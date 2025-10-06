@@ -1,0 +1,108 @@
+import { Suspense } from 'react'
+import { FormulaCard } from '@/components/cards/FormulaCard'
+import { Pagination } from '@/components/ui/pagination'
+import { Loading } from '@/components/ui/loading'
+import { SearchBar } from '@/components/search/SearchBar'
+
+interface FormulasPageProps {
+  searchParams: {
+    page?: string
+    q?: string
+    tradition?: string
+  }
+}
+
+async function getFormulas(page: number = 1, query?: string, tradition?: string) {
+  // TODO: Replace with actual Payload CMS API call
+  return {
+    docs: [],
+    totalPages: 0,
+    page: 1,
+    totalDocs: 0,
+  }
+}
+
+export default async function FormulasPage({ searchParams }: FormulasPageProps) {
+  const page = Number(searchParams.page) || 1
+  const query = searchParams.q
+  const tradition = searchParams.tradition
+
+  const { docs: formulas, totalPages, totalDocs } = await getFormulas(page, query, tradition)
+
+  return (
+    <div className="container-custom py-12">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">
+          Herbal Formulas
+        </h1>
+        <p className="text-lg text-gray-600 max-w-3xl">
+          Discover time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda,
+          and Western herbalism. Each formula includes detailed ingredient information,
+          traditional uses, and modern applications.
+        </p>
+      </div>
+
+      {/* Search */}
+      <div className="mb-8 max-w-2xl">
+        <SearchBar
+          placeholder="Search formulas by name, ingredients, or actions..."
+          defaultValue={query}
+        />
+      </div>
+
+      {/* Stats */}
+      <div className="mb-8">
+        <p className="text-sm text-gray-600">
+          {totalDocs} {totalDocs === 1 ? 'formula' : 'formulas'} found
+        </p>
+      </div>
+
+      {/* Formula Grid */}
+      <Suspense fallback={<Loading />}>
+        {formulas.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600">
+              {query ? 'No formulas found matching your search.' : 'No formulas available yet.'}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {formulas.map((formula: any) => (
+                <FormulaCard
+                  key={formula.id}
+                  formulaId={formula.formulaId}
+                  title={formula.title}
+                  slug={formula.slug}
+                  chineseName={formula.chineseName}
+                  pinyin={formula.pinyin}
+                  description={formula.description}
+                  category={formula.category}
+                  tradition={formula.tradition}
+                  ingredientCount={formula.ingredients?.length}
+                  averageRating={formula.averageRating}
+                  reviewCount={formula.reviewCount}
+                />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                baseUrl="/formulas"
+              />
+            )}
+          </>
+        )}
+      </Suspense>
+    </div>
+  )
+}
+
+export const metadata = {
+  title: 'Herbal Formulas | Verscienta Health',
+  description: 'Discover time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda, and Western herbalism.',
+}

@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:17-alpine
+    container_name: verscienta-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: verscienta_health
+      POSTGRES_USER: verscienta_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verscienta_user -d verscienta_health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Payload CMS Backend
+  cms:
+    build:
+      context: .
+      dockerfile: apps/cms/Dockerfile
+    container_name: verscienta-cms
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://verscienta_user:${DB_PASSWORD:-changeme123}@postgres:5432/verscienta_health
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-your-secret-key-change-in-production}
+      FRONTEND_URL: http://localhost:3000
+      ALGOLIA_APP_ID: ${ALGOLIA_APP_ID:-}
+      ALGOLIA_ADMIN_KEY: ${ALGOLIA_ADMIN_KEY:-}
+      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:-}
+      CLOUDFLARE_IMAGES_API_TOKEN: ${CLOUDFLARE_IMAGES_API_TOKEN:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - cms_media:/app/media
+
+  # Next.js Frontend
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: verscienta-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_CMS_URL: http://localhost:3001
+      DATABASE_URL: postgresql://verscienta_user:${DB_PASSWORD:-changeme123}@postgres:5432/verscienta_health
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-your-auth-secret-change-in-production}
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_ALGOLIA_APP_ID: ${ALGOLIA_APP_ID:-}
+      NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: ${ALGOLIA_SEARCH_KEY:-}
+      GROK_API_KEY: ${GROK_API_KEY:-}
+    depends_on:
+      - cms
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+  cms_media:
+    driver: local
+
+networks:
+  default:
+    name: verscienta-network

@@ -1,0 +1,40 @@
+{
+  "name": "cms",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" payload dev",
+    "build": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" payload build",
+    "start": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" payload start",
+    "generate:types": "payload generate:types",
+    "generate:schema": "payload generate:graphQLSchema",
+    "db:setup": "tsx src/scripts/setup-db.ts",
+    "db:migrate": "payload migrate",
+    "db:seed": "tsx src/scripts/seed.ts",
+    "db:studio": "drizzle-kit studio",
+    "lint": "eslint src --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "payload": "^3.58.0",
+    "@payloadcms/db-postgres": "^3.58.0",
+    "@payloadcms/richtext-lexical": "^3.58.0",
+    "@payloadcms/plugin-cloud-storage": "^3.58.0",
+    "express": "^4.21.2",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.38.3",
+    "postgres": "^3.4.5",
+    "algoliasearch": "^5.18.0",
+    "axios": "^1.7.9",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.29.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
