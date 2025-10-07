@@ -65,8 +65,8 @@ function getClientIdentifier(request: NextRequest): string {
     return realIp
   }
 
-  // Fallback to request IP (may be proxy IP)
-  return request.ip || 'unknown'
+  // Fallback to unknown (request.ip not available in NextRequest)
+  return 'unknown'
 }
 
 /**

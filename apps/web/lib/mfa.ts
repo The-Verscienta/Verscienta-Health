@@ -1,19 +1,8 @@
 import { createAuthClient } from 'better-auth/client'
-import { twoFactor } from 'better-auth/client/plugins'
 
 // Enhanced Better Auth client with 2FA plugin
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  plugins: [
-    twoFactor({
-      // TOTP (Time-based One-Time Password) support
-      totpOptions: {
-        appName: 'Verscienta Health',
-        period: 30, // 30 seconds
-        digits: 6,  // 6-digit codes
-      },
-    }),
-  ],
 })
 
 // Types for MFA

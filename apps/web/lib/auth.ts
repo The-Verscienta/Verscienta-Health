@@ -80,12 +80,6 @@ export const auth = betterAuth({
     twoFactor({
       // TOTP (Time-based One-Time Password) - compatible with Google Authenticator, Authy, etc.
       issuer: 'Verscienta Health',
-      // Backup codes: Generate 10 single-use backup codes
-      backupCodes: {
-        enabled: true,
-        length: 10,
-        count: 10,
-      },
     }),
   ],
   // Advanced security options
@@ -107,4 +101,3 @@ export const auth = betterAuth({
 })
 
 export type Session = typeof auth.$Infer.Session
-export type User = typeof auth.$Infer.User

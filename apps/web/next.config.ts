@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+// @ts-expect-error - next-pwa has no types
 import withPWA from 'next-pwa'
 
 const nextConfig: NextConfig = {
@@ -33,7 +34,7 @@ const nextConfig: NextConfig = {
   i18n: {
     locales: ['en', 'es', 'zh-CN', 'zh-TW'],
     defaultLocale: 'en',
-    localeDetection: true,
+    localeDetection: false,
   },
 
   // Headers for security
@@ -234,8 +235,8 @@ export default withPWA({
       },
     },
     {
-      urlPattern: ({ url }) => {
-        const isSameOrigin = self.origin === url.origin
+      urlPattern: ({ url }: { url: URL }) => {
+        const isSameOrigin = url.origin === new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').origin
         if (!isSameOrigin) return false
         const pathname = url.pathname
         // Exclude API routes and admin routes

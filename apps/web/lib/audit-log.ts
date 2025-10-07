@@ -96,7 +96,7 @@ export interface AuditLogEntry {
 export async function createAuditLog(entry: Partial<AuditLogEntry>): Promise<void> {
   try {
     // Get request metadata
-    const headersList = headers()
+    const headersList = await headers()
     const ipAddress =
       headersList.get('x-forwarded-for') ||
       headersList.get('x-real-ip') ||
@@ -109,6 +109,7 @@ export async function createAuditLog(entry: Partial<AuditLogEntry>): Promise<voi
       userAgent,
       success: true,
       severity: AuditSeverity.INFO,
+      action: entry.action || AuditAction.LOGIN, // Provide default action
       ...entry,
     }
 
