@@ -44,9 +44,7 @@ Request your API key at: [https://verscienta.com/developers](https://verscienta.
 ```javascript
 // Get list of herbs
 async function getHerbs(page = 1, limit = 20) {
-  const response = await fetch(
-    `https://verscienta.com/api/herbs?page=${page}&limit=${limit}`
-  )
+  const response = await fetch(`https://verscienta.com/api/herbs?page=${page}&limit=${limit}`)
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
@@ -59,7 +57,7 @@ async function getHerbs(page = 1, limit = 20) {
 // Usage
 const herbs = await getHerbs(1, 10)
 console.log(`Found ${herbs.totalDocs} herbs`)
-herbs.docs.forEach(herb => {
+herbs.docs.forEach((herb) => {
   console.log(`- ${herb.name} (${herb.scientificName})`)
 })
 ```
@@ -92,12 +90,10 @@ async function searchHerbs(query, filters = {}) {
   const params = new URLSearchParams({
     q: query,
     type: 'herbs',
-    ...filters
+    ...filters,
   })
 
-  const response = await fetch(
-    `https://verscienta.com/api/search?${params}`
-  )
+  const response = await fetch(`https://verscienta.com/api/search?${params}`)
 
   return await response.json()
 }
@@ -106,7 +102,7 @@ async function searchHerbs(query, filters = {}) {
 const results = await searchHerbs('immune support', {
   temperature: 'Warm',
   page: 1,
-  limit: 10
+  limit: 10,
 })
 ```
 
@@ -114,21 +110,18 @@ const results = await searchHerbs('immune support', {
 
 ```javascript
 async function analyzeSymptoms(symptoms, apiKey) {
-  const response = await fetch(
-    'https://verscienta.com/api/ai/analyze-symptoms',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        symptoms,
-        age: 35,
-        gender: 'female',
-      }),
-    }
-  )
+  const response = await fetch('https://verscienta.com/api/ai/analyze-symptoms', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      symptoms,
+      age: 35,
+      gender: 'female',
+    }),
+  })
 
   if (!response.ok) {
     if (response.status === 429) {
@@ -162,7 +155,7 @@ const api = axios.create({
 })
 
 // Add authentication token
-api.interceptors.request.use(config => {
+api.interceptors.request.use((config) => {
   const token = process.env.VERSCIENTA_API_KEY
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -172,8 +165,8 @@ api.interceptors.request.use(config => {
 
 // Handle rate limiting
 api.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     if (error.response?.status === 429) {
       const retryAfter = error.response.headers['retry-after']
       console.log(`Rate limited. Retry after ${retryAfter} seconds`)
@@ -712,10 +705,10 @@ class HerbSearch {
     if (!response.ok) throw new Error('Search failed')
 
     const data = await response.json()
-    return data.results.map(herb => ({
+    return data.results.map((herb) => ({
       label: `${herb.name} (${herb.scientificName})`,
       value: herb.slug,
-      ...herb
+      ...herb,
     }))
   }
 
@@ -734,12 +727,16 @@ const resultsDiv = document.getElementById('results')
 searchInput.addEventListener('input', async (e) => {
   const results = await search.searchWithAutocomplete(e.target.value)
 
-  resultsDiv.innerHTML = results.map(herb => `
+  resultsDiv.innerHTML = results
+    .map(
+      (herb) => `
     <div class="result" data-slug="${herb.slug}">
       <h4>${herb.name}</h4>
       <p>${herb.scientificName}</p>
     </div>
-  `).join('')
+  `
+    )
+    .join('')
 })
 ```
 
@@ -875,7 +872,7 @@ class RateLimitedClient {
   }
 
   private sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }
 ```
@@ -945,7 +942,7 @@ class CachedClient {
 
     this.cache.set(endpoint, {
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     })
 
     return data
@@ -964,9 +961,8 @@ async function batchGetHerbs(slugs) {
   // Instead of making N requests sequentially
   // Make them concurrently
 
-  const promises = slugs.map(slug =>
-    fetch(`https://verscienta.com/api/herbs/${slug}`)
-      .then(r => r.json())
+  const promises = slugs.map((slug) =>
+    fetch(`https://verscienta.com/api/herbs/${slug}`).then((r) => r.json())
   )
 
   return await Promise.all(promises)
@@ -985,9 +981,7 @@ async function getAllHerbs() {
   let hasMore = true
 
   while (hasMore) {
-    const response = await fetch(
-      `https://verscienta.com/api/herbs?page=${page}&limit=100`
-    )
+    const response = await fetch(`https://verscienta.com/api/herbs?page=${page}&limit=100`)
     const data = await response.json()
 
     allHerbs.push(...data.docs)
@@ -995,7 +989,7 @@ async function getAllHerbs() {
     page++
 
     // Add small delay to respect rate limits
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise((resolve) => setTimeout(resolve, 100))
   }
 
   return allHerbs

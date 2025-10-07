@@ -1,27 +1,25 @@
-import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
+import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
-
+import { AuditLogs } from './src/collections/AuditLogs.js'
+import { Conditions } from './src/collections/Conditions.js'
+import { Formulas } from './src/collections/Formulas.js'
+import { GrokInsights } from './src/collections/GrokInsights.js'
 // Import collections
 import { Herbs } from './src/collections/Herbs.js'
-import { Formulas } from './src/collections/Formulas.js'
-import { Conditions } from './src/collections/Conditions.js'
-import { Symptoms } from './src/collections/Symptoms.js'
+import { ImportLogs } from './src/collections/ImportLogs.js'
+import { Media } from './src/collections/Media.js'
 import { Modalities } from './src/collections/Modalities.js'
 import { Practitioners } from './src/collections/Practitioners.js'
 import { Reviews } from './src/collections/Reviews.js'
-import { GrokInsights } from './src/collections/GrokInsights.js'
-import { Media } from './src/collections/Media.js'
+import { Symptoms } from './src/collections/Symptoms.js'
 import { Users } from './src/collections/Users.js'
-import { AuditLogs } from './src/collections/AuditLogs.js'
-import { ImportLogs } from './src/collections/ImportLogs.js'
 import { ValidationReports } from './src/collections/ValidationReports.js'
-
+import { PerenualImportState } from './src/globals/PerenualImportState.js'
 // Import globals
 import { TrefleImportState } from './src/globals/TrefleImportState.js'
-import { PerenualImportState } from './src/globals/PerenualImportState.js'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -54,10 +52,7 @@ export default buildConfig({
     ValidationReports,
   ],
 
-  globals: [
-    TrefleImportState,
-    PerenualImportState,
-  ],
+  globals: [TrefleImportState, PerenualImportState],
 
   editor: lexicalEditor({}),
 
@@ -75,15 +70,9 @@ export default buildConfig({
     schemaOutputFile: path.resolve(dirname, 'generated-schema.graphql'),
   },
 
-  cors: [
-    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-    'http://localhost:3000',
-  ],
+  cors: [process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000', 'http://localhost:3000'],
 
-  csrf: [
-    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-    'http://localhost:3000',
-  ],
+  csrf: [process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000', 'http://localhost:3000'],
 
   upload: {
     limits: {

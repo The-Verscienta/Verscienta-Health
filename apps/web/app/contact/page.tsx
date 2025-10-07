@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Mail } from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ export default function ContactPage() {
     // TODO: Implement actual contact form submission
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    toast.success('Thank you for your message! We\'ll get back to you soon.')
+    toast.success("Thank you for your message! We'll get back to you soon.")
     setFormData({ name: '', email: '', subject: '', message: '' })
     setIsSubmitting(false)
   }
@@ -38,14 +38,14 @@ export default function ContactPage() {
   return (
     <div className="container-custom py-12">
       {/* Header */}
-      <div className="mb-12 text-center max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">Contact Us</h1>
+      <div className="mx-auto mb-12 max-w-3xl text-center">
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Contact Us</h1>
         <p className="text-lg text-gray-600">
           Have a question, suggestion, or feedback? We'd love to hear from you.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Contact Form */}
         <div className="lg:col-span-2">
           <Card>
@@ -58,7 +58,7 @@ export default function ContactPage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="text-sm font-semibold text-gray-700 mb-2 block">
+                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-gray-700">
                     Name *
                   </label>
                   <Input
@@ -72,7 +72,7 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="text-sm font-semibold text-gray-700 mb-2 block">
+                  <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-700">
                     Email *
                   </label>
                   <Input
@@ -87,7 +87,10 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="text-sm font-semibold text-gray-700 mb-2 block">
+                  <label
+                    htmlFor="subject"
+                    className="mb-2 block text-sm font-semibold text-gray-700"
+                  >
                     Subject *
                   </label>
                   <Input
@@ -101,7 +104,10 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="text-sm font-semibold text-gray-700 mb-2 block">
+                  <label
+                    htmlFor="message"
+                    className="mb-2 block text-sm font-semibold text-gray-700"
+                  >
                     Message *
                   </label>
                   <textarea
@@ -112,7 +118,7 @@ export default function ContactPage() {
                     placeholder="Your message..."
                     required
                     rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-600 resize-none"
+                    className="focus:ring-earth-600 w-full resize-none rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2"
                   />
                 </div>
 
@@ -131,7 +137,7 @@ export default function ContactPage() {
               <CardTitle className="text-lg">Email</CardTitle>
             </CardHeader>
             <CardContent className="flex items-start gap-3">
-              <Mail className="h-5 w-5 text-earth-600 flex-shrink-0 mt-0.5" />
+              <Mail className="text-earth-600 mt-0.5 h-5 w-5 flex-shrink-0" />
               <div>
                 <a
                   href="mailto:info@verscientahealth.com"
@@ -189,5 +195,6 @@ export default function ContactPage() {
 
 export const metadata = {
   title: 'Contact Us | Verscienta Health',
-  description: 'Get in touch with Verscienta Health. We\'re here to answer your questions about herbal medicine and our platform.',
+  description:
+    "Get in touch with Verscienta Health. We're here to answer your questions about herbal medicine and our platform.",
 }

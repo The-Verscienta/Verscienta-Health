@@ -69,14 +69,7 @@ async function cleanupRedisCache(stats: CacheStats): Promise<void> {
     let deletedCount = 0
 
     // Clean up expired keys using SCAN (more efficient than KEYS)
-    const patterns = [
-      'herb:*',
-      'formula:*',
-      'condition:*',
-      'search:*',
-      'ai:*',
-      '@ratelimit:*',
-    ]
+    const patterns = ['herb:*', 'formula:*', 'condition:*', 'search:*', 'ai:*', '@ratelimit:*']
 
     for (const pattern of patterns) {
       const stream = redis.scanStream({
@@ -170,11 +163,9 @@ async function cleanupTempFiles(stats: CacheStats): Promise<void> {
         }
 
         stats.diskSpaceFreed = deletedSize
-        console.log(
-          `  ✓ Freed ${(deletedSize / 1024 / 1024).toFixed(2)}MB of disk space`
-        )
+        console.log(`  ✓ Freed ${(deletedSize / 1024 / 1024).toFixed(2)}MB of disk space`)
       }
-    } catch (error) {
+    } catch (_error) {
       // Directory might not exist, which is fine
       console.log('  ⏭️  No temp directory to clean')
     }

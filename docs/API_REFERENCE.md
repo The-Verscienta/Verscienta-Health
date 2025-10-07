@@ -27,6 +27,7 @@ Staging:    https://staging.verscienta.com/api
 ### Interactive Documentation
 
 Visit our interactive API documentation powered by Swagger UI:
+
 - **https://verscienta.com/api-docs**
 
 ### Quick Start Example
@@ -51,6 +52,7 @@ curl https://verscienta.com/api/search?q=immune+support&type=herbs
 Most endpoints are public and don't require authentication. However, some advanced features (like AI symptom analysis) require an API key.
 
 **Request an API Key:**
+
 1. Create an account at [verscienta.com](https://verscienta.com)
 2. Navigate to [Developer Settings](https://verscienta.com/account/developer)
 3. Click "Generate API Key"
@@ -66,7 +68,7 @@ curl -H "Authorization: Bearer YOUR_API_KEY" \
 // JavaScript
 fetch('https://verscienta.com/api/ai/analyze-symptoms', {
   headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
+    Authorization: 'Bearer YOUR_API_KEY',
     'Content-Type': 'application/json',
   },
   method: 'POST',
@@ -107,12 +109,12 @@ Rate limits protect our API from abuse and ensure fair access for all users.
 
 ### Limits
 
-| Endpoint Type | Limit | Window |
-|--------------|-------|---------|
-| Public (unauthenticated) | 100 requests | 10 minutes |
-| Authenticated | 1000 requests | 1 hour |
-| AI Endpoints | 20 requests | 10 minutes |
-| Search | 50 requests | 10 minutes |
+| Endpoint Type            | Limit         | Window     |
+| ------------------------ | ------------- | ---------- |
+| Public (unauthenticated) | 100 requests  | 10 minutes |
+| Authenticated            | 1000 requests | 1 hour     |
+| AI Endpoints             | 20 requests   | 10 minutes |
+| Search                   | 50 requests   | 10 minutes |
 
 ### Rate Limit Headers
 
@@ -142,6 +144,7 @@ When you exceed the rate limit, you'll receive a 429 status code:
 ```
 
 **Best Practices:**
+
 - Implement exponential backoff
 - Cache responses when possible
 - Respect the `Retry-After` header
@@ -158,15 +161,15 @@ List all herbs with pagination and filtering.
 
 **Parameters:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `page` | integer | 1 | Page number |
-| `limit` | integer | 20 | Items per page (max: 100) |
-| `temperature` | string | - | Filter by TCM temperature |
-| `taste` | string | - | Filter by TCM taste (comma-separated) |
-| `meridians` | string | - | Filter by meridians (comma-separated) |
-| `sort` | string | `name` | Sort field |
-| `order` | string | `asc` | Sort order (`asc` or `desc`) |
+| Parameter     | Type    | Default | Description                           |
+| ------------- | ------- | ------- | ------------------------------------- |
+| `page`        | integer | 1       | Page number                           |
+| `limit`       | integer | 20      | Items per page (max: 100)             |
+| `temperature` | string  | -       | Filter by TCM temperature             |
+| `taste`       | string  | -       | Filter by TCM taste (comma-separated) |
+| `meridians`   | string  | -       | Filter by meridians (comma-separated) |
+| `sort`        | string  | `name`  | Sort field                            |
+| `order`       | string  | `asc`   | Sort order (`asc` or `desc`)          |
 
 **Example Request:**
 
@@ -220,9 +223,9 @@ Get detailed information about a specific herb.
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `slug` | string | Yes | Herb slug (e.g., "ginseng") |
+| Parameter | Type   | Required | Description                 |
+| --------- | ------ | -------- | --------------------------- |
+| `slug`    | string | Yes      | Herb slug (e.g., "ginseng") |
 
 **Example Request:**
 
@@ -306,12 +309,12 @@ List all herbal formulas.
 
 **Parameters:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `page` | integer | 1 | Page number |
-| `limit` | integer | 20 | Items per page |
-| `tradition` | string | - | Filter by tradition (TCM, Western, Ayurveda) |
-| `category` | string | - | Filter by category |
+| Parameter   | Type    | Default | Description                                  |
+| ----------- | ------- | ------- | -------------------------------------------- |
+| `page`      | integer | 1       | Page number                                  |
+| `limit`     | integer | 20      | Items per page                               |
+| `tradition` | string  | -       | Filter by tradition (TCM, Western, Ayurveda) |
+| `category`  | string  | -       | Filter by category                           |
 
 #### `GET /api/formulas/{slug}`
 
@@ -335,14 +338,14 @@ Find practitioners with filtering by location, specialty, and availability.
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `latitude` | number | Latitude for geo-search |
-| `longitude` | number | Longitude for geo-search |
-| `radius` | number | Search radius in kilometers (default: 50) |
-| `specialty` | string | Filter by specialty |
-| `acceptingPatients` | boolean | Only show accepting patients |
-| `verified` | boolean | Only show verified practitioners |
+| Parameter           | Type    | Description                               |
+| ------------------- | ------- | ----------------------------------------- |
+| `latitude`          | number  | Latitude for geo-search                   |
+| `longitude`         | number  | Longitude for geo-search                  |
+| `radius`            | number  | Search radius in kilometers (default: 50) |
+| `specialty`         | string  | Filter by specialty                       |
+| `acceptingPatients` | boolean | Only show accepting patients              |
+| `verified`          | boolean | Only show verified practitioners          |
 
 #### `GET /api/practitioners/{slug}`
 
@@ -356,12 +359,12 @@ Full-text search across all content types.
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `q` | string | Yes | Search query |
-| `type` | string | No | Content type (herbs, formulas, conditions, all) |
-| `page` | integer | No | Page number |
-| `limit` | integer | No | Results per page |
+| Parameter | Type    | Required | Description                                     |
+| --------- | ------- | -------- | ----------------------------------------------- |
+| `q`       | string  | Yes      | Search query                                    |
+| `type`    | string  | No       | Content type (herbs, formulas, conditions, all) |
+| `page`    | integer | No       | Page number                                     |
+| `limit`   | integer | No       | Results per page                                |
 
 **Example:**
 
@@ -570,17 +573,17 @@ interface Condition {
 
 ### HTTP Status Codes
 
-| Status Code | Meaning |
-|-------------|---------|
-| 200 | Success |
-| 201 | Created |
-| 400 | Bad Request - Invalid parameters |
-| 401 | Unauthorized - Authentication required |
-| 403 | Forbidden - Insufficient permissions |
-| 404 | Not Found |
-| 429 | Rate Limit Exceeded |
-| 500 | Internal Server Error |
-| 503 | Service Unavailable |
+| Status Code | Meaning                                |
+| ----------- | -------------------------------------- |
+| 200         | Success                                |
+| 201         | Created                                |
+| 400         | Bad Request - Invalid parameters       |
+| 401         | Unauthorized - Authentication required |
+| 403         | Forbidden - Insufficient permissions   |
+| 404         | Not Found                              |
+| 429         | Rate Limit Exceeded                    |
+| 500         | Internal Server Error                  |
+| 503         | Service Unavailable                    |
 
 ### Error Response Format
 
@@ -598,6 +601,7 @@ interface Condition {
 ### Common Errors
 
 **Invalid Parameters:**
+
 ```json
 {
   "error": "Validation Error",
@@ -611,6 +615,7 @@ interface Condition {
 ```
 
 **Authentication Required:**
+
 ```json
 {
   "error": "Unauthorized",
@@ -620,6 +625,7 @@ interface Condition {
 ```
 
 **Resource Not Found:**
+
 ```json
 {
   "error": "Not Found",
@@ -632,11 +638,12 @@ interface Condition {
 
 ## Webhooks
 
-*Coming Soon*
+_Coming Soon_
 
 Webhooks allow you to receive real-time notifications when certain events occur.
 
 **Planned Events:**
+
 - `herb.created`
 - `herb.updated`
 - `formula.created`
@@ -649,6 +656,7 @@ Webhooks allow you to receive real-time notifications when certain events occur.
 ### Official SDKs
 
 **JavaScript/TypeScript**
+
 ```bash
 npm install @verscienta/api-client
 ```
@@ -665,6 +673,7 @@ const ginseng = await client.herbs.get('ginseng')
 ```
 
 **Python**
+
 ```bash
 pip install verscienta
 ```
@@ -709,6 +718,7 @@ Check API status and uptime: https://status.verscienta.com
 ## Changelog
 
 ### v1.0.0 (2025-01-01)
+
 - Initial public API release
 - Herbs, Formulas, Conditions, Practitioners endpoints
 - Search functionality

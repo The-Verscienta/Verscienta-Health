@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { ConditionCard } from '@/components/cards/ConditionCard'
-import { Pagination } from '@/components/ui/pagination'
-import { Loading } from '@/components/ui/loading'
 import { SearchBar } from '@/components/search/SearchBar'
+import { Loading } from '@/components/ui/loading'
+import { Pagination } from '@/components/ui/pagination'
 
 interface ConditionsPageProps {
   searchParams: {
@@ -45,22 +45,17 @@ export default async function ConditionsPage({ searchParams }: ConditionsPagePro
     <div className="container-custom py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">
-          Health Conditions
-        </h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Explore health conditions and learn about herbal approaches to wellness.
-          Each condition includes symptom information, related herbs and formulas,
-          and evidence-based natural treatment options.
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Health Conditions</h1>
+        <p className="max-w-3xl text-lg text-gray-600">
+          Explore health conditions and learn about herbal approaches to wellness. Each condition
+          includes symptom information, related herbs and formulas, and evidence-based natural
+          treatment options.
         </p>
       </div>
 
       {/* Search */}
       <div className="mb-8 max-w-2xl">
-        <SearchBar
-          placeholder="Search conditions by name or symptoms..."
-          defaultValue={query}
-        />
+        <SearchBar placeholder="Search conditions by name or symptoms..." defaultValue={query} />
       </div>
 
       {/* Stats */}
@@ -73,14 +68,14 @@ export default async function ConditionsPage({ searchParams }: ConditionsPagePro
       {/* Condition Grid */}
       <Suspense fallback={<Loading />}>
         {conditions.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-gray-600">
               {query ? 'No conditions found matching your search.' : 'No conditions available yet.'}
             </p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {conditions.map((condition: Condition) => (
                 <ConditionCard
                   key={condition.id}
@@ -98,11 +93,7 @@ export default async function ConditionsPage({ searchParams }: ConditionsPagePro
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                baseUrl="/conditions"
-              />
+              <Pagination currentPage={page} totalPages={totalPages} baseUrl="/conditions" />
             )}
           </>
         )}
@@ -113,5 +104,6 @@ export default async function ConditionsPage({ searchParams }: ConditionsPagePro
 
 export const metadata = {
   title: 'Health Conditions | Verscienta Health',
-  description: 'Explore health conditions and learn about herbal approaches to wellness with evidence-based natural treatment options.',
+  description:
+    'Explore health conditions and learn about herbal approaches to wellness with evidence-based natural treatment options.',
 }

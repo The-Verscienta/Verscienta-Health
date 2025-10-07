@@ -7,6 +7,7 @@ This guide covers the complete plant data integration system for Verscienta Heal
 Verscienta Health imports and enriches herb data from two complementary sources:
 
 ### 🌿 Trefle API (1M+ Plants)
+
 - **Botanical data** - Scientific validation, taxonomy, distributions
 - **Images** - High-quality botanical photographs
 - **Toxicity** - Safety information
@@ -15,6 +16,7 @@ Verscienta Health imports and enriches herb data from two complementary sources:
 - **Sources** - Scientific citations and references
 
 ### 🌱 Perenual API (10K+ Plants)
+
 - **Cultivation tips** - Watering, sunlight, soil requirements
 - **Pest management** - Common pests and treatment solutions
 - **Care guides** - Detailed growing instructions
@@ -80,23 +82,26 @@ The system automatically prevents duplicate herbs when importing from multiple s
 
 ```typescript
 // Trefle Import
-images: [{
-  url: "https://trefle.io/images/lavender.jpg",
-  caption: "Lavender - from Trefle botanical database",
-  type: "photograph",
-  source: "Trefle"
-}]
+images: [
+  {
+    url: 'https://trefle.io/images/lavender.jpg',
+    caption: 'Lavender - from Trefle botanical database',
+    type: 'photograph',
+    source: 'Trefle',
+  },
+]
 
 // Perenual Import (merges with existing)
 images: [
-  { url: "https://trefle.io/images/lavender.jpg", source: "Trefle" },
-  { url: "https://perenual.com/images/lavender-garden.jpg", source: "Perenual" } // Added!
+  { url: 'https://trefle.io/images/lavender.jpg', source: 'Trefle' },
+  { url: 'https://perenual.com/images/lavender-garden.jpg', source: 'Perenual' }, // Added!
 ]
 
 // Result: Herb has images from both sources
 ```
 
 The merge function:
+
 1. Checks existing image URLs
 2. Filters out duplicates (same URL)
 3. Adds new unique images
@@ -107,11 +112,13 @@ The merge function:
 ### 1. Get API Keys
 
 **Trefle:**
+
 1. Visit [trefle.io](https://trefle.io/)
 2. Create free account
 3. Generate API key
 
 **Perenual:**
+
 1. Visit [perenual.com/docs/api](https://perenual.com/docs/api)
 2. Create free account
 3. Generate API key
@@ -192,22 +199,26 @@ ENABLE_PERENUAL_IMPORT=true
 ### What Gets Merged
 
 **✅ Always Merged:**
+
 - Images (both sources combined)
 - Synonyms (combined without duplicates)
 - Safety warnings (combined)
 - Habitat information (appended)
 
 **✅ Conditionally Merged:**
+
 - Family (only if missing)
 - Cultivation data (Perenual adds to existing)
 - Pest management (Perenual adds to existing)
 
 **✅ Never Overwritten:**
+
 - Existing non-null values preferred
 - Manual edits preserved
 - Published status maintained
 
 **✅ Source-Specific Fields:**
+
 - `botanicalData.trefleId` - Only from Trefle
 - `botanicalData.perenualId` - Only from Perenual
 - `botanicalData.trefleData` - Only from Trefle
@@ -280,11 +291,13 @@ Filter by: "Perenual Progressive Import"
 **Symptoms:** Same herb appears multiple times
 
 **Causes:**
+
 1. Scientific name variations (e.g., "Mill." vs "L.")
 2. Deduplication failed
 3. Different genus/species names
 
 **Solution:**
+
 ```typescript
 // Run bulk deduplication
 import { bulkDeduplicate } from '@/lib/herbDeduplication'
@@ -303,19 +316,24 @@ console.log(`
 **Symptoms:** Only Trefle OR Perenual images, not both
 
 **Check:**
+
 1. View herb in admin
 2. Check image sources
 3. Review import logs for merge messages
 
 **Debug:**
+
 ```typescript
 // Check merge logic
 const herb = await payload.findByID({ collection: 'herbs', id: 'xxx' })
 
-console.log('Images:', herb.images?.map(img => ({
-  source: img.source,
-  url: img.url
-})))
+console.log(
+  'Images:',
+  herb.images?.map((img) => ({
+    source: img.source,
+    url: img.url,
+  }))
+)
 
 // Should show:
 // [
@@ -332,6 +350,7 @@ console.log('Images:', herb.images?.map(img => ({
 
 **Solution:**
 Review `mergeHerbData()` in `herbDeduplication.ts`:
+
 ```typescript
 // Should use preferFilled helper
 merged.name = preferFilled(existing.name, newData.name)
@@ -341,6 +360,7 @@ merged.name = preferFilled(existing.name, newData.name)
 ### Import Jobs Not Running
 
 **Check:**
+
 ```bash
 # Verify API keys
 echo $TREFLE_API_KEY
@@ -383,15 +403,18 @@ tail -f logs/cron.log | grep -E "(Trefle|Perenual)"
 ## API Rate Limits
 
 ### Trefle
+
 - **120 requests/minute**
 - **5000 requests/day** (free tier)
 - Our implementation: ~60 req/min (well under limit)
 
 ### Perenual
+
 - **Limited requests/day** (free tier)
 - Our implementation: 1s delay between requests
 
 ### Combined Import
+
 - Both run every minute
 - Total: ~65 requests/minute
 - Well within limits for both APIs
@@ -487,15 +510,18 @@ tail -f logs/cron.log | grep -E "(Trefle|Perenual)"
 ## Resources
 
 ### Documentation
+
 - [Trefle Integration](./TREFLE_INTEGRATION.md)
 - [Perenual Integration](./PERENUAL_INTEGRATION.md)
 - [Advanced Features](./ADVANCED_FEATURES.md)
 
 ### API Documentation
+
 - [Trefle API Docs](https://docs.trefle.io/)
 - [Perenual API Docs](https://perenual.com/docs/api)
 
 ### Code References
+
 - Trefle Client: `apps/cms/src/lib/trefle.ts`
 - Perenual Client: `apps/cms/src/lib/perenual.ts`
 - Deduplication: `apps/cms/src/lib/herbDeduplication.ts`

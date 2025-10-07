@@ -55,23 +55,27 @@ This policy applies to:
 ### 1. Information Classification
 
 **Public Information**:
+
 - Herb descriptions, formulas, general health information
 - Practitioner public profiles
 - Published articles and research
 - Marketing materials
 
 **Confidential Information**:
+
 - User account information
 - Business strategies and financial data
 - Internal communications
 - System configurations
 
 **Protected Health Information (PHI)**:
+
 - Symptom checker submissions
 - Health-related user reviews (if identifiable)
 - Any health data linked to identifiable individuals
 
 **Handling Requirements**:
+
 - **Public**: May be freely shared
 - **Confidential**: Shared only on need-to-know basis
 - **PHI**: Requires HIPAA compliance controls
@@ -79,11 +83,13 @@ This policy applies to:
 ### 2. Acceptable Use Policy
 
 **Permitted Uses**:
+
 - Accessing systems and data required for job duties
 - Using approved software and tools
 - Reporting security incidents immediately
 
 **Prohibited Actions**:
+
 - Accessing PHI without business justification
 - Sharing credentials or session tokens
 - Installing unauthorized software
@@ -94,6 +100,7 @@ This policy applies to:
 ### 3. Password Policy
 
 **Requirements**:
+
 - Minimum 12 characters (14+ recommended)
 - Mix of uppercase, lowercase, numbers, and symbols
 - No reuse of previous 6 passwords
@@ -101,6 +108,7 @@ This policy applies to:
 - Unique passwords for each system
 
 **Management**:
+
 - Use approved password manager
 - Change passwords if compromised
 - Never share passwords
@@ -113,11 +121,13 @@ This policy applies to:
 ### 1. User Access Management
 
 **Principle of Least Privilege**:
+
 - Users granted minimum access needed for role
 - Regular access reviews (quarterly)
 - Immediate revocation upon role change or termination
 
 **User Roles**:
+
 - **User**: Basic access, no PHI access
 - **Herbalist**: Content creation, no PHI access
 - **Practitioner**: Profile management, no PHI access
@@ -128,11 +138,13 @@ This policy applies to:
 ### 2. Authentication Requirements
 
 **All Users**:
+
 - Strong password (12+ characters)
 - Account lockout after 5 failed attempts
 - Session timeout (24 hours general, 15 minutes for PHI)
 
 **Admin and PHI Access**:
+
 - Multi-Factor Authentication (MFA) required
 - Additional verification for sensitive operations
 - IP-based restrictions (if applicable)
@@ -140,11 +152,13 @@ This policy applies to:
 ### 3. Session Management
 
 **General Sessions**:
+
 - Maximum lifetime: 24 hours
 - Update age: 1 hour
 - Secure cookies (httpOnly, secure, sameSite)
 
 **PHI Access Sessions**:
+
 - Idle timeout: 15 minutes
 - Warning at 13 minutes
 - Automatic logout on timeout
@@ -157,12 +171,14 @@ This policy applies to:
 ### 1. Encryption Requirements
 
 **Data in Transit**:
+
 - TLS 1.3 for all connections
 - HTTPS enforced via HSTS headers
 - No downgrade to HTTP allowed
 - Certificate pinning for mobile apps
 
 **Data at Rest**:
+
 - Database encryption enabled (PostgreSQL)
 - Column-level encryption for PHI fields
 - Encrypted backups (AES-256)
@@ -171,16 +187,19 @@ This policy applies to:
 ### 2. Data Retention
 
 **Operational Data**:
+
 - User accounts: Until deleted by user + 30 days
 - Content (herbs, formulas): Indefinitely
 - Media uploads: Until deleted + 90 days
 
 **Audit Logs**:
+
 - Minimum retention: 6 years (HIPAA requirement)
 - Stored in immutable, write-once format
 - Regular backups to separate location
 
 **PHI Data**:
+
 - Symptom checker: Anonymized immediately, logs 6 years
 - Health reviews: Retained per user preference
 - Right to deletion: Honored within 30 days
@@ -188,6 +207,7 @@ This policy applies to:
 ### 3. Data Sanitization
 
 **Before AI Processing**:
+
 - Remove email addresses
 - Remove phone numbers
 - Remove street addresses
@@ -195,6 +215,7 @@ This policy applies to:
 - Remove names (basic pattern matching)
 
 **Before Deletion**:
+
 - Secure wipe (multi-pass overwrite)
 - Verify deletion completion
 - Update audit logs
@@ -202,17 +223,20 @@ This policy applies to:
 ### 4. Backup and Recovery
 
 **Backup Schedule**:
+
 - Database: Daily full backup, hourly incremental
 - File storage: Daily backup
 - Configuration: Version controlled (Git)
 
 **Backup Security**:
+
 - Encrypted (AES-256)
 - Stored off-site (separate region)
 - Access restricted to admins only
 - Tested monthly (restore verification)
 
 **Recovery Time Objectives**:
+
 - RTO (Recovery Time): 4 hours
 - RPO (Recovery Point): 1 hour
 - Critical systems: 2 hours RTO
@@ -224,17 +248,20 @@ This policy applies to:
 ### 1. Security Incident Classification
 
 **Low Severity**:
+
 - Failed login attempts (under threshold)
 - Minor configuration issues
 - Non-critical vulnerability reports
 
 **Medium Severity**:
+
 - Brute force attacks
 - Suspicious user activity
 - Unauthorized access attempts
 - Non-PHI data exposure
 
 **High Severity**:
+
 - Successful unauthorized access
 - PHI data breach
 - System compromise
@@ -242,6 +269,7 @@ This policy applies to:
 - DDoS attack affecting availability
 
 **Critical Severity**:
+
 - Large-scale PHI breach
 - Complete system compromise
 - Active data exfiltration
@@ -250,12 +278,14 @@ This policy applies to:
 ### 2. Incident Response Procedures
 
 **Detection**:
+
 1. Monitor security alerts (24/7)
 2. Review audit logs daily
 3. User reports via security@verscienta.health
 4. Automated intrusion detection
 
 **Response**:
+
 1. **Immediate** (within 1 hour):
    - Isolate affected systems
    - Preserve evidence
@@ -290,11 +320,13 @@ This policy applies to:
 ### 3. Breach Notification
 
 **HIPAA Breach Notification Timeline**:
+
 - **Individual Notification**: Within 60 days
 - **HHS Notification**: Within 60 days (if 500+ affected)
 - **Media Notification**: Within 60 days (if 500+ affected)
 
 **Breach Report Must Include**:
+
 - Description of incident
 - Types of PHI involved
 - Steps individuals should take
@@ -302,6 +334,7 @@ This policy applies to:
 - Contact information for questions
 
 **Non-PHI Breach**:
+
 - Notify affected users promptly
 - Provide remediation steps
 - Offer credit monitoring if applicable
@@ -315,28 +348,33 @@ This policy applies to:
 We welcome responsible disclosure of security vulnerabilities.
 
 **How to Report**:
+
 - Email: security@verscienta.health
 - PGP Key: [Public key to be published]
 - Include: Description, steps to reproduce, impact assessment
 
 **What to Expect**:
+
 - Acknowledgment within 24 hours
 - Status update within 7 days
 - Resolution timeline provided
 - Credit in security advisories (if desired)
 
 **Responsible Disclosure Guidelines**:
+
 - Do not access or modify user data
 - Do not perform DoS attacks
 - Do not publicly disclose before fix
 - Give us reasonable time to respond (90 days)
 
 **Bug Bounty Program**:
+
 - Program details: [To be established]
 - Eligible vulnerabilities: All OWASP Top 10
 - Rewards: Based on severity (CVSS score)
 
 **Scope**:
+
 - In scope: verscienta.health, api.verscienta.health
 - Out of scope: Third-party services, social engineering
 
@@ -347,16 +385,19 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 1. Workforce Security (HIPAA §164.308(a)(3))
 
 **Hiring**:
+
 - Background checks for PHI access
 - Confidentiality agreements signed
 - Security training before access granted
 
 **Authorization**:
+
 - Role-based access assignment
 - Documented access approvals
 - Quarterly access reviews
 
 **Termination**:
+
 - Immediate access revocation
 - Return of all devices and credentials
 - Exit interview and NDA reminder
@@ -364,6 +405,7 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 2. Security Training Requirements
 
 **Initial Training** (before access):
+
 - Security policies and procedures
 - HIPAA compliance basics
 - Password and authentication
@@ -371,12 +413,14 @@ We welcome responsible disclosure of security vulnerabilities.
 - Incident reporting procedures
 
 **Annual Training**:
+
 - Policy updates and changes
 - Recent security incidents
 - Emerging threats and vulnerabilities
 - Compliance requirements
 
 **Role-Specific Training**:
+
 - Developers: Secure coding, OWASP Top 10
 - Admins: System hardening, log analysis
 - PHI Users: HIPAA privacy and security rules
@@ -384,6 +428,7 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 3. Workstation Security
 
 **Required Controls**:
+
 - Full disk encryption (BitLocker/FileVault)
 - Automatic screen lock (5 minutes)
 - Antivirus/anti-malware software
@@ -391,6 +436,7 @@ We welcome responsible disclosure of security vulnerabilities.
 - OS and software updates current
 
 **Prohibited Actions**:
+
 - Accessing PHI on public Wi-Fi
 - Storing PHI on personal devices
 - Using unapproved cloud storage
@@ -403,6 +449,7 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 1. Business Associate Agreements
 
 **Required for All Vendors Handling PHI**:
+
 - Cloudflare (image hosting)
 - Algolia (search indexing)
 - xAI/Grok (symptom analysis - if not fully anonymized)
@@ -411,6 +458,7 @@ We welcome responsible disclosure of security vulnerabilities.
 - Backup storage provider
 
 **BAA Must Include**:
+
 - Permitted uses of PHI
 - Safeguard requirements
 - Breach notification obligations
@@ -420,11 +468,13 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 2. Minimum Necessary Standard
 
 **Policy**:
+
 - Access only PHI needed for specific task
 - Limit data shared to minimum required
 - Role-based access controls enforce limits
 
 **Examples**:
+
 - Symptom checker: No user identification sent to AI
 - Support: Access only specific user's data
 - Analytics: Aggregated, de-identified data only
@@ -432,16 +482,19 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 3. Patient Rights
 
 **Right to Access**:
+
 - Users can download their data (JSON export)
 - Provided within 30 days of request
 - No charge for electronic copies
 
 **Right to Amendment**:
+
 - Users can request corrections
 - Reviewed within 60 days
 - Approved changes made within 30 days
 
 **Right to Deletion**:
+
 - Users can delete accounts
 - PHI removed within 30 days
 - Audit logs retained (de-identified)
@@ -453,6 +506,7 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 1. Audit Logging (HIPAA §164.312(b))
 
 **All Logs Must Include**:
+
 - Who: User ID, email, role
 - What: Action performed
 - When: Timestamp
@@ -461,6 +515,7 @@ We welcome responsible disclosure of security vulnerabilities.
 - How: Endpoint, method, status
 
 **Events to Log**:
+
 - All PHI access (view, create, update, delete)
 - Authentication events (login, logout, failures)
 - Authorization failures
@@ -469,6 +524,7 @@ We welcome responsible disclosure of security vulnerabilities.
 - Security events (rate limits, suspicious activity)
 
 **Log Management**:
+
 - Write-once storage (immutable)
 - Encrypted in transit and at rest
 - Retained for 6+ years
@@ -478,6 +534,7 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 2. Security Monitoring
 
 **Real-Time Monitoring**:
+
 - Failed authentication attempts
 - Rate limit violations
 - Suspicious IP addresses
@@ -485,6 +542,7 @@ We welcome responsible disclosure of security vulnerabilities.
 - System resource anomalies
 
 **Automated Alerts**:
+
 - 5+ failed logins from same IP
 - PHI access outside business hours
 - Multiple users from same IP
@@ -492,6 +550,7 @@ We welcome responsible disclosure of security vulnerabilities.
 - System errors or crashes
 
 **Log Analysis**:
+
 - Daily review of security logs
 - Weekly compliance reports
 - Monthly trend analysis
@@ -500,11 +559,13 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 3. Compliance Audits
 
 **Internal Audits**:
+
 - Quarterly security reviews
 - Annual HIPAA compliance audit
 - Bi-annual penetration testing
 
 **External Audits**:
+
 - Annual third-party security assessment
 - HIPAA compliance validation (if applicable)
 - SOC 2 Type II audit (future)
@@ -516,16 +577,19 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 1. Violations and Sanctions
 
 **Minor Violations**:
+
 - First offense: Written warning + retraining
 - Second offense: Suspension of access
 - Third offense: Termination
 
 **Major Violations**:
+
 - Immediate suspension pending investigation
 - Possible termination
 - Legal action if warranted
 
 **Examples of Major Violations**:
+
 - Unauthorized PHI access
 - Sharing credentials
 - Disabling security controls
@@ -535,12 +599,14 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 2. Policy Updates
 
 **Review Schedule**:
+
 - Annual comprehensive review
 - As-needed for regulatory changes
 - After security incidents
 - When systems change
 
 **Change Process**:
+
 1. Security Officer proposes changes
 2. Legal review (if applicable)
 3. Management approval
@@ -551,6 +617,7 @@ We welcome responsible disclosure of security vulnerabilities.
 ### 3. Exceptions
 
 **Exception Process**:
+
 - Written request with justification
 - Security Officer review
 - Risk assessment
@@ -559,6 +626,7 @@ We welcome responsible disclosure of security vulnerabilities.
 - Documented and logged
 
 **No Exceptions Allowed For**:
+
 - Encryption of PHI
 - Audit logging
 - Access controls
@@ -574,10 +642,12 @@ We welcome responsible disclosure of security vulnerabilities.
 **Incident Hotline**: [24/7 emergency contact]
 
 **Breach Reporting**:
+
 - Internal: security@verscienta.health
 - HHS (if PHI breach): https://ocrportal.hhs.gov/ocr/breach/wizard_breach.jsf
 
 **Resources**:
+
 - Security Training Portal: [To be established]
 - Policy Documentation: `docs/SECURITY_POLICY.md`
 - Security Audit Report: `docs/SECURITY_AUDIT.md`
@@ -595,4 +665,4 @@ By accessing Verscienta Health systems, you acknowledge that you have read, unde
 
 ---
 
-*This policy is a living document and will be updated as needed to address new threats, technologies, and regulatory requirements.*
+_This policy is a living document and will be updated as needed to address new threats, technologies, and regulatory requirements._

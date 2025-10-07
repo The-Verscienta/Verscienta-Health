@@ -107,10 +107,12 @@ export async function validateHerbDataJob(payload: Payload): Promise<void> {
       // Check for orphaned references
       if (herb.relatedFormulas?.length > 0) {
         for (const formulaId of herb.relatedFormulas) {
-          const formula = await payload.findByID({
-            collection: 'formulas',
-            id: formulaId,
-          }).catch(() => null)
+          const formula = await payload
+            .findByID({
+              collection: 'formulas',
+              id: formulaId,
+            })
+            .catch(() => null)
 
           if (!formula) {
             issues.push({

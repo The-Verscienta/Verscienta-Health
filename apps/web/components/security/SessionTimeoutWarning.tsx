@@ -1,6 +1,8 @@
 'use client'
 
+import { AlertTriangle, Clock } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,8 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { AlertTriangle, Clock } from 'lucide-react'
 
 interface SessionTimeoutWarningProps {
   /** Whether the warning is shown */
@@ -63,7 +63,7 @@ export function SessionTimeoutWarning({
     <Dialog open={open} onOpenChange={(open) => !open && onContinue()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="mb-2 flex items-center gap-3">
             <div className="rounded-full bg-yellow-100 p-2">
               <AlertTriangle className="h-6 w-6 text-yellow-700" />
             </div>
@@ -75,15 +75,15 @@ export function SessionTimeoutWarning({
         </DialogHeader>
 
         <div className="py-6">
-          <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="mb-4 flex items-center justify-center gap-3">
             <Clock className="h-8 w-8 text-yellow-700" />
-            <div className="text-3xl font-bold font-mono text-yellow-700">
+            <div className="font-mono text-3xl font-bold text-yellow-700">
               {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </div>
           </div>
 
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-900">
-            <p className="font-semibold mb-1">Security Notice</p>
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-900">
+            <p className="mb-1 font-semibold">Security Notice</p>
             <p>
               For your protection, sensitive health information pages automatically log you out
               after 15 minutes of inactivity. Click "Continue Session" to stay logged in.

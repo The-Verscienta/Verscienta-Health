@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface ConditionCardProps {
   conditionId: string
@@ -35,14 +35,14 @@ export function ConditionCard({
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-lg font-serif text-earth-900 group-hover:text-earth-700">
+              <CardTitle className="text-earth-900 group-hover:text-earth-700 font-serif text-lg">
                 {title}
               </CardTitle>
               {description && (
                 <CardDescription className="mt-2 line-clamp-2">{description}</CardDescription>
               )}
             </div>
-            <span className="text-xs font-mono text-gray-500">{conditionId}</span>
+            <span className="font-mono text-xs text-gray-500">{conditionId}</span>
           </div>
         </CardHeader>
 
@@ -54,7 +54,10 @@ export function ConditionCard({
               </Badge>
             )}
             {severity && (
-              <Badge variant={severityColors[severity.toLowerCase()] || 'default'} className="text-xs">
+              <Badge
+                variant={severityColors[severity.toLowerCase()] || 'default'}
+                className="text-xs"
+              >
                 {severity}
               </Badge>
             )}

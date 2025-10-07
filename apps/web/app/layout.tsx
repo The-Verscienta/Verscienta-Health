@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter, Crimson_Pro, JetBrains_Mono } from 'next/font/google'
+import { Crimson_Pro, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import { Providers } from '@/components/providers/Providers'
-import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { Header } from '@/components/layout/Header'
+import { Providers } from '@/components/providers/Providers'
 import { Toaster } from '@/components/ui/sonner'
 
 const inter = Inter({
@@ -104,7 +104,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${crimsonPro.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className="bg-background min-h-screen font-sans antialiased">
         <Providers>
           <div className="relative flex min-h-screen flex-col">
             <Header />

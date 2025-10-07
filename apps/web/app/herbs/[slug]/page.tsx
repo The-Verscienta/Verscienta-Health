@@ -1,10 +1,10 @@
-import { notFound } from 'next/navigation'
+import { AlertTriangle, Beaker, Book, Leaf, MapPin, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Star, MapPin, AlertTriangle, Leaf, Beaker, Book } from 'lucide-react'
 
 interface Herb {
   id: string
@@ -81,7 +81,7 @@ export default async function HerbPage({ params }: HerbPageProps) {
     <div className="container-custom py-12">
       {/* Hero Section */}
       <div className="mb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Image */}
           <div className="lg:col-span-1">
             {herb.featuredImage && (
@@ -99,52 +99,52 @@ export default async function HerbPage({ params }: HerbPageProps) {
 
           {/* Header Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-start justify-between mb-4">
+            <div className="mb-4 flex items-start justify-between">
               <div>
-                <h1 className="text-4xl font-bold font-serif text-earth-900 mb-2">
-                  {herb.title}
-                </h1>
+                <h1 className="text-earth-900 mb-2 font-serif text-4xl font-bold">{herb.title}</h1>
                 {herb.scientificName && (
-                  <p className="text-xl italic text-gray-600 mb-2">{herb.scientificName}</p>
+                  <p className="mb-2 text-xl italic text-gray-600">{herb.scientificName}</p>
                 )}
                 {herb.chineseName && (
-                  <p className="font-serif-sc text-lg text-tcm-600">{herb.chineseName}</p>
+                  <p className="font-serif-sc text-tcm-600 text-lg">{herb.chineseName}</p>
                 )}
               </div>
-              <span className="text-sm font-mono text-gray-500">{herb.herbId}</span>
+              <span className="font-mono text-sm text-gray-500">{herb.herbId}</span>
             </div>
 
             {/* Rating */}
             {herb.averageRating && herb.reviewCount && herb.reviewCount > 0 && (
-              <div className="flex items-center space-x-2 mb-4">
+              <div className="mb-4 flex items-center space-x-2">
                 <div className="flex items-center">
-                  <Star className="h-5 w-5 fill-gold-600 text-gold-600" />
-                  <span className="ml-1 text-lg font-semibold">{herb.averageRating.toFixed(1)}</span>
+                  <Star className="fill-gold-600 text-gold-600 h-5 w-5" />
+                  <span className="ml-1 text-lg font-semibold">
+                    {herb.averageRating.toFixed(1)}
+                  </span>
                 </div>
                 <span className="text-gray-600">({herb.reviewCount} reviews)</span>
               </div>
             )}
 
             {/* Description */}
-            {herb.description && (
-              <p className="text-lg text-gray-700 mb-6">{herb.description}</p>
-            )}
+            {herb.description && <p className="mb-6 text-lg text-gray-700">{herb.description}</p>}
 
             {/* Quick Properties */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="mb-6 grid grid-cols-2 gap-4">
               {herb.tcmProperties?.taste && herb.tcmProperties.taste.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">TCM Taste</h3>
+                  <h3 className="mb-2 text-sm font-semibold text-gray-700">TCM Taste</h3>
                   <div className="flex flex-wrap gap-1">
                     {herb.tcmProperties.taste.map((taste: string) => (
-                      <Badge key={taste} variant="tcm">{taste}</Badge>
+                      <Badge key={taste} variant="tcm">
+                        {taste}
+                      </Badge>
                     ))}
                   </div>
                 </div>
               )}
               {herb.tcmProperties?.temperature && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">TCM Temperature</h3>
+                  <h3 className="mb-2 text-sm font-semibold text-gray-700">TCM Temperature</h3>
                   <Badge variant="tcm">{herb.tcmProperties.temperature}</Badge>
                 </div>
               )}
@@ -153,10 +153,12 @@ export default async function HerbPage({ params }: HerbPageProps) {
             {/* Western Properties */}
             {herb.westernProperties && herb.westernProperties.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Western Properties</h3>
+                <h3 className="mb-2 text-sm font-semibold text-gray-700">Western Properties</h3>
                 <div className="flex flex-wrap gap-2">
                   {herb.westernProperties.map((prop: string) => (
-                    <Badge key={prop} variant="sage">{prop}</Badge>
+                    <Badge key={prop} variant="sage">
+                      {prop}
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -181,32 +183,32 @@ export default async function HerbPage({ params }: HerbPageProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Leaf className="mr-2 h-5 w-5 text-sage-600" />
+                <Leaf className="text-sage-600 mr-2 h-5 w-5" />
                 Botanical Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {herb.family && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Family</h4>
+                  <h4 className="mb-1 text-sm font-semibold text-gray-700">Family</h4>
                   <p className="text-gray-600">{herb.family}</p>
                 </div>
               )}
               {herb.genus && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Genus</h4>
-                  <p className="text-gray-600 italic">{herb.genus}</p>
+                  <h4 className="mb-1 text-sm font-semibold text-gray-700">Genus</h4>
+                  <p className="italic text-gray-600">{herb.genus}</p>
                 </div>
               )}
               {herb.species && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Species</h4>
-                  <p className="text-gray-600 italic">{herb.species}</p>
+                  <h4 className="mb-1 text-sm font-semibold text-gray-700">Species</h4>
+                  <p className="italic text-gray-600">{herb.species}</p>
                 </div>
               )}
               {herb.partUsed && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Part Used</h4>
+                  <h4 className="mb-1 text-sm font-semibold text-gray-700">Part Used</h4>
                   <p className="text-gray-600">{herb.partUsed}</p>
                 </div>
               )}
@@ -218,14 +220,16 @@ export default async function HerbPage({ params }: HerbPageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <MapPin className="mr-2 h-5 w-5 text-sage-600" />
+                  <MapPin className="text-sage-600 mr-2 h-5 w-5" />
                   Native Habitat
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {herb.nativeRegions.map((region: string) => (
-                    <Badge key={region} variant="default">{region}</Badge>
+                    <Badge key={region} variant="default">
+                      {region}
+                    </Badge>
                   ))}
                 </div>
               </CardContent>
@@ -242,24 +246,26 @@ export default async function HerbPage({ params }: HerbPageProps) {
             <CardContent className="space-y-4">
               {herb.tcmProperties?.category && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Category</h4>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Category</h4>
                   <Badge variant="tcm">{herb.tcmProperties.category}</Badge>
                 </div>
               )}
               {herb.tcmProperties?.meridians && herb.tcmProperties.meridians.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Meridians Entered</h4>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Meridians Entered</h4>
                   <div className="flex flex-wrap gap-2">
                     {herb.tcmProperties.meridians.map((meridian: string) => (
-                      <Badge key={meridian} variant="tcm">{meridian}</Badge>
+                      <Badge key={meridian} variant="tcm">
+                        {meridian}
+                      </Badge>
                     ))}
                   </div>
                 </div>
               )}
               {herb.tcmProperties?.functions && herb.tcmProperties.functions.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">TCM Functions</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">TCM Functions</h4>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
                     {herb.tcmProperties.functions.map((func: string, idx: number) => (
                       <li key={idx}>{func}</li>
                     ))}
@@ -275,7 +281,7 @@ export default async function HerbPage({ params }: HerbPageProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Beaker className="mr-2 h-5 w-5 text-sage-600" />
+                <Beaker className="text-sage-600 mr-2 h-5 w-5" />
                 Active Constituents
               </CardTitle>
             </CardHeader>
@@ -286,10 +292,12 @@ export default async function HerbPage({ params }: HerbPageProps) {
                     <div key={idx} className="border-b border-gray-200 pb-3 last:border-0">
                       <h4 className="font-semibold text-gray-900">{compound.name}</h4>
                       {compound.percentage && (
-                        <p className="text-sm text-gray-600">Concentration: {compound.percentage}</p>
+                        <p className="text-sm text-gray-600">
+                          Concentration: {compound.percentage}
+                        </p>
                       )}
                       {compound.effects && (
-                        <p className="text-sm text-gray-700 mt-1">{compound.effects}</p>
+                        <p className="mt-1 text-sm text-gray-700">{compound.effects}</p>
                       )}
                     </div>
                   ))}
@@ -306,21 +314,21 @@ export default async function HerbPage({ params }: HerbPageProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Book className="mr-2 h-5 w-5 text-sage-600" />
+                <Book className="text-sage-600 mr-2 h-5 w-5" />
                 Preparation & Dosage
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {herb.dosageInfo?.standardDosage && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Standard Dosage</h4>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Standard Dosage</h4>
                   <p className="text-gray-700">{herb.dosageInfo.standardDosage}</p>
                 </div>
               )}
               {herb.preparationMethods && herb.preparationMethods.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Preparation Methods</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Preparation Methods</h4>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
                     {herb.preparationMethods.map((method: string, idx: number) => (
                       <li key={idx}>{method}</li>
                     ))}
@@ -336,15 +344,15 @@ export default async function HerbPage({ params }: HerbPageProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <AlertTriangle className="mr-2 h-5 w-5 text-tcm-600" />
+                <AlertTriangle className="text-tcm-600 mr-2 h-5 w-5" />
                 Safety Information
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {herb.contraindications && herb.contraindications.length > 0 && (
-                <div className="bg-tcm-50 border border-tcm-200 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-tcm-800 mb-2">Contraindications</h4>
-                  <ul className="list-disc list-inside space-y-1 text-tcm-700">
+                <div className="bg-tcm-50 border-tcm-200 rounded-lg border p-4">
+                  <h4 className="text-tcm-800 mb-2 text-sm font-semibold">Contraindications</h4>
+                  <ul className="text-tcm-700 list-inside list-disc space-y-1">
                     {herb.contraindications.map((item: string, idx: number) => (
                       <li key={idx}>{item}</li>
                     ))}
@@ -352,9 +360,9 @@ export default async function HerbPage({ params }: HerbPageProps) {
                 </div>
               )}
               {herb.drugInteractions && herb.drugInteractions.length > 0 && (
-                <div className="bg-gold-50 border border-gold-200 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-gold-800 mb-2">Drug Interactions</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gold-700">
+                <div className="bg-gold-50 border-gold-200 rounded-lg border p-4">
+                  <h4 className="text-gold-800 mb-2 text-sm font-semibold">Drug Interactions</h4>
+                  <ul className="text-gold-700 list-inside list-disc space-y-1">
                     {herb.drugInteractions.map((item: string, idx: number) => (
                       <li key={idx}>{item}</li>
                     ))}
@@ -363,8 +371,10 @@ export default async function HerbPage({ params }: HerbPageProps) {
               )}
               {herb.sideEffects && herb.sideEffects.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Possible Side Effects</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">
+                    Possible Side Effects
+                  </h4>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
                     {herb.sideEffects.map((effect: string, idx: number) => (
                       <li key={idx}>{effect}</li>
                     ))}
@@ -379,15 +389,15 @@ export default async function HerbPage({ params }: HerbPageProps) {
       {/* Related Herbs */}
       {herb.relatedHerbs && herb.relatedHerbs.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-2xl font-bold font-serif text-earth-900 mb-6">Related Herbs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <h2 className="text-earth-900 mb-6 font-serif text-2xl font-bold">Related Herbs</h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {herb.relatedHerbs.slice(0, 3).map((related) => (
               <Link
                 key={related.id}
                 href={`/herbs/${related.slug}`}
-                className="block p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                className="block rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
               >
-                <h3 className="font-semibold text-earth-900">{related.title}</h3>
+                <h3 className="text-earth-900 font-semibold">{related.title}</h3>
                 {related.scientificName && (
                   <p className="text-sm italic text-gray-600">{related.scientificName}</p>
                 )}
@@ -398,11 +408,11 @@ export default async function HerbPage({ params }: HerbPageProps) {
       )}
 
       {/* Medical Disclaimer */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
         <p className="text-sm text-yellow-900">
-          <strong>Medical Disclaimer:</strong> This information is for educational purposes only
-          and is not a substitute for professional medical advice, diagnosis, or treatment.
-          Always consult your healthcare provider before using any herbal remedies.
+          <strong>Medical Disclaimer:</strong> This information is for educational purposes only and
+          is not a substitute for professional medical advice, diagnosis, or treatment. Always
+          consult your healthcare provider before using any herbal remedies.
         </p>
       </div>
     </div>
@@ -420,6 +430,8 @@ export async function generateMetadata({ params }: HerbPageProps) {
 
   return {
     title: `${herb.title} | Verscienta Health`,
-    description: herb.description || `Learn about ${herb.title}, its properties, uses, and safety information.`,
+    description:
+      herb.description ||
+      `Learn about ${herb.title}, its properties, uses, and safety information.`,
   }
 }

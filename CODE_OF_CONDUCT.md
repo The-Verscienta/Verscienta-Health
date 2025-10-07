@@ -101,6 +101,7 @@ Community leaders will follow these Community Impact Guidelines in determining t
 Given the nature of this project (herbal medicine and holistic health), we have additional guidelines:
 
 **✅ Acceptable:**
+
 - Sharing educational information about herbs and traditional medicine
 - Discussing historical uses and traditional applications
 - Citing scientific research and studies
@@ -108,6 +109,7 @@ Given the nature of this project (herbal medicine and holistic health), we have 
 - Asking questions about herbal properties and uses
 
 **❌ Not Acceptable:**
+
 - Providing medical diagnoses
 - Prescribing treatments or dosages
 - Claiming cures for diseases

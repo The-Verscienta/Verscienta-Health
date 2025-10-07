@@ -228,14 +228,15 @@ export class PerenualClient {
     page: number = 1
   ): Promise<PerenualPaginatedResponse<PerenualSearchResult>> {
     try {
-      const response = await this.client.get<
-        PerenualPaginatedResponse<PerenualSearchResult>
-      >('/species-list', {
-        params: {
-          q: query,
-          page,
-        },
-      })
+      const response = await this.client.get<PerenualPaginatedResponse<PerenualSearchResult>>(
+        '/species-list',
+        {
+          params: {
+            q: query,
+            page,
+          },
+        }
+      )
 
       return response.data
     } catch (error) {
@@ -249,9 +250,7 @@ export class PerenualClient {
    */
   async getPlantById(id: number): Promise<PerenualPlantDetail> {
     try {
-      const response = await this.client.get<PerenualPlantDetail>(
-        `/species/details/${id}`
-      )
+      const response = await this.client.get<PerenualPlantDetail>(`/species/details/${id}`)
 
       return response.data
     } catch (error) {
@@ -265,14 +264,11 @@ export class PerenualClient {
    */
   async getCareGuide(plantId: number): Promise<PerenualCareGuide | null> {
     try {
-      const response = await this.client.get<PerenualCareGuide>(
-        `/species-care-guide-list`,
-        {
-          params: {
-            species_id: plantId,
-          },
-        }
-      )
+      const response = await this.client.get<PerenualCareGuide>(`/species-care-guide-list`, {
+        params: {
+          species_id: plantId,
+        },
+      })
 
       return response.data
     } catch (error) {
@@ -286,14 +282,11 @@ export class PerenualClient {
    */
   async getPestInfo(plantId: number): Promise<PerenualPestInfo | null> {
     try {
-      const response = await this.client.get<PerenualPestInfo>(
-        `/pest-disease-list`,
-        {
-          params: {
-            species_id: plantId,
-          },
-        }
-      )
+      const response = await this.client.get<PerenualPestInfo>(`/pest-disease-list`, {
+        params: {
+          species_id: plantId,
+        },
+      })
 
       return response.data
     } catch (error) {
@@ -315,9 +308,7 @@ export class PerenualClient {
 
       // Check for exact scientific name match
       const exactMatch = results.data.find((result) =>
-        result.scientific_name.some(
-          (name) => name.toLowerCase() === scientificName.toLowerCase()
-        )
+        result.scientific_name.some((name) => name.toLowerCase() === scientificName.toLowerCase())
       )
 
       if (exactMatch) {
@@ -343,10 +334,7 @@ export class PerenualClient {
   /**
    * Enrich herb data with Perenual cultivation information
    */
-  async enrichHerbData(herb: {
-    scientificName: string
-    name: string
-  }): Promise<{
+  async enrichHerbData(herb: { scientificName: string; name: string }): Promise<{
     perenualId: number | null
     commonName: string | null
     family: string | null
@@ -455,9 +443,8 @@ export class PerenualClient {
         },
         attracts: details.attracts || [],
         imageUrl: details.default_image?.regular_url || null,
-        careGuide: careGuide?.section
-          ?.map((s) => `${s.type}: ${s.description}`)
-          .join('\n\n') || null,
+        careGuide:
+          careGuide?.section?.map((s) => `${s.type}: ${s.description}`).join('\n\n') || null,
       }
     } catch (error) {
       console.error('Perenual enrich herb data error:', error)

@@ -37,10 +37,7 @@ export async function setupMFA(userId: string): Promise<MFASetupResponse> {
 }
 
 // Verify TOTP code
-export async function verifyMFA(
-  userId: string,
-  code: string
-): Promise<MFAVerifyResponse> {
+export async function verifyMFA(userId: string, code: string): Promise<MFAVerifyResponse> {
   try {
     const response = await fetch('/api/auth/mfa/verify', {
       method: 'POST',

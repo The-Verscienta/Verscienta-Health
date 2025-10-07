@@ -1,15 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
-import { MapPin, Star, CheckCircle } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { CheckCircle, MapPin, Star } from 'lucide-react'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
+import { Badge } from '@/components/ui/badge'
 
 // Fix for default marker icons in Next.js
-delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -53,9 +54,7 @@ function MapBoundsHandler({ practitioners }: { practitioners: PractitionerLocati
 
   useEffect(() => {
     if (practitioners.length > 0) {
-      const bounds = L.latLngBounds(
-        practitioners.map(p => [p.latitude, p.longitude])
-      )
+      const bounds = L.latLngBounds(practitioners.map((p) => [p.latitude, p.longitude]))
       map.fitBounds(bounds, { padding: [50, 50] })
     }
   }, [practitioners, map])
@@ -67,7 +66,7 @@ export function PractitionerMap({
   practitioners,
   center = [37.7749, -122.4194], // Default to San Francisco
   zoom = 12,
-  className = ''
+  className = '',
 }: PractitionerMapProps) {
   const [mounted, setMounted] = useState(false)
 
@@ -78,7 +77,7 @@ export function PractitionerMap({
 
   if (!mounted) {
     return (
-      <div className={`bg-gray-100 rounded-lg flex items-center justify-center ${className}`}>
+      <div className={`flex items-center justify-center rounded-lg bg-gray-100 ${className}`}>
         <p className="text-gray-500">Loading map...</p>
       </div>
     )
@@ -90,16 +89,14 @@ export function PractitionerMap({
         center={center}
         zoom={zoom}
         scrollWheelZoom={true}
-        className="h-full w-full rounded-lg z-0"
+        className="z-0 h-full w-full rounded-lg"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {practitioners.length > 0 && (
-          <MapBoundsHandler practitioners={practitioners} />
-        )}
+        {practitioners.length > 0 && <MapBoundsHandler practitioners={practitioners} />}
 
         <MarkerClusterGroup
           chunkedLoading
@@ -113,26 +110,27 @@ export function PractitionerMap({
               position={[practitioner.latitude, practitioner.longitude]}
             >
               <Popup>
-                <div className="p-2 min-w-[250px]">
-                  <div className="flex items-start gap-3 mb-2">
+                <div className="min-w-[250px] p-2">
+                  <div className="mb-2 flex items-start gap-3">
                     {practitioner.photo ? (
                       <img
                         src={practitioner.photo?.url}
                         alt={practitioner.name}
-                        className="w-12 h-12 rounded-full object-cover"
+                        className="h-12 w-12 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-earth-200 flex items-center justify-center">
+                      <div className="bg-earth-200 flex h-12 w-12 items-center justify-center rounded-full">
                         <span className="text-earth-700 font-semibold">
-                          {practitioner.name.split(' ').map(n => n[0]).join('')}
+                          {practitioner.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')}
                         </span>
                       </div>
                     )}
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-earth-900">
-                          {practitioner.name}
-                        </h3>
+                        <h3 className="text-earth-900 font-semibold">{practitioner.name}</h3>
                         {practitioner.verificationStatus === 'verified' && (
                           <CheckCircle className="h-4 w-4 text-green-600" />
                         )}
@@ -144,7 +142,7 @@ export function PractitionerMap({
                   </div>
 
                   {practitioner.modalities && practitioner.modalities.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
+                    <div className="mb-2 flex flex-wrap gap-1">
                       {practitioner.modalities.slice(0, 3).map((modality, idx) => (
                         <Badge key={idx} variant="outline" className="text-xs">
                           {modality}
@@ -159,19 +157,20 @@ export function PractitionerMap({
                   )}
 
                   {practitioner.averageRating && practitioner.reviewCount && (
-                    <div className="flex items-center gap-1 mb-2">
-                      <Star className="h-4 w-4 fill-gold-500 text-gold-500" />
+                    <div className="mb-2 flex items-center gap-1">
+                      <Star className="fill-gold-500 text-gold-500 h-4 w-4" />
                       <span className="text-sm font-medium">
                         {practitioner.averageRating.toFixed(1)}
                       </span>
                       <span className="text-sm text-gray-500">
-                        ({practitioner.reviewCount} {practitioner.reviewCount === 1 ? 'review' : 'reviews'})
+                        ({practitioner.reviewCount}{' '}
+                        {practitioner.reviewCount === 1 ? 'review' : 'reviews'})
                       </span>
                     </div>
                   )}
 
-                  <div className="flex items-start gap-2 mb-3 text-sm text-gray-600">
-                    <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <div className="mb-3 flex items-start gap-2 text-sm text-gray-600">
+                    <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0" />
                     <div>
                       {practitioner.address.street && <p>{practitioner.address.street}</p>}
                       <p>
@@ -188,7 +187,7 @@ export function PractitionerMap({
 
                   <Link
                     href={`/practitioners/${practitioner.slug}`}
-                    className="inline-block w-full text-center px-4 py-2 bg-earth-600 hover:bg-earth-700 text-white rounded-md text-sm font-medium transition-colors"
+                    className="bg-earth-600 hover:bg-earth-700 inline-block w-full rounded-md px-4 py-2 text-center text-sm font-medium text-white transition-colors"
                   >
                     View Profile
                   </Link>

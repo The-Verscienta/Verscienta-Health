@@ -236,7 +236,8 @@ export default withPWA({
     },
     {
       urlPattern: ({ url }: { url: URL }) => {
-        const isSameOrigin = url.origin === new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').origin
+        const isSameOrigin =
+          url.origin === new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').origin
         if (!isSameOrigin) return false
         const pathname = url.pathname
         // Exclude API routes and admin routes

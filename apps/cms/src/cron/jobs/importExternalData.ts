@@ -1,6 +1,6 @@
-import type { Payload } from 'payload'
 import axios from 'axios'
 import csvParser from 'csv-parser'
+import type { Payload } from 'payload'
 import { Readable } from 'stream'
 
 interface ExternalDataSource {
@@ -82,9 +82,7 @@ export async function importExternalDataJob(payload: Payload): Promise<void> {
   }
 }
 
-async function fetchExternalData(
-  source: ExternalDataSource
-): Promise<any[]> {
+async function fetchExternalData(source: ExternalDataSource): Promise<any[]> {
   switch (source.type) {
     case 'json': {
       const jsonResponse = await axios.get(source.url)

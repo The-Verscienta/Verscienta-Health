@@ -27,6 +27,7 @@ pnpm dev
 ## Prerequisites
 
 You need:
+
 - Node.js 20+
 - PostgreSQL 17+
 - pnpm 9+
@@ -113,6 +114,7 @@ pnpm db:seed
 ```
 
 This creates:
+
 - 50 sample herbs
 - 10 sample formulas
 - 5 sample practitioners

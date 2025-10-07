@@ -21,6 +21,7 @@ Thank you for your interest in contributing to Verscienta Health! This document 
 This project adheres to a Code of Conduct that all contributors are expected to follow. Please read [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) before contributing.
 
 **In Summary:**
+
 - ✅ Be respectful and inclusive
 - ✅ Welcome newcomers
 - ✅ Focus on constructive feedback
@@ -36,6 +37,7 @@ While Verscienta Health is a proprietary project, we welcome contributions in se
 ### 1. **Documentation Improvements** ✍️
 
 Documentation is crucial for user success. You can help by:
+
 - Fixing typos and grammatical errors
 - Improving clarity and examples
 - Adding missing documentation
@@ -43,6 +45,7 @@ Documentation is crucial for user success. You can help by:
 - Creating tutorials and guides
 
 **Examples:**
+
 - Add code examples to API documentation
 - Improve setup instructions
 - Create video tutorials
@@ -51,16 +54,19 @@ Documentation is crucial for user success. You can help by:
 ### 2. **Bug Reports** 🐛
 
 Found a bug? Help us improve by:
+
 - Checking if the bug is already reported
 - Providing detailed reproduction steps
 - Including relevant logs and screenshots
 - Suggesting possible fixes
 
 **Good Bug Report:**
+
 ```markdown
 **Description**: Search returns no results for valid herb names
 
 **Steps to Reproduce**:
+
 1. Go to /herbs
 2. Enter "ginseng" in search box
 3. Press Enter
@@ -69,6 +75,7 @@ Found a bug? Help us improve by:
 **Actual**: "No results found" message
 
 **Environment**:
+
 - Browser: Chrome 120
 - OS: Windows 11
 - URL: https://verscienta.com
@@ -79,6 +86,7 @@ Found a bug? Help us improve by:
 ### 3. **Feature Suggestions** 💡
 
 We value your ideas! Suggest features by:
+
 - Opening a GitHub Discussion
 - Explaining the use case
 - Describing the expected behavior
@@ -89,12 +97,14 @@ We value your ideas! Suggest features by:
 ### 4. **Content Contributions** 🌿
 
 Help expand our herbal database:
+
 - Submit herb information with proper citations
 - Provide translations (Chinese, Spanish)
 - Share traditional formulas
 - Add practitioner profiles
 
 **Content Requirements:**
+
 - Must include credible sources
 - Must follow our schema structure
 - Must be reviewed by domain experts
@@ -103,6 +113,7 @@ Help expand our herbal database:
 ### 5. **Community Support** 🤝
 
 Help other users by:
+
 - Answering questions in Discussions
 - Helping troubleshoot issues
 - Creating educational content
@@ -124,29 +135,34 @@ Before contributing, ensure you have:
 ### Setup Development Environment
 
 1. **Fork the Repository** (if applicable)
+
    ```bash
    # For documentation and content contributions
    gh repo fork verscienta/verscienta-health
    ```
 
 2. **Clone Your Fork**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/verscienta-health.git
    cd verscienta-health
    ```
 
 3. **Install Dependencies**
+
    ```bash
    pnpm install
    ```
 
 4. **Set Up Environment Variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 5. **Start Development Server**
+
    ```bash
    pnpm dev
    ```
@@ -219,6 +235,7 @@ Then open a Pull Request on GitHub.
 ### TypeScript
 
 **✅ Do:**
+
 ```typescript
 // Use explicit types
 interface HerbProps {
@@ -238,9 +255,10 @@ const temperature = herb?.tcmProperties?.temperature
 ```
 
 **❌ Don't:**
+
 ```typescript
 // Avoid 'any' type
-function processData(data: any) { } // Bad
+function processData(data: any) {} // Bad
 
 // Avoid non-null assertions unless necessary
 const value = someValue! // Avoid
@@ -252,6 +270,7 @@ const value = someValue! // Avoid
 ### React Components
 
 **✅ Do:**
+
 ```typescript
 // Use function components with TypeScript
 interface ButtonProps {
@@ -274,6 +293,7 @@ const memoizedValue = useMemo(() => expensiveComputation(count), [count])
 ```
 
 **❌ Don't:**
+
 ```typescript
 // Avoid class components
 class Button extends React.Component { } // Avoid
@@ -288,6 +308,7 @@ class Button extends React.Component { } // Avoid
 ### CSS/Styling
 
 **✅ Do:**
+
 ```tsx
 // Use Tailwind CSS
 <div className="flex items-center gap-4 p-4">
@@ -304,6 +325,7 @@ class Button extends React.Component { } // Avoid
 ```
 
 **❌ Don't:**
+
 ```tsx
 // Avoid inline styles (use Tailwind)
 <div style={{ padding: '16px' }}> // Bad
@@ -338,14 +360,14 @@ apps/cms/
 
 ### Naming Conventions
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Components | PascalCase | `HerbCard.tsx` |
-| Files | kebab-case | `search-results.ts` |
-| Functions | camelCase | `fetchHerbData()` |
-| Constants | UPPER_SNAKE_CASE | `MAX_PAGE_SIZE` |
-| Interfaces | PascalCase with I prefix | `IHerbProps` |
-| Types | PascalCase | `HerbCategory` |
+| Type       | Convention               | Example             |
+| ---------- | ------------------------ | ------------------- |
+| Components | PascalCase               | `HerbCard.tsx`      |
+| Files      | kebab-case               | `search-results.ts` |
+| Functions  | camelCase                | `fetchHerbData()`   |
+| Constants  | UPPER_SNAKE_CASE         | `MAX_PAGE_SIZE`     |
+| Interfaces | PascalCase with I prefix | `IHerbProps`        |
+| Types      | PascalCase               | `HerbCategory`      |
 
 ---
 
@@ -401,6 +423,7 @@ Closes #123"
 ### Commit Message Rules
 
 ✅ **Do:**
+
 - Use imperative mood ("add" not "added")
 - Keep subject line under 72 characters
 - Capitalize subject line
@@ -408,6 +431,7 @@ Closes #123"
 - Explain "what" and "why", not "how"
 
 ❌ **Don't:**
+
 - Don't use vague messages ("fix stuff", "updates")
 - Don't combine unrelated changes
 - Don't skip the body for complex changes
@@ -431,27 +455,33 @@ When creating a PR, include:
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Documentation update
 - [ ] Code refactoring
 
 ## Related Issues
+
 Closes #123
 Related to #456
 
 ## Testing
+
 - [ ] Unit tests added/updated
 - [ ] E2E tests added/updated
 - [ ] Manual testing completed
 
 ## Screenshots (if applicable)
+
 [Add screenshots for UI changes]
 
 ## Checklist
+
 - [ ] Code follows project style guide
 - [ ] Self-review completed
 - [ ] Comments added for complex code
@@ -481,7 +511,8 @@ Related to #456
 ### Documentation Types
 
 1. **Code Comments**
-   ```typescript
+
+   ````typescript
    /**
     * Fetches herb data by slug
     *
@@ -498,7 +529,7 @@ Related to #456
    async function getHerb(slug: string): Promise<Herb> {
      // Implementation
    }
-   ```
+   ````
 
 2. **README Files**
    - Keep concise and focused
@@ -538,12 +569,14 @@ Related to #456
 ### Getting Help
 
 **Before Asking:**
+
 1. Check existing documentation
 2. Search GitHub issues/discussions
 3. Review FAQ
 4. Try debugging yourself
 
 **When Asking:**
+
 - Provide context
 - Include error messages
 - Share reproduction steps
@@ -552,6 +585,7 @@ Related to #456
 ### Recognition
 
 Contributors are recognized in:
+
 - **README.md** Contributors section
 - **Changelog** for significant contributions
 - **Release notes**

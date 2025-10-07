@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { FormulaCard } from '@/components/cards/FormulaCard'
-import { Pagination } from '@/components/ui/pagination'
-import { Loading } from '@/components/ui/loading'
 import { SearchBar } from '@/components/search/SearchBar'
+import { Loading } from '@/components/ui/loading'
+import { Pagination } from '@/components/ui/pagination'
 
 interface FormulasPageProps {
   searchParams: {
@@ -48,13 +48,11 @@ export default async function FormulasPage({ searchParams }: FormulasPageProps) 
     <div className="container-custom py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">
-          Herbal Formulas
-        </h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Discover time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda,
-          and Western herbalism. Each formula includes detailed ingredient information,
-          traditional uses, and modern applications.
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Herbal Formulas</h1>
+        <p className="max-w-3xl text-lg text-gray-600">
+          Discover time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda, and
+          Western herbalism. Each formula includes detailed ingredient information, traditional
+          uses, and modern applications.
         </p>
       </div>
 
@@ -76,14 +74,14 @@ export default async function FormulasPage({ searchParams }: FormulasPageProps) 
       {/* Formula Grid */}
       <Suspense fallback={<Loading />}>
         {formulas.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-gray-600">
               {query ? 'No formulas found matching your search.' : 'No formulas available yet.'}
             </p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {formulas.map((formula: Formula) => (
                 <FormulaCard
                   key={formula.id}
@@ -104,11 +102,7 @@ export default async function FormulasPage({ searchParams }: FormulasPageProps) 
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                baseUrl="/formulas"
-              />
+              <Pagination currentPage={page} totalPages={totalPages} baseUrl="/formulas" />
             )}
           </>
         )}
@@ -119,5 +113,6 @@ export default async function FormulasPage({ searchParams }: FormulasPageProps) 
 
 export const metadata = {
   title: 'Herbal Formulas | Verscienta Health',
-  description: 'Discover time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda, and Western herbalism.',
+  description:
+    'Discover time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda, and Western herbalism.',
 }

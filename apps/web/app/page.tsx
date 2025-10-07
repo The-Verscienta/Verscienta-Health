@@ -1,24 +1,24 @@
+import { BookOpenIcon, BrainIcon, HeartIcon, MapPinIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/search/SearchBar'
-import { HeartIcon, BrainIcon, MapPinIcon, BookOpenIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-earth-50 via-sage-50 to-earth-100 py-20 md:py-32">
+      <section className="from-earth-50 via-sage-50 to-earth-100 relative bg-gradient-to-br py-20 md:py-32">
         <div className="container-custom">
           <div className="mx-auto max-w-4xl text-center">
-            <h1 className="mb-6 text-5xl font-bold tracking-tight text-earth-900 md:text-6xl lg:text-7xl">
+            <h1 className="text-earth-900 mb-6 text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
               Verscienta Health
             </h1>
-            <p className="mb-4 text-2xl font-medium text-earth-700 md:text-3xl">
+            <p className="text-earth-700 mb-4 text-2xl font-medium md:text-3xl">
               Versatile Knowledge
             </p>
             <p className="mb-8 text-lg text-gray-700 md:text-xl">
-              Bridging ancient herbal wisdom with modern science. Explore 15,000+ herbs,
-              Traditional Chinese Medicine, and holistic health practices.
+              Bridging ancient herbal wisdom with modern science. Explore 15,000+ herbs, Traditional
+              Chinese Medicine, and holistic health practices.
             </p>
 
             {/* Search Bar */}
@@ -59,7 +59,7 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="py-20">
         <div className="container-custom">
-          <h2 className="mb-12 text-center text-4xl font-bold text-earth-900">
+          <h2 className="text-earth-900 mb-12 text-center text-4xl font-bold">
             Comprehensive Holistic Health Platform
           </h2>
 
@@ -67,16 +67,14 @@ export default function HomePage() {
             {/* Feature 1: Herb Database */}
             <div className="card-feature text-center">
               <div className="mb-4 flex justify-center">
-                <div className="rounded-full bg-earth-600 p-4">
+                <div className="bg-earth-600 rounded-full p-4">
                   <HeartIcon className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-earth-900">
-                15,000+ Herbs
-              </h3>
+              <h3 className="text-earth-900 mb-3 text-xl font-semibold">15,000+ Herbs</h3>
               <p className="mb-4 text-gray-700">
-                Comprehensive database with TCM properties, Western herbalism, safety data,
-                and clinical studies.
+                Comprehensive database with TCM properties, Western herbalism, safety data, and
+                clinical studies.
               </p>
               <Link href="/herbs" className="link font-semibold">
                 Explore Herbs →
@@ -86,16 +84,13 @@ export default function HomePage() {
             {/* Feature 2: AI Symptom Checker */}
             <div className="card-feature text-center">
               <div className="mb-4 flex justify-center">
-                <div className="rounded-full bg-sage-600 p-4">
+                <div className="bg-sage-600 rounded-full p-4">
                   <BrainIcon className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-earth-900">
-                AI Symptom Analysis
-              </h3>
+              <h3 className="text-earth-900 mb-3 text-xl font-semibold">AI Symptom Analysis</h3>
               <p className="mb-4 text-gray-700">
-                Get personalized herb recommendations and modality suggestions powered by
-                Grok AI.
+                Get personalized herb recommendations and modality suggestions powered by Grok AI.
               </p>
               <Link href="/symptom-checker" className="link font-semibold">
                 Try Symptom Checker →
@@ -105,16 +100,14 @@ export default function HomePage() {
             {/* Feature 3: Practitioner Directory */}
             <div className="card-feature text-center">
               <div className="mb-4 flex justify-center">
-                <div className="rounded-full bg-earth-600 p-4">
+                <div className="bg-earth-600 rounded-full p-4">
                   <MapPinIcon className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-earth-900">
-                Find Practitioners
-              </h3>
+              <h3 className="text-earth-900 mb-3 text-xl font-semibold">Find Practitioners</h3>
               <p className="mb-4 text-gray-700">
-                Connect with verified holistic health practitioners near you. Filter by
-                modality and specialty.
+                Connect with verified holistic health practitioners near you. Filter by modality and
+                specialty.
               </p>
               <Link href="/practitioners" className="link font-semibold">
                 Find Practitioners →
@@ -124,16 +117,14 @@ export default function HomePage() {
             {/* Feature 4: Herbal Formulas */}
             <div className="card-feature text-center">
               <div className="mb-4 flex justify-center">
-                <div className="rounded-full bg-sage-600 p-4">
+                <div className="bg-sage-600 rounded-full p-4">
                   <BookOpenIcon className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-earth-900">
-                Traditional Formulas
-              </h3>
+              <h3 className="text-earth-900 mb-3 text-xl font-semibold">Traditional Formulas</h3>
               <p className="mb-4 text-gray-700">
-                Classical TCM formulas and modern blends with precise ingredients and
-                preparation methods.
+                Classical TCM formulas and modern blends with precise ingredients and preparation
+                methods.
               </p>
               <Link href="/formulas" className="link font-semibold">
                 Browse Formulas →
@@ -147,7 +138,7 @@ export default function HomePage() {
       <section className="bg-earth-50 py-16">
         <div className="container-custom">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-6 text-3xl font-bold text-earth-900">Our Mission</h2>
+            <h2 className="text-earth-900 mb-6 text-3xl font-bold">Our Mission</h2>
             <p className="text-lg leading-relaxed text-gray-700">
               Verscienta empowers individuals and healthcare practitioners worldwide with
               comprehensive, evidence-based knowledge of holistic health practices, fostering
@@ -163,19 +154,19 @@ export default function HomePage() {
         <div className="container-custom">
           <div className="grid gap-8 text-center md:grid-cols-4">
             <div>
-              <div className="mb-2 text-4xl font-bold text-earth-600">15,000+</div>
+              <div className="text-earth-600 mb-2 text-4xl font-bold">15,000+</div>
               <div className="text-gray-600">Herbs Documented</div>
             </div>
             <div>
-              <div className="mb-2 text-4xl font-bold text-sage-600">1,000+</div>
+              <div className="text-sage-600 mb-2 text-4xl font-bold">1,000+</div>
               <div className="text-gray-600">Traditional Formulas</div>
             </div>
             <div>
-              <div className="mb-2 text-4xl font-bold text-earth-600">500+</div>
+              <div className="text-earth-600 mb-2 text-4xl font-bold">500+</div>
               <div className="text-gray-600">Verified Practitioners</div>
             </div>
             <div>
-              <div className="mb-2 text-4xl font-bold text-sage-600">10+</div>
+              <div className="text-sage-600 mb-2 text-4xl font-bold">10+</div>
               <div className="text-gray-600">Healing Modalities</div>
             </div>
           </div>
@@ -183,7 +174,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-earth-600 to-sage-600 py-16 text-white">
+      <section className="from-earth-600 to-sage-600 bg-gradient-to-r py-16 text-white">
         <div className="container-custom text-center">
           <h2 className="mb-4 text-3xl font-bold">Ready to Begin Your Holistic Health Journey?</h2>
           <p className="mb-8 text-xl">
@@ -191,12 +182,20 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link href="/register">
-              <Button size="lg" variant="secondary" className="bg-white text-earth-600 hover:bg-gray-100">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="text-earth-600 bg-white hover:bg-gray-100"
+              >
                 Create Free Account
               </Button>
             </Link>
             <Link href="/about">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10"
+              >
                 Learn More
               </Button>
             </Link>

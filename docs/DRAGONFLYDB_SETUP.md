@@ -19,6 +19,7 @@ This guide explains how to set up DragonflyDB for Verscienta Health's caching an
 DragonflyDB is a modern, high-performance, in-memory data store that's fully compatible with Redis and Memcached APIs. It's designed to be a drop-in replacement for Redis with significantly better performance.
 
 **Key Features:**
+
 - 🚀 **25x faster** throughput than Redis on a single instance
 - 💾 **Lower memory footprint** (better memory efficiency)
 - 🔄 **Full Redis compatibility** (works with all Redis clients)
@@ -35,12 +36,12 @@ DragonflyDB is a modern, high-performance, in-memory data store that's fully com
 
 ### Performance Comparison
 
-| Metric | Redis | DragonflyDB | Improvement |
-|--------|-------|-------------|-------------|
-| Throughput (ops/sec) | ~200K | ~5M | **25x faster** |
-| Memory efficiency | Baseline | 30% less | **Better** |
-| CPU utilization | Single-threaded | Multi-threaded | **Full CPU usage** |
-| Latency (p99) | ~2ms | ~0.5ms | **4x lower** |
+| Metric               | Redis           | DragonflyDB    | Improvement        |
+| -------------------- | --------------- | -------------- | ------------------ |
+| Throughput (ops/sec) | ~200K           | ~5M            | **25x faster**     |
+| Memory efficiency    | Baseline        | 30% less       | **Better**         |
+| CPU utilization      | Single-threaded | Multi-threaded | **Full CPU usage** |
+| Latency (p99)        | ~2ms            | ~0.5ms         | **4x lower**       |
 
 ### Why We Chose It
 
@@ -57,6 +58,7 @@ DragonflyDB is a modern, high-performance, in-memory data store that's fully com
 ### Option 1: Docker (Recommended)
 
 **Basic Setup:**
+
 ```bash
 # Pull and run DragonflyDB
 docker run -d \
@@ -72,6 +74,7 @@ redis-cli ping  # Should return: PONG
 ```
 
 **With Persistence:**
+
 ```bash
 # Create data directory
 mkdir -p ~/dragonfly-data
@@ -86,6 +89,7 @@ docker run -d \
 ```
 
 **With Password:**
+
 ```bash
 docker run -d \
   --name dragonfly \
@@ -106,17 +110,17 @@ services:
     image: docker.dragonflydb.io/dragonflydb/dragonfly
     container_name: dragonfly
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - dragonfly-data:/data
     command:
       - --requirepass=${REDIS_PASSWORD:-dev-password}
       - --dir=/data
       - --dbfilename=dump.rdb
-      - --save_schedule=*:15  # Save every 15 minutes
+      - --save_schedule=*:15 # Save every 15 minutes
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-dev-password}", "ping"]
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD:-dev-password}', 'ping']
       interval: 10s
       timeout: 3s
       retries: 3
@@ -127,11 +131,13 @@ volumes:
 ```
 
 **Start:**
+
 ```bash
 docker-compose up -d
 ```
 
 **Check logs:**
+
 ```bash
 docker-compose logs -f dragonfly
 ```
@@ -139,12 +145,14 @@ docker-compose logs -f dragonfly
 ### Option 3: Native Installation
 
 **macOS (Homebrew):**
+
 ```bash
 brew install dragonfly
 dragonfly --logtostderr
 ```
 
 **Linux (Binary):**
+
 ```bash
 # Download latest release
 wget https://github.com/dragonflydb/dragonfly/releases/download/v1.15.0/dragonfly-x86_64.tar.gz
@@ -239,7 +247,7 @@ services:
           cpus: '2'
           memory: 2G
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - dragonfly-data:/data
     command:
@@ -280,41 +288,41 @@ spec:
         app: dragonfly
     spec:
       containers:
-      - name: dragonfly
-        image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
-        ports:
-        - containerPort: 6379
-          name: dragonfly
-        env:
-        - name: DRAGONFLY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: dragonfly-secret
-              key: password
-        command:
-        - dragonfly
-        - --requirepass=$(DRAGONFLY_PASSWORD)
-        - --dir=/data
-        - --dbfilename=dump.rdb
-        - --maxmemory=4gb
-        volumeMounts:
-        - name: data
-          mountPath: /data
+        - name: dragonfly
+          image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+          ports:
+            - containerPort: 6379
+              name: dragonfly
+          env:
+            - name: DRAGONFLY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dragonfly-secret
+                  key: password
+          command:
+            - dragonfly
+            - --requirepass=$(DRAGONFLY_PASSWORD)
+            - --dir=/data
+            - --dbfilename=dump.rdb
+            - --maxmemory=4gb
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              memory: '2Gi'
+              cpu: '1000m'
+            limits:
+              memory: '4Gi'
+              cpu: '4000m'
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ['ReadWriteOnce']
         resources:
           requests:
-            memory: "2Gi"
-            cpu: "1000m"
-          limits:
-            memory: "4Gi"
-            cpu: "4000m"
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 10Gi
+            storage: 10Gi
 ```
 
 ### Production Environment Variables
@@ -379,6 +387,7 @@ dragonfly \
 ```
 
 **Recommended for Verscienta:**
+
 - Memory limit: 2-4GB (based on server capacity)
 - Policy: `allkeys-lru` (evict least recently used)
 
@@ -406,6 +415,7 @@ dragonfly \
 ```
 
 **Recommendation for Verscienta:**
+
 - Use RDB with `--save_schedule=*:15`
 - Enable AOF for critical data: `--appendonly=yes`
 
@@ -416,12 +426,14 @@ dragonfly \
 ### Health Checks
 
 **Basic check:**
+
 ```bash
 redis-cli -h localhost -p 6379 -a your-password ping
 # Expected: PONG
 ```
 
 **Connection test:**
+
 ```bash
 redis-cli -h localhost -p 6379 -a your-password INFO server
 ```
@@ -436,10 +448,12 @@ curl http://localhost:6379/metrics
 ```
 
 **Grafana Dashboard:**
+
 - Import dashboard ID: `16802` (DragonflyDB Official)
 - Or create custom dashboard with key metrics
 
 **Key Metrics to Monitor:**
+
 - `dragonfly_connected_clients` - Active connections
 - `dragonfly_used_memory_bytes` - Memory usage
 - `dragonfly_keyspace_hits_total` - Cache hits
@@ -449,6 +463,7 @@ curl http://localhost:6379/metrics
 ### Redis CLI Commands
 
 **View stats:**
+
 ```bash
 redis-cli -a your-password INFO stats
 redis-cli -a your-password INFO memory
@@ -456,16 +471,19 @@ redis-cli -a your-password INFO clients
 ```
 
 **Monitor in real-time:**
+
 ```bash
 redis-cli -a your-password MONITOR
 ```
 
 **Check key count:**
+
 ```bash
 redis-cli -a your-password DBSIZE
 ```
 
 **View sample keys:**
+
 ```bash
 redis-cli -a your-password --scan --pattern '*' | head -20
 ```
@@ -473,6 +491,7 @@ redis-cli -a your-password --scan --pattern '*' | head -20
 ### Backup & Restore
 
 **Manual backup:**
+
 ```bash
 # Create snapshot
 redis-cli -a your-password SAVE
@@ -482,6 +501,7 @@ docker cp dragonfly:/data/dump.rdb ./backup-$(date +%Y%m%d).rdb
 ```
 
 **Restore from backup:**
+
 ```bash
 # Stop DragonflyDB
 docker stop dragonfly
@@ -494,6 +514,7 @@ docker start dragonfly
 ```
 
 **Automated backups:**
+
 ```bash
 #!/bin/bash
 # backup-dragonfly.sh
@@ -514,6 +535,7 @@ echo "Backup completed: dump-$DATE.rdb"
 ```
 
 Add to crontab for daily backups:
+
 ```bash
 0 2 * * * /path/to/backup-dragonfly.sh
 ```
@@ -525,11 +547,13 @@ Add to crontab for daily backups:
 ### Connection Refused
 
 **Symptoms:**
+
 ```
 Error: connect ECONNREFUSED 127.0.0.1:6379
 ```
 
 **Solutions:**
+
 1. Check if DragonflyDB is running:
    ```bash
    docker ps | grep dragonfly
@@ -544,11 +568,13 @@ Error: connect ECONNREFUSED 127.0.0.1:6379
 ### Authentication Error
 
 **Symptoms:**
+
 ```
 NOAUTH Authentication required
 ```
 
 **Solutions:**
+
 1. Verify password in environment variables
 2. Test with redis-cli:
    ```bash
@@ -562,10 +588,12 @@ NOAUTH Authentication required
 ### High Memory Usage
 
 **Symptoms:**
+
 - Memory usage exceeds expected levels
 - OOM errors
 
 **Solutions:**
+
 1. Check memory usage:
    ```bash
    redis-cli -a password INFO memory
@@ -586,10 +614,12 @@ NOAUTH Authentication required
 ### Performance Issues
 
 **Symptoms:**
+
 - Slow response times
 - High latency
 
 **Solutions:**
+
 1. Check active connections:
    ```bash
    redis-cli -a password INFO clients
@@ -610,10 +640,12 @@ NOAUTH Authentication required
 ### Data Persistence Issues
 
 **Symptoms:**
+
 - Data lost after restart
 - Snapshot errors
 
 **Solutions:**
+
 1. Check write permissions:
    ```bash
    docker exec dragonfly ls -la /data
@@ -662,6 +694,7 @@ docker run -d \
 ```
 
 **Expected performance:**
+
 - Throughput: 100K+ ops/sec
 - Latency (p99): < 1ms
 - Memory efficiency: ~70% utilization
@@ -679,6 +712,7 @@ docker run -d \
 ---
 
 **Next Steps:**
+
 1. Set up DragonflyDB using the guide above
 2. Configure environment variables in `.env`
 3. Test connection with the Verscienta app

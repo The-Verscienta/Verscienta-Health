@@ -26,6 +26,7 @@ Quick reference for deploying Verscienta Health to Coolify.
 4. **Deploy** and wait for health check
 
 **Copy the connection string for later:**
+
 ```
 postgresql://user:PASSWORD@host:5432/verscienta_health
 ```
@@ -42,6 +43,7 @@ postgresql://user:PASSWORD@host:5432/verscienta_health
    - **Domain:** `backend.verscienta.com`
 
 4. **Environment Variables:**
+
 ```env
 NODE_ENV=production
 PORT=3001
@@ -70,6 +72,7 @@ FRONTEND_URL=https://verscienta.com
    - **Domain:** `verscienta.com`
 
 4. **Environment Variables:**
+
 ```env
 NODE_ENV=production
 NEXT_PUBLIC_APP_URL=https://verscienta.com
@@ -121,30 +124,35 @@ GROK_API_KEY=<your-grok-api-key>
 ## 🔧 Common Commands
 
 ### View Logs
+
 ```bash
 # In Coolify UI
 Service → Logs → Filter by time
 ```
 
 ### Restart Service
+
 ```bash
 # In Coolify UI
 Service → Restart
 ```
 
 ### Access Database
+
 ```bash
 # In Coolify UI
 Database → Terminal
 ```
 
 ### Run Migrations
+
 ```bash
 # In CMS service terminal
 pnpm db:push
 ```
 
 ### Clear Cache
+
 ```bash
 # Restart both services
 ```
@@ -154,21 +162,25 @@ pnpm db:push
 ## 🚨 Troubleshooting
 
 ### Build Fails
+
 - Check Dockerfile syntax
 - Verify pnpm-lock.yaml is committed
 - Review build logs
 
 ### Can't Connect to Database
+
 - Verify DATABASE_URL is correct
 - Check database service is running
 - Verify Docker network connectivity
 
 ### 502 Bad Gateway
+
 - Check if service is running (logs)
 - Verify port configuration (3000/3001)
 - Check health check status
 
 ### Environment Variables Not Working
+
 - Ensure no trailing spaces
 - Restart service after changes
 - Check variable names match exactly
@@ -178,14 +190,17 @@ pnpm db:push
 ## 📊 Monitoring
 
 ### Health Checks
+
 - Frontend: `https://verscienta.com/api/health`
 - Backend: `https://backend.verscienta.com/api/health`
 
 ### Resource Usage
+
 - Coolify Dashboard → Service → Metrics
 - Monitor CPU, RAM, Disk usage
 
 ### Uptime Monitoring
+
 - Add external uptime monitor (UptimeRobot, etc.)
 - Monitor both frontend and backend endpoints
 
@@ -207,11 +222,13 @@ pnpm db:push
 ## 📈 Scaling
 
 ### Vertical Scaling (More Resources)
+
 1. Coolify → Service → Settings
 2. Adjust CPU/RAM limits
 3. Restart service
 
 ### Horizontal Scaling (More Instances)
+
 1. Coolify → Service → Settings
 2. Increase **Replicas** count
 3. Coolify auto-load balances
@@ -221,12 +238,14 @@ pnpm db:push
 ## 💾 Backup & Restore
 
 ### Manual Backup
+
 ```bash
 # Database backup
 docker exec verscienta-db pg_dump -U verscienta_user verscienta_health > backup.sql
 ```
 
 ### Restore
+
 ```bash
 # Upload backup.sql to server
 docker exec -i verscienta-db psql -U verscienta_user verscienta_health < backup.sql
@@ -246,6 +265,7 @@ docker exec -i verscienta-db psql -U verscienta_user verscienta_health < backup.
 ## ✅ Deployment Success
 
 You should now have:
+
 - ✅ Frontend running at `https://verscienta.com`
 - ✅ Backend running at `https://backend.verscienta.com`
 - ✅ SSL/HTTPS enabled

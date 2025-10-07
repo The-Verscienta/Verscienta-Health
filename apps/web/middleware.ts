@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { checkRateLimit, isRedisConfigured, type RateLimitConfig } from '@/lib/redis-rate-limiter'
 
 /**
@@ -160,9 +160,7 @@ export async function middleware(request: NextRequest) {
         status: 429,
         headers: {
           'Content-Type': 'application/json',
-          'Retry-After': String(
-            Math.ceil((rateLimit.resetTime - Date.now()) / 1000)
-          ),
+          'Retry-After': String(Math.ceil((rateLimit.resetTime - Date.now()) / 1000)),
           'X-RateLimit-Limit': String(rateLimit.limit),
           'X-RateLimit-Remaining': String(rateLimit.remaining),
           'X-RateLimit-Reset': String(rateLimit.resetTime),
@@ -189,10 +187,7 @@ export async function middleware(request: NextRequest) {
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=(self), interest-cohort=()'
   )
-  response.headers.set(
-    'Strict-Transport-Security',
-    'max-age=63072000; includeSubDomains; preload'
-  )
+  response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
 
   // Remove server header (don't expose Next.js version)
   response.headers.delete('X-Powered-By')

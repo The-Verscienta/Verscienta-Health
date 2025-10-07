@@ -1,11 +1,11 @@
-import { notFound } from 'next/navigation'
+import { Activity, AlertCircle, Brain, Leaf, Pill } from 'lucide-react'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { FormulaCard } from '@/components/cards/FormulaCard'
+import { HerbCard } from '@/components/cards/HerbCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { HerbCard } from '@/components/cards/HerbCard'
-import { FormulaCard } from '@/components/cards/FormulaCard'
-import { AlertCircle, Leaf, Pill, Activity, Brain } from 'lucide-react'
 
 interface Symptom {
   id: string
@@ -121,44 +121,48 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
     <div className="container-custom py-12">
       {/* Hero Section */}
       <div className="mb-12">
-        <div className="flex items-start justify-between mb-4">
+        <div className="mb-4 flex items-start justify-between">
           <div className="flex-1">
-            <h1 className="text-4xl font-bold font-serif text-earth-900 mb-2">
+            <h1 className="text-earth-900 mb-2 font-serif text-4xl font-bold">
               {validCondition.title}
             </h1>
             {validCondition.alternativeNames && validCondition.alternativeNames.length > 0 && (
-              <p className="text-lg text-gray-600 mb-4">
+              <p className="mb-4 text-lg text-gray-600">
                 Also known as: {validCondition.alternativeNames.join(', ')}
               </p>
             )}
           </div>
-          <span className="text-sm font-mono text-gray-500">{validCondition.conditionId}</span>
+          <span className="font-mono text-sm text-gray-500">{validCondition.conditionId}</span>
         </div>
 
         {/* Description */}
         {validCondition.description && (
-          <p className="text-lg text-gray-700 mb-6">{validCondition.description}</p>
+          <p className="mb-6 text-lg text-gray-700">{validCondition.description}</p>
         )}
 
         {/* Quick Info */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {condition.category && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">Category</h3>
+              <h3 className="mb-1 text-sm font-semibold text-gray-700">Category</h3>
               <Badge variant="default">{condition.category}</Badge>
             </div>
           )}
           {condition.severity && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">Typical Severity</h3>
-              <Badge variant={severityColors[condition.severity as keyof typeof severityColors] || 'default'}>
+              <h3 className="mb-1 text-sm font-semibold text-gray-700">Typical Severity</h3>
+              <Badge
+                variant={
+                  severityColors[condition.severity as keyof typeof severityColors] || 'default'
+                }
+              >
                 {condition.severity}
               </Badge>
             </div>
           )}
           {condition.affectedSystems && condition.affectedSystems.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">Affected Systems</h3>
+              <h3 className="mb-1 text-sm font-semibold text-gray-700">Affected Systems</h3>
               <div className="flex flex-wrap gap-1">
                 {condition.affectedSystems.slice(0, 2).map((system: string) => (
                   <Badge key={system} variant="sage" className="text-xs">
@@ -185,13 +189,13 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <AlertCircle className="mr-2 h-5 w-5 text-earth-600" />
+                <AlertCircle className="text-earth-600 mr-2 h-5 w-5" />
                 Common Symptoms
               </CardTitle>
             </CardHeader>
             <CardContent>
               {condition.commonSymptoms && condition.commonSymptoms.length > 0 ? (
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
                   {condition.commonSymptoms.map((symptom: string, idx: number) => (
                     <li key={idx} className="flex items-start">
                       <span className="text-earth-600 mr-2">•</span>
@@ -236,7 +240,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
                 <CardTitle className="text-tcm-900">When to Seek Immediate Medical Care</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc list-inside space-y-2 text-tcm-800">
+                <ul className="text-tcm-800 list-inside list-disc space-y-2">
                   {condition.emergencySymptoms.map((symptom: string, idx: number) => (
                     <li key={idx}>{symptom}</li>
                   ))}
@@ -251,7 +255,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Activity className="mr-2 h-5 w-5 text-earth-600" />
+                <Activity className="text-earth-600 mr-2 h-5 w-5" />
                 Western Medical Perspective
               </CardTitle>
             </CardHeader>
@@ -259,8 +263,8 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* Causes */}
               {condition.westernCauses && condition.westernCauses.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Causes</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Causes</h4>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
                     {condition.westernCauses.map((cause: string, idx: number) => (
                       <li key={idx}>{cause}</li>
                     ))}
@@ -271,8 +275,8 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* Risk Factors */}
               {condition.riskFactors && condition.riskFactors.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Risk Factors</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Risk Factors</h4>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
                     {condition.riskFactors.map((factor: string, idx: number) => (
                       <li key={idx}>{factor}</li>
                     ))}
@@ -283,7 +287,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* Diagnosis */}
               {condition.diagnosis && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Diagnosis</h4>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Diagnosis</h4>
                   <p className="text-gray-700">{condition.diagnosis}</p>
                 </div>
               )}
@@ -291,7 +295,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* Conventional Treatment */}
               {condition.conventionalTreatment && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">
                     Conventional Treatment
                   </h4>
                   <p className="text-gray-700">{condition.conventionalTreatment}</p>
@@ -306,7 +310,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Brain className="mr-2 h-5 w-5 text-earth-600" />
+                <Brain className="text-earth-600 mr-2 h-5 w-5" />
                 Traditional Chinese Medicine Perspective
               </CardTitle>
             </CardHeader>
@@ -314,7 +318,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* TCM Pattern */}
               {condition.tcmPattern && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">TCM Pattern</h4>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">TCM Pattern</h4>
                   <Badge variant="tcm" className="text-base">
                     {condition.tcmPattern}
                   </Badge>
@@ -324,10 +328,10 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* TCM Causes */}
               {condition.tcmCauses && condition.tcmCauses.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">
                     TCM Etiology (Causes)
                   </h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
                     {condition.tcmCauses.map((cause: string, idx: number) => (
                       <li key={idx}>{cause}</li>
                     ))}
@@ -338,7 +342,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* Affected Meridians */}
               {condition.affectedMeridians && condition.affectedMeridians.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Affected Meridians</h4>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Affected Meridians</h4>
                   <div className="flex flex-wrap gap-2">
                     {condition.affectedMeridians.map((meridian: string) => (
                       <Badge key={meridian} variant="tcm">
@@ -352,7 +356,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* TCM Diagnosis */}
               {condition.tcmDiagnosis && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">TCM Diagnosis</h4>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">TCM Diagnosis</h4>
                   <p className="text-gray-700">{condition.tcmDiagnosis}</p>
                 </div>
               )}
@@ -360,10 +364,8 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               {/* Treatment Principles */}
               {condition.treatmentPrinciples && condition.treatmentPrinciples.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">
-                    Treatment Principles
-                  </h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Treatment Principles</h4>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
                     {condition.treatmentPrinciples.map((principle: string, idx: number) => (
                       <li key={idx}>{principle}</li>
                     ))}
@@ -383,7 +385,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
                 <CardTitle>Lifestyle Recommendations</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                <ul className="list-inside list-disc space-y-2 text-gray-700">
                   {condition.lifestyleRecommendations.map((rec: string, idx: number) => (
                     <li key={idx}>{rec}</li>
                   ))}
@@ -409,11 +411,11 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
       {/* Related Herbs */}
       {condition.relatedHerbs && condition.relatedHerbs.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-2xl font-bold font-serif text-earth-900 mb-6 flex items-center">
-            <Leaf className="mr-2 h-6 w-6 text-earth-600" />
+          <h2 className="text-earth-900 mb-6 flex items-center font-serif text-2xl font-bold">
+            <Leaf className="text-earth-600 mr-2 h-6 w-6" />
             Helpful Herbs
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {condition.relatedHerbs.slice(0, 6).map((herb) => (
               <HerbCard
                 key={herb.id}
@@ -436,11 +438,11 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
       {/* Related Formulas */}
       {condition.relatedFormulas && condition.relatedFormulas.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-2xl font-bold font-serif text-earth-900 mb-6 flex items-center">
-            <Pill className="mr-2 h-6 w-6 text-earth-600" />
+          <h2 className="text-earth-900 mb-6 flex items-center font-serif text-2xl font-bold">
+            <Pill className="text-earth-600 mr-2 h-6 w-6" />
             Recommended Formulas
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {condition.relatedFormulas.slice(0, 6).map((formula) => (
               <FormulaCard
                 key={formula.id}
@@ -462,11 +464,11 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
       )}
 
       {/* Medical Disclaimer */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
         <p className="text-sm text-yellow-900">
-          <strong>Medical Disclaimer:</strong> This information is for educational purposes only
-          and is not a substitute for professional medical advice, diagnosis, or treatment.
-          Always consult your healthcare provider for medical concerns.
+          <strong>Medical Disclaimer:</strong> This information is for educational purposes only and
+          is not a substitute for professional medical advice, diagnosis, or treatment. Always
+          consult your healthcare provider for medical concerns.
         </p>
       </div>
     </div>
@@ -484,6 +486,8 @@ export async function generateMetadata({ params }: ConditionPageProps) {
 
   return {
     title: `${condition.title} | Verscienta Health`,
-    description: condition.description || `Learn about ${condition.title}, its symptoms, causes, and natural treatment approaches.`,
+    description:
+      condition.description ||
+      `Learn about ${condition.title}, its symptoms, causes, and natural treatment approaches.`,
   }
 }

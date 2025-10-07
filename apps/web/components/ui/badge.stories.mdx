@@ -27,46 +27,55 @@ export default function Example() {
 ## Variants
 
 ### Default
+
 Standard badge with subtle gray styling.
 
 <Canvas of={BadgeStories.Default} />
 
 ### Sage (Verscienta Primary)
+
 Uses the platform's primary sage green color.
 
 <Canvas of={BadgeStories.Sage} />
 
 ### TCM (Traditional Chinese Medicine)
+
 Red badge for TCM-related content.
 
 <Canvas of={BadgeStories.Tcm} />
 
 ### Gold (Premium/Verified)
+
 Gold badge for premium or verified content.
 
 <Canvas of={BadgeStories.Gold} />
 
 ### Success
+
 Green badge for positive statuses.
 
 <Canvas of={BadgeStories.Success} />
 
 ### Warning
+
 Yellow/amber badge for warnings or cautions.
 
 <Canvas of={BadgeStories.Warning} />
 
 ### Danger
+
 Red badge for errors or critical information.
 
 <Canvas of={BadgeStories.Danger} />
 
 ### Info
+
 Blue badge for informational content.
 
 <Canvas of={BadgeStories.Info} />
 
 ### Outline
+
 Transparent badge with border.
 
 <Canvas of={BadgeStories.Outline} />
@@ -97,18 +106,28 @@ Badges are commonly used to display TCM properties:
 ```tsx
 <div className="space-y-2">
   <div>
-    <span className="text-sm text-muted-foreground">Temperature:</span>
-    <Badge variant="tcm" className="ml-2">Warm</Badge>
+    <span className="text-muted-foreground text-sm">Temperature:</span>
+    <Badge variant="tcm" className="ml-2">
+      Warm
+    </Badge>
   </div>
   <div>
-    <span className="text-sm text-muted-foreground">Taste:</span>
-    <Badge variant="sage" className="ml-2">Sweet</Badge>
-    <Badge variant="sage" className="ml-2">Bitter</Badge>
+    <span className="text-muted-foreground text-sm">Taste:</span>
+    <Badge variant="sage" className="ml-2">
+      Sweet
+    </Badge>
+    <Badge variant="sage" className="ml-2">
+      Bitter
+    </Badge>
   </div>
   <div>
-    <span className="text-sm text-muted-foreground">Meridians:</span>
-    <Badge variant="gold" className="ml-2">Liver</Badge>
-    <Badge variant="gold" className="ml-2">Kidney</Badge>
+    <span className="text-muted-foreground text-sm">Meridians:</span>
+    <Badge variant="gold" className="ml-2">
+      Liver
+    </Badge>
+    <Badge variant="gold" className="ml-2">
+      Kidney
+    </Badge>
   </div>
 </div>
 ```
@@ -228,9 +247,7 @@ Badges are commonly used to display TCM properties:
 ### Custom Colors
 
 ```tsx
-<Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">
-  Custom Color
-</Badge>
+<Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">Custom Color</Badge>
 ```
 
 ### With Icons
@@ -259,11 +276,11 @@ import { Leaf, Star, AlertTriangle } from 'lucide-react'
 ```tsx
 import { X } from 'lucide-react'
 
-<Badge variant="outline" className="pr-1">
+;<Badge variant="outline" className="pr-1">
   Adaptogen
   <button
     onClick={() => removeFilter('adaptogen')}
-    className="ml-1 hover:bg-muted rounded-full p-0.5"
+    className="hover:bg-muted ml-1 rounded-full p-0.5"
     aria-label="Remove filter"
   >
     <X className="h-3 w-3" />
@@ -274,14 +291,20 @@ import { X } from 'lucide-react'
 ### Size Variations
 
 ```tsx
-{/* Small badge */}
-<Badge className="text-xs px-1.5 py-0.5">Small</Badge>
+{
+  /* Small badge */
+}
+;<Badge className="px-1.5 py-0.5 text-xs">Small</Badge>
 
-{/* Default */}
-<Badge>Default</Badge>
+{
+  /* Default */
+}
+;<Badge>Default</Badge>
 
-{/* Large */}
-<Badge className="text-sm px-3 py-1">Large</Badge>
+{
+  /* Large */
+}
+;<Badge className="px-3 py-1 text-sm">Large</Badge>
 ```
 
 ## Component Combinations
@@ -293,7 +316,9 @@ import { X } from 'lucide-react'
   <Avatar />
   <div>
     <p className="font-medium">Dr. Jane Smith</p>
-    <Badge variant="gold" className="text-xs">Verified Practitioner</Badge>
+    <Badge variant="gold" className="text-xs">
+      Verified Practitioner
+    </Badge>
   </div>
 </div>
 ```
@@ -309,7 +334,7 @@ import { X } from 'lucide-react'
     </div>
   </CardHeader>
   <CardContent>
-    <div className="flex flex-wrap gap-2 mt-2">
+    <div className="mt-2 flex flex-wrap gap-2">
       <Badge variant="tcm">Warm</Badge>
       <Badge variant="sage">Sweet</Badge>
       <Badge variant="sage">Bitter</Badge>
@@ -366,11 +391,13 @@ const meridianColors = {
   // ... etc
 }
 
-{herb.meridians.map(meridian => (
-  <Badge key={meridian} className={meridianColors[meridian]}>
-    {meridian}
-  </Badge>
-))}
+{
+  herb.meridians.map((meridian) => (
+    <Badge key={meridian} className={meridianColors[meridian]}>
+      {meridian}
+    </Badge>
+  ))
+}
 ```
 
 ### Actions/Functions
@@ -391,11 +418,15 @@ const meridianColors = {
 Badges are lightweight components with minimal performance impact. For lists with many badges:
 
 ```tsx
-{/* Memoize badge rendering for large lists */}
+{
+  /* Memoize badge rendering for large lists */
+}
 const BadgeList = React.memo(({ items }) => (
   <div className="flex flex-wrap gap-2">
-    {items.map(item => (
-      <Badge key={item} variant="outline">{item}</Badge>
+    {items.map((item) => (
+      <Badge key={item} variant="outline">
+        {item}
+      </Badge>
     ))}
   </div>
 ))
@@ -411,6 +442,7 @@ const BadgeList = React.memo(({ items }) => (
 ## Technical Details
 
 The Badge component:
+
 - Uses `class-variance-authority` for variant management
 - Built with Tailwind CSS
 - Supports all HTML div attributes

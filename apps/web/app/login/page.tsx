@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signIn } from '@/lib/auth-client'
-import { toast } from 'sonner'
 import { Leaf } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { signIn } from '@/lib/auth-client'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -69,16 +69,16 @@ export default function LoginPage() {
     <div className="container-custom flex min-h-[80vh] items-center justify-center py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-earth-100">
-            <Leaf className="h-6 w-6 text-earth-600" />
+          <div className="bg-earth-100 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+            <Leaf className="text-earth-600 h-6 w-6" />
           </div>
-          <CardTitle className="text-2xl font-serif">Welcome Back</CardTitle>
+          <CardTitle className="font-serif text-2xl">Welcome Back</CardTitle>
           <CardDescription>Sign in to your Verscienta Health account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="text-sm font-semibold text-gray-700 mb-2 block">
+              <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-700">
                 Email
               </label>
               <Input
@@ -92,7 +92,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="text-sm font-semibold text-gray-700 mb-2 block">
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-gray-700">
                 Password
               </label>
               <Input
@@ -138,7 +138,7 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don't have an account?{' '}
-            <Link href="/register" className="font-semibold text-earth-600 hover:text-earth-700">
+            <Link href="/register" className="text-earth-600 hover:text-earth-700 font-semibold">
               Sign up
             </Link>
           </p>

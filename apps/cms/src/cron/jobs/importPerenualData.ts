@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
-import { getPerenualClient } from '../../lib/perenual'
 import { findOrCreateHerb } from '../../lib/herbDeduplication'
+import { getPerenualClient } from '../../lib/perenual'
 
 interface PerenualImportStats {
   plantsProcessed: number
@@ -86,9 +86,7 @@ export async function importPerenualDataJob(payload: Payload): Promise<void> {
               continue
             }
 
-            console.log(
-              `🔍 Processing: ${plant.common_name} (${plant.scientific_name.join(', ')})`
-            )
+            console.log(`🔍 Processing: ${plant.common_name} (${plant.scientific_name.join(', ')})`)
 
             // Get detailed data
             const enrichedData = await perenualClient.enrichHerbData({
@@ -147,14 +145,10 @@ export async function importPerenualDataJob(payload: Payload): Promise<void> {
               safetyInfo: {
                 warnings: [
                   ...(enrichedData.toxicity?.toHumans
-                    ? [
-                        `Toxicity to humans: ${enrichedData.toxicity.toHumans > 0 ? 'Yes' : 'No'}`,
-                      ]
+                    ? [`Toxicity to humans: ${enrichedData.toxicity.toHumans > 0 ? 'Yes' : 'No'}`]
                     : []),
                   ...(enrichedData.toxicity?.toPets
-                    ? [
-                        `Toxicity to pets: ${enrichedData.toxicity.toPets > 0 ? 'Yes' : 'No'}`,
-                      ]
+                    ? [`Toxicity to pets: ${enrichedData.toxicity.toPets > 0 ? 'Yes' : 'No'}`]
                     : []),
                 ],
               },
@@ -187,10 +181,7 @@ export async function importPerenualDataJob(payload: Payload): Promise<void> {
             // Rate limiting: delay between plant processing
             await new Promise((resolve) => setTimeout(resolve, 200))
           } catch (error) {
-            console.error(
-              `  ❌ Error processing ${plant.common_name}:`,
-              error
-            )
+            console.error(`  ❌ Error processing ${plant.common_name}:`, error)
             stats.errors++
           }
         }
@@ -243,9 +234,7 @@ export async function importPerenualDataJob(payload: Payload): Promise<void> {
 /**
  * Get current import state
  */
-async function getImportState(
-  payload: Payload
-): Promise<{
+async function getImportState(payload: Payload): Promise<{
   currentPage: number
   isComplete: boolean
   lastRunAt: Date | null
@@ -260,11 +249,9 @@ async function getImportState(
       currentPage: state.currentPage || 1,
       isComplete: state.isComplete || false,
       lastRunAt: state.lastRunAt ? new Date(state.lastRunAt) : null,
-      lastCompletedAt: state.lastCompletedAt
-        ? new Date(state.lastCompletedAt)
-        : null,
+      lastCompletedAt: state.lastCompletedAt ? new Date(state.lastCompletedAt) : null,
     }
-  } catch (error) {
+  } catch (_error) {
     // State doesn't exist yet
     try {
       await payload.updateGlobal({
@@ -345,9 +332,7 @@ export async function resetPerenualImport(payload: Payload): Promise<void> {
 /**
  * Get import progress
  */
-export async function getPerenualImportProgress(
-  payload: Payload
-): Promise<{
+export async function getPerenualImportProgress(payload: Payload): Promise<{
   currentPage: number
   isComplete: boolean
   lastRunAt: Date | null
@@ -358,10 +343,7 @@ export async function getPerenualImportProgress(
 
   // Perenual has ~10,000 plants
   const estimatedTotalPages = 500 // Rough estimate
-  const estimatedPlantsRemaining = Math.max(
-    0,
-    (estimatedTotalPages - state.currentPage) * 20
-  )
+  const estimatedPlantsRemaining = Math.max(0, (estimatedTotalPages - state.currentPage) * 20)
 
   return {
     ...state,

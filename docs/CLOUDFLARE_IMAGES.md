@@ -5,6 +5,7 @@ This guide explains how Cloudflare Images is integrated into Verscienta Health f
 ## 🎯 Overview
 
 Cloudflare Images provides:
+
 - **Global CDN** - Images delivered from 300+ locations worldwide
 - **Automatic Optimization** - WebP/AVIF conversion, quality optimization
 - **Responsive Images** - On-the-fly resizing and cropping
@@ -20,7 +21,7 @@ The main component for rendering optimized images:
 ```tsx
 import { OptimizedImage } from '@/components/ui/optimized-image'
 
-<OptimizedImage
+;<OptimizedImage
   src="image-id-or-url"
   alt="Description"
   variant="medium"
@@ -30,6 +31,7 @@ import { OptimizedImage } from '@/components/ui/optimized-image'
 ```
 
 **Props:**
+
 - `src` - Image ID (Cloudflare) or URL (fallback)
 - `alt` - Alt text for accessibility
 - `variant` - Predefined size variant (optional)
@@ -43,12 +45,13 @@ import { OptimizedImage } from '@/components/ui/optimized-image'
 ### 2. Specialized Components
 
 #### OptimizedAvatar
+
 For user/practitioner profile pictures:
 
 ```tsx
 import { OptimizedAvatar } from '@/components/ui/optimized-image'
 
-<OptimizedAvatar
+;<OptimizedAvatar
   src="user-avatar-id"
   alt="John Doe"
   size={64}
@@ -57,25 +60,23 @@ import { OptimizedAvatar } from '@/components/ui/optimized-image'
 ```
 
 #### OptimizedCardImage
+
 For card thumbnails:
 
 ```tsx
 import { OptimizedCardImage } from '@/components/ui/optimized-image'
 
-<OptimizedCardImage
-  src="herb-image-id"
-  alt="Ginseng"
-  fallback="/images/herb-placeholder.jpg"
-/>
+;<OptimizedCardImage src="herb-image-id" alt="Ginseng" fallback="/images/herb-placeholder.jpg" />
 ```
 
 #### OptimizedHeroImage
+
 For hero/banner images:
 
 ```tsx
 import { OptimizedHeroImage } from '@/components/ui/optimized-image'
 
-<OptimizedHeroImage
+;<OptimizedHeroImage
   src="hero-image-id"
   alt="Herbal medicine"
   priority={true}
@@ -131,11 +132,7 @@ export const IMAGE_VARIANTS = {
 Usage:
 
 ```tsx
-<OptimizedImage
-  src="image-id"
-  alt="Alt text"
-  variant="hero"
-/>
+<OptimizedImage src="image-id" alt="Alt text" variant="hero" />
 ```
 
 ## 📤 Uploading Images
@@ -292,6 +289,7 @@ This allows development without Cloudflare Images and graceful degradation.
 Generate optimized image URL.
 
 **Parameters:**
+
 - `imageId` (string) - Image ID or filename
 - `options` (object) - Transformation options
   - `variant` (string) - Named variant
@@ -313,6 +311,7 @@ Generate optimized image URL.
 Generate responsive srcset string.
 
 **Parameters:**
+
 - `imageId` (string) - Image ID
 - `widths` (number[]) - Array of widths
 - `options` (object) - Transformation options (except width)
@@ -324,6 +323,7 @@ Generate responsive srcset string.
 Upload image to Cloudflare.
 
 **Parameters:**
+
 - `file` (File | Blob) - File to upload
 - `metadata` (object) - Optional metadata
 
@@ -334,6 +334,7 @@ Upload image to Cloudflare.
 Delete image from Cloudflare.
 
 **Parameters:**
+
 - `imageId` (string) - Image ID to delete
 
 **Returns:** Promise with success status

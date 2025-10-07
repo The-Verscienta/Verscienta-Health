@@ -17,10 +17,7 @@ interface AuditLogData {
 }
 
 // Helper to create audit log entries
-export async function createAuditLog(
-  payload: any,
-  data: AuditLogData
-): Promise<void> {
+export async function createAuditLog(payload: any, data: AuditLogData): Promise<void> {
   try {
     await payload.create({
       collection: 'audit-logs',

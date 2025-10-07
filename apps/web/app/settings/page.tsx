@@ -1,12 +1,11 @@
 'use client'
 
-import { useSession, signOut } from '@/lib/auth-client'
+import { Bell, Eye, Lock, LogOut, Settings, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Loading } from '@/components/ui/loading'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -16,8 +15,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Settings, Lock, Bell, Eye, Trash2, LogOut } from 'lucide-react'
-import { toast } from 'sonner'
+import { Input } from '@/components/ui/input'
+import { Loading } from '@/components/ui/loading'
+import { signOut, useSession } from '@/lib/auth-client'
 
 export default function SettingsPage() {
   const { data: session, isPending } = useSession()
@@ -75,10 +75,10 @@ export default function SettingsPage() {
 
   return (
     <div className="container-custom py-12">
-      <div className="max-w-3xl mx-auto">
+      <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold font-serif text-earth-900 mb-2 flex items-center">
+          <h1 className="text-earth-900 mb-2 flex items-center font-serif text-4xl font-bold">
             <Settings className="mr-3 h-8 w-8" />
             Account Settings
           </h1>
@@ -90,17 +90,15 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Lock className="mr-2 h-5 w-5 text-earth-600" />
+                <Lock className="text-earth-600 mr-2 h-5 w-5" />
                 Change Password
               </CardTitle>
-              <CardDescription>
-                Update your password to keep your account secure
-              </CardDescription>
+              <CardDescription>Update your password to keep your account secure</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handlePasswordChange} className="space-y-4">
                 <div>
-                  <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
                     Current Password
                   </label>
                   <Input
@@ -112,7 +110,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
                     New Password
                   </label>
                   <Input
@@ -121,11 +119,11 @@ export default function SettingsPage() {
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
+                  <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
                     Confirm New Password
                   </label>
                   <Input
@@ -145,7 +143,7 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Bell className="mr-2 h-5 w-5 text-earth-600" />
+                <Bell className="text-earth-600 mr-2 h-5 w-5" />
                 Notification Preferences
               </CardTitle>
               <CardDescription>
@@ -160,7 +158,7 @@ export default function SettingsPage() {
                 </div>
                 <input
                   type="checkbox"
-                  className="h-5 w-5 rounded border-gray-300 text-earth-600 focus:ring-earth-600"
+                  className="text-earth-600 focus:ring-earth-600 h-5 w-5 rounded border-gray-300"
                   defaultChecked
                 />
               </div>
@@ -174,20 +172,18 @@ export default function SettingsPage() {
                 </div>
                 <input
                   type="checkbox"
-                  className="h-5 w-5 rounded border-gray-300 text-earth-600 focus:ring-earth-600"
+                  className="text-earth-600 focus:ring-earth-600 h-5 w-5 rounded border-gray-300"
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-semibold text-gray-900">Practitioner Updates</p>
-                  <p className="text-sm text-gray-600">
-                    Updates from practitioners you follow
-                  </p>
+                  <p className="text-sm text-gray-600">Updates from practitioners you follow</p>
                 </div>
                 <input
                   type="checkbox"
-                  className="h-5 w-5 rounded border-gray-300 text-earth-600 focus:ring-earth-600"
+                  className="text-earth-600 focus:ring-earth-600 h-5 w-5 rounded border-gray-300"
                 />
               </div>
             </CardContent>
@@ -197,7 +193,7 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Eye className="mr-2 h-5 w-5 text-earth-600" />
+                <Eye className="text-earth-600 mr-2 h-5 w-5" />
                 Privacy Settings
               </CardTitle>
               <CardDescription>Control your privacy and data sharing</CardDescription>
@@ -210,7 +206,7 @@ export default function SettingsPage() {
                 </div>
                 <input
                   type="checkbox"
-                  className="h-5 w-5 rounded border-gray-300 text-earth-600 focus:ring-earth-600"
+                  className="text-earth-600 focus:ring-earth-600 h-5 w-5 rounded border-gray-300"
                   defaultChecked
                 />
               </div>
@@ -222,7 +218,7 @@ export default function SettingsPage() {
                 </div>
                 <input
                   type="checkbox"
-                  className="h-5 w-5 rounded border-gray-300 text-earth-600 focus:ring-earth-600"
+                  className="text-earth-600 focus:ring-earth-600 h-5 w-5 rounded border-gray-300"
                   defaultChecked
                 />
               </div>
@@ -258,7 +254,7 @@ export default function SettingsPage() {
               </div>
 
               {/* Delete Account */}
-              <div className="flex items-center justify-between pt-4 border-t border-red-100">
+              <div className="flex items-center justify-between border-t border-red-100 pt-4">
                 <div>
                   <p className="font-semibold text-red-700">Delete Account</p>
                   <p className="text-sm text-gray-600">
@@ -267,7 +263,10 @@ export default function SettingsPage() {
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" className="border-red-300 text-red-700 hover:bg-red-50">
+                    <Button
+                      variant="outline"
+                      className="border-red-300 text-red-700 hover:bg-red-50"
+                    >
                       Delete Account
                     </Button>
                   </DialogTrigger>
@@ -275,12 +274,12 @@ export default function SettingsPage() {
                     <DialogHeader>
                       <DialogTitle>Delete Account</DialogTitle>
                       <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove all your data from our servers.
+                        This action cannot be undone. This will permanently delete your account and
+                        remove all your data from our servers.
                       </DialogDescription>
                     </DialogHeader>
                     <div className="py-4">
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="mb-2 block text-sm font-semibold text-gray-700">
                         Type <span className="font-mono text-red-600">DELETE</span> to confirm:
                       </label>
                       <Input
@@ -290,10 +289,7 @@ export default function SettingsPage() {
                       />
                     </div>
                     <DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setDeleteConfirmation('')}
-                      >
+                      <Button variant="outline" onClick={() => setDeleteConfirmation('')}>
                         Cancel
                       </Button>
                       <Button

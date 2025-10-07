@@ -21,6 +21,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ### 1. Authentication & Authorization ✅
 
 **Current Implementation**:
+
 - ✅ Better Auth 1.3.26 with secure session management
 - ✅ bcrypt password hashing (industry standard)
 - ✅ OAuth integration (Google, GitHub) with secure tokens
@@ -29,12 +30,14 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 - ✅ Session expiration and rotation
 
 **Recommendations Implemented**:
+
 - ✅ Password minimum 8 characters (should be 12+ for HIPAA)
 - ✅ Account lockout after failed attempts
 - ✅ Secure session cookies (httpOnly, secure, sameSite)
 - ✅ Multi-factor authentication capability
 
 **Remaining Tasks**:
+
 - [ ] Implement MFA requirement for access to PHI
 - [ ] Add IP-based access controls for admin panel
 - [ ] Implement session timeout warnings
@@ -42,16 +45,19 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ### 2. Data Encryption ✅
 
 **In Transit**:
+
 - ✅ HTTPS enforced via Next.js config (HSTS headers)
 - ✅ TLS 1.3 support (configured in deployment)
 - ✅ Strict-Transport-Security header with preload
 
 **At Rest**:
+
 - ✅ PostgreSQL supports encryption at rest (must be enabled)
 - ✅ Bcrypt for passwords (10 rounds)
 - ⚠️ Database column-level encryption for PHI recommended
 
 **Recommendations**:
+
 - ✅ Use environment variables for secrets (not hardcoded)
 - ✅ Cloudflare for DDoS protection and CDN
 - [ ] Implement database encryption for sensitive fields
@@ -60,6 +66,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ### 3. Input Validation & Sanitization ✅
 
 **Current Protection**:
+
 - ✅ Zod schemas for all form inputs
 - ✅ Next.js built-in XSS protection
 - ✅ Payload CMS sanitization
@@ -68,6 +75,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 - ✅ Content Security Policy headers
 
 **Potential Vulnerabilities Fixed**:
+
 - ✅ All user inputs validated server-side
 - ✅ File upload restrictions (type, size)
 - ✅ HTML sanitization for rich text
@@ -76,6 +84,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ### 4. API Security ✅
 
 **Protection Implemented**:
+
 - ✅ Rate limiting on sensitive endpoints (implemented)
 - ✅ CORS configuration (specific origins only)
 - ✅ API authentication required
@@ -83,6 +92,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 - ✅ Error messages don't expose system details
 
 **Recommendations**:
+
 - ✅ Cloudflare Turnstile for bot protection
 - ✅ API versioning for backward compatibility
 - [ ] GraphQL query depth limiting
@@ -91,6 +101,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ### 5. Session Management ✅
 
 **Current Implementation**:
+
 - ✅ Secure session tokens (better-auth)
 - ✅ HttpOnly cookies
 - ✅ Secure flag on cookies
@@ -98,6 +109,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 - ✅ Session expiration (configurable)
 
 **HIPAA Requirements**:
+
 - ✅ Automatic logout after inactivity (15 minutes recommended)
 - ✅ Session revocation on password change
 - ✅ Concurrent session limits
@@ -106,6 +118,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ### 6. Secure Headers ✅
 
 **Implemented Headers** (in `next.config.ts`):
+
 ```typescript
 'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
 'X-Content-Type-Options': 'nosniff'
@@ -116,6 +129,7 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ```
 
 **Additional Recommendations**:
+
 - ✅ Content-Security-Policy (implemented)
 - ✅ Feature-Policy headers
 - ✅ X-DNS-Prefetch-Control
@@ -123,12 +137,14 @@ This document provides a comprehensive security audit and HIPAA compliance asses
 ### 7. Dependency Security ✅
 
 **Current Status**:
+
 - ✅ All dependencies up-to-date
 - ✅ No known high-severity vulnerabilities
 - ✅ pnpm audit run regularly
 - ✅ Dependabot enabled (recommended)
 
 **Ongoing Maintenance**:
+
 ```bash
 # Check for vulnerabilities
 pnpm audit
@@ -143,6 +159,7 @@ pnpm outdated
 ### 8. File Upload Security ✅
 
 **Protection Implemented**:
+
 - ✅ File type validation (whitelist approach)
 - ✅ File size limits (prevent DoS)
 - ✅ Virus scanning (Cloudflare Images)
@@ -150,6 +167,7 @@ pnpm outdated
 - ✅ No execution permissions on upload directory
 
 **Cloudflare Images Security**:
+
 - ✅ Malware scanning
 - ✅ Content validation
 - ✅ Automatic format conversion (prevents exploits)
@@ -157,6 +175,7 @@ pnpm outdated
 ### 9. Error Handling ✅
 
 **Current Implementation**:
+
 - ✅ Generic error messages to users
 - ✅ Detailed errors in server logs only
 - ✅ No stack traces in production
@@ -166,12 +185,14 @@ pnpm outdated
 ### 10. Logging & Monitoring ✅
 
 **Current Status**:
+
 - ✅ Comprehensive audit logging system implemented
 - ✅ HIPAA-compliant audit log collection (Payload CMS)
 - ✅ Logs all PHI access and modifications
 - ✅ Immutable log storage (write-once, no updates/deletes)
 
 **HIPAA Requirements Implemented**:
+
 - ✅ Comprehensive audit logging system (`lib/audit-log.ts`)
 - ✅ Log all PHI access and modifications (action enums defined)
 - ✅ Tamper-proof log storage (hooks prevent updates/deletes)
@@ -185,11 +206,13 @@ pnpm outdated
 ### Understanding HIPAA Scope
 
 **Important Note**: HIPAA compliance is only required if the application:
+
 1. Is a Covered Entity (healthcare provider, health plan, healthcare clearinghouse)
 2. Is a Business Associate (handles PHI on behalf of covered entities)
 3. Stores, processes, or transmits Protected Health Information (PHI)
 
 **PHI Includes**:
+
 - Name + health information
 - Medical record numbers
 - Health plan numbers
@@ -199,6 +222,7 @@ pnpm outdated
 - Any unique identifying information + health data
 
 **Verscienta Health Considerations**:
+
 - ✅ General health information (herbs, formulas) - NOT PHI
 - ⚠️ Symptom checker inputs - COULD BE PHI if identifiable
 - ⚠️ User health reviews - COULD BE PHI if detailed
@@ -211,12 +235,14 @@ pnpm outdated
 #### 1. Access Control (§164.312(a)(1)) ✅
 
 **Required**:
+
 - ✅ Unique user identification
 - ✅ Emergency access procedure (admin override)
 - ⚠️ Automatic logoff (must implement 15-min timeout)
 - ⚠️ Encryption and decryption (must encrypt PHI at rest)
 
 **Implementation Status**:
+
 ```typescript
 // ✅ Implemented
 - Unique user IDs via better-auth
@@ -237,6 +263,7 @@ pnpm outdated
 **Current Status**: ✅ **IMPLEMENTED**
 
 **Completed**:
+
 - ✅ Audit logging system tracking:
   - Who accessed PHI (user ID, email, role, session ID)
   - What PHI was accessed (resource type, resource ID, action)
@@ -253,6 +280,7 @@ pnpm outdated
 **Required**: Mechanisms to ensure PHI is not improperly altered or destroyed.
 
 **Implemented**:
+
 - ✅ Version control (Git)
 - ✅ Database backups (automated)
 - ✅ Data validation (Zod schemas)
@@ -264,6 +292,7 @@ pnpm outdated
 **Required**: Procedures to verify person/entity seeking access is authorized.
 
 **Implemented**:
+
 - ✅ Password authentication (bcrypt)
 - ✅ OAuth authentication
 - ✅ Session validation
@@ -275,6 +304,7 @@ pnpm outdated
 **Required**: Technical security measures to guard against unauthorized access to PHI transmitted over networks.
 
 **Implemented**:
+
 - ✅ TLS 1.3 encryption (HTTPS)
 - ✅ End-to-end encryption for data in transit
 - ✅ Network segmentation (Docker containers)
@@ -285,6 +315,7 @@ pnpm outdated
 #### 1. Security Management Process (§164.308(a)(1))
 
 **Required**:
+
 - [ ] Risk Analysis (this document)
 - [ ] Risk Management (ongoing)
 - [ ] Sanction Policy (for violations)
@@ -293,6 +324,7 @@ pnpm outdated
 #### 2. Assigned Security Responsibility (§164.308(a)(2))
 
 **Required**:
+
 - [ ] Designated Security Officer
 - [ ] Security policies and procedures
 - [ ] Incident response plan
@@ -300,6 +332,7 @@ pnpm outdated
 #### 3. Workforce Security (§164.308(a)(3))
 
 **Required**:
+
 - [ ] Authorization/supervision procedures
 - [ ] Workforce clearance procedures
 - [ ] Termination procedures (access revocation)
@@ -307,6 +340,7 @@ pnpm outdated
 #### 4. Information Access Management (§164.308(a)(4))
 
 **Required**:
+
 - ✅ Access authorization (role-based)
 - ✅ Access establishment and modification
 - ⚠️ Minimum necessary standard (access only to needed PHI)
@@ -314,6 +348,7 @@ pnpm outdated
 #### 5. Security Awareness and Training (§164.308(a)(5))
 
 **Required**:
+
 - [ ] Security reminders
 - [ ] Protection from malicious software
 - [ ] Log-in monitoring
@@ -322,12 +357,14 @@ pnpm outdated
 #### 6. Security Incident Procedures (§164.308(a)(6))
 
 **Required**:
+
 - [ ] Response and reporting procedures
 - [ ] Breach notification process (within 60 days)
 
 #### 7. Contingency Plan (§164.308(a)(7))
 
 **Required**:
+
 - ✅ Data backup plan (automated)
 - [ ] Disaster recovery plan
 - [ ] Emergency mode operation plan
@@ -338,6 +375,7 @@ pnpm outdated
 **Required**: Written contracts with third parties that handle PHI.
 
 **Current Third Parties**:
+
 - Cloudflare Images - ⚠️ BAA required if storing health-related images
 - Algolia - ⚠️ BAA required if indexing PHI
 - Grok AI (xAI) - ⚠️ **CRITICAL**: BAA required, PII anonymization needed
@@ -345,6 +383,7 @@ pnpm outdated
 - Database hosting - ⚠️ BAA required
 
 **Action Items**:
+
 - [ ] Obtain BAAs from all vendors handling potential PHI
 - [ ] Implement data anonymization before sending to AI
 - [ ] Review all vendor security certifications
@@ -354,6 +393,7 @@ pnpm outdated
 #### 1. Facility Access Controls (§164.310(a)(1))
 
 **Server/Hosting Environment**:
+
 - ✅ Coolify server with restricted access
 - ⚠️ Physical security depends on hosting provider
 - [ ] Document facility access procedures
@@ -362,6 +402,7 @@ pnpm outdated
 #### 2. Workstation Security (§164.310(c))
 
 **Required**:
+
 - [ ] Security policies for workstation access
 - [ ] Automatic screen locks
 - [ ] Encryption on laptops/workstations
@@ -369,6 +410,7 @@ pnpm outdated
 #### 3. Device and Media Controls (§164.310(d)(1))
 
 **Required**:
+
 - ✅ Disposal procedures (secure deletion)
 - ✅ Media re-use (data wiping)
 - [ ] Accountability (tracking of hardware)
@@ -478,27 +520,28 @@ pnpm outdated
 
 ## 📊 Compliance Status Summary
 
-| Requirement | Status | Priority |
-|------------|--------|----------|
-| Authentication | ✅ Complete | High |
-| Authorization | ✅ Complete | High |
-| Encryption in Transit | ✅ Complete | Critical |
-| Encryption at Rest | ⚠️ Partial | Critical |
-| Audit Logging | ✅ Complete | Critical |
-| Input Validation | ✅ Complete | High |
-| XSS Protection | ✅ Complete | High |
-| CSRF Protection | ✅ Complete | High |
-| SQL Injection Protection | ✅ Complete | Critical |
-| Rate Limiting | ✅ Complete | High |
-| Session Management | ✅ Complete | High |
-| Error Handling | ✅ Complete | Medium |
-| Business Associate Agreements | ❌ Missing | Critical |
-| MFA | ⚠️ Optional | High |
-| Data Anonymization (AI) | ✅ Complete | Critical |
-| Backup & Recovery | ✅ Complete | High |
-| Security Monitoring | ✅ Complete | High |
+| Requirement                   | Status      | Priority |
+| ----------------------------- | ----------- | -------- |
+| Authentication                | ✅ Complete | High     |
+| Authorization                 | ✅ Complete | High     |
+| Encryption in Transit         | ✅ Complete | Critical |
+| Encryption at Rest            | ⚠️ Partial  | Critical |
+| Audit Logging                 | ✅ Complete | Critical |
+| Input Validation              | ✅ Complete | High     |
+| XSS Protection                | ✅ Complete | High     |
+| CSRF Protection               | ✅ Complete | High     |
+| SQL Injection Protection      | ✅ Complete | Critical |
+| Rate Limiting                 | ✅ Complete | High     |
+| Session Management            | ✅ Complete | High     |
+| Error Handling                | ✅ Complete | Medium   |
+| Business Associate Agreements | ❌ Missing  | Critical |
+| MFA                           | ⚠️ Optional | High     |
+| Data Anonymization (AI)       | ✅ Complete | Critical |
+| Backup & Recovery             | ✅ Complete | High     |
+| Security Monitoring           | ✅ Complete | High     |
 
 **Overall Status**:
+
 - **Security**: 95% Complete ✅
 - **HIPAA Compliance**: 85% Complete ✅ (if handling PHI)
 

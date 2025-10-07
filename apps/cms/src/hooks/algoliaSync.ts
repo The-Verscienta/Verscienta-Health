@@ -1,10 +1,7 @@
-import type { CollectionAfterChangeHook } from 'payload'
 import { algoliasearch } from 'algoliasearch'
+import type { CollectionAfterChangeHook } from 'payload'
 
-const client = algoliasearch(
-  process.env.ALGOLIA_APP_ID!,
-  process.env.ALGOLIA_ADMIN_API_KEY!
-)
+const client = algoliasearch(process.env.ALGOLIA_APP_ID!, process.env.ALGOLIA_ADMIN_API_KEY!)
 
 /**
  * Sync Payload documents to Algolia search index
@@ -87,7 +84,9 @@ function transformDocForAlgolia(doc: any, collection: string): any {
         shortDescription: doc.shortDescription,
         tradition: doc.tradition,
         category: doc.category,
-        ingredients: doc.ingredients?.map((ing: any) => ing.herb?.title || ing.herb).filter(Boolean),
+        ingredients: doc.ingredients
+          ?.map((ing: any) => ing.herb?.title || ing.herb)
+          .filter(Boolean),
         useCases: doc.useCases?.map((uc: any) => uc.useCase).filter(Boolean),
       }
 
@@ -114,12 +113,13 @@ function transformDocForAlgolia(doc: any, collection: string): any {
         city: doc.address?.city,
         state: doc.address?.state,
         country: doc.address?.country,
-        _geoloc: doc.address?.latitude && doc.address?.longitude
-          ? {
-              lat: doc.address.latitude,
-              lng: doc.address.longitude,
-            }
-          : undefined,
+        _geoloc:
+          doc.address?.latitude && doc.address?.longitude
+            ? {
+                lat: doc.address.latitude,
+                lng: doc.address.longitude,
+              }
+            : undefined,
         averageRating: doc.averageRating,
         featured: doc.featured,
       }

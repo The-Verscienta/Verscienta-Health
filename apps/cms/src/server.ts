@@ -1,6 +1,6 @@
+import { config } from 'dotenv'
 import express from 'express'
 import payload from 'payload'
-import { config } from 'dotenv'
 import configPayload from '../payload.config.js'
 
 const app = express()

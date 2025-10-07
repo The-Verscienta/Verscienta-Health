@@ -22,6 +22,7 @@ Verscienta implements a multi-layer caching strategy to optimize performance and
 
 **What is DragonflyDB?**
 DragonflyDB is a modern, high-performance, drop-in replacement for Redis that's designed for cloud workloads. It offers:
+
 - **25x higher throughput** than Redis on a single instance
 - **Lower latency** and memory footprint
 - **Full Redis compatibility** (works with all Redis clients)
@@ -29,6 +30,7 @@ DragonflyDB is a modern, high-performance, drop-in replacement for Redis that's 
 - **Persistence** with snapshots and append-only file (AOF)
 
 **Environment Variables:**
+
 ```bash
 # DragonflyDB Configuration
 REDIS_HOST=localhost          # DragonflyDB host
@@ -38,6 +40,7 @@ REDIS_DB=0                    # Database number (0-15)
 ```
 
 **Quick Setup (Docker):**
+
 ```bash
 # Basic deployment
 docker run -d --name dragonfly -p 6379:6379 \
@@ -52,12 +55,14 @@ docker run -d --name dragonfly -p 6379:6379 \
 ```
 
 **Coolify Deployment:**
+
 1. Create new service → DragonflyDB
 2. Set password via environment variable
 3. Configure persistent volume for `/data`
 4. Expose port 6379 internally (no public exposure needed)
 
 **Features:**
+
 - Self-hosted with full control
 - Automatic cache expiration (TTL)
 - Rate limiting per endpoint
@@ -73,21 +78,18 @@ docker run -d --name dragonfly -p 6379:6379 \
 import { withCache, cacheKeys, cacheTTL } from '@/lib/cache'
 
 // Cache a database query
-const herb = await withCache(
-  cacheKeys.herb(slug),
-  cacheTTL.herb,
-  async () => {
-    return await payload.findByID({
-      collection: 'herbs',
-      id: herbId,
-    })
-  }
-)
+const herb = await withCache(cacheKeys.herb(slug), cacheTTL.herb, async () => {
+  return await payload.findByID({
+    collection: 'herbs',
+    id: herbId,
+  })
+})
 ```
 
 #### Cache Keys
 
 Predefined cache key patterns:
+
 - `herb:{slug}` - Individual herb data (1 hour TTL)
 - `formula:{slug}` - Individual formula data (1 hour TTL)
 - `search:{query}` - Search results (15 minutes TTL)
@@ -123,6 +125,7 @@ export async function middleware(request: NextRequest) {
 ```
 
 **Rate Limits:**
+
 - API endpoints: 100 requests per 10 minutes
 - AI endpoints: 20 requests per 10 minutes
 - Search endpoints: 50 requests per 10 minutes
@@ -144,6 +147,7 @@ if (!cachedData) {
 ### Cache Cleanup
 
 Automated cache cleanup runs daily at 4 AM via cron job:
+
 - Removes expired Redis keys
 - Clears old temporary files
 - Frees disk space
@@ -158,6 +162,7 @@ MFA implementation using TOTP (Time-based One-Time Passwords) for admin and prac
 ### Setup
 
 **Environment Variables:**
+
 ```bash
 # better-auth configuration
 BETTER_AUTH_SECRET=your-secret-key
@@ -203,6 +208,7 @@ POST /api/auth/mfa/verify
 ### Backup Codes
 
 8 single-use backup codes generated during setup:
+
 - Stored encrypted in database
 - Can be used if authenticator is unavailable
 - Regenerate via account settings
@@ -223,11 +229,13 @@ Comprehensive audit trail for security and compliance.
 ### Tracked Events
 
 **Automatic (via hooks):**
+
 - Create/Update/Delete operations on all collections
 - Changes tracked with before/after values
 - IP address and user agent captured
 
 **Manual (security events):**
+
 - Login attempts (success/failure)
 - MFA events (setup, verification, disable)
 - Password changes
@@ -237,6 +245,7 @@ Comprehensive audit trail for security and compliance.
 ### AuditLogs Collection
 
 **Schema:**
+
 ```typescript
 {
   user: relationship // User who performed action
@@ -294,10 +303,12 @@ await logSecurityEvent(
 ### Querying Audit Logs
 
 **Via Payload Admin:**
+
 - Navigate to Audit Logs collection
 - Filter by user, action, resource, severity, date range
 
 **Via API:**
+
 ```typescript
 const logs = await payload.find({
   collection: 'audit-logs',
@@ -324,6 +335,7 @@ const logs = await payload.find({
 ### Compliance
 
 Audit logs support compliance with:
+
 - HIPAA (Health Insurance Portability and Accountability Act)
 - GDPR (General Data Protection Regulation)
 - SOC 2 (Service Organization Control 2)
@@ -343,24 +355,28 @@ Migration file: `apps/cms/src/db/migrations/add-indexes.sql`
 #### Index Types
 
 **1. Standard Indexes**
+
 ```sql
 CREATE INDEX idx_herbs_status ON herbs(status);
 CREATE INDEX idx_herbs_slug ON herbs(slug);
 ```
 
 **2. Composite Indexes**
+
 ```sql
 CREATE INDEX idx_herbs_status_published
   ON herbs(status, published_at DESC);
 ```
 
 **3. GIN Indexes (JSONB fields)**
+
 ```sql
 CREATE INDEX idx_herbs_tcm_properties
   ON herbs USING gin ((tcm_properties::jsonb));
 ```
 
 **4. Full-Text Search Indexes**
+
 ```sql
 CREATE INDEX idx_herbs_full_text ON herbs
   USING gin(to_tsvector('english',
@@ -371,6 +387,7 @@ CREATE INDEX idx_herbs_full_text ON herbs
 ```
 
 **5. Geospatial Indexes**
+
 ```sql
 CREATE INDEX idx_practitioners_location ON practitioners
   USING gist(
@@ -382,6 +399,7 @@ CREATE INDEX idx_practitioners_location ON practitioners
 ```
 
 **6. Partial Indexes** (optimized for common queries)
+
 ```sql
 CREATE INDEX idx_herbs_active ON herbs(id, name)
   WHERE status = 'published';
@@ -390,11 +408,13 @@ CREATE INDEX idx_herbs_active ON herbs(id, name)
 ### Applying Migrations
 
 **Development:**
+
 ```bash
 psql $DATABASE_URL < apps/cms/src/db/migrations/add-indexes.sql
 ```
 
 **Production:**
+
 ```bash
 # Via Coolify or your deployment platform
 # Connect to database and run migration
@@ -478,6 +498,7 @@ const suggestions = await autocompleteSearch(
 ### Query Performance
 
 Expected query times with indexes:
+
 - Simple lookups (by ID/slug): < 5ms
 - Full-text search: < 50ms
 - TCM property filters: < 30ms
@@ -495,6 +516,7 @@ Scheduled background jobs for maintenance and data management.
 Located in: `apps/cms/src/cron/`
 
 **Initialization:**
+
 ```typescript
 // apps/cms/src/server.ts
 import { initializeCronJobs } from './cron'
@@ -512,12 +534,14 @@ await initializeCronJobs(payload)
 Synchronizes Payload CMS data with Algolia search indexes.
 
 **Features:**
+
 - Syncs herbs, formulas, conditions, practitioners
 - Replaces all objects (full sync)
 - Transforms data for optimal search
 - Logs sync statistics
 
 **Manual trigger:**
+
 ```typescript
 import { triggerJob } from '@/cron'
 await triggerJob(payload, 'Sync Algolia Index')
@@ -531,6 +555,7 @@ await triggerJob(payload, 'Sync Algolia Index')
 Validates data integrity and quality.
 
 **Validation Rules:**
+
 - Scientific name format (`Genus species`)
 - TCM temperature properties
 - TCM taste properties
@@ -538,10 +563,12 @@ Validates data integrity and quality.
 - Required fields presence
 
 **Output:**
+
 - Validation report saved to `validation-reports` collection
 - Email alert for critical errors (if configured)
 
 **Sample Validation Rules:**
+
 ```typescript
 {
   field: 'scientificName',
@@ -558,18 +585,21 @@ Validates data integrity and quality.
 Imports data from external sources.
 
 **Data Sources:**
+
 - PubChem (chemical compounds)
 - TCM databases (configurable)
 - CSV files
 - APIs
 
 **Features:**
+
 - Duplicate detection by scientific name
 - Creates drafts (requires manual review)
 - Maps external data to herb schema
 - Tracks import statistics
 
 **Configuration:**
+
 ```bash
 # Enable data import
 ENABLE_DATA_IMPORT=true
@@ -577,6 +607,7 @@ ENABLE_PUBCHEM_IMPORT=true
 ```
 
 **Adding New Sources:**
+
 ```typescript
 // apps/cms/src/cron/jobs/importExternalData.ts
 const dataSources: ExternalDataSource[] = [
@@ -607,6 +638,7 @@ function mapTCMData(data: any): any {
 Removes expired cache entries and temporary files.
 
 **Tasks:**
+
 - Delete expired Redis keys
 - Clear old rate limit entries
 - Remove temporary files older than 24 hours
@@ -620,12 +652,14 @@ Removes expired cache entries and temporary files.
 Creates PostgreSQL database backups.
 
 **Features:**
+
 - Uses `pg_dump` for consistent backups
 - Optional compression (gzip)
 - Optional cloud upload (S3, R2)
 - Retention policy (keeps last 7 backups)
 
 **Configuration:**
+
 ```bash
 # Enable auto backup
 ENABLE_AUTO_BACKUP=true
@@ -638,6 +672,7 @@ BACKUP_RETENTION_COUNT=7
 ```
 
 **Manual Backup:**
+
 ```typescript
 await triggerJob(payload, 'Backup Database')
 ```
@@ -650,6 +685,7 @@ await triggerJob(payload, 'Backup Database')
 Generates XML sitemap for SEO.
 
 **Features:**
+
 - Static pages (/, /herbs, /about, etc.)
 - Dynamic pages from CMS collections
 - Proper priority and changefreq settings
@@ -657,6 +693,7 @@ Generates XML sitemap for SEO.
 - Optionally pings search engines
 
 **Configuration:**
+
 ```bash
 SITEMAP_DIR=./public
 PING_SEARCH_ENGINES=true
@@ -672,12 +709,14 @@ PING_SEARCH_ENGINES=true
 Sends weekly digest emails to subscribers.
 
 **Features:**
+
 - Gathers content from past 7 days
 - Beautiful HTML email template
 - Batch sending (100 emails per batch)
 - Rate limit protection
 
 **Configuration:**
+
 ```bash
 ENABLE_DIGEST_EMAILS=true
 RESEND_API_KEY=your-resend-api-key
@@ -685,6 +724,7 @@ RESEND_FROM_EMAIL=noreply@verscienta.com
 ```
 
 **Email Sections:**
+
 - New herbs
 - New formulas
 - New conditions
@@ -692,6 +732,7 @@ RESEND_FROM_EMAIL=noreply@verscienta.com
 
 **Subscriber Management:**
 Users opt in via account preferences:
+
 ```typescript
 preferences: {
   weeklyDigest: true
@@ -736,11 +777,13 @@ const logs = await payload.find({
 ### Monitoring & Alerts
 
 **Success Metrics:**
+
 - Job completion time
 - Records processed
 - Errors encountered
 
 **Failure Handling:**
+
 - Errors logged to console
 - Job execution continues for other jobs
 - TODO: Email alerts for critical failures
@@ -748,6 +791,7 @@ const logs = await payload.find({
 ### Best Practices
 
 1. **Test jobs manually** before relying on schedule:
+
    ```bash
    pnpm --filter @verscienta/cms dev
    # Then in another terminal
@@ -759,6 +803,7 @@ const logs = await payload.find({
 3. **Set appropriate schedules** to avoid peak traffic times
 
 4. **Enable backups** in production:
+
    ```bash
    ENABLE_AUTO_BACKUP=true
    ```
@@ -819,6 +864,7 @@ Automated botanical data enrichment using the Trefle API, a free database with o
 ### Overview
 
 The Trefle integration provides:
+
 - **Scientific name validation** against botanical database
 - **Automated herb enrichment** with images, distributions, toxicity data
 - **Progressive import** of 1M+ plants from Trefle
@@ -836,6 +882,7 @@ ENABLE_TREFLE_IMPORT=false
 ```
 
 **Get API Key:**
+
 1. Visit [trefle.io](https://trefle.io/)
 2. Create free account
 3. Generate API key from dashboard
@@ -845,6 +892,7 @@ ENABLE_TREFLE_IMPORT=false
 #### 1. Herb Enrichment (Weekly Sync)
 
 Automatically enriches existing herbs with:
+
 - ✅ Scientific name validation
 - 🌍 Native and introduced distributions
 - 🖼️ Botanical images
@@ -861,6 +909,7 @@ Automatically enriches existing herbs with:
 #### 2. Progressive Import (Every Minute)
 
 Imports all Trefle plants into your database:
+
 - 🔄 Runs every minute when enabled
 - 📊 ~100 plants per run (respects 120 req/min rate limit)
 - 📝 Creates herbs as **drafts** for review
@@ -872,6 +921,7 @@ Imports all Trefle plants into your database:
 ### Data Enrichment Examples
 
 **Before Enrichment:**
+
 ```typescript
 {
   name: "Lavender",
@@ -883,6 +933,7 @@ Imports all Trefle plants into your database:
 ```
 
 **After Enrichment:**
+
 ```typescript
 {
   name: "Lavender",
@@ -917,6 +968,7 @@ Imports all Trefle plants into your database:
 #### Import Logs
 
 View sync and import results:
+
 ```
 CMS Admin → System → Import Logs
 
@@ -929,6 +981,7 @@ Filter by:
 #### Validation Reports
 
 Review scientific name issues:
+
 ```
 CMS Admin → System → Validation Reports
 
@@ -939,6 +992,7 @@ Filter by:
 #### Import Progress
 
 Check progressive import status:
+
 ```
 CMS Admin → System → Trefle Import State
 
@@ -993,10 +1047,12 @@ await resetTrefleImport(payload)
 ### Rate Limiting
 
 Trefle API limits:
+
 - **120 requests per minute**
 - **5000 requests per day** (free tier)
 
 Our implementation:
+
 - ✅ 500ms delay between requests (built-in)
 - ✅ Auto-retry on 429 rate limit (60s wait)
 - ✅ Batch processing within limits
@@ -1035,21 +1091,25 @@ Our implementation:
 ### Troubleshooting
 
 **Issue: No herbs enriched**
+
 1. Check `TREFLE_API_KEY` is set
 2. Verify sync job is enabled in cron logs
 3. Ensure herbs meet criteria (no trefleId or >30 days old)
 
 **Issue: Rate limit errors**
+
 1. Implementation auto-retries after 60s
 2. Reduce `pagesPerRun` in import job if persistent
 3. Check Trefle dashboard for usage
 
 **Issue: Import stuck**
+
 1. Check import state: System → Trefle Import State
 2. Reset if needed: `resetTrefleImport(payload)`
 3. Review error logs for issues
 
 **Issue: Too many drafts**
+
 1. Pause import: `ENABLE_TREFLE_IMPORT=false`
 2. Review and delete non-herbs
 3. Modify `isHerbCandidate()` filter for stricter criteria
@@ -1070,6 +1130,7 @@ Automated cultivation and pest management data using the Perenual API, a databas
 ### Overview
 
 The Perenual integration provides:
+
 - **Cultivation information** - Watering, sunlight, soil, hardiness
 - **Pest management** - Common pests and treatment solutions
 - **Care guides** - Detailed growing instructions
@@ -1088,6 +1149,7 @@ ENABLE_PERENUAL_IMPORT=false
 ```
 
 **Get API Key:**
+
 1. Visit [perenual.com/docs/api](https://perenual.com/docs/api)
 2. Create free account
 3. Generate API key from dashboard
@@ -1097,6 +1159,7 @@ ENABLE_PERENUAL_IMPORT=false
 #### Cultivation Data
 
 Enriches herbs with:
+
 - 💧 Watering requirements and frequency
 - ☀️ Sunlight needs (full sun, partial shade, etc.)
 - 🌱 Soil preferences and pH
@@ -1123,6 +1186,7 @@ Enriches herbs with:
 Both Trefle and Perenual imports use intelligent deduplication:
 
 **Prevents Duplicates:**
+
 ```typescript
 // Checks for existing herbs by:
 - Scientific name (primary)
@@ -1138,6 +1202,7 @@ Both Trefle and Perenual imports use intelligent deduplication:
 ```
 
 **Example Merge:**
+
 ```typescript
 // Existing herb from Trefle
 {
@@ -1207,12 +1272,14 @@ console.log(`Merged: ${stats.merged}, Deleted: ${stats.deleted}`)
 ### Monitoring
 
 #### Import Logs
+
 ```
 CMS Admin → System → Import Logs
 Filter by: "Perenual Progressive Import"
 ```
 
 #### Import State
+
 ```
 CMS Admin → System → Perenual Import State
 
@@ -1226,16 +1293,19 @@ View:
 ### Troubleshooting
 
 **Issue: Duplicate herbs created**
+
 1. Run bulk deduplication: `bulkDeduplicate(payload)`
 2. Check scientific name variations
 3. Review merge logs for conflicts
 
 **Issue: Data not merging**
+
 1. Verify both API keys are set
 2. Check import logs for errors
 3. Review `herbDeduplication.ts` merge logic
 
 **Issue: Import running but no herbs**
+
 1. Check herb candidate filter in import job
 2. Verify plants meet inclusion criteria
 3. Review import logs for skipped plants
@@ -1261,13 +1331,13 @@ View:
 
 Expected performance improvements with advanced features:
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Herb page load | 800ms | 150ms | 81% faster |
-| Search query | 500ms | 50ms | 90% faster |
-| Database queries | 200ms | 20ms | 90% faster |
-| Cache hit rate | 0% | 85% | N/A |
-| API rate limit violations | Common | Rare | 95% reduction |
+| Metric                    | Before | After | Improvement   |
+| ------------------------- | ------ | ----- | ------------- |
+| Herb page load            | 800ms  | 150ms | 81% faster    |
+| Search query              | 500ms  | 50ms  | 90% faster    |
+| Database queries          | 200ms  | 20ms  | 90% faster    |
+| Cache hit rate            | 0%     | 85%   | N/A           |
+| API rate limit violations | Common | Rare  | 95% reduction |
 
 ---
 
@@ -1292,6 +1362,7 @@ Expected performance improvements with advanced features:
 **Problem:** "Failed to connect to DragonflyDB"
 
 **Solution:**
+
 1. Verify DragonflyDB is running: `docker ps | grep dragonfly`
 2. Check `REDIS_HOST` and `REDIS_PORT` are correct
 3. Verify password if configured
@@ -1304,6 +1375,7 @@ Expected performance improvements with advanced features:
 **Problem:** "Invalid verification code"
 
 **Solution:**
+
 1. Ensure system time is synchronized (NTP)
 2. QR code generated correctly
 3. User entered 6-digit code (not backup code)
@@ -1314,6 +1386,7 @@ Expected performance improvements with advanced features:
 **Problem:** Jobs don't execute on schedule
 
 **Solution:**
+
 1. Verify cron system initialized in `server.ts`
 2. Check job `enabled` flag is `true`
 3. Validate cron schedule syntax
@@ -1325,6 +1398,7 @@ Expected performance improvements with advanced features:
 **Problem:** Index creation fails
 
 **Solution:**
+
 1. Check PostgreSQL version (17+ required)
 2. Ensure extensions installed (`earthdistance`, `cube`)
 3. Verify database user has CREATE INDEX permission

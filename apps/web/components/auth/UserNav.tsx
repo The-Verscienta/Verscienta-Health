@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession, signOut } from '@/lib/auth-client'
+import { LogOut, Settings, User } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,13 +11,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { User, LogOut, Settings } from 'lucide-react'
+import { signOut, useSession } from '@/lib/auth-client'
 
 export function UserNav() {
   const { data: session, isPending } = useSession()
 
   if (isPending) {
-    return <div className="h-9 w-20 animate-pulse bg-earth-100 rounded" />
+    return <div className="bg-earth-100 h-9 w-20 animate-pulse rounded" />
   }
 
   if (!session) {
@@ -49,9 +49,7 @@ export function UserNav() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
-          <DialogDescription>
-            {session.user?.email}
-          </DialogDescription>
+          <DialogDescription>{session.user?.email}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
           <Link href="/profile">
@@ -68,7 +66,7 @@ export function UserNav() {
           </Link>
           <Button
             variant="ghost"
-            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
             onClick={handleSignOut}
           >
             <LogOut className="mr-2 h-4 w-4" />

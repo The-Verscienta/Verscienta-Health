@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { ChevronRight, Heart, Search } from 'lucide-react'
 import { Button } from './button'
-import { Search, ChevronRight, Heart } from 'lucide-react'
 
 const meta = {
   title: 'UI/Button',
@@ -111,12 +111,12 @@ export const Disabled: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-4 items-center">
+      <div className="flex items-center gap-4">
         <Button variant="default">Default</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="outline">Outline</Button>
       </div>
-      <div className="flex gap-4 items-center">
+      <div className="flex items-center gap-4">
         <Button variant="ghost">Ghost</Button>
         <Button variant="destructive">Destructive</Button>
         <Button variant="link">Link</Button>
@@ -127,7 +127,7 @@ export const AllVariants: Story = {
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex gap-4 items-center">
+    <div className="flex items-center gap-4">
       <Button size="sm">Small</Button>
       <Button size="default">Default</Button>
       <Button size="lg">Large</Button>

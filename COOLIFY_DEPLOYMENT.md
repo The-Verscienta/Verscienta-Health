@@ -7,6 +7,7 @@ This guide covers deploying Verscienta Health to a server running Coolify.
 **Deployment Platform:** Coolify (Self-hosted)
 **Architecture:** Monorepo (Turborepo + pnpm)
 **Services Required:**
+
 - Next.js Frontend (Port 3000)
 - Payload CMS Backend (Port 3001)
 - PostgreSQL 17+ Database
@@ -28,10 +29,12 @@ This guide covers deploying Verscienta Health to a server running Coolify.
 ### Domain Setup
 
 You'll need two domains/subdomains:
+
 - `verscienta.com` - Frontend (Next.js)
 - `backend.verscienta.com` - Backend (Payload CMS)
 
 Or use a single domain with reverse proxy paths:
+
 - `yourdomain.com` - Frontend
 - `yourdomain.com/cms` - Backend
 
@@ -191,6 +194,7 @@ export default {
 ### 3.2 Note Database Connection Details
 
 Coolify will provide you with:
+
 - **Host:** Internal Docker network hostname
 - **Port:** Usually 5432
 - **Database:** verscienta_health
@@ -198,6 +202,7 @@ Coolify will provide you with:
 - **Password:** [generated password]
 
 Connection string format:
+
 ```
 postgresql://verscienta_user:PASSWORD@HOST:5432/verscienta_health
 ```
@@ -265,6 +270,7 @@ After deployment, run migrations:
 1. Go to the CMS service in Coolify
 2. Click **Terminal**
 3. Run:
+
 ```bash
 pnpm db:push
 ```
@@ -350,6 +356,7 @@ TURNSTILE_SECRET_KEY=your_turnstile_secret_key
 ### 6.2 Build Configuration
 
 Coolify will automatically:
+
 - Pull latest code on git push
 - Build Docker images
 - Deploy new containers
@@ -398,6 +405,7 @@ In `apps/cms/payload.config.ts`, the CORS is configured via `FRONTEND_URL` env v
 ### 8.1 Coolify Built-in Monitoring
 
 Coolify provides:
+
 - Container health status
 - Resource usage (CPU, RAM, disk)
 - Logs viewer
@@ -408,6 +416,7 @@ Coolify provides:
 Both applications log to stdout/stderr, which Coolify captures.
 
 To view logs:
+
 1. Go to service in Coolify
 2. Click **Logs**
 3. Filter by time range or search keywords
@@ -415,6 +424,7 @@ To view logs:
 ### 8.3 Set Up Alerts (Optional)
 
 Configure Coolify to send alerts:
+
 - Email notifications
 - Webhook notifications
 - Discord/Slack integration
@@ -529,6 +539,7 @@ Add Redis for session storage:
 ### 10.2 CDN Configuration
 
 Use Cloudflare as CDN:
+
 1. Point DNS to Cloudflare
 2. Enable caching rules
 3. Configure page rules
@@ -537,6 +548,7 @@ Use Cloudflare as CDN:
 ### 10.3 Resource Limits
 
 Set appropriate Docker resource limits in Coolify:
+
 - **Frontend:** 1GB RAM, 1 CPU
 - **Backend:** 2GB RAM, 1 CPU
 - **Database:** 2GB RAM, 1 CPU
@@ -564,9 +576,11 @@ Coolify supports multiple replicas:
 ## 📞 Support
 
 ### Coolify Documentation
+
 - https://coolify.io/docs
 
 ### Verscienta Health
+
 - Email: support@verscientahealth.com
 - Documentation: See README.md and SETUP_GUIDE.md
 

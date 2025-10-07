@@ -2,43 +2,86 @@
 
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { HerbCard } from '@/components/cards/HerbCard'
-import { FormulaCard } from '@/components/cards/FormulaCard'
 import { ConditionCard } from '@/components/cards/ConditionCard'
+import { FormulaCard } from '@/components/cards/FormulaCard'
+import { HerbCard } from '@/components/cards/HerbCard'
 import { PractitionerCard } from '@/components/cards/PractitionerCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { SearchFilters } from '@/components/search/SearchFilters'
 import { Loading } from '@/components/ui/loading'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { searchMultipleIndexes } from '@/lib/algolia'
-import {
-  getFilterGroups,
-  getSortOptions,
-  applyFilters,
-  applySorting,
-} from '@/lib/search-filters'
+import { applyFilters, applySorting, getFilterGroups, getSortOptions } from '@/lib/search-filters'
 
 interface SearchHerb {
   objectID: string
   herbId: string
+  title: string
+  slug: string
+  scientificName?: string
+  description?: string
+  featuredImage?: {
+    url: string
+    alt?: string
+  }
+  tcmProperties?: {
+    taste?: string[]
+    temperature?: string
+    category?: string
+  }
+  westernProperties?: string[]
+  averageRating?: number
+  reviewCount?: number
   [key: string]: unknown
 }
 
 interface SearchFormula {
   objectID: string
   formulaId: string
+  title: string
+  slug: string
+  chineseName?: string
+  pinyin?: string
+  description?: string
+  category?: string
+  tradition?: string
+  ingredientCount?: number
+  averageRating?: number
+  reviewCount?: number
   [key: string]: unknown
 }
 
 interface SearchCondition {
   objectID: string
   conditionId: string
+  title: string
+  slug: string
+  description?: string
+  category?: string
+  severity?: string
+  relatedHerbsCount?: number
+  relatedFormulasCount?: number
   [key: string]: unknown
 }
 
 interface SearchPractitioner {
   objectID: string
   practitionerId: string
+  name: string
+  slug: string
+  photo?: {
+    url: string
+    alt?: string
+  }
+  title?: string
+  modalities?: string[]
+  address?: {
+    city?: string
+    state?: string
+  }
+  averageRating?: number
+  reviewCount?: number
+  verificationStatus?: 'verified' | 'pending' | 'unverified'
   [key: string]: unknown
 }
 
@@ -91,7 +134,12 @@ export default function SearchPage() {
           'practitioners',
         ])
 
-        setResults(searchResults)
+        setResults({
+          herbs: (searchResults.herbs as SearchHerb[]) || [],
+          formulas: (searchResults.formulas as SearchFormula[]) || [],
+          conditions: (searchResults.conditions as SearchCondition[]) || [],
+          practitioners: (searchResults.practitioners as SearchPractitioner[]) || [],
+        })
       } catch (error) {
         console.error('Search error:', error)
       } finally {
@@ -103,19 +151,22 @@ export default function SearchPage() {
   }, [query])
 
   // Apply filters and sorting to results
-  const filteredHerbs = applySorting(applyFilters(results.herbs || [], herbFilters), herbSort)
+  const filteredHerbs = applySorting(
+    applyFilters(results.herbs || [], herbFilters),
+    herbSort
+  ) as SearchHerb[]
   const filteredFormulas = applySorting(
     applyFilters(results.formulas || [], formulaFilters),
     formulaSort
-  )
+  ) as SearchFormula[]
   const filteredConditions = applySorting(
     applyFilters(results.conditions || [], conditionFilters),
     conditionSort
-  )
+  ) as SearchCondition[]
   const filteredPractitioners = applySorting(
     applyFilters(results.practitioners || [], practitionerFilters),
     practitionerSort
-  )
+  ) as SearchPractitioner[]
 
   const totalResults =
     filteredHerbs.length +
@@ -167,7 +218,7 @@ export default function SearchPage() {
     <div className="container-custom py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">Search Results</h1>
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Search Results</h1>
         {query && (
           <p className="text-lg text-gray-600">
             {isLoading ? (
@@ -190,12 +241,16 @@ export default function SearchPage() {
       {isLoading ? (
         <Loading />
       ) : !query ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600">Enter a search term to find herbs, formulas, conditions, and practitioners.</p>
+        <div className="py-12 text-center">
+          <p className="text-gray-600">
+            Enter a search term to find herbs, formulas, conditions, and practitioners.
+          </p>
         </div>
       ) : totalResults === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600">No results found for "{query}". Try a different search term.</p>
+        <div className="py-12 text-center">
+          <p className="text-gray-600">
+            No results found for "{query}". Try a different search term.
+          </p>
         </div>
       ) : (
         <Tabs defaultValue="all" className="w-full" value={activeTab} onValueChange={setActiveTab}>
@@ -213,10 +268,10 @@ export default function SearchPage() {
           <TabsContent value="all" className="space-y-8">
             {filteredHerbs.length > 0 && (
               <div>
-                <h2 className="text-2xl font-bold font-serif text-earth-900 mb-4">
+                <h2 className="text-earth-900 mb-4 font-serif text-2xl font-bold">
                   Herbs ({filteredHerbs.length})
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {filteredHerbs.slice(0, 6).map((herb: SearchHerb) => (
                     <HerbCard key={herb.objectID} {...herb} herbId={herb.herbId} />
                   ))}
@@ -224,7 +279,7 @@ export default function SearchPage() {
                 {filteredHerbs.length > 6 && (
                   <button
                     onClick={() => setActiveTab('herbs')}
-                    className="mt-4 text-earth-600 hover:text-earth-700 font-medium"
+                    className="text-earth-600 hover:text-earth-700 mt-4 font-medium"
                   >
                     View all {filteredHerbs.length} herbs →
                   </button>
@@ -234,10 +289,10 @@ export default function SearchPage() {
 
             {filteredFormulas.length > 0 && (
               <div>
-                <h2 className="text-2xl font-bold font-serif text-earth-900 mb-4">
+                <h2 className="text-earth-900 mb-4 font-serif text-2xl font-bold">
                   Formulas ({filteredFormulas.length})
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {filteredFormulas.slice(0, 6).map((formula: SearchFormula) => (
                     <FormulaCard
                       key={formula.objectID}
@@ -249,7 +304,7 @@ export default function SearchPage() {
                 {filteredFormulas.length > 6 && (
                   <button
                     onClick={() => setActiveTab('formulas')}
-                    className="mt-4 text-earth-600 hover:text-earth-700 font-medium"
+                    className="text-earth-600 hover:text-earth-700 mt-4 font-medium"
                   >
                     View all {filteredFormulas.length} formulas →
                   </button>
@@ -259,10 +314,10 @@ export default function SearchPage() {
 
             {filteredConditions.length > 0 && (
               <div>
-                <h2 className="text-2xl font-bold font-serif text-earth-900 mb-4">
+                <h2 className="text-earth-900 mb-4 font-serif text-2xl font-bold">
                   Conditions ({filteredConditions.length})
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {filteredConditions.slice(0, 6).map((condition: SearchCondition) => (
                     <ConditionCard
                       key={condition.objectID}
@@ -274,7 +329,7 @@ export default function SearchPage() {
                 {filteredConditions.length > 6 && (
                   <button
                     onClick={() => setActiveTab('conditions')}
-                    className="mt-4 text-earth-600 hover:text-earth-700 font-medium"
+                    className="text-earth-600 hover:text-earth-700 mt-4 font-medium"
                   >
                     View all {filteredConditions.length} conditions →
                   </button>
@@ -284,10 +339,10 @@ export default function SearchPage() {
 
             {filteredPractitioners.length > 0 && (
               <div>
-                <h2 className="text-2xl font-bold font-serif text-earth-900 mb-4">
+                <h2 className="text-earth-900 mb-4 font-serif text-2xl font-bold">
                   Practitioners ({filteredPractitioners.length})
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {filteredPractitioners.slice(0, 6).map((practitioner: SearchPractitioner) => (
                     <PractitionerCard
                       key={practitioner.objectID}
@@ -299,7 +354,7 @@ export default function SearchPage() {
                 {filteredPractitioners.length > 6 && (
                   <button
                     onClick={() => setActiveTab('practitioners')}
-                    className="mt-4 text-earth-600 hover:text-earth-700 font-medium"
+                    className="text-earth-600 hover:text-earth-700 mt-4 font-medium"
                   >
                     View all {filteredPractitioners.length} practitioners →
                   </button>
@@ -310,7 +365,7 @@ export default function SearchPage() {
 
           {/* Herbs Only */}
           <TabsContent value="herbs">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
               {/* Filters Sidebar */}
               <div className="lg:col-span-1">
                 <SearchFilters
@@ -329,13 +384,13 @@ export default function SearchPage() {
               {/* Results */}
               <div className="lg:col-span-3">
                 {filteredHerbs.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {filteredHerbs.map((herb: SearchHerb) => (
                       <HerbCard key={herb.objectID} {...herb} herbId={herb.herbId} />
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center py-12 text-gray-600">
+                  <p className="py-12 text-center text-gray-600">
                     No herbs found matching your filters.
                   </p>
                 )}
@@ -345,7 +400,7 @@ export default function SearchPage() {
 
           {/* Formulas Only */}
           <TabsContent value="formulas">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
               {/* Filters Sidebar */}
               <div className="lg:col-span-1">
                 <SearchFilters
@@ -364,7 +419,7 @@ export default function SearchPage() {
               {/* Results */}
               <div className="lg:col-span-3">
                 {filteredFormulas.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {filteredFormulas.map((formula: SearchFormula) => (
                       <FormulaCard
                         key={formula.objectID}
@@ -374,7 +429,7 @@ export default function SearchPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center py-12 text-gray-600">
+                  <p className="py-12 text-center text-gray-600">
                     No formulas found matching your filters.
                   </p>
                 )}
@@ -384,7 +439,7 @@ export default function SearchPage() {
 
           {/* Conditions Only */}
           <TabsContent value="conditions">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
               {/* Filters Sidebar */}
               <div className="lg:col-span-1">
                 <SearchFilters
@@ -403,7 +458,7 @@ export default function SearchPage() {
               {/* Results */}
               <div className="lg:col-span-3">
                 {filteredConditions.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {filteredConditions.map((condition: SearchCondition) => (
                       <ConditionCard
                         key={condition.objectID}
@@ -413,7 +468,7 @@ export default function SearchPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center py-12 text-gray-600">
+                  <p className="py-12 text-center text-gray-600">
                     No conditions found matching your filters.
                   </p>
                 )}
@@ -423,7 +478,7 @@ export default function SearchPage() {
 
           {/* Practitioners Only */}
           <TabsContent value="practitioners">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
               {/* Filters Sidebar */}
               <div className="lg:col-span-1">
                 <SearchFilters
@@ -442,7 +497,7 @@ export default function SearchPage() {
               {/* Results */}
               <div className="lg:col-span-3">
                 {filteredPractitioners.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {filteredPractitioners.map((practitioner: SearchPractitioner) => (
                       <PractitionerCard
                         key={practitioner.objectID}
@@ -452,7 +507,7 @@ export default function SearchPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center py-12 text-gray-600">
+                  <p className="py-12 text-center text-gray-600">
                     No practitioners found matching your filters.
                   </p>
                 )}

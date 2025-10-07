@@ -31,22 +31,34 @@ function sanitizeInput(text: string): string {
   let sanitized = text
 
   // Remove email addresses
-  sanitized = sanitized.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL REMOVED]')
+  sanitized = sanitized.replace(
+    /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+    '[EMAIL REMOVED]'
+  )
 
   // Remove phone numbers (various formats)
-  sanitized = sanitized.replace(/\b(\+?1?[-.]?)?\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}\b/g, '[PHONE REMOVED]')
+  sanitized = sanitized.replace(
+    /\b(\+?1?[-.]?)?\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}\b/g,
+    '[PHONE REMOVED]'
+  )
 
   // Remove names (very basic - should be improved)
   // Warn user not to include personal information
 
   // Remove addresses (basic pattern)
-  sanitized = sanitized.replace(/\d+\s+\w+\s+(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd)/gi, '[ADDRESS REMOVED]')
+  sanitized = sanitized.replace(
+    /\d+\s+\w+\s+(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd)/gi,
+    '[ADDRESS REMOVED]'
+  )
 
   // Remove SSN
   sanitized = sanitized.replace(/\b\d{3}-\d{2}-\d{4}\b/g, '[SSN REMOVED]')
 
   // Remove dates of birth (MM/DD/YYYY, MM-DD-YYYY)
-  sanitized = sanitized.replace(/\b(0?[1-9]|1[0-2])[/-](0?[1-9]|[12]\d|3[01])[/-](19|20)\d{2}\b/g, '[DATE REMOVED]')
+  sanitized = sanitized.replace(
+    /\b(0?[1-9]|1[0-2])[/-](0?[1-9]|[12]\d|3[01])[/-](19|20)\d{2}\b/g,
+    '[DATE REMOVED]'
+  )
 
   return sanitized
 }
@@ -55,10 +67,7 @@ export async function POST(request: NextRequest) {
   try {
     // Check if API key is configured
     if (!GROK_API_KEY) {
-      return NextResponse.json(
-        { error: 'Grok API key not configured' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'Grok API key not configured' }, { status: 500 })
     }
 
     const body: SymptomAnalysisRequest = await request.json()
@@ -66,10 +75,7 @@ export async function POST(request: NextRequest) {
 
     // Validate input
     if (!symptoms || symptoms.length === 0) {
-      return NextResponse.json(
-        { error: 'At least one symptom is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'At least one symptom is required' }, { status: 400 })
     }
 
     // HIPAA: Audit log symptom submission
@@ -77,7 +83,7 @@ export async function POST(request: NextRequest) {
     await auditLog.submitSymptoms(undefined, symptoms)
 
     // HIPAA: Sanitize all inputs to remove PII before sending to external AI
-    const sanitizedSymptoms = symptoms.map(s => sanitizeInput(s))
+    const sanitizedSymptoms = symptoms.map((s) => sanitizeInput(s))
     const sanitizedDuration = duration ? sanitizeInput(duration) : undefined
     const sanitizedSeverity = severity ? sanitizeInput(severity) : undefined
     const sanitizedAdditionalInfo = additionalInfo ? sanitizeInput(additionalInfo) : undefined
@@ -107,14 +113,15 @@ Keep your response clear, practical, and educational. Format your response in a 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${GROK_API_KEY}`,
+        Authorization: `Bearer ${GROK_API_KEY}`,
       },
       body: JSON.stringify({
         model: 'grok-beta',
         messages: [
           {
             role: 'system',
-            content: 'You are an expert herbalist and Traditional Chinese Medicine practitioner providing educational information about herbs and natural remedies. Always emphasize that your advice is educational and users should consult healthcare providers for medical issues.',
+            content:
+              'You are an expert herbalist and Traditional Chinese Medicine practitioner providing educational information about herbs and natural remedies. Always emphasize that your advice is educational and users should consult healthcare providers for medical issues.',
           },
           {
             role: 'user',
@@ -139,10 +146,7 @@ Keep your response clear, practical, and educational. Format your response in a 
     const analysis = data.choices[0]?.message?.content
 
     if (!analysis) {
-      return NextResponse.json(
-        { error: 'No analysis returned from Grok' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'No analysis returned from Grok' }, { status: 500 })
     }
 
     return NextResponse.json({
@@ -159,10 +163,7 @@ Keep your response clear, practical, and educational. Format your response in a 
       timestamp: new Date().toISOString(),
     })
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 

@@ -1,8 +1,8 @@
+import { CheckCircle, MapPin, Star } from 'lucide-react'
 import Link from 'next/link'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { OptimizedAvatar } from '@/components/ui/optimized-image'
-import { MapPin, Star, CheckCircle } from 'lucide-react'
 
 interface PractitionerCardProps {
   practitionerId: string
@@ -10,7 +10,7 @@ interface PractitionerCardProps {
   slug: string
   photo?: {
     url: string
-    alt: string
+    alt?: string
   }
   title?: string
   modalities?: string[]
@@ -50,7 +50,7 @@ export function PractitionerCard({
                 className="flex-shrink-0"
               />
             ) : (
-              <div className="h-16 w-16 flex-shrink-0 rounded-full bg-earth-100 flex items-center justify-center text-xl font-semibold text-earth-600">
+              <div className="bg-earth-100 text-earth-600 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full text-xl font-semibold">
                 {name
                   .split(' ')
                   .map((n) => n[0])
@@ -63,7 +63,7 @@ export function PractitionerCard({
             {/* Name and title */}
             <div className="flex-1">
               <div className="flex items-center space-x-2">
-                <CardTitle className="text-lg font-serif text-earth-900 group-hover:text-earth-700">
+                <CardTitle className="text-earth-900 group-hover:text-earth-700 font-serif text-lg">
                   {name}
                 </CardTitle>
                 {verificationStatus === 'verified' && (
@@ -75,14 +75,14 @@ export function PractitionerCard({
               {/* Rating */}
               {averageRating !== undefined && reviewCount !== undefined && reviewCount > 0 && (
                 <div className="mt-1 flex items-center space-x-1 text-sm">
-                  <Star className="h-3 w-3 fill-gold-600 text-gold-600" />
+                  <Star className="fill-gold-600 text-gold-600 h-3 w-3" />
                   <span className="font-semibold">{averageRating.toFixed(1)}</span>
                   <span className="text-gray-500">({reviewCount})</span>
                 </div>
               )}
             </div>
 
-            <span className="text-xs font-mono text-gray-500">{practitionerId}</span>
+            <span className="font-mono text-xs text-gray-500">{practitionerId}</span>
           </div>
         </CardHeader>
 

@@ -15,13 +15,19 @@ const ENCRYPTION_KEY = process.env.DATABASE_ENCRYPTION_KEY
 if (!ENCRYPTION_KEY && process.env.NODE_ENV === 'production') {
   console.warn(
     '[DATABASE ENCRYPTION] DATABASE_ENCRYPTION_KEY not set. ' +
-    'Ensure full database encryption is enabled at infrastructure level.'
+      'Ensure full database encryption is enabled at infrastructure level.'
   )
 }
 
 export interface EncryptedData {
   encrypted: boolean
   data: Buffer | string
+}
+
+// Database connection interface
+interface DatabaseConnection {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  execute: (query: string) => Promise<any>
 }
 
 /**
@@ -45,9 +51,7 @@ export function isEncryptionConfigured(): boolean {
  */
 export async function encryptPHI(data: string): Promise<string> {
   if (!ENCRYPTION_KEY) {
-    throw new Error(
-      'DATABASE_ENCRYPTION_KEY not configured. Cannot encrypt PHI data.'
-    )
+    throw new Error('DATABASE_ENCRYPTION_KEY not configured. Cannot encrypt PHI data.')
   }
 
   if (!data || data.length === 0) {
@@ -70,20 +74,17 @@ export async function encryptPHI(data: string): Promise<string> {
  * })
  * ```
  */
-export function createEncryptedInsertSQL(
-  tableName: string,
-  data: Record<string, string>
-): string {
+export function createEncryptedInsertSQL(tableName: string, data: Record<string, string>): string {
   if (!ENCRYPTION_KEY) {
     throw new Error('DATABASE_ENCRYPTION_KEY not configured')
   }
 
   const columns = Object.keys(data)
-    .map(col => `${col}_encrypted`)
+    .map((col) => `${col}_encrypted`)
     .join(', ')
 
   const values = Object.values(data)
-    .map(val => `encrypt_phi('${val.replace(/'/g, "''")}', '${ENCRYPTION_KEY}')`)
+    .map((val) => `encrypt_phi('${val.replace(/'/g, "''")}', '${ENCRYPTION_KEY}')`)
     .join(', ')
 
   return `INSERT INTO ${tableName} (${columns}) VALUES (${values})`
@@ -107,7 +108,7 @@ export function createEncryptedSelectSQL(
   }
 
   const selectColumns = columns
-    .map(col => `decrypt_phi(${col}_encrypted, '${ENCRYPTION_KEY}') AS ${col}`)
+    .map((col) => `decrypt_phi(${col}_encrypted, '${ENCRYPTION_KEY}') AS ${col}`)
     .join(', ')
 
   let sql = `SELECT id, ${selectColumns} FROM ${tableName}`
@@ -149,13 +150,16 @@ export async function verifyEncryptionSetup(): Promise<{
     // Check if we're using cloud provider encryption
     const cloudProvider = process.env.DATABASE_PROVIDER // 'aws-rds', 'digitalocean', 'supabase', etc.
 
-    if (cloudProvider && ['aws-rds', 'digitalocean', 'supabase', 'render'].includes(cloudProvider)) {
+    if (
+      cloudProvider &&
+      ['aws-rds', 'digitalocean', 'supabase', 'render'].includes(cloudProvider)
+    ) {
       return {
         configured: true,
         method: 'full-database',
         warnings: [
           'Using cloud provider full database encryption. ' +
-          'Verify encryption is enabled in provider dashboard.'
+            'Verify encryption is enabled in provider dashboard.',
         ],
       }
     } else {
@@ -186,7 +190,7 @@ export async function verifyEncryptionSetup(): Promise<{
  * This is a reference implementation showing how to use encryption
  */
 export async function storeEncryptedSymptomSubmission(
-  db: unknown, // Your database connection
+  db: DatabaseConnection, // Your database connection
   data: {
     userId: string
     symptoms: string[]
@@ -225,7 +229,7 @@ export async function storeEncryptedSymptomSubmission(
  * This is a reference implementation showing how to decrypt data
  */
 export async function getEncryptedSymptomSubmission(
-  db: unknown, // Your database connection
+  db: DatabaseConnection, // Your database connection
   submissionId: string
 ): Promise<{
   id: string
@@ -271,7 +275,7 @@ export async function getEncryptedSymptomSubmission(
  * Log encryption operation for audit trail
  */
 export async function logEncryptionOperation(
-  db: unknown,
+  db: DatabaseConnection,
   operation: {
     eventType: 'encrypt' | 'decrypt' | 'key_rotation'
     tableName: string

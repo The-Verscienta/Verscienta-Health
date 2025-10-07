@@ -1,35 +1,37 @@
+import { BookOpen, Heart, Leaf, Users } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Leaf, Heart, BookOpen, Users } from 'lucide-react'
 
 export default function AboutPage() {
   return (
     <div className="container-custom py-12">
       {/* Hero Section */}
-      <div className="mb-12 text-center max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">About Verscienta Health</h1>
+      <div className="mx-auto mb-12 max-w-3xl text-center">
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">
+          About Verscienta Health
+        </h1>
         <p className="text-xl text-gray-600">
           Bridging ancient herbal wisdom with modern science to empower informed health decisions
         </p>
       </div>
 
       {/* Mission Statement */}
-      <div className="mb-16 max-w-4xl mx-auto">
+      <div className="mx-auto mb-16 max-w-4xl">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl font-serif text-center">Our Mission</CardTitle>
+            <CardTitle className="text-center font-serif text-2xl">Our Mission</CardTitle>
           </CardHeader>
-          <CardContent className="text-lg text-gray-700 space-y-4">
+          <CardContent className="space-y-4 text-lg text-gray-700">
             <p>
               Verscienta Health is dedicated to making herbal medicine knowledge accessible,
-              evidence-based, and trustworthy. We believe that traditional healing wisdom,
-              when combined with modern scientific research, can provide powerful tools for
-              health and wellness.
+              evidence-based, and trustworthy. We believe that traditional healing wisdom, when
+              combined with modern scientific research, can provide powerful tools for health and
+              wellness.
             </p>
             <p>
               Our platform serves as a comprehensive resource for anyone interested in herbal
               medicine—from curious beginners to experienced practitioners. We carefully curate
-              information from both ancient texts and contemporary research to provide you with
-              the most complete picture possible.
+              information from both ancient texts and contemporary research to provide you with the
+              most complete picture possible.
             </p>
           </CardContent>
         </Card>
@@ -37,13 +39,13 @@ export default function AboutPage() {
 
       {/* Core Values */}
       <div className="mb-16">
-        <h2 className="text-3xl font-bold font-serif text-earth-900 mb-8 text-center">
+        <h2 className="text-earth-900 mb-8 text-center font-serif text-3xl font-bold">
           Our Core Values
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader>
-              <Leaf className="h-8 w-8 text-earth-600 mb-2" />
+              <Leaf className="text-earth-600 mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Evidence-Based</CardTitle>
             </CardHeader>
             <CardContent className="text-gray-600">
@@ -54,7 +56,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <Heart className="h-8 w-8 text-earth-600 mb-2" />
+              <Heart className="text-earth-600 mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Holistic Approach</CardTitle>
             </CardHeader>
             <CardContent className="text-gray-600">
@@ -65,7 +67,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <BookOpen className="h-8 w-8 text-earth-600 mb-2" />
+              <BookOpen className="text-earth-600 mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Educational Focus</CardTitle>
             </CardHeader>
             <CardContent className="text-gray-600">
@@ -76,7 +78,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <Users className="h-8 w-8 text-earth-600 mb-2" />
+              <Users className="text-earth-600 mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Community-Driven</CardTitle>
             </CardHeader>
             <CardContent className="text-gray-600">
@@ -88,8 +90,8 @@ export default function AboutPage() {
       </div>
 
       {/* What We Offer */}
-      <div className="mb-16 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold font-serif text-earth-900 mb-8 text-center">
+      <div className="mx-auto mb-16 max-w-4xl">
+        <h2 className="text-earth-900 mb-8 text-center font-serif text-3xl font-bold">
           What We Offer
         </h2>
         <div className="space-y-6">
@@ -128,21 +130,23 @@ export default function AboutPage() {
               <CardTitle>Practitioner Directory</CardTitle>
             </CardHeader>
             <CardContent className="text-gray-700">
-              Find qualified herbalists, acupuncturists, and holistic health practitioners in your area.
+              Find qualified herbalists, acupuncturists, and holistic health practitioners in your
+              area.
             </CardContent>
           </Card>
         </div>
       </div>
 
       {/* Contact CTA */}
-      <div className="bg-earth-50 rounded-lg p-8 text-center max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold font-serif text-earth-900 mb-4">Get in Touch</h2>
-        <p className="text-gray-700 mb-6">
-          Have questions, suggestions, or want to contribute to our platform? We'd love to hear from you.
+      <div className="bg-earth-50 mx-auto max-w-3xl rounded-lg p-8 text-center">
+        <h2 className="text-earth-900 mb-4 font-serif text-2xl font-bold">Get in Touch</h2>
+        <p className="mb-6 text-gray-700">
+          Have questions, suggestions, or want to contribute to our platform? We'd love to hear from
+          you.
         </p>
         <a
           href="/contact"
-          className="inline-block px-6 py-3 bg-earth-600 text-white font-semibold rounded-lg hover:bg-earth-700 transition-colors"
+          className="bg-earth-600 hover:bg-earth-700 inline-block rounded-lg px-6 py-3 font-semibold text-white transition-colors"
         >
           Contact Us
         </a>
@@ -153,5 +157,6 @@ export default function AboutPage() {
 
 export const metadata = {
   title: 'About Us | Verscienta Health',
-  description: 'Learn about Verscienta Health - bridging ancient herbal wisdom with modern science to empower informed health decisions.',
+  description:
+    'Learn about Verscienta Health - bridging ancient herbal wisdom with modern science to empower informed health decisions.',
 }

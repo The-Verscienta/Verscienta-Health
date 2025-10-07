@@ -1,4 +1,4 @@
-import type { Payload, JsonObject, TypeWithID } from 'payload'
+import type { JsonObject, Payload, TypeWithID } from 'payload'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -64,9 +64,7 @@ export async function sendDigestEmailsJob(payload: Payload): Promise<void> {
       const batch = subscribers.slice(i, i + batchSize)
 
       await Promise.all(
-        batch.map((subscriber) =>
-          sendDigestEmail(subscriber, digestContent, stats)
-        )
+        batch.map((subscriber) => sendDigestEmail(subscriber, digestContent, stats))
       )
 
       // Add a small delay between batches

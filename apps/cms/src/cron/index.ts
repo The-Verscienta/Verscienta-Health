@@ -1,18 +1,17 @@
 /* eslint-disable no-undef */
 import cron from 'node-cron'
 import type { Payload } from 'payload'
-
+import { backupDatabaseJob } from './jobs/backupDatabase'
+import { cleanupCacheJob } from './jobs/cleanupCache'
+import { generateSitemapJob } from './jobs/generateSitemap'
+import { importExternalDataJob } from './jobs/importExternalData'
+import { importPerenualDataJob } from './jobs/importPerenualData'
+import { importTrefleDataJob } from './jobs/importTrefleData'
+import { sendDigestEmailsJob } from './jobs/sendDigestEmails'
 // Import job modules
 import { syncAlgoliaJob } from './jobs/syncAlgolia'
-import { validateHerbDataJob } from './jobs/validateHerbData'
-import { importExternalDataJob } from './jobs/importExternalData'
 import { syncTrefleDataJob } from './jobs/syncTrefleData'
-import { importTrefleDataJob } from './jobs/importTrefleData'
-import { importPerenualDataJob } from './jobs/importPerenualData'
-import { cleanupCacheJob } from './jobs/cleanupCache'
-import { backupDatabaseJob } from './jobs/backupDatabase'
-import { generateSitemapJob } from './jobs/generateSitemap'
-import { sendDigestEmailsJob } from './jobs/sendDigestEmails'
+import { validateHerbDataJob } from './jobs/validateHerbData'
 
 interface CronJob {
   name: string

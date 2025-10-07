@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Image, { ImageProps } from 'next/image'
+import { useEffect, useState } from 'react'
 import {
   getCloudflareImageUrl,
   getImageBlurPlaceholder,
-  isCloudflareImagesEnabled,
   IMAGE_VARIANTS,
+  isCloudflareImagesEnabled,
 } from '@/lib/cloudflare-images'
 
 export interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'loader'> {
@@ -93,9 +93,7 @@ export function OptimizedImage({
   }, [src])
 
   // Determine dimensions from variant or props
-  const dimensions = variant
-    ? IMAGE_VARIANTS[variant]
-    : { width: width || 800, height: height }
+  const dimensions = variant ? IMAGE_VARIANTS[variant] : { width: width || 800, height: height }
 
   const imgWidth = width || dimensions.width
   const imgHeight = height || (dimensions as { height?: number }).height
@@ -140,14 +138,10 @@ export function OptimizedImage({
           blurDataURL={blurDataURL}
           onLoad={handleLoad}
           onError={handleError}
-          className={`transition-opacity duration-300 ${
-            isLoading ? 'opacity-0' : 'opacity-100'
-          }`}
+          className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
           {...props}
         />
-        {isLoading && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse rounded" />
-        )}
+        {isLoading && <div className="absolute inset-0 animate-pulse rounded bg-gray-200" />}
       </div>
     )
   }
@@ -163,14 +157,10 @@ export function OptimizedImage({
         quality={quality}
         onLoad={handleLoad}
         onError={handleError}
-        className={`transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
+        className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
         {...props}
       />
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded" />
-      )}
+      {isLoading && <div className="absolute inset-0 animate-pulse rounded bg-gray-200" />}
     </div>
   )
 }
@@ -219,13 +209,7 @@ export function OptimizedCardImage({
   className?: string
 }) {
   return (
-    <OptimizedImage
-      src={src}
-      alt={alt}
-      variant="card"
-      fallback={fallback}
-      className={className}
-    />
+    <OptimizedImage src={src} alt={alt} variant="card" fallback={fallback} className={className} />
   )
 }
 

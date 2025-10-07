@@ -39,6 +39,7 @@ verscienta-health/
 ### Technology Stack
 
 **Frontend:**
+
 - Next.js 15.5.4 (App Router)
 - TypeScript 5.7+
 - Tailwind CSS 4.1.0
@@ -48,12 +49,14 @@ verscienta-health/
 - Leaflet + OpenStreetMap
 
 **Backend:**
+
 - Payload CMS 3.58.0
 - PostgreSQL 17+
 - Drizzle ORM
 - Node.js 20+
 
 **Services:**
+
 - Cloudflare Images (CDN + optimization)
 - Algolia (search)
 - Grok AI (symptom analysis)
@@ -64,6 +67,7 @@ verscienta-health/
 - Perenual API (cultivation database with 10,000+ plants)
 
 **Advanced Features:**
+
 - Multi-factor Authentication (TOTP)
 - DragonflyDB Caching (self-hosted, 25x faster than Redis)
 - Audit Logging System
@@ -138,22 +142,26 @@ pnpm db:studio        # Open Drizzle Studio
 ## 📚 Documentation
 
 ### Getting Started
+
 - [**Setup Guide**](./docs/SETUP.md) - Detailed installation and configuration
 - [**Comprehensive Implementation Plan**](./VERSCIENTA_HEALTH_COMPREHENSIVE_PLAN.md) - Complete technical specification
 - [**Contributor Onboarding**](./docs/CONTRIBUTOR_ONBOARDING.md) - New contributor guide
 
 ### API & Integration
+
 - [**API Reference**](./docs/API_REFERENCE.md) - Complete API documentation
 - [**API Integration Examples**](./docs/API_INTEGRATION_EXAMPLES.md) - Code examples in multiple languages
 - [**Interactive API Docs**](https://verscienta.com/api-docs) - Swagger UI (live)
 
 ### Development
+
 - [**Contributing Guide**](./CONTRIBUTING.md) - How to contribute
 - [**Code of Conduct**](./CODE_OF_CONDUCT.md) - Community guidelines
 - [**Storybook**](./docs/STORYBOOK.md) - Interactive component documentation (`pnpm storybook`)
 - [**Design System**](./docs/DESIGN_SYSTEM.md) - Colors, typography, spacing
 
 ### Features & Configuration
+
 - [**Advanced Features**](./docs/ADVANCED_FEATURES.md) - Caching, MFA, audit logging, automation
 - [**DragonflyDB Setup**](./docs/DRAGONFLYDB_SETUP.md) - High-performance caching setup
 - [**Plant Data Integrations**](./docs/PLANT_DATA_INTEGRATIONS.md) - Complete guide to Trefle + Perenual with deduplication
@@ -163,6 +171,7 @@ pnpm db:studio        # Open Drizzle Studio
 - [**Accessibility**](./docs/ACCESSIBILITY.md) - WCAG 2.1 AA+ compliance guide
 
 ### Deployment
+
 - [**Deployment Guide**](./docs/DEPLOYMENT.md) - Production deployment instructions
 - [**Deployment Quickstart**](./DEPLOYMENT_QUICKSTART.md) - 30-minute deployment guide
 - [**Coolify Deployment**](./COOLIFY_DEPLOYMENT.md) - Self-hosted deployment with Coolify
@@ -182,6 +191,7 @@ Verscienta Health uses a nature-inspired design system with:
 ### 1. Comprehensive Herb Database
 
 Each herb entry includes:
+
 - Botanical information (scientific name, family, habitat, cultivation)
 - Traditional Chinese Medicine properties (taste, temperature, meridians)
 - Western herbalism properties (adaptogen, anti-inflammatory, etc.)
@@ -195,6 +205,7 @@ Each herb entry includes:
 ### 2. AI Symptom Checker
 
 Powered by Grok AI:
+
 - Multi-symptom analysis
 - Condition suggestions with confidence scores
 - Personalized herb recommendations
@@ -205,6 +216,7 @@ Powered by Grok AI:
 ### 3. Advanced Search
 
 Algolia-powered search with:
+
 - Instant results as you type
 - Faceted filtering (TCM properties, Western properties, parts used, etc.)
 - Typo tolerance
@@ -215,6 +227,7 @@ Algolia-powered search with:
 ### 4. Practitioner Directory
 
 Find verified holistic health practitioners:
+
 - Interactive map (OpenStreetMap + Leaflet)
 - Filter by modality, distance, specialty
 - Practitioner profiles with credentials, bio, pricing
@@ -224,6 +237,7 @@ Find verified holistic health practitioners:
 ### 5. Herbal Formulas
 
 Traditional and modern formulas:
+
 - Precise ingredient quantities and percentages
 - Preparation instructions
 - Historical context (classical TCM formulas)
@@ -266,6 +280,7 @@ Traditional and modern formulas:
 ## 🌍 Internationalization
 
 Supported languages:
+
 - English (en)
 - Spanish (es)
 - Simplified Chinese (zh-CN)
@@ -290,6 +305,7 @@ pnpm test:e2e
 ```
 
 End-to-end tests for critical user flows:
+
 - Herb search and filtering
 - Symptom checker flow
 - Practitioner directory
@@ -316,6 +332,7 @@ pnpm build && pnpm start
 ```
 
 **Performance Targets:**
+
 - Lighthouse Performance: ≥ 90
 - Lighthouse Accessibility: ≥ 95
 - LCP: < 2.5s
@@ -346,12 +363,14 @@ docker-compose up -d
 ```
 
 **What you need:**
+
 - Server with Coolify installed
 - PostgreSQL 17+ database
 - Two domains (verscienta.com, backend.verscienta.com)
 - Environment variables configured
 
 **Quick Steps:**
+
 1. Create PostgreSQL database in Coolify
 2. Deploy backend (Payload CMS) using `apps/cms/Dockerfile`
 3. Deploy frontend (Next.js) using `apps/web/Dockerfile`
@@ -366,6 +385,7 @@ See [Deployment Quick Start](./DEPLOYMENT_QUICKSTART.md) for step-by-step instru
 Verscienta Health provides a public API for developers to integrate herbal medicine data into their applications.
 
 **Features:**
+
 - 📖 **15,000+ Herbs** with TCM and Western properties
 - 🧪 **Formulas Database** with precise ingredient information
 - 🏥 **Health Conditions** with recommended treatments
@@ -374,17 +394,20 @@ Verscienta Health provides a public API for developers to integrate herbal medic
 - 🔍 **Full-Text Search** across all content
 
 **Getting Started:**
+
 1. View [Interactive API Documentation](https://verscienta.com/api-docs) (Swagger UI)
 2. Read the [API Reference](./docs/API_REFERENCE.md)
 3. Check [Integration Examples](./docs/API_INTEGRATION_EXAMPLES.md) (JavaScript, Python, PHP, Ruby)
 4. Request an API key at [verscienta.com/developers](https://verscienta.com/developers)
 
 **Rate Limits:**
+
 - Public endpoints: 100 requests per 10 minutes
 - Authenticated: 1000 requests per hour
 - AI endpoints: 20 requests per 10 minutes
 
 **Quick Example:**
+
 ```bash
 # Get all herbs with Warm temperature
 curl "https://verscienta.com/api/herbs?temperature=Warm&page=1&limit=10"
@@ -398,6 +421,7 @@ curl "https://verscienta.com/api/herbs/ginseng"
 We welcome contributions from the community! While Verscienta Health is a proprietary project, we appreciate help in several areas:
 
 **How to Contribute:**
+
 - 📝 **Documentation**: Fix typos, improve clarity, add examples, translate content
 - 🐛 **Bug Reports**: Report issues with detailed reproduction steps
 - 💡 **Feature Suggestions**: Share ideas for improvements
@@ -405,6 +429,7 @@ We welcome contributions from the community! While Verscienta Health is a propri
 - 🆘 **Community Support**: Help answer questions and support other users
 
 **Get Started:**
+
 1. Read our [Contributing Guide](./CONTRIBUTING.md)
 2. Review the [Code of Conduct](./CODE_OF_CONDUCT.md)
 3. Check [Contributor Onboarding](./docs/CONTRIBUTOR_ONBOARDING.md)
@@ -412,11 +437,13 @@ We welcome contributions from the community! While Verscienta Health is a propri
 5. Join our [Discord Community](https://discord.gg/verscienta)
 
 **Recognition:**
+
 - Contributors are recognized in our README and release notes
 - Significant contributions earn special mentions
 - Active contributors may be invited to join the core team
 
 **Questions?**
+
 - GitHub Discussions: https://github.com/verscienta/verscienta-health/discussions
 - Email: developers@verscienta.com
 - Discord: https://discord.gg/verscienta
@@ -435,6 +462,7 @@ Copyright © 2025 Verscienta Health. All rights reserved.
 ## 📧 Contact
 
 For questions, support, or partnership inquiries:
+
 - Website: [https://verscienta.com](https://verscienta.com)
 - Email: hello@verscienta.com
 
@@ -442,4 +470,4 @@ For questions, support, or partnership inquiries:
 
 **Built with ❤️ for holistic health practitioners and seekers worldwide.**
 
-*Verscienta: Versatile Knowledge - Bridging ancient wisdom with modern science.*
+_Verscienta: Versatile Knowledge - Bridging ancient wisdom with modern science._

@@ -132,6 +132,7 @@ ENABLE_TREFLE_IMPORT=true
 ```
 
 The import job will:
+
 - Run every minute
 - Process ~100 plants per run (5 pages × 20 plants)
 - Respect 120 requests/minute rate limit
@@ -233,12 +234,14 @@ Not all plants are imported. The import job filters for:
 ### Our Implementation
 
 **Sync Job** (Weekly):
+
 - Processes 100 herbs per run
 - 600ms delay between requests
 - ~60 requests per run
 - Well under rate limit
 
 **Import Job** (Every Minute):
+
 - Fetches 5 pages per run
 - 20 plants per page = 100 plants/minute
 - 500ms delay between pages
@@ -246,6 +249,7 @@ Not all plants are imported. The import job filters for:
 - ~100 API requests for enrichment (within 120/min limit)
 
 **Built-in Protection**:
+
 - Request interceptor adds 500ms delay
 - Response interceptor retries on 429 (rate limit)
 - Automatic 60-second wait if rate limited
@@ -311,11 +315,13 @@ tail -f logs/cron.log
 ### Issue: No herbs being enriched
 
 **Check**:
+
 1. Is `TREFLE_API_KEY` set in `.env`?
 2. Is the sync job enabled? Check cron logs: `🕐 Initializing cron jobs...`
 3. Are there herbs matching criteria (no trefleId or >30 days old)?
 
 **Solution**:
+
 ```bash
 # Manually trigger sync
 POST /api/cron/trigger
@@ -325,11 +331,13 @@ POST /api/cron/trigger
 ### Issue: Import not running
 
 **Check**:
+
 1. Is `TREFLE_API_KEY` set?
 2. Is `ENABLE_TREFLE_IMPORT=true`?
 3. Check cron logs for: `✓ Scheduled: Import Trefle Plant Database`
 
 **Solution**:
+
 ```bash
 # Verify environment
 echo $TREFLE_API_KEY
@@ -342,6 +350,7 @@ echo $ENABLE_TREFLE_IMPORT
 ### Issue: Rate limit errors
 
 **Symptoms**:
+
 ```
 ❌ Trefle API rate limit reached. Waiting 60 seconds...
 ```
@@ -349,6 +358,7 @@ echo $ENABLE_TREFLE_IMPORT
 **Cause**: Too many requests to Trefle API
 
 **Solution**:
+
 - Our implementation auto-retries after 60s
 - If persistent, reduce `pagesPerRun` in `importTrefleData.ts` from 5 to 3
 - Consider pausing import: `ENABLE_TREFLE_IMPORT=false`
@@ -356,6 +366,7 @@ echo $ENABLE_TREFLE_IMPORT
 ### Issue: Invalid scientific names
 
 **Symptoms**:
+
 ```
 ⚠️ Scientific name not found. Suggestions: Lavandula officinalis, Lavandula vera
 ```
@@ -363,6 +374,7 @@ echo $ENABLE_TREFLE_IMPORT
 **Cause**: Herb uses outdated or misspelled scientific name
 
 **Solution**:
+
 1. Check validation reports: System → Validation Reports
 2. Review suggestions
 3. Update herb's scientific name to match Trefle
@@ -371,12 +383,14 @@ echo $ENABLE_TREFLE_IMPORT
 ### Issue: Import stuck on same page
 
 **Check**:
+
 ```typescript
 const progress = await getTrefleImportProgress(payload)
 console.log(progress.currentPage)
 ```
 
 **Solution**:
+
 ```typescript
 // Reset to restart
 await resetTrefleImport(payload)
@@ -391,6 +405,7 @@ await resetTrefleImport(payload)
 **Cause**: Progressive import creates all plants as drafts
 
 **Solution**:
+
 ```bash
 # Pause import
 ENABLE_TREFLE_IMPORT=false
@@ -444,7 +459,7 @@ await trefleClient.findBestMatch('Lavandula angustifolia', 'Lavender')
 // Enrich herb data
 await trefleClient.enrichHerbData({
   scientificName: 'Lavandula angustifolia',
-  name: 'Lavender'
+  name: 'Lavender',
 })
 
 // Validate scientific name

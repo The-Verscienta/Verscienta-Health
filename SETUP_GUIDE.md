@@ -37,6 +37,7 @@ GRANT ALL PRIVILEGES ON DATABASE verscienta_health TO verscienta_user;
 ```
 
 2. Note your database connection string:
+
 ```
 postgresql://verscienta_user:your_password@localhost:5432/verscienta_health
 ```
@@ -126,14 +127,10 @@ pnpm db:push
 3. Configure searchable attributes for each index:
 
 For **verscienta_herbs**:
+
 ```json
 {
-  "searchableAttributes": [
-    "title",
-    "scientificName",
-    "description",
-    "commonNames"
-  ],
+  "searchableAttributes": ["title", "scientificName", "description", "commonNames"],
   "attributesForFaceting": [
     "tcmProperties.taste",
     "tcmProperties.temperature",
@@ -200,6 +197,7 @@ pnpm seed
 ### Database Connection Errors
 
 If you see database connection errors:
+
 1. Verify PostgreSQL is running: `pg_isready`
 2. Check your DATABASE_URL is correct
 3. Ensure the database exists and user has permissions
@@ -207,6 +205,7 @@ If you see database connection errors:
 ### Algolia Sync Issues
 
 If content isn't syncing to Algolia:
+
 1. Verify your Algolia credentials
 2. Check that indexes exist in Algolia dashboard
 3. Ensure ALGOLIA_ADMIN_KEY has write permissions
@@ -215,6 +214,7 @@ If content isn't syncing to Algolia:
 ### Grok AI Errors
 
 If the symptom checker isn't working:
+
 1. Verify your GROK_API_KEY is valid
 2. Check you have sufficient API credits
 3. Review browser console for error messages
@@ -222,6 +222,7 @@ If the symptom checker isn't working:
 ### Port Conflicts
 
 If ports 3000 or 3001 are already in use:
+
 1. Change PORT in `apps/cms/.env`
 2. Update NEXT_PUBLIC_CMS_URL accordingly
 3. Restart both servers

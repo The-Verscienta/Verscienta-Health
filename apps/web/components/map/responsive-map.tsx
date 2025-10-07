@@ -1,17 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
+import { useEffect, useState } from 'react'
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
-import { cn } from '@/lib/utils'
 
 // Fix Leaflet default marker icon issue
 import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
+import { cn } from '@/lib/utils'
 
 const DefaultIcon = L.icon({
   iconUrl: icon.src,
@@ -137,7 +137,7 @@ export function ResponsiveMap({
   const mapCenter = userLocation || center
 
   return (
-    <div className={cn('relative w-full rounded-lg overflow-hidden shadow-md', height, className)}>
+    <div className={cn('relative w-full overflow-hidden rounded-lg shadow-md', height, className)}>
       <MapContainer
         center={mapCenter}
         zoom={zoom}
@@ -174,13 +174,13 @@ export function ResponsiveMap({
                 icon={createCustomIcon('#5d7a5d')}
               >
                 <Popup>
-                  <div className="p-2 min-w-[200px]">
-                    <h3 className="font-semibold text-earth-900 mb-1">{practitioner.name}</h3>
-                    <div className="flex flex-wrap gap-1 mb-2">
+                  <div className="min-w-[200px] p-2">
+                    <h3 className="text-earth-900 mb-1 font-semibold">{practitioner.name}</h3>
+                    <div className="mb-2 flex flex-wrap gap-1">
                       {practitioner.specialty.slice(0, 2).map((spec, idx) => (
                         <span
                           key={idx}
-                          className="text-xs bg-sage-100 text-sage-700 px-2 py-0.5 rounded-full"
+                          className="bg-sage-100 text-sage-700 rounded-full px-2 py-0.5 text-xs"
                         >
                           {spec}
                         </span>
@@ -188,7 +188,7 @@ export function ResponsiveMap({
                     </div>
                     <a
                       href={`/practitioners/${practitioner.slug}`}
-                      className="text-sm text-earth-600 hover:text-earth-700 underline"
+                      className="text-earth-600 hover:text-earth-700 text-sm underline"
                     >
                       View Profile →
                     </a>
@@ -205,13 +205,13 @@ export function ResponsiveMap({
               icon={createCustomIcon('#5d7a5d')}
             >
               <Popup>
-                <div className="p-2 min-w-[200px]">
-                  <h3 className="font-semibold text-earth-900 mb-1">{practitioner.name}</h3>
-                  <div className="flex flex-wrap gap-1 mb-2">
+                <div className="min-w-[200px] p-2">
+                  <h3 className="text-earth-900 mb-1 font-semibold">{practitioner.name}</h3>
+                  <div className="mb-2 flex flex-wrap gap-1">
                     {practitioner.specialty.slice(0, 2).map((spec, idx) => (
                       <span
                         key={idx}
-                        className="text-xs bg-sage-100 text-sage-700 px-2 py-0.5 rounded-full"
+                        className="bg-sage-100 text-sage-700 rounded-full px-2 py-0.5 text-xs"
                       >
                         {spec}
                       </span>
@@ -219,7 +219,7 @@ export function ResponsiveMap({
                   </div>
                   <a
                     href={`/practitioners/${practitioner.slug}`}
-                    className="text-sm text-earth-600 hover:text-earth-700 underline"
+                    className="text-earth-600 hover:text-earth-700 text-sm underline"
                   >
                     View Profile →
                   </a>
@@ -234,7 +234,7 @@ export function ResponsiveMap({
           <Marker position={userLocation} icon={createCustomIcon('#c1272d')}>
             <Popup>
               <div className="p-2">
-                <p className="font-semibold text-sm">Your Location</p>
+                <p className="text-sm font-semibold">Your Location</p>
               </div>
             </Popup>
           </Marker>
@@ -242,7 +242,7 @@ export function ResponsiveMap({
       </MapContainer>
 
       {/* Mobile-friendly controls hint */}
-      <div className="absolute bottom-4 left-4 bg-white px-3 py-2 rounded-md shadow-md text-xs text-gray-600 md:hidden z-[1000]">
+      <div className="absolute bottom-4 left-4 z-[1000] rounded-md bg-white px-3 py-2 text-xs text-gray-600 shadow-md md:hidden">
         Pinch to zoom • Drag to pan
       </div>
     </div>

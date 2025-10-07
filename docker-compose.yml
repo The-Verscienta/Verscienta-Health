@@ -11,11 +11,11 @@ services:
       POSTGRES_USER: verscienta_user
       POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U verscienta_user -d verscienta_health"]
+      test: ['CMD-SHELL', 'pg_isready -U verscienta_user -d verscienta_health']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +28,7 @@ services:
     container_name: verscienta-cms
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
       NODE_ENV: production
       PORT: 3001
@@ -53,7 +53,7 @@ services:
     container_name: verscienta-web
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       NODE_ENV: production
       PORT: 3000

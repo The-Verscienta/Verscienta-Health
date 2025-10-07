@@ -1,5 +1,5 @@
-import type { Payload } from 'payload'
 import { exec } from 'child_process'
+import type { Payload } from 'payload'
 import { promisify } from 'util'
 
 const execAsync = promisify(exec)
@@ -54,7 +54,7 @@ export async function backupDatabaseJob(payload: Payload): Promise<void> {
     const fs = await import('fs/promises')
     try {
       await fs.mkdir(backupDir, { recursive: true })
-    } catch (error) {
+    } catch (_error) {
       // Directory might already exist
     }
 
@@ -85,9 +85,7 @@ export async function backupDatabaseJob(payload: Payload): Promise<void> {
       const fileStats = await fs.stat(backupPath)
       stats.backupSize = fileStats.size
 
-      console.log(
-        `✓ Backup created: ${(stats.backupSize / 1024 / 1024).toFixed(2)}MB`
-      )
+      console.log(`✓ Backup created: ${(stats.backupSize / 1024 / 1024).toFixed(2)}MB`)
 
       // Optionally compress the backup
       if (process.env.COMPRESS_BACKUPS === 'true') {
@@ -105,9 +103,7 @@ export async function backupDatabaseJob(payload: Payload): Promise<void> {
       stats.backupLocation = backupPath
       stats.success = true
     } catch (error) {
-      throw new Error(
-        `pg_dump failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-      )
+      throw new Error(`pg_dump failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
 
     stats.duration = Date.now() - startTime
@@ -148,10 +144,7 @@ export async function backupDatabaseJob(payload: Payload): Promise<void> {
   }
 }
 
-async function compressBackup(
-  backupPath: string,
-  stats: BackupStats
-): Promise<void> {
+async function compressBackup(backupPath: string, stats: BackupStats): Promise<void> {
   console.log('🗜️  Compressing backup...')
 
   try {
@@ -162,10 +155,7 @@ async function compressBackup(
     const gzipPath = `${backupPath}.gz`
     const gzipStats = await fs.stat(gzipPath)
 
-    const compressionRatio = (
-      (1 - gzipStats.size / stats.backupSize) *
-      100
-    ).toFixed(1)
+    const compressionRatio = ((1 - gzipStats.size / stats.backupSize) * 100).toFixed(1)
 
     stats.backupSize = gzipStats.size
     stats.backupLocation = gzipPath
@@ -179,10 +169,7 @@ async function compressBackup(
   }
 }
 
-async function uploadBackup(
-  backupPath: string,
-  stats: BackupStats
-): Promise<void> {
+async function uploadBackup(backupPath: string, stats: BackupStats): Promise<void> {
   console.log('☁️  Uploading backup to cloud storage...')
 
   try {

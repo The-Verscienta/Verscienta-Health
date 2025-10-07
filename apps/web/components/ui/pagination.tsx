@@ -46,7 +46,7 @@ export function Pagination({ currentPage, totalPages, baseUrl, className }: Pagi
       <Link
         href={currentPage > 1 ? `${baseUrl}?page=${currentPage - 1}` : '#'}
         className={cn(
-          'flex h-9 w-9 items-center justify-center rounded-md border border-earth-200 text-earth-700 transition-colors hover:bg-earth-50',
+          'border-earth-200 text-earth-700 hover:bg-earth-50 flex h-9 w-9 items-center justify-center rounded-md border transition-colors',
           currentPage <= 1 && 'pointer-events-none opacity-50'
         )}
         aria-label="Go to previous page"
@@ -61,7 +61,7 @@ export function Pagination({ currentPage, totalPages, baseUrl, className }: Pagi
           return (
             <span
               key={`ellipsis-${index}`}
-              className="flex h-9 w-9 items-center justify-center text-earth-600"
+              className="text-earth-600 flex h-9 w-9 items-center justify-center"
               aria-hidden="true"
             >
               <MoreHorizontal className="h-4 w-4" />
@@ -93,7 +93,7 @@ export function Pagination({ currentPage, totalPages, baseUrl, className }: Pagi
       <Link
         href={currentPage < totalPages ? `${baseUrl}?page=${currentPage + 1}` : '#'}
         className={cn(
-          'flex h-9 w-9 items-center justify-center rounded-md border border-earth-200 text-earth-700 transition-colors hover:bg-earth-50',
+          'border-earth-200 text-earth-700 hover:bg-earth-50 flex h-9 w-9 items-center justify-center rounded-md border transition-colors',
           currentPage >= totalPages && 'pointer-events-none opacity-50'
         )}
         aria-label="Go to next page"

@@ -6,9 +6,7 @@ export async function cacheMiddleware(request: NextRequest) {
 
   // Get client identifier (IP address or user ID)
   const identifier =
-    request.headers.get('x-forwarded-for') ||
-    request.headers.get('x-real-ip') ||
-    'anonymous'
+    request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'anonymous'
 
   // Apply rate limiting to API routes
   if (pathname.startsWith('/api/')) {
@@ -21,10 +19,7 @@ export async function cacheMiddleware(request: NextRequest) {
       limitType = 'search'
     }
 
-    const { success, limit, remaining, reset } = await checkRateLimit(
-      identifier,
-      limitType
-    )
+    const { success, limit, remaining, reset } = await checkRateLimit(identifier, limitType)
 
     if (!success) {
       return NextResponse.json(

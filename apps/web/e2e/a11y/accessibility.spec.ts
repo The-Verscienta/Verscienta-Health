@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { expect, test } from '@playwright/test'
 
 test.describe('Accessibility Tests', () => {
   test('homepage should not have accessibility violations', async ({ page }) => {
@@ -104,9 +104,7 @@ test.describe('Accessibility Tests', () => {
     expect(h1Count).toBeGreaterThan(0)
 
     // Verify heading hierarchy using axe
-    const accessibilityScanResults = await new AxeBuilder({ page })
-      .include('main')
-      .analyze()
+    const accessibilityScanResults = await new AxeBuilder({ page }).include('main').analyze()
 
     const headingViolations = accessibilityScanResults.violations.filter(
       (violation) =>
@@ -122,9 +120,7 @@ test.describe('Accessibility Tests', () => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
 
-    const accessibilityScanResults = await new AxeBuilder({ page })
-      .include('main')
-      .analyze()
+    const accessibilityScanResults = await new AxeBuilder({ page }).include('main').analyze()
 
     const imageViolations = accessibilityScanResults.violations.filter(
       (violation) => violation.id === 'image-alt'
@@ -137,9 +133,7 @@ test.describe('Accessibility Tests', () => {
     await page.goto('/login')
     await page.waitForLoadState('networkidle')
 
-    const accessibilityScanResults = await new AxeBuilder({ page })
-      .include('form')
-      .analyze()
+    const accessibilityScanResults = await new AxeBuilder({ page }).include('form').analyze()
 
     const labelViolations = accessibilityScanResults.violations.filter(
       (violation) => violation.id === 'label' || violation.id === 'form-field-multiple-labels'
@@ -170,7 +164,7 @@ test.describe('Accessibility Tests', () => {
     await page.keyboard.press('Tab')
 
     const skipLink = page.locator('a[href="#main"], a:has-text("skip to")')
-    if (await skipLink.count() > 0) {
+    if ((await skipLink.count()) > 0) {
       await expect(skipLink.first()).toBeFocused()
     }
   })

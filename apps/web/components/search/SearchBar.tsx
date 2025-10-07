@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { SearchIcon } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 interface SearchBarProps {
   placeholder?: string
@@ -40,7 +40,7 @@ export function SearchBar({
           autoFocus={autoFocus}
         />
       </div>
-      <Button type="submit" className="ml-2 btn-primary">
+      <Button type="submit" className="btn-primary ml-2">
         Search
       </Button>
     </form>

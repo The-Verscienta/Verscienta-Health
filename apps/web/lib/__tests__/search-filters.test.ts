@@ -1,14 +1,17 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import {
-  getFilterGroups,
-  getSortOptions,
   applyFilters,
   applySorting,
-  herbFilterGroups,
-  formulaFilterGroups,
   conditionFilterGroups,
+  formulaFilterGroups,
+  getFilterGroups,
+  getSortOptions,
+  herbFilterGroups,
   practitionerFilterGroups,
 } from '../search-filters'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type TestItem = any
 
 describe('search-filters', () => {
   describe('getFilterGroups', () => {
@@ -104,7 +107,7 @@ describe('search-filters', () => {
     it('should filter by TCM taste', () => {
       const result = applyFilters(mockHerbs, {
         tcm_taste: ['sweet'],
-      })
+      }) as TestItem[]
       expect(result).toHaveLength(2)
       expect(result[0].id).toBe('1')
       expect(result[1].id).toBe('2')
@@ -113,7 +116,7 @@ describe('search-filters', () => {
     it('should filter by TCM temperature', () => {
       const result = applyFilters(mockHerbs, {
         tcm_temperature: ['warm'],
-      })
+      }) as TestItem[]
       expect(result).toHaveLength(1)
       expect(result[0].id).toBe('1')
     })
@@ -121,7 +124,7 @@ describe('search-filters', () => {
     it('should filter by western properties', () => {
       const result = applyFilters(mockHerbs, {
         western_properties: ['adaptogen'],
-      })
+      }) as TestItem[]
       expect(result).toHaveLength(1)
       expect(result[0].id).toBe('1')
     })
@@ -129,7 +132,7 @@ describe('search-filters', () => {
     it('should filter by safety level', () => {
       const result = applyFilters(mockHerbs, {
         safety_level: ['safe'],
-      })
+      }) as TestItem[]
       expect(result).toHaveLength(2)
       expect(result[0].id).toBe('1')
       expect(result[1].id).toBe('3')
@@ -139,7 +142,7 @@ describe('search-filters', () => {
       const result = applyFilters(mockHerbs, {
         tcm_taste: ['sweet'],
         safety_level: ['safe'],
-      })
+      }) as TestItem[]
       expect(result).toHaveLength(1)
       expect(result[0].id).toBe('1')
     })
@@ -147,7 +150,7 @@ describe('search-filters', () => {
     it('should apply multiple values in same filter (OR logic)', () => {
       const result = applyFilters(mockHerbs, {
         tcm_temperature: ['warm', 'hot'],
-      })
+      }) as TestItem[]
       expect(result).toHaveLength(2)
       expect(result[0].id).toBe('1')
       expect(result[1].id).toBe('3')
@@ -162,28 +165,28 @@ describe('search-filters', () => {
     ]
 
     it('should sort by name ascending', () => {
-      const result = applySorting(mockItems, 'name_asc')
+      const result = applySorting(mockItems, 'name_asc') as TestItem[]
       expect(result[0].title).toBe('Apple')
       expect(result[1].title).toBe('Banana')
       expect(result[2].title).toBe('Zinc')
     })
 
     it('should sort by name descending', () => {
-      const result = applySorting(mockItems, 'name_desc')
+      const result = applySorting(mockItems, 'name_desc') as TestItem[]
       expect(result[0].title).toBe('Zinc')
       expect(result[1].title).toBe('Banana')
       expect(result[2].title).toBe('Apple')
     })
 
     it('should sort by rating descending', () => {
-      const result = applySorting(mockItems, 'rating_desc')
+      const result = applySorting(mockItems, 'rating_desc') as TestItem[]
       expect(result[0].averageRating).toBe(4.8)
       expect(result[1].averageRating).toBe(4.5)
       expect(result[2].averageRating).toBe(4.2)
     })
 
     it('should sort by review count descending', () => {
-      const result = applySorting(mockItems, 'reviews_desc')
+      const result = applySorting(mockItems, 'reviews_desc') as TestItem[]
       expect(result[0].reviewCount).toBe(42)
       expect(result[1].reviewCount).toBe(28)
       expect(result[2].reviewCount).toBe(15)
@@ -196,14 +199,14 @@ describe('search-filters', () => {
         { name: 'Condition C', severity: 'moderate' },
       ]
 
-      const result = applySorting(conditions, 'severity_desc')
+      const result = applySorting(conditions, 'severity_desc') as TestItem[]
       expect(result[0].severity).toBe('severe')
       expect(result[1].severity).toBe('moderate')
       expect(result[2].severity).toBe('mild')
     })
 
     it('should keep original order for relevance', () => {
-      const result = applySorting(mockItems, 'relevance')
+      const result = applySorting(mockItems, 'relevance') as TestItem[]
       expect(result[0].title).toBe('Zinc')
       expect(result[1].title).toBe('Apple')
       expect(result[2].title).toBe('Banana')
@@ -214,7 +217,7 @@ describe('search-filters', () => {
     it('should have correct herb filter structure', () => {
       expect(herbFilterGroups).toHaveLength(5)
 
-      const tasteFilter = herbFilterGroups.find(g => g.id === 'tcm_taste')
+      const tasteFilter = herbFilterGroups.find((g) => g.id === 'tcm_taste')
       expect(tasteFilter).toBeDefined()
       expect(tasteFilter?.multiSelect).toBe(true)
       expect(tasteFilter?.options).toContainEqual({ label: 'Sweet', value: 'sweet' })
@@ -223,7 +226,7 @@ describe('search-filters', () => {
     it('should have correct formula filter structure', () => {
       expect(formulaFilterGroups).toHaveLength(4)
 
-      const traditionFilter = formulaFilterGroups.find(g => g.id === 'tradition')
+      const traditionFilter = formulaFilterGroups.find((g) => g.id === 'tradition')
       expect(traditionFilter).toBeDefined()
       expect(traditionFilter?.multiSelect).toBe(true)
       expect(traditionFilter?.options.length).toBeGreaterThan(0)
@@ -232,7 +235,7 @@ describe('search-filters', () => {
     it('should have correct condition filter structure', () => {
       expect(conditionFilterGroups).toHaveLength(3)
 
-      const severityFilter = conditionFilterGroups.find(g => g.id === 'severity')
+      const severityFilter = conditionFilterGroups.find((g) => g.id === 'severity')
       expect(severityFilter).toBeDefined()
       expect(severityFilter?.options).toContainEqual({ label: 'Mild', value: 'mild' })
     })
@@ -240,11 +243,11 @@ describe('search-filters', () => {
     it('should have correct practitioner filter structure', () => {
       expect(practitionerFilterGroups).toHaveLength(4)
 
-      const modalityFilter = practitionerFilterGroups.find(g => g.id === 'modality')
+      const modalityFilter = practitionerFilterGroups.find((g) => g.id === 'modality')
       expect(modalityFilter).toBeDefined()
       expect(modalityFilter?.multiSelect).toBe(true)
 
-      const verificationFilter = practitionerFilterGroups.find(g => g.id === 'verification')
+      const verificationFilter = practitionerFilterGroups.find((g) => g.id === 'verification')
       expect(verificationFilter).toBeDefined()
       expect(verificationFilter?.multiSelect).toBe(false)
     })

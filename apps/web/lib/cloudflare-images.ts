@@ -35,7 +35,9 @@ export interface CloudflareImageOptions {
  */
 const CLOUDFLARE_CONFIG = {
   accountId: process.env.CLOUDFLARE_ACCOUNT_ID || process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID,
-  deliveryUrl: process.env.CLOUDFLARE_IMAGES_DELIVERY_URL || process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_DELIVERY_URL,
+  deliveryUrl:
+    process.env.CLOUDFLARE_IMAGES_DELIVERY_URL ||
+    process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_DELIVERY_URL,
   apiToken: process.env.CLOUDFLARE_IMAGES_API_TOKEN,
 }
 

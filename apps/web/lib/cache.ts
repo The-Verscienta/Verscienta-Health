@@ -1,5 +1,5 @@
-import Redis from 'ioredis'
 import { Ratelimit } from '@upstash/ratelimit'
+import Redis from 'ioredis'
 
 // Initialize DragonflyDB client (Redis-compatible)
 export const redis = new Redis({
@@ -56,15 +56,13 @@ export const ratelimit = {
 // Cache key generators
 export const cacheKeys = {
   herb: (slug: string) => `herb:${slug}`,
-  herbList: (page: number, filters?: string) =>
-    `herbs:list:${page}:${filters || 'all'}`,
+  herbList: (page: number, filters?: string) => `herbs:list:${page}:${filters || 'all'}`,
   formula: (slug: string) => `formula:${slug}`,
   condition: (slug: string) => `condition:${slug}`,
   practitioner: (slug: string) => `practitioner:${slug}`,
   aiSymptomAnalysis: (symptoms: string) =>
     `ai:symptoms:${Buffer.from(symptoms).toString('base64').substring(0, 50)}`,
-  searchResults: (query: string, index: string) =>
-    `search:${index}:${query}`,
+  searchResults: (query: string, index: string) => `search:${index}:${query}`,
 }
 
 // Cache TTL (Time To Live) in seconds
@@ -90,11 +88,7 @@ export async function getCached<T>(key: string): Promise<T | null> {
   }
 }
 
-export async function setCached<T>(
-  key: string,
-  value: T,
-  ttl: number = 3600
-): Promise<void> {
+export async function setCached<T>(key: string, value: T, ttl: number = 3600): Promise<void> {
   try {
     await redis.setex(key, ttl, JSON.stringify(value))
   } catch (error) {
@@ -292,8 +286,7 @@ export async function checkRateLimit(
   reset: number
 }> {
   try {
-    const { success, limit, remaining, reset } =
-      await ratelimit[limitType].limit(identifier)
+    const { success, limit, remaining, reset } = await ratelimit[limitType].limit(identifier)
     return { success, limit, remaining, reset }
   } catch (error) {
     console.error('Rate limit check error:', error)

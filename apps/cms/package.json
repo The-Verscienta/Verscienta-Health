@@ -13,7 +13,8 @@
     "db:migrate": "payload migrate",
     "db:seed": "tsx src/scripts/seed.ts",
     "db:studio": "drizzle-kit studio",
-    "lint": "eslint src --ext .ts,.tsx",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

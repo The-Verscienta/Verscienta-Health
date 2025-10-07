@@ -74,9 +74,7 @@ export async function syncTrefleDataJob(payload: Payload): Promise<void> {
       try {
         stats.processed++
 
-        console.log(
-          `🔍 Processing: ${herb.name} (${herb.scientificName || 'no scientific name'})`
-        )
+        console.log(`🔍 Processing: ${herb.name} (${herb.scientificName || 'no scientific name'})`)
 
         // Skip herbs without scientific name
         if (!herb.scientificName) {
@@ -86,15 +84,11 @@ export async function syncTrefleDataJob(payload: Payload): Promise<void> {
         }
 
         // Validate scientific name first
-        const validation = await trefleClient.validateScientificName(
-          herb.scientificName
-        )
+        const validation = await trefleClient.validateScientificName(herb.scientificName)
 
         if (validation.valid) {
           stats.validated++
-          console.log(
-            `  ✓ Scientific name validated: ${validation.matchedName}`
-          )
+          console.log(`  ✓ Scientific name validated: ${validation.matchedName}`)
         } else if (validation.suggestions.length > 0) {
           console.log(
             `  ⚠️  Scientific name not found. Suggestions: ${validation.suggestions.slice(0, 3).join(', ')}`
@@ -157,10 +151,7 @@ export async function syncTrefleDataJob(payload: Payload): Promise<void> {
         }
 
         // Check for new synonyms
-        if (
-          enrichedData.synonyms.length > 0 &&
-          (!herb.synonyms || herb.synonyms.length === 0)
-        ) {
+        if (enrichedData.synonyms.length > 0 && (!herb.synonyms || herb.synonyms.length === 0)) {
           stats.newSynonyms++
           console.log(`  📝 Found ${enrichedData.synonyms.length} synonyms`)
         }
@@ -192,10 +183,7 @@ export async function syncTrefleDataJob(payload: Payload): Promise<void> {
         }
 
         // Add synonyms if not already set
-        if (
-          enrichedData.synonyms.length > 0 &&
-          (!herb.synonyms || herb.synonyms.length === 0)
-        ) {
+        if (enrichedData.synonyms.length > 0 && (!herb.synonyms || herb.synonyms.length === 0)) {
           updateData.synonyms = enrichedData.synonyms
         }
 
@@ -212,13 +200,8 @@ export async function syncTrefleDataJob(payload: Payload): Promise<void> {
         }
 
         // Add native distribution to habitat if available
-        if (
-          enrichedData.distributions?.native.length &&
-          !herb.habitat?.includes('Native to')
-        ) {
-          const nativeRegions = enrichedData.distributions.native
-            .slice(0, 5)
-            .join(', ')
+        if (enrichedData.distributions?.native.length && !herb.habitat?.includes('Native to')) {
+          const nativeRegions = enrichedData.distributions.native.slice(0, 5).join(', ')
           const habitatAddition = `Native to: ${nativeRegions}`
 
           updateData.habitat = herb.habitat
@@ -286,9 +269,7 @@ export async function syncTrefleDataJob(payload: Payload): Promise<void> {
 
     // Send notification if significant enrichment occurred
     if (stats.enriched > 10) {
-      console.log(
-        `📧 ${stats.enriched} herbs enriched. Consider reviewing new data.`
-      )
+      console.log(`📧 ${stats.enriched} herbs enriched. Consider reviewing new data.`)
       // TODO: Send email notification to admins
     }
   } catch (error) {

@@ -36,6 +36,7 @@ apps/web/lib/__tests__/
 ### What's Tested
 
 **Cloudflare Images** (`cloudflare-images.test.ts`):
+
 - Image URL generation
 - Variant configurations
 - srcset generation
@@ -43,6 +44,7 @@ apps/web/lib/__tests__/
 - Fallback behavior when Cloudflare not configured
 
 **Search Filters** (`search-filters.test.ts`):
+
 - Filter group configurations
 - Filter application logic (AND/OR)
 - Sorting logic (name, rating, reviews, severity)
@@ -106,6 +108,7 @@ apps/web/e2e/
 ### What's Tested
 
 **Homepage** (`homepage.spec.ts`):
+
 - Page loads correctly
 - Navigation links work
 - Search bar functionality
@@ -115,6 +118,7 @@ apps/web/e2e/
 - No console errors
 
 **Search** (`search.spec.ts`):
+
 - Search results display
 - Content type tabs
 - Filter functionality
@@ -125,6 +129,7 @@ apps/web/e2e/
 - Accessibility
 
 **Authentication** (`authentication.spec.ts`):
+
 - Login page loads
 - Registration page loads
 - Form validation
@@ -227,6 +232,7 @@ open coverage/index.html
 ### Vitest Configuration
 
 `apps/web/vitest.config.ts`:
+
 ```typescript
 export default defineConfig({
   test: {
@@ -244,6 +250,7 @@ export default defineConfig({
 ### Playwright Configuration
 
 `apps/web/playwright.config.ts`:
+
 ```typescript
 export default defineConfig({
   testDir: './e2e',
@@ -318,12 +325,15 @@ pnpm exec playwright show-report playwright-report-a11y
 ### Common Issues
 
 **Issue**: Tests fail locally but pass in CI
+
 - **Solution**: Clear `.next` and `node_modules`, reinstall dependencies
 
 **Issue**: Accessibility tests fail for color contrast
+
 - **Solution**: Check Tailwind color classes, ensure proper contrast ratios
 
 **Issue**: E2E tests timeout
+
 - **Solution**: Increase timeout in test or check if dev server is running
 
 ## 📚 Best Practices

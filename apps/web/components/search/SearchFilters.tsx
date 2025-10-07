@@ -1,16 +1,10 @@
 'use client'
 
+import { ChevronDown, ChevronUp, SlidersHorizontal, X } from 'lucide-react'
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { X, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export interface FilterOption {
   label: string
@@ -112,7 +106,7 @@ export function SearchFilters({
             <select
               value={activeSort || ''}
               onChange={(e) => onSortChange(e.target.value)}
-              className="input-standard text-sm py-1"
+              className="input-standard py-1 text-sm"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -132,17 +126,11 @@ export function SearchFilters({
               const group = filterGroups.find((g) => g.id === groupId)
               const option = group?.options.find((o) => o.value === value)
               return (
-                <Badge
-                  key={`${groupId}-${value}`}
-                  variant="outline"
-                  className="gap-1 pr-1"
-                >
+                <Badge key={`${groupId}-${value}`} variant="outline" className="gap-1 pr-1">
                   {option?.label || value}
                   <button
-                    onClick={() =>
-                      handleFilterToggle(groupId, value, group?.multiSelect || false)
-                    }
-                    className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+                    onClick={() => handleFilterToggle(groupId, value, group?.multiSelect || false)}
+                    className="ml-1 rounded-full p-0.5 hover:bg-gray-300"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -159,14 +147,14 @@ export function SearchFilters({
           {filterGroups.map((group) => (
             <Card key={group.id}>
               <CardHeader
-                className="cursor-pointer hover:bg-gray-50 transition-colors py-3"
+                className="cursor-pointer py-3 transition-colors hover:bg-gray-50"
                 onClick={() => toggleGroup(group.id)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-sm font-semibold">{group.label}</CardTitle>
                     {activeFilters[group.id]?.length > 0 && (
-                      <CardDescription className="text-xs mt-1">
+                      <CardDescription className="mt-1 text-xs">
                         {activeFilters[group.id].length} selected
                       </CardDescription>
                     )}
@@ -180,14 +168,14 @@ export function SearchFilters({
               </CardHeader>
 
               {expandedGroups.has(group.id) && (
-                <CardContent className="pt-0 pb-3">
+                <CardContent className="pb-3 pt-0">
                   <div className="space-y-2">
                     {group.options.map((option) => {
                       const isActive = activeFilters[group.id]?.includes(option.value) || false
                       return (
                         <label
                           key={option.value}
-                          className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
+                          className="flex cursor-pointer items-center gap-2 rounded p-2 transition-colors hover:bg-gray-50"
                         >
                           <input
                             type={group.multiSelect ? 'checkbox' : 'radio'}
@@ -196,7 +184,7 @@ export function SearchFilters({
                             onChange={() =>
                               handleFilterToggle(group.id, option.value, group.multiSelect || false)
                             }
-                            className="rounded text-earth-600 focus:ring-earth-600"
+                            className="text-earth-600 focus:ring-earth-600 rounded"
                           />
                           <span className="flex-1 text-sm">{option.label}</span>
                           {option.count !== undefined && (

@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor } from '../access/isAdmin'
-import { geocodeAddress } from '../hooks/geocodeAddress'
 import { generateSlug } from '../hooks/generateSlug'
+import { geocodeAddress } from '../hooks/geocodeAddress'
 
 export const Practitioners: CollectionConfig = {
   slug: 'practitioners',

@@ -1,14 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from './card'
-import { Button } from './button'
 import { Badge } from './badge'
+import { Button } from './button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card'
 
 const meta = {
   title: 'UI/Card',
@@ -63,14 +56,14 @@ export const WithBadges: Story = {
         <CardDescription>Panax ginseng</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="mb-4 flex flex-wrap gap-2">
           <Badge variant="tcm">Warming</Badge>
           <Badge variant="sage">Sweet</Badge>
           <Badge variant="sage">Bitter</Badge>
         </div>
         <p className="text-sm text-gray-600">
-          A powerful adaptogen used in Traditional Chinese Medicine to boost energy and
-          cognitive function.
+          A powerful adaptogen used in Traditional Chinese Medicine to boost energy and cognitive
+          function.
         </p>
       </CardContent>
       <CardFooter>
@@ -124,7 +117,7 @@ export const PractitionerCard: Story = {
     <Card className="w-[350px]">
       <CardHeader>
         <div className="flex items-start gap-4">
-          <div className="h-16 w-16 rounded-full bg-earth-200 flex items-center justify-center text-2xl font-bold text-earth-700">
+          <div className="bg-earth-200 text-earth-700 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-bold">
             JD
           </div>
           <div className="flex-1">
@@ -144,8 +137,8 @@ export const PractitionerCard: Story = {
             <Badge variant="sage">Cupping</Badge>
           </div>
           <p className="text-sm text-gray-600">
-            15 years of experience in Traditional Chinese Medicine. Specializing in pain
-            management and digestive health.
+            15 years of experience in Traditional Chinese Medicine. Specializing in pain management
+            and digestive health.
           </p>
           <p className="text-sm text-gray-500">📍 San Francisco, CA</p>
         </div>
@@ -159,7 +152,7 @@ export const PractitionerCard: Story = {
 
 export const MultipleCards: Story = {
   render: () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+    <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
       <Card>
         <CardHeader>
           <CardTitle>Card 1</CardTitle>

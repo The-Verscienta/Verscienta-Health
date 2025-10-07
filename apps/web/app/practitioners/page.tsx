@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
-import { Loading } from '@/components/ui/loading'
-import { SearchBar } from '@/components/search/SearchBar'
 import { PractitionerViewToggle } from '@/components/practitioners/PractitionerViewToggle'
+import { SearchBar } from '@/components/search/SearchBar'
+import { Loading } from '@/components/ui/loading'
 
 interface PractitionersPageProps {
   searchParams: {
@@ -32,25 +32,20 @@ export default async function PractitionersPage({ searchParams }: PractitionersP
     <div className="container-custom py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">
-          Find a Practitioner
-        </h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Connect with qualified holistic health practitioners including herbalists,
-          acupuncturists, naturopaths, and Traditional Chinese Medicine specialists.
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Find a Practitioner</h1>
+        <p className="max-w-3xl text-lg text-gray-600">
+          Connect with qualified holistic health practitioners including herbalists, acupuncturists,
+          naturopaths, and Traditional Chinese Medicine specialists.
         </p>
       </div>
 
       {/* Search */}
       <div className="mb-8 max-w-2xl">
-        <SearchBar
-          placeholder="Search by name, specialty, or location..."
-          defaultValue={query}
-        />
+        <SearchBar placeholder="Search by name, specialty, or location..." defaultValue={query} />
       </div>
 
       {/* Stats and View Toggle */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <p className="text-sm text-gray-600">
           {totalDocs} {totalDocs === 1 ? 'practitioner' : 'practitioners'} found
         </p>
@@ -59,9 +54,11 @@ export default async function PractitionersPage({ searchParams }: PractitionersP
       {/* Practitioner View (List or Map) */}
       <Suspense fallback={<Loading />}>
         {practitioners.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-gray-600">
-              {query ? 'No practitioners found matching your search.' : 'No practitioners available yet.'}
+              {query
+                ? 'No practitioners found matching your search.'
+                : 'No practitioners available yet.'}
             </p>
           </div>
         ) : (
@@ -78,5 +75,6 @@ export default async function PractitionersPage({ searchParams }: PractitionersP
 
 export const metadata = {
   title: 'Find a Practitioner | Verscienta Health',
-  description: 'Connect with qualified holistic health practitioners including herbalists, acupuncturists, and Traditional Chinese Medicine specialists.',
+  description:
+    'Connect with qualified holistic health practitioners including herbalists, acupuncturists, and Traditional Chinese Medicine specialists.',
 }

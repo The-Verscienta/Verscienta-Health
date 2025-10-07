@@ -24,7 +24,7 @@ cd verscienta-health
 pnpm install
 ```
 
-This will install dependencies for all workspaces (root, apps/web, apps/cms, packages/*).
+This will install dependencies for all workspaces (root, apps/web, apps/cms, packages/\*).
 
 ## Step 3: Set Up PostgreSQL Database
 
@@ -110,6 +110,7 @@ pnpm dev
 ```
 
 This starts:
+
 - **Frontend (Next.js):** http://localhost:3000
 - **Backend (Payload CMS):** http://localhost:3001/admin
 
@@ -228,6 +229,7 @@ On first run, Payload CMS will prompt you to create an admin user:
 ### Testing Frontend
 
 Visit http://localhost:3000 and test:
+
 - Homepage
 - Herb listing: /herbs
 - Herb detail: /herbs/[slug]
@@ -268,6 +270,7 @@ pnpm type-check
 **Error:** `ECONNREFUSED ::1:5432`
 
 **Solution:**
+
 - Ensure PostgreSQL is running: `sudo service postgresql status`
 - Check connection string in `.env`
 - Verify user permissions
@@ -277,6 +280,7 @@ pnpm type-check
 **Error:** `Invalid session`
 
 **Solution:**
+
 - Clear browser cookies for localhost:3001
 - Restart the CMS server: `pnpm dev:cms`
 - Check `PAYLOAD_SECRET` in `.env`
@@ -286,6 +290,7 @@ pnpm type-check
 **Error:** `Module not found: Can't resolve '@/components/...'`
 
 **Solution:**
+
 - Run `pnpm install` again
 - Check TypeScript paths in `tsconfig.json`
 - Restart the dev server
@@ -295,6 +300,7 @@ pnpm type-check
 **Error:** Search returns no results
 
 **Solution:**
+
 - Verify Algolia credentials in `.env`
 - Check that indices were created
 - Manually trigger reindex: Visit Payload Admin > Herbs > Select All > Bulk Actions > Sync to Algolia
@@ -304,6 +310,7 @@ pnpm type-check
 **Error:** `401 Unauthorized`
 
 **Solution:**
+
 - Verify `GROK_API_KEY` in `.env`
 - Check xAI API status: https://status.x.ai
 - Ensure you have credits/quota available

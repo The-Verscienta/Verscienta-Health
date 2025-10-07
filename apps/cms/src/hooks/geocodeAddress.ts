@@ -1,5 +1,5 @@
-import type { CollectionBeforeChangeHook } from 'payload'
 import axios from 'axios'
+import type { CollectionBeforeChangeHook } from 'payload'
 
 /**
  * Auto-geocode practitioner addresses using OpenStreetMap Nominatim API
@@ -11,24 +11,19 @@ export const geocodeAddress: CollectionBeforeChangeHook = async ({ data, operati
 
       // Only geocode if we have enough address information
       if (city && (state || country)) {
-        const query = [street, city, state, zipCode, country]
-          .filter(Boolean)
-          .join(', ')
+        const query = [street, city, state, zipCode, country].filter(Boolean).join(', ')
 
         try {
-          const response = await axios.get(
-            'https://nominatim.openstreetmap.org/search',
-            {
-              params: {
-                q: query,
-                format: 'json',
-                limit: 1,
-              },
-              headers: {
-                'User-Agent': 'Verscienta Health App (https://verscienta.health)',
-              },
-            }
-          )
+          const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+            params: {
+              q: query,
+              format: 'json',
+              limit: 1,
+            },
+            headers: {
+              'User-Agent': 'Verscienta Health App (https://verscienta.health)',
+            },
+          })
 
           if (response.data && response.data.length > 0) {
             const { lat, lon } = response.data[0]

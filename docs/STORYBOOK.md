@@ -90,7 +90,8 @@ export const AllVariants: Story = {
 For comprehensive component documentation, create an MDX file alongside your stories:
 
 **button.stories.mdx**
-```mdx
+
+````mdx
 import { Meta, Canvas, Story, Controls, Primary } from '@storybook/blocks'
 import * as ButtonStories from './button.stories'
 
@@ -107,8 +108,9 @@ A versatile button component built on Radix UI.
 ```tsx
 import { Button } from '@/components/ui/button'
 
-<Button variant="default">Click me</Button>
+;<Button variant="default">Click me</Button>
 ```
+````
 
 ## Variants
 
@@ -122,6 +124,7 @@ import { Button } from '@/components/ui/button'
 ```
 
 **Benefits of MDX:**
+
 - Rich markdown content with component examples
 - Code syntax highlighting
 - Interactive component previews
@@ -153,6 +156,7 @@ import { Button } from '@/components/ui/button'
 ### Accessibility
 
 All components must:
+
 - Have proper ARIA labels
 - Support keyboard navigation
 - Meet WCAG 2.1 AA standards
@@ -162,8 +166,7 @@ All components must:
 
 ```tsx
 // Always export props interface
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'secondary' | 'outline'
   size?: 'sm' | 'default' | 'lg'
 }
@@ -265,21 +268,25 @@ export default preview
 ### Colors
 
 **Earth (Primary)**
+
 ```tsx
 <Button variant="default" /> // Uses earth-600
 ```
 
 **Sage (Secondary)**
+
 ```tsx
 <Badge variant="sage" /> // Uses sage-100/sage-700
 ```
 
 **TCM Red**
+
 ```tsx
 <Badge variant="tcm" /> // Uses #c1272d
 ```
 
 **Gold (Verified)**
+
 ```tsx
 <Badge variant="gold" /> // Uses #d4a574
 ```
@@ -336,7 +343,7 @@ components/ui/
 
 Example JSDoc:
 
-```tsx
+````tsx
 /**
  * Primary button component for user interactions
  *
@@ -348,9 +355,10 @@ Example JSDoc:
  * ```
  */
 export const Button = ({ ... }) => { ... }
-```
+````
 
 **MDX Documentation Checklist:**
+
 - [ ] Component overview and description
 - [ ] Installation/usage instructions
 - [ ] All variants with examples

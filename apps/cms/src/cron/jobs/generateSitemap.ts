@@ -24,8 +24,7 @@ export async function generateSitemapJob(payload: Payload): Promise<void> {
 
     // Build sitemap XML
     let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    sitemap +=
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 
     // Add static pages
     const staticPages = [
@@ -93,7 +92,7 @@ export async function generateSitemapJob(payload: Payload): Promise<void> {
 
     try {
       await fs.mkdir(sitemapDir, { recursive: true })
-    } catch (error) {
+    } catch (_error) {
       // Directory might already exist
     }
 
@@ -209,26 +208,20 @@ function generateUrlEntry(
   </url>\n`
 }
 
-async function generateSitemapIndex(
-  baseUrl: string,
-  sitemapDir: string
-): Promise<void> {
+async function generateSitemapIndex(baseUrl: string, sitemapDir: string): Promise<void> {
   try {
     const fs = await import('fs/promises')
     const path = await import('path')
 
     // Check if multiple sitemaps exist
     const files = await fs.readdir(sitemapDir)
-    const sitemapFiles = files.filter(
-      (file) => file.startsWith('sitemap') && file.endsWith('.xml')
-    )
+    const sitemapFiles = files.filter((file) => file.startsWith('sitemap') && file.endsWith('.xml'))
 
     if (sitemapFiles.length > 1) {
       console.log('📑 Generating sitemap index...')
 
       let index = '<?xml version="1.0" encoding="UTF-8"?>\n'
-      index +=
-        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      index += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 
       for (const file of sitemapFiles) {
         index += `  <sitemap>
@@ -266,7 +259,7 @@ async function pingSearchEngines(baseUrl: string): Promise<void> {
       try {
         await axios.default.get(url)
         console.log(`  ✓ Pinged: ${url.split('/')[2]}`)
-      } catch (error) {
+      } catch (_error) {
         console.error(`  ⚠️  Failed to ping: ${url.split('/')[2]}`)
       }
     }

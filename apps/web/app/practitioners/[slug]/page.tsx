@@ -1,20 +1,20 @@
-import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
 import {
-  MapPin,
-  Phone,
-  Mail,
-  Globe,
-  CheckCircle,
-  Star,
-  Calendar,
   Award,
   BookOpen,
+  Calendar,
+  CheckCircle,
+  Globe,
+  Mail,
+  MapPin,
+  Phone,
+  Star,
 } from 'lucide-react'
+import Image from 'next/image'
+import { notFound } from 'next/navigation'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface Practitioner {
   id: string
@@ -111,10 +111,10 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
     <div className="container-custom py-12">
       {/* Hero Section */}
       <div className="mb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Profile Image */}
           <div className="lg:col-span-1">
-            <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg shadow-lg">
+            <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-lg shadow-lg">
               {practitioner.photo ? (
                 <Image
                   src={practitioner.photo?.url || '/placeholder-practitioner.jpg'}
@@ -124,7 +124,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                   priority
                 />
               ) : (
-                <div className="flex h-full items-center justify-center bg-earth-100 text-6xl font-bold text-earth-600">
+                <div className="bg-earth-100 text-earth-600 flex h-full items-center justify-center text-6xl font-bold">
                   {practitioner.name
                     .split(' ')
                     .map((n: string) => n[0])
@@ -144,7 +144,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 {practitioner.phone && (
                   <a
                     href={`tel:${practitioner.phone}`}
-                    className="flex items-center gap-2 text-gray-700 hover:text-earth-600"
+                    className="hover:text-earth-600 flex items-center gap-2 text-gray-700"
                   >
                     <Phone className="h-4 w-4" />
                     <span>{practitioner.phone}</span>
@@ -153,7 +153,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 {practitioner.email && (
                   <a
                     href={`mailto:${practitioner.email}`}
-                    className="flex items-center gap-2 text-gray-700 hover:text-earth-600"
+                    className="hover:text-earth-600 flex items-center gap-2 text-gray-700"
                   >
                     <Mail className="h-4 w-4" />
                     <span>{practitioner.email}</span>
@@ -164,7 +164,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                     href={practitioner.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-700 hover:text-earth-600"
+                    className="hover:text-earth-600 flex items-center gap-2 text-gray-700"
                   >
                     <Globe className="h-4 w-4" />
                     <span>Visit Website</span>
@@ -172,7 +172,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 )}
                 {fullAddress && (
                   <div className="flex items-start gap-2 text-gray-700">
-                    <MapPin className="h-4 w-4 flex-shrink-0 mt-1" />
+                    <MapPin className="mt-1 h-4 w-4 flex-shrink-0" />
                     <span>{fullAddress}</span>
                   </div>
                 )}
@@ -181,7 +181,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
 
             {/* Book Appointment */}
             {practitioner.acceptingNewPatients && (
-              <Button className="w-full mt-4" size="lg">
+              <Button className="mt-4 w-full" size="lg">
                 <Calendar className="mr-2 h-4 w-4" />
                 Book Appointment
               </Button>
@@ -190,10 +190,10 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
 
           {/* Header Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-start justify-between mb-4">
+            <div className="mb-4 flex items-start justify-between">
               <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-4xl font-bold font-serif text-earth-900">
+                <div className="mb-2 flex items-center gap-3">
+                  <h1 className="text-earth-900 font-serif text-4xl font-bold">
                     {practitioner.name}
                   </h1>
                   {practitioner.verificationStatus === 'verified' && (
@@ -202,35 +202,37 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 </div>
 
                 {practitioner.title && (
-                  <p className="text-xl text-gray-600 mb-2">{practitioner.title}</p>
+                  <p className="mb-2 text-xl text-gray-600">{practitioner.title}</p>
                 )}
 
                 {practitioner.credentials && practitioner.credentials.length > 0 && (
-                  <p className="text-lg text-gray-600 mb-4">
+                  <p className="mb-4 text-lg text-gray-600">
                     {practitioner.credentials.join(', ')}
                   </p>
                 )}
               </div>
-              <span className="text-sm font-mono text-gray-500">{practitioner.practitionerId}</span>
+              <span className="font-mono text-sm text-gray-500">{practitioner.practitionerId}</span>
             </div>
 
             {/* Rating */}
-            {practitioner.averageRating && practitioner.reviewCount && practitioner.reviewCount > 0 && (
-              <div className="flex items-center space-x-2 mb-6">
-                <div className="flex items-center">
-                  <Star className="h-5 w-5 fill-gold-600 text-gold-600" />
-                  <span className="ml-1 text-lg font-semibold">
-                    {practitioner.averageRating.toFixed(1)}
-                  </span>
+            {practitioner.averageRating &&
+              practitioner.reviewCount &&
+              practitioner.reviewCount > 0 && (
+                <div className="mb-6 flex items-center space-x-2">
+                  <div className="flex items-center">
+                    <Star className="fill-gold-600 text-gold-600 h-5 w-5" />
+                    <span className="ml-1 text-lg font-semibold">
+                      {practitioner.averageRating.toFixed(1)}
+                    </span>
+                  </div>
+                  <span className="text-gray-600">({practitioner.reviewCount} reviews)</span>
                 </div>
-                <span className="text-gray-600">({practitioner.reviewCount} reviews)</span>
-              </div>
-            )}
+              )}
 
             {/* Modalities */}
             {practitioner.modalities && practitioner.modalities.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Modalities</h3>
+                <h3 className="mb-2 text-sm font-semibold text-gray-700">Modalities</h3>
                 <div className="flex flex-wrap gap-2">
                   {practitioner.modalities.map((modality: string) => (
                     <Badge key={modality} variant="sage">
@@ -244,7 +246,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
             {/* Specializations */}
             {practitioner.specializations && practitioner.specializations.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Specializations</h3>
+                <h3 className="mb-2 text-sm font-semibold text-gray-700">Specializations</h3>
                 <div className="flex flex-wrap gap-2">
                   {practitioner.specializations.map((spec: string) => (
                     <Badge key={spec} variant="gold">
@@ -263,7 +265,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
             )}
 
             {/* Status Badges */}
-            <div className="flex flex-wrap gap-2 mt-6">
+            <div className="mt-6 flex flex-wrap gap-2">
               {practitioner.acceptingNewPatients && (
                 <Badge variant="success">Accepting New Patients</Badge>
               )}
@@ -294,7 +296,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <BookOpen className="mr-2 h-5 w-5 text-earth-600" />
+                  <BookOpen className="text-earth-600 mr-2 h-5 w-5" />
                   Treatment Philosophy
                 </CardTitle>
               </CardHeader>
@@ -329,7 +331,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 <CardTitle>Insurance Accepted</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc list-inside space-y-1 text-gray-700">
+                <ul className="list-inside list-disc space-y-1 text-gray-700">
                   {practitioner.insuranceAccepted.map((insurance: string, idx: number) => (
                     <li key={idx}>{insurance}</li>
                   ))}
@@ -347,7 +349,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 <CardTitle>Services Offered</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   {practitioner.servicesOffered.map((service: string, idx: number) => (
                     <li key={idx} className="flex items-start">
                       <span className="text-earth-600 mr-2">•</span>
@@ -389,7 +391,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 <CardTitle>Office Hours</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 whitespace-pre-line">{practitioner.officeHours}</p>
+                <p className="whitespace-pre-line text-gray-700">{practitioner.officeHours}</p>
               </CardContent>
             </Card>
           )}
@@ -402,7 +404,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Award className="mr-2 h-5 w-5 text-earth-600" />
+                  <Award className="text-earth-600 mr-2 h-5 w-5" />
                   Education
                 </CardTitle>
               </CardHeader>
@@ -430,7 +432,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 <div className="space-y-3">
                   {practitioner.certifications.map((cert, idx: number) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
                       <div>
                         <p className="font-semibold text-gray-900">{cert.name}</p>
                         {cert.issuingOrganization && (
@@ -452,7 +454,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
                 <CardTitle>Experience</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-earth-900">
+                <p className="text-earth-900 text-2xl font-bold">
                   {practitioner.yearsInPractice}+ years
                 </p>
                 <p className="text-gray-600">in practice</p>
@@ -468,12 +470,12 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
               {practitioner.reviews.map((review) => (
                 <Card key={review.id}>
                   <CardContent className="pt-6">
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="mb-3 flex items-start justify-between">
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="mb-1 flex items-center gap-2">
                           <span className="font-semibold text-gray-900">{review.author}</span>
                           <div className="flex items-center">
-                            <Star className="h-4 w-4 fill-gold-600 text-gold-600" />
+                            <Star className="fill-gold-600 text-gold-600 h-4 w-4" />
                             <span className="ml-1 text-sm font-semibold">{review.rating}</span>
                           </div>
                         </div>
@@ -496,11 +498,11 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
       </Tabs>
 
       {/* Medical Disclaimer */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
         <p className="text-sm text-yellow-900">
           <strong>Disclaimer:</strong> Verscienta Health provides practitioner listings as a
-          service. We do not employ or control these practitioners. Please verify credentials
-          and licensing independently before engaging services.
+          service. We do not employ or control these practitioners. Please verify credentials and
+          licensing independently before engaging services.
         </p>
       </div>
     </div>
@@ -518,6 +520,8 @@ export async function generateMetadata({ params }: PractitionerPageProps) {
 
   return {
     title: `${practitioner.name} | Verscienta Health`,
-    description: practitioner.bio || `${practitioner.name} - ${practitioner.title || 'Holistic Health Practitioner'}`,
+    description:
+      practitioner.bio ||
+      `${practitioner.name} - ${practitioner.title || 'Holistic Health Practitioner'}`,
   }
 }

@@ -24,10 +24,7 @@ if (process.env.REDIS_URL && process.env.REDIS_TOKEN) {
 }
 
 // Fallback to in-memory storage if Redis not configured
-const memoryStore = new Map<
-  string,
-  { count: number; resetTime: number }
->()
+const memoryStore = new Map<string, { count: number; resetTime: number }>()
 
 export interface RateLimitConfig {
   requests: number
@@ -58,7 +55,9 @@ export async function checkRateLimit(
   } else {
     // Fallback to in-memory
     if (process.env.NODE_ENV === 'production') {
-      console.warn('[RATE LIMIT] Redis not configured - using in-memory fallback (not recommended for production)')
+      console.warn(
+        '[RATE LIMIT] Redis not configured - using in-memory fallback (not recommended for production)'
+      )
     }
     return checkRateLimitMemory(key, config, now)
   }
@@ -117,11 +116,7 @@ async function checkRateLimitRedis(
 /**
  * In-memory fallback implementation
  */
-function checkRateLimitMemory(
-  key: string,
-  config: RateLimitConfig,
-  now: number
-): RateLimitResult {
+function checkRateLimitMemory(key: string, config: RateLimitConfig, now: number): RateLimitResult {
   let record = memoryStore.get(key)
 
   // Reset if window has passed
@@ -223,7 +218,7 @@ export async function getRateLimitInfo(
 
       return {
         count,
-        resetTime: now + (ttl * 1000),
+        resetTime: now + ttl * 1000,
       }
     } catch (error) {
       console.error('[RATE LIMIT] Error getting Redis info:', error)

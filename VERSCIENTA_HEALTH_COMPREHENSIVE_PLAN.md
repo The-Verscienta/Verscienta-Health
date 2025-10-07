@@ -8,13 +8,14 @@
 
 **Mission:** Empower individuals and healthcare practitioners worldwide with comprehensive, evidence-based knowledge of holistic health practices, fostering informed decision-making and integrative wellness approaches that honor both traditional wisdom and scientific validation.
 
-**Name Etymology:** Verscienta = *vers-* (turned/directed) + *scientia* (knowledge/science) = "Versatile Knowledge" - representing comprehensive, adaptable wisdom encompassing diverse health approaches.
+**Name Etymology:** Verscienta = _vers-_ (turned/directed) + _scientia_ (knowledge/science) = "Versatile Knowledge" - representing comprehensive, adaptable wisdom encompassing diverse health approaches.
 
 ---
 
 ## 1. Technology Stack
 
 ### Frontend: Next.js 15.5.4
+
 - **Framework:** Next.js 15.5.4 (App Router)
 - **Language:** TypeScript 5.7+
 - **Styling:** Tailwind CSS 4.1.0
@@ -29,6 +30,7 @@
 - **Fonts:** Inter, Crimson Pro, Noto Serif SC
 
 ### Backend: Payload CMS 3.58.0
+
 - **CMS:** Payload CMS 3.58.0
 - **Database:** PostgreSQL 17+
 - **ORM:** Drizzle ORM (Payload native)
@@ -38,6 +40,7 @@
 - **Admin Panel:** Payload Admin UI (React-based)
 
 ### Infrastructure & Services
+
 - **Database:** PostgreSQL 17+
 - **Search:** Algolia (full-text search, faceting, autocomplete)
 - **Image CDN:** Cloudflare Images (optimization, transformations, global CDN)
@@ -51,6 +54,7 @@
 - **Analytics:** Vercel Analytics or Plausible
 
 ### Development Tools
+
 - **Package Manager:** pnpm (monorepo support)
 - **Code Quality:** ESLint, Prettier, TypeScript strict mode
 - **Testing:** Vitest (unit), Playwright (e2e)
@@ -136,12 +140,14 @@ verscienta-health/
 The most comprehensive collection with 100+ fields organized into logical groups:
 
 #### 1. Basic Information
+
 - `title` (text, required) - Common primary name
 - `slug` (text, unique, auto-generated)
 - `description` (richText) - Overview and general description
 - `status` (select: draft, in_review, peer_reviewed, expert_verified, published)
 
 #### 2. Botanical Information
+
 - `scientificName` (text, required, indexed)
 - `commonNames` (array of objects)
   - `name` (text)
@@ -158,6 +164,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
 - `botanicalDescription` (richText) - Detailed physical characteristics
 
 #### 3. Cultivation Details (nested group)
+
 - `soilType` (text)
 - `climateZone` (text)
 - `sunlightNeeds` (select: Full Sun, Partial Shade, Full Shade)
@@ -167,12 +174,14 @@ The most comprehensive collection with 100+ fields organized into logical groups
 - `growingSeason` (text)
 
 #### 4. Conservation
+
 - `conservationStatus` (select: Least Concern, Near Threatened, Vulnerable, Endangered, Critically Endangered, Extinct in Wild, Not Evaluated, Data Deficient)
 - `conservationNotes` (richText) - IUCN details, overharvesting concerns
 - `citesStatus` (checkbox)
 - `citesAppendix` (select: Appendix I, II, III, N/A)
 
 #### 5. Traditional Chinese Medicine Properties (nested group)
+
 - `tcmTaste` (multiSelect: Sweet, Bitter, Sour, Pungent, Salty, Bland)
 - `tcmTemperature` (select: Hot, Warm, Neutral, Cool, Cold)
 - `tcmMeridians` (multiSelect: Lung, Large Intestine, Stomach, Spleen, Heart, Small Intestine, Bladder, Kidney, Pericardium, Triple Burner, Gallbladder, Liver)
@@ -181,18 +190,21 @@ The most comprehensive collection with 100+ fields organized into logical groups
 - `tcmTraditionalUses` (richText)
 
 #### 6. Western Herbalism Properties
+
 - `westernProperties` (multiSelect: Adaptogen, Alterative, Analgesic, Anti-inflammatory, Antimicrobial, Antioxidant, Antispasmodic, Astringent, Bitter, Carminative, Demulcent, Diaphoretic, Diuretic, Expectorant, Hepatic, Nervine, Sedative, Stimulant, Tonic, Vulnerary)
 - `therapeuticUses` (richText) - Primary medicinal applications
 - `traditionalAmericanUses` (richText)
 - `nativeAmericanUses` (richText)
 
 #### 7. Active Constituents (array of objects)
+
 - `compoundName` (text)
 - `compoundClass` (text) - e.g., "Ginsenosides", "Alkaloids"
 - `percentage` (number, optional)
 - `effects` (textarea)
 
 #### 8. Pharmacological Effects
+
 - `pharmacologicalEffects` (richText)
 - `clinicalStudies` (array of objects)
   - `title` (text)
@@ -203,6 +215,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
   - `conclusion` (textarea)
 
 #### 9. Dosage & Preparation
+
 - `dosageForms` (multiSelect: Tincture, Tea/Infusion, Decoction, Capsule, Tablet, Powder, Extract, Essential Oil, Poultice, Salve, Syrup, Compress)
 - `recommendedDosage` (array of objects)
   - `form` (select, from dosageForms)
@@ -220,6 +233,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
   - `storage` (textarea)
 
 #### 10. Safety Information
+
 - `contraindications` (richText)
 - `drugInteractions` (array of objects)
   - `drugName` (text)
@@ -242,6 +256,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
   - `affectedPopulation` (text)
 
 #### 11. Quality & Sourcing
+
 - `qualityStandards` (array of objects)
   - `organization` (text) - e.g., "USP", "Chinese Pharmacopoeia"
   - `code` (text)
@@ -270,12 +285,14 @@ The most comprehensive collection with 100+ fields organized into logical groups
   - `degradationSigns` (textarea)
 
 #### 12. Regulatory Status (array of objects)
+
 - `country` (text)
 - `status` (select: Approved, Restricted, Banned, GRAS, Dietary Supplement, Prescription Only)
 - `classification` (text)
 - `notes` (textarea)
 
 #### 13. Cultural & Historical
+
 - `culturalSignificance` (richText)
 - `historicalTexts` (array of objects)
   - `textName` (text) - e.g., "Shennong Bencao Jing"
@@ -288,6 +305,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
 - `folkloreMyth` (richText)
 
 #### 14. Media & Visual
+
 - `featuredImage` (upload, relationship to Media collection)
 - `images` (array, relationship to Media collection)
   - Auto-uploaded to Cloudflare Images
@@ -304,6 +322,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
   - `location` (text) - Description of this point
 
 #### 15. Cross-References (Relationships)
+
 - `relatedSpecies` (relationship: Herb, hasMany)
 - `substituteHerbs` (relationship: Herb, hasMany)
 - `similarTcmHerbs` (relationship: Herb, hasMany)
@@ -312,6 +331,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
 - `formulas` (relationship: Formula, hasMany) - Reverse relationship
 
 #### 16. User & Practitioner Data
+
 - `practitionerNotes` (array of objects)
   - `practitionerName` (text)
   - `credentials` (text)
@@ -330,11 +350,13 @@ The most comprehensive collection with 100+ fields organized into logical groups
 - `reviewCount` (number, calculated)
 
 #### 17. Search & Taxonomy
+
 - `searchTags` (array of text) - For Algolia
 - `tcmCategoryTags` (array of text)
 - `keywords` (array of text)
 
 #### 18. Metadata
+
 - `herbId` (text, unique, auto-generated) - Format: H-0001
 - `alternativeIds` (array of objects)
   - `system` (select: USDA PLANTS, Chinese Pharmacopoeia, ITIS, GRIN, COL, Other)
@@ -369,6 +391,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
 - `updatedBy` (relationship: User)
 
 **Access Control:**
+
 - Anonymous: View published herbs only
 - Authenticated: View published, save favorites
 - Herbalist: Create, edit own entries
@@ -383,6 +406,7 @@ The most comprehensive collection with 100+ fields organized into logical groups
 Traditional herbal formulas with precise ingredient quantities.
 
 #### Fields:
+
 - `title` (text, required) - Formula name (e.g., "Four Gentlemen Decoction")
 - `slug` (text, unique, auto-generated)
 - `description` (richText) - Detailed description, history, context
@@ -412,6 +436,7 @@ Traditional herbal formulas with precise ingredient quantities.
 - `createdBy` (relationship: User)
 
 **Payload Hooks:**
+
 - `beforeChange`: Auto-calculate percentages if totalWeight is set
 - `beforeChange`: Validate that ingredient quantities sum to totalWeight (warning if mismatch)
 - `afterChange`: Sync to Algolia search index
@@ -423,6 +448,7 @@ Traditional herbal formulas with precise ingredient quantities.
 Health conditions that herbs/formulas can address.
 
 #### Fields:
+
 - `title` (text, required) - Condition name
 - `slug` (text, unique, auto-generated)
 - `description` (richText) - Overview of the condition
@@ -453,6 +479,7 @@ Health conditions that herbs/formulas can address.
 Individual symptoms for the symptom checker.
 
 #### Fields:
+
 - `title` (text, required) - Symptom name
 - `slug` (text, unique, auto-generated)
 - `description` (richText) - What this symptom is
@@ -476,6 +503,7 @@ Individual symptoms for the symptom checker.
 Different healing modalities (TCM, Ayurveda, etc.).
 
 #### Fields:
+
 - `title` (text, required) - Modality name
 - `slug` (text, unique, auto-generated)
 - `description` (richText) - What this modality is
@@ -508,6 +536,7 @@ Different healing modalities (TCM, Ayurveda, etc.).
 Verified practitioners users can find and contact.
 
 #### Fields:
+
 - `name` (text, required)
 - `slug` (text, unique, auto-generated)
 - `email` (email, required)
@@ -552,6 +581,7 @@ Verified practitioners users can find and contact.
 - `updatedAt` (datetime, auto)
 
 **Payload Hooks:**
+
 - `beforeChange`: Geocode address to lat/lng using OpenStreetMap Nominatim API
 - `afterChange`: Sync to Algolia with geolocation data
 
@@ -562,6 +592,7 @@ Verified practitioners users can find and contact.
 User reviews for herbs, formulas, practitioners, etc.
 
 #### Fields:
+
 - `rating` (number, 1-5, required)
 - `title` (text, optional)
 - `comment` (richText, required)
@@ -577,6 +608,7 @@ User reviews for herbs, formulas, practitioners, etc.
 - `updatedAt` (datetime, auto)
 
 **Access Control:**
+
 - Anonymous: View approved reviews only
 - Authenticated: Submit reviews, vote helpful
 - Moderator: Approve/reject reviews
@@ -589,6 +621,7 @@ User reviews for herbs, formulas, practitioners, etc.
 AI-generated insights from Grok AI (symptom analysis, recommendations).
 
 #### Fields:
+
 - `title` (text, auto-generated summary)
 - `slug` (text, unique, auto-generated)
 - `input` (json) - Original user input (symptoms, questions)
@@ -609,6 +642,7 @@ AI-generated insights from Grok AI (symptom analysis, recommendations).
 - `createdAt` (datetime, auto)
 
 **Privacy:**
+
 - Personal health information is anonymized before sending to Grok
 - Users can delete their insights
 - Admins can view aggregated analytics only
@@ -620,6 +654,7 @@ AI-generated insights from Grok AI (symptom analysis, recommendations).
 Centralized media management (uploaded to Cloudflare Images).
 
 #### Fields:
+
 - `alt` (text, required) - Alt text for accessibility
 - `filename` (text, auto)
 - `mimeType` (text, auto)
@@ -636,6 +671,7 @@ Centralized media management (uploaded to Cloudflare Images).
 - `uploadedBy` (relationship: User)
 
 **Payload Plugin:**
+
 - Use `@payloadcms/plugin-cloud-storage` configured for Cloudflare Images
 - Auto-generate responsive variants (thumbnail, medium, large, full)
 
@@ -646,6 +682,7 @@ Centralized media management (uploaded to Cloudflare Images).
 User accounts with role-based access control.
 
 #### Fields (managed by better-auth + Payload):
+
 - `email` (email, required, unique)
 - `name` (text)
 - `profileImage` (upload, optional)
@@ -665,6 +702,7 @@ User accounts with role-based access control.
 - `updatedAt` (datetime, auto)
 
 **Roles & Permissions:**
+
 - **User**: View content, save favorites, submit reviews
 - **Herbalist**: Create herb/formula entries, add notes
 - **Practitioner**: Manage practitioner profile, respond to reviews
@@ -762,10 +800,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
-  ],
+  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
 }
 
 export default config
@@ -797,44 +832,49 @@ export default config
   }
 
   body {
-    @apply bg-white text-gray-900 font-sans antialiased;
+    @apply bg-white font-sans text-gray-900 antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif text-earth-900;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-earth-900 font-serif;
   }
 }
 
 @layer components {
   /* Button variants */
   .btn-primary {
-    @apply bg-earth-600 hover:bg-earth-700 text-white font-semibold px-6 py-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-150;
+    @apply bg-earth-600 hover:bg-earth-700 rounded-lg px-6 py-3 font-semibold text-white shadow-sm transition-all duration-150 hover:shadow-md;
   }
 
   .btn-secondary {
-    @apply bg-sage-100 hover:bg-sage-200 text-sage-900 font-semibold px-6 py-3 rounded-lg border-2 border-sage-300 transition-all duration-150;
+    @apply bg-sage-100 hover:bg-sage-200 text-sage-900 border-sage-300 rounded-lg border-2 px-6 py-3 font-semibold transition-all duration-150;
   }
 
   .btn-outline {
-    @apply bg-transparent hover:bg-earth-50 text-earth-600 font-semibold px-6 py-3 rounded-lg border-2 border-earth-600 transition-all duration-150;
+    @apply hover:bg-earth-50 text-earth-600 border-earth-600 rounded-lg border-2 bg-transparent px-6 py-3 font-semibold transition-all duration-150;
   }
 
   /* Card variants */
   .card-standard {
-    @apply bg-white border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-200;
+    @apply rounded-lg border border-gray-200 bg-white p-6 shadow-md transition-all duration-200 hover:shadow-lg;
   }
 
   .card-feature {
-    @apply bg-gradient-to-br from-earth-50 to-sage-50 border-2 border-earth-200 rounded-xl p-8 shadow-lg;
+    @apply from-earth-50 to-sage-50 border-earth-200 rounded-xl border-2 bg-gradient-to-br p-8 shadow-lg;
   }
 
   .card-elevated {
-    @apply bg-white rounded-2xl p-8 shadow-xl;
+    @apply rounded-2xl bg-white p-8 shadow-xl;
   }
 
   /* Input styles */
   .input-standard {
-    @apply border border-gray-300 focus:ring-2 focus:ring-earth-600 focus:border-transparent rounded-md px-4 py-2.5 bg-white;
+    @apply focus:ring-earth-600 rounded-md border border-gray-300 bg-white px-4 py-2.5 focus:border-transparent focus:ring-2;
   }
 }
 
@@ -861,17 +901,18 @@ interface HerbCardProps {
 }
 
 export function HerbCard({ herb, variant = 'standard' }: HerbCardProps) {
-  const cardClass = variant === 'standard'
-    ? 'card-standard'
-    : variant === 'feature'
-    ? 'card-feature'
-    : 'card-elevated'
+  const cardClass =
+    variant === 'standard'
+      ? 'card-standard'
+      : variant === 'feature'
+        ? 'card-feature'
+        : 'card-elevated'
 
   return (
     <Link href={`/herbs/${herb.slug}`}>
       <div className={cardClass}>
         {herb.featuredImage && (
-          <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">
+          <div className="relative mb-4 h-48 w-full overflow-hidden rounded-lg">
             <Image
               src={herb.featuredImage.cloudflareUrl}
               alt={herb.featuredImage.alt}
@@ -882,28 +923,25 @@ export function HerbCard({ herb, variant = 'standard' }: HerbCardProps) {
           </div>
         )}
 
-        <h3 className="text-xl font-bold text-earth-900 mb-2">
-          {herb.title}
-        </h3>
+        <h3 className="text-earth-900 mb-2 text-xl font-bold">{herb.title}</h3>
 
-        <p className="text-sm italic text-gray-600 mb-3">
-          {herb.scientificName}
-        </p>
+        <p className="mb-3 text-sm italic text-gray-600">{herb.scientificName}</p>
 
-        <p className="text-sm text-gray-700 line-clamp-3 mb-4">
-          {herb.description}
-        </p>
+        <p className="mb-4 line-clamp-3 text-sm text-gray-700">{herb.description}</p>
 
         {/* TCM Properties */}
         {herb.tcmProperties && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="mb-4 flex flex-wrap gap-2">
             {herb.tcmProperties.tcmTemperature && (
-              <span className="px-3 py-1 bg-tcm-100 text-tcm-600 text-xs font-semibold rounded-full">
+              <span className="bg-tcm-100 text-tcm-600 rounded-full px-3 py-1 text-xs font-semibold">
                 {herb.tcmProperties.tcmTemperature}
               </span>
             )}
             {herb.tcmProperties.tcmTaste?.slice(0, 2).map((taste) => (
-              <span key={taste} className="px-3 py-1 bg-earth-100 text-earth-700 text-xs font-semibold rounded-full">
+              <span
+                key={taste}
+                className="bg-earth-100 text-earth-700 rounded-full px-3 py-1 text-xs font-semibold"
+              >
                 {taste}
               </span>
             ))}
@@ -912,9 +950,9 @@ export function HerbCard({ herb, variant = 'standard' }: HerbCardProps) {
 
         {/* Western Properties */}
         {herb.westernProperties && herb.westernProperties.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="mb-4 flex flex-wrap gap-2">
             {herb.westernProperties.slice(0, 3).map((prop) => (
-              <span key={prop} className="px-2 py-1 bg-sage-100 text-sage-800 text-xs rounded-full">
+              <span key={prop} className="bg-sage-100 text-sage-800 rounded-full px-2 py-1 text-xs">
                 {prop}
               </span>
             ))}
@@ -922,16 +960,15 @@ export function HerbCard({ herb, variant = 'standard' }: HerbCardProps) {
         )}
 
         {/* Conservation warning */}
-        {herb.conservationStatus && ['Endangered', 'Critically Endangered'].includes(herb.conservationStatus) && (
-          <div className="mt-4 p-3 bg-amber-50 border-l-4 border-amber-500 rounded">
-            <p className="text-xs font-semibold text-amber-900">
-              ⚠️ {herb.conservationStatus}
-            </p>
-          </div>
-        )}
+        {herb.conservationStatus &&
+          ['Endangered', 'Critically Endangered'].includes(herb.conservationStatus) && (
+            <div className="mt-4 rounded border-l-4 border-amber-500 bg-amber-50 p-3">
+              <p className="text-xs font-semibold text-amber-900">⚠️ {herb.conservationStatus}</p>
+            </div>
+          )}
 
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm font-medium text-earth-600 hover:text-earth-700">
+          <span className="text-earth-600 hover:text-earth-700 text-sm font-medium">
             View Details →
           </span>
 
@@ -1300,12 +1337,8 @@ export default buildConfig({
     trustProxy: true,
     max: 2000,
   },
-  cors: [
-    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  ],
-  csrf: [
-    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  ],
+  cors: [process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'],
+  csrf: [process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'],
 })
 ```
 
@@ -1454,9 +1487,7 @@ export const Herbs: CollectionConfig = {
         {
           name: 'plantType',
           type: 'select',
-          options: [
-            'Herb', 'Shrub', 'Tree', 'Vine', 'Grass', 'Fern', 'Moss', 'Fungus', 'Lichen'
-          ],
+          options: ['Herb', 'Shrub', 'Tree', 'Vine', 'Grass', 'Fern', 'Moss', 'Fungus', 'Lichen'],
         },
         {
           name: 'nativeRegion',
@@ -1478,8 +1509,17 @@ export const Herbs: CollectionConfig = {
           type: 'select',
           hasMany: true,
           options: [
-            'Root', 'Leaf', 'Stem', 'Flower', 'Seed', 'Bark', 'Fruit',
-            'Whole Plant', 'Rhizome', 'Bulb', 'Resin'
+            'Root',
+            'Leaf',
+            'Stem',
+            'Flower',
+            'Seed',
+            'Bark',
+            'Fruit',
+            'Whole Plant',
+            'Rhizome',
+            'Bulb',
+            'Resin',
           ],
         },
         {
@@ -1512,9 +1552,18 @@ export const Herbs: CollectionConfig = {
           type: 'select',
           hasMany: true,
           options: [
-            'Lung', 'Large Intestine', 'Stomach', 'Spleen',
-            'Heart', 'Small Intestine', 'Bladder', 'Kidney',
-            'Pericardium', 'Triple Burner', 'Gallbladder', 'Liver'
+            'Lung',
+            'Large Intestine',
+            'Stomach',
+            'Spleen',
+            'Heart',
+            'Small Intestine',
+            'Bladder',
+            'Kidney',
+            'Pericardium',
+            'Triple Burner',
+            'Gallbladder',
+            'Liver',
           ],
         },
         {
@@ -1541,11 +1590,26 @@ export const Herbs: CollectionConfig = {
       hasMany: true,
       label: 'Western Herbal Properties',
       options: [
-        'Adaptogen', 'Alterative', 'Analgesic', 'Anti-inflammatory',
-        'Antimicrobial', 'Antioxidant', 'Antispasmodic', 'Astringent',
-        'Bitter', 'Carminative', 'Demulcent', 'Diaphoretic',
-        'Diuretic', 'Expectorant', 'Hepatic', 'Nervine',
-        'Sedative', 'Stimulant', 'Tonic', 'Vulnerary'
+        'Adaptogen',
+        'Alterative',
+        'Analgesic',
+        'Anti-inflammatory',
+        'Antimicrobial',
+        'Antioxidant',
+        'Antispasmodic',
+        'Astringent',
+        'Bitter',
+        'Carminative',
+        'Demulcent',
+        'Diaphoretic',
+        'Diuretic',
+        'Expectorant',
+        'Hepatic',
+        'Nervine',
+        'Sedative',
+        'Stimulant',
+        'Tonic',
+        'Vulnerary',
       ],
     },
     {
@@ -1631,8 +1695,15 @@ export const Herbs: CollectionConfig = {
           name: 'imageType',
           type: 'select',
           options: [
-            'Whole Plant', 'Flower', 'Leaf', 'Root', 'Bark',
-            'Seed', 'Dried Form', 'Habitat', 'Preparation'
+            'Whole Plant',
+            'Flower',
+            'Leaf',
+            'Root',
+            'Bark',
+            'Seed',
+            'Dried Form',
+            'Habitat',
+            'Preparation',
           ],
         },
       ],
@@ -1717,8 +1788,12 @@ export const Herbs: CollectionConfig = {
       name: 'peerReviewStatus',
       type: 'select',
       options: [
-        'Draft', 'In Review', 'Peer Reviewed',
-        'Expert Verified', 'Published', 'Needs Update'
+        'Draft',
+        'In Review',
+        'Peer Reviewed',
+        'Expert Verified',
+        'Published',
+        'Needs Update',
       ],
       admin: {
         position: 'sidebar',
@@ -1740,10 +1815,7 @@ export const Herbs: CollectionConfig = {
 import { CollectionAfterChangeHook } from 'payload/types'
 import algoliasearch from 'algoliasearch'
 
-const client = algoliasearch(
-  process.env.ALGOLIA_APP_ID!,
-  process.env.ALGOLIA_ADMIN_API_KEY!
-)
+const client = algoliasearch(process.env.ALGOLIA_APP_ID!, process.env.ALGOLIA_ADMIN_API_KEY!)
 
 export const algoliaSync = (indexName: string): CollectionAfterChangeHook => {
   return async ({ doc, operation }) => {
@@ -1799,19 +1871,16 @@ export const geocodeAddress: CollectionBeforeChangeHook = async ({ data, operati
       const query = `${street}, ${city}, ${state} ${zipCode}, ${country}`
 
       try {
-        const response = await axios.get(
-          'https://nominatim.openstreetmap.org/search',
-          {
-            params: {
-              q: query,
-              format: 'json',
-              limit: 1,
-            },
-            headers: {
-              'User-Agent': 'Verscienta Health App',
-            },
-          }
-        )
+        const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+          params: {
+            q: query,
+            format: 'json',
+            limit: 1,
+          },
+          headers: {
+            'User-Agent': 'Verscienta Health App',
+          },
+        })
 
         if (response.data && response.data.length > 0) {
           const { lat, lon } = response.data[0]
@@ -1939,45 +2008,42 @@ import { HerbCard } from '@/components/cards/HerbCard'
 export default function SearchPage() {
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold font-serif text-earth-900 mb-8">
+      <h1 className="text-earth-900 mb-8 font-serif text-4xl font-bold">
         Search Holistic Health Database
       </h1>
 
-      <InstantSearch
-        searchClient={algoliaClient}
-        indexName={ALGOLIA_INDICES.HERBS}
-      >
+      <InstantSearch searchClient={algoliaClient} indexName={ALGOLIA_INDICES.HERBS}>
         <Configure hitsPerPage={24} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
             <div className="card-standard sticky top-24">
-              <h3 className="text-lg font-semibold mb-4">Refine Results</h3>
+              <h3 className="mb-4 text-lg font-semibold">Refine Results</h3>
 
               <div className="space-y-6">
                 <div>
-                  <h4 className="font-medium mb-2">Western Properties</h4>
+                  <h4 className="mb-2 font-medium">Western Properties</h4>
                   <RefinementList attribute="westernProperties" limit={10} />
                 </div>
 
                 <div>
-                  <h4 className="font-medium mb-2">TCM Temperature</h4>
+                  <h4 className="mb-2 font-medium">TCM Temperature</h4>
                   <RefinementList attribute="tcmTemperature" />
                 </div>
 
                 <div>
-                  <h4 className="font-medium mb-2">TCM Taste</h4>
+                  <h4 className="mb-2 font-medium">TCM Taste</h4>
                   <RefinementList attribute="tcmTaste" />
                 </div>
 
                 <div>
-                  <h4 className="font-medium mb-2">Parts Used</h4>
+                  <h4 className="mb-2 font-medium">Parts Used</h4>
                   <RefinementList attribute="partsUsed" limit={8} />
                 </div>
 
                 <div>
-                  <h4 className="font-medium mb-2">Conservation Status</h4>
+                  <h4 className="mb-2 font-medium">Conservation Status</h4>
                   <RefinementList attribute="conservationStatus" />
                 </div>
               </div>
@@ -2038,7 +2104,7 @@ export class GrokClient {
       },
       {
         headers: {
-          'Authorization': `Bearer ${GROK_API_KEY}`,
+          Authorization: `Bearer ${GROK_API_KEY}`,
           'Content-Type': 'application/json',
         },
       }
@@ -2139,10 +2205,14 @@ const requestSchema = z.object({
   duration: z.string().optional(),
   severity: z.string().optional(),
   additionalInfo: z.string().optional(),
-  conversationHistory: z.array(z.object({
-    role: z.enum(['user', 'assistant']),
-    content: z.string(),
-  })).optional(),
+  conversationHistory: z
+    .array(
+      z.object({
+        role: z.enum(['user', 'assistant']),
+        content: z.string(),
+      })
+    )
+    .optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -2151,10 +2221,7 @@ export async function POST(req: NextRequest) {
   const rateLimitResult = await rateLimit(identifier, 10, 60) // 10 requests per minute
 
   if (!rateLimitResult.success) {
-    return NextResponse.json(
-      { error: 'Rate limit exceeded' },
-      { status: 429 }
-    )
+    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
   }
 
   try {
@@ -2172,7 +2239,6 @@ export async function POST(req: NextRequest) {
     // }
 
     return NextResponse.json(analysis)
-
   } catch (error) {
     console.error('Grok analysis error:', error)
 
@@ -2183,10 +2249,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    return NextResponse.json(
-      { error: 'Failed to analyze symptoms' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to analyze symptoms' }, { status: 500 })
   }
 }
 ```
@@ -2236,7 +2299,7 @@ export function ResponsiveImage({
   media,
   sizes = '100vw',
   className,
-  priority = false
+  priority = false,
 }: ResponsiveImageProps) {
   if (!media.cloudflareUrl) return null
 
@@ -2408,7 +2471,7 @@ export function PractitionerMap({
   practitioners,
   center = [39.8283, -98.5795], // Center of USA
   zoom = 4,
-  onMarkerClick
+  onMarkerClick,
 }: PractitionerMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<L.Map | null>(null)
@@ -2428,15 +2491,12 @@ export function PractitionerMap({
     // Add markers
     practitioners.forEach((practitioner) => {
       if (practitioner.address.latitude && practitioner.address.longitude) {
-        const marker = L.marker([
-          practitioner.address.latitude,
-          practitioner.address.longitude
-        ])
+        const marker = L.marker([practitioner.address.latitude, practitioner.address.longitude])
 
         marker.bindPopup(`
           <div class="p-2">
             <h3 class="font-bold text-lg">${practitioner.name}</h3>
-            <p class="text-sm text-gray-600">${practitioner.modalities?.map(m => m.title).join(', ')}</p>
+            <p class="text-sm text-gray-600">${practitioner.modalities?.map((m) => m.title).join(', ')}</p>
             <a href="/practitioners/${practitioner.slug}" class="text-earth-600 hover:underline text-sm">
               View Profile →
             </a>
@@ -2456,12 +2516,7 @@ export function PractitionerMap({
     }
   }, [practitioners, center, zoom, onMarkerClick])
 
-  return (
-    <div
-      ref={mapRef}
-      className="w-full h-[600px] rounded-lg shadow-lg"
-    />
-  )
+  return <div ref={mapRef} className="h-[600px] w-full rounded-lg shadow-lg" />
 }
 ```
 
@@ -2700,6 +2755,7 @@ REDIS_URL=redis://localhost:6379
 ### Frontend Deployment (Vercel)
 
 **vercel.json:**
+
 ```json
 {
   "buildCommand": "cd ../.. && turbo run build --filter=web",
@@ -2717,6 +2773,7 @@ REDIS_URL=redis://localhost:6379
 ### Backend Deployment (Railway / Render)
 
 **Dockerfile (apps/cms):**
+
 ```dockerfile
 FROM node:20-alpine AS base
 
@@ -2762,6 +2819,7 @@ CMD ["node", "apps/cms/dist/server.js"]
 ```
 
 **railway.toml:**
+
 ```toml
 [build]
 builder = "DOCKERFILE"
@@ -2781,6 +2839,7 @@ interval = 60
 ### Database (Managed PostgreSQL)
 
 Options:
+
 - **Railway PostgreSQL** (easiest for small-medium)
 - **Supabase** (includes free tier, backups, pooling)
 - **Neon** (serverless PostgreSQL)
@@ -2789,6 +2848,7 @@ Options:
 ### Environment Variables (Production)
 
 **Frontend (Vercel):**
+
 - `NEXT_PUBLIC_APP_URL`
 - `NEXT_PUBLIC_ALGOLIA_APP_ID`
 - `NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY`
@@ -2798,6 +2858,7 @@ Options:
 - `GROK_API_KEY`
 
 **Backend (Railway/Render):**
+
 - `DATABASE_URL`
 - `PAYLOAD_SECRET`
 - `ALGOLIA_ADMIN_API_KEY`
@@ -2867,6 +2928,7 @@ migrateHerbs()
 ```
 
 Run with:
+
 ```bash
 pnpm tsx scripts/migrate-from-drupal.ts
 ```
@@ -2962,11 +3024,7 @@ export async function cacheGet<T>(key: string): Promise<T | null> {
   return cached as T | null
 }
 
-export async function cacheSet(
-  key: string,
-  value: any,
-  ttl: number = 3600
-): Promise<void> {
+export async function cacheSet(key: string, value: any, ttl: number = 3600): Promise<void> {
   await redis.setex(key, ttl, JSON.stringify(value))
 }
 
@@ -2989,18 +3047,14 @@ export async function cacheDelete(key: string): Promise<void> {
 // Dynamic imports for heavy components
 import dynamic from 'next/dynamic'
 
-const PractitionerMap = dynamic(
-  () => import('@/components/maps/PractitionerMap'),
-  {
-    ssr: false,
-    loading: () => <div className="h-[600px] bg-gray-100 animate-pulse rounded-lg" />
-  }
-)
+const PractitionerMap = dynamic(() => import('@/components/maps/PractitionerMap'), {
+  ssr: false,
+  loading: () => <div className="h-[600px] animate-pulse rounded-lg bg-gray-100" />,
+})
 
-const GrokResults = dynamic(
-  () => import('@/components/symptom-checker/GrokResults'),
-  { loading: () => <LoadingSpinner /> }
-)
+const GrokResults = dynamic(() => import('@/components/symptom-checker/GrokResults'), {
+  loading: () => <LoadingSpinner />,
+})
 ```
 
 ---
@@ -3142,6 +3196,7 @@ public/locales/
 ## 23. Future Enhancements (Post-MVP)
 
 ### Phase 2 (3-6 months post-launch)
+
 - [ ] **Mobile Apps:** React Native iOS/Android apps
 - [ ] **PWA:** Full Progressive Web App with offline support
 - [ ] **Advanced AI:** Personalized herb recommendations based on user profile
@@ -3152,6 +3207,7 @@ public/locales/
 - [ ] **Personalized Health Dashboard:** Track symptoms, remedies, progress
 
 ### Phase 3 (6-12 months)
+
 - [ ] **API Marketplace:** Public API for developers
 - [ ] **White-Label Solution:** License platform to institutions
 - [ ] **Research Portal:** Partner with universities for clinical trials
@@ -3164,32 +3220,38 @@ public/locales/
 ## 24. Success Metrics & KPIs
 
 ### User Engagement
+
 - Daily Active Users (DAU)
 - Session Duration (target: >5 minutes)
 - Pages per Session (target: >3)
 - Return Rate (target: >40% within 7 days)
 
 ### Content Quality
+
 - Number of Expert-Verified Herbs (target: 500+)
 - Average Herb Completeness Score (target: >80%)
 - User Rating of Content Accuracy (target: >4.5/5)
 
 ### AI Symptom Checker
+
 - Completion Rate (target: >60%)
 - User Satisfaction (target: >4/5)
 - Follow-up Actions (herb views, practitioner searches)
 
 ### Search Performance
+
 - Search Success Rate (target: >85% result in click)
 - Average Search Response Time (target: <200ms)
 - Top 10 Search Queries
 
 ### Practitioner Directory
+
 - Number of Verified Practitioners (target: 1000+)
 - Practitioner Profile Completeness (target: >75%)
 - User-to-Practitioner Connection Rate
 
 ### Business Metrics
+
 - Monthly Recurring Revenue (if applicable)
 - Conversion Rate (free → paid, if freemium model)
 - Customer Acquisition Cost (CAC)
@@ -3200,29 +3262,34 @@ public/locales/
 ## 25. Implementation Timeline
 
 ### Phase 1: Foundation (Weeks 1-4)
+
 - **Week 1:** Project setup, monorepo structure, design system
 - **Week 2:** Payload CMS collections, authentication with better-auth
 - **Week 3:** Frontend pages (homepage, herb listing, herb detail)
 - **Week 4:** Algolia search integration, basic testing
 
 ### Phase 2: Core Features (Weeks 5-8)
+
 - **Week 5:** Formula system, condition pages, modality pages
 - **Week 6:** Grok AI integration (symptom checker)
 - **Week 7:** Practitioner directory with map
 - **Week 8:** Reviews, ratings, user profiles
 
 ### Phase 3: Polish & Launch Prep (Weeks 9-12)
+
 - **Week 9:** Media optimization (Cloudflare Images), video embeds
 - **Week 10:** Security hardening, Turnstile, rate limiting
 - **Week 11:** i18n setup, translation infrastructure
 - **Week 12:** Testing (E2E, accessibility), bug fixes, documentation
 
 ### Phase 4: Content Population (Weeks 13-16)
+
 - **Week 13-14:** Migrate Drupal content, data cleanup
 - **Week 15:** Create sample formulas, conditions, modalities
 - **Week 16:** Recruit practitioners, seed practitioner directory
 
 ### Phase 5: Launch (Week 17)
+
 - Beta testing with select users
 - Performance optimization
 - Marketing materials preparation
@@ -3245,9 +3312,11 @@ public/locales/
 ### Budget Estimates (Monthly)
 
 **Development:**
+
 - Personnel: $15,000 - $30,000 (varies by location, seniority)
 
 **Infrastructure:**
+
 - Vercel Pro: $20/month
 - Railway/Render: $20-50/month
 - PostgreSQL (managed): $25-100/month
@@ -3264,27 +3333,30 @@ public/locales/
 ## 27. Risk Mitigation
 
 ### Technical Risks
-| Risk | Mitigation |
-|------|------------|
-| Grok AI API changes | Implement adapter pattern, easy to swap providers |
-| Algolia cost scaling | Set up monitoring, implement caching, consider Meilisearch alternative |
-| Database performance | Index optimization, read replicas, query optimization |
-| Cloudflare Images limits | Set up fallback to local storage if needed |
+
+| Risk                     | Mitigation                                                             |
+| ------------------------ | ---------------------------------------------------------------------- |
+| Grok AI API changes      | Implement adapter pattern, easy to swap providers                      |
+| Algolia cost scaling     | Set up monitoring, implement caching, consider Meilisearch alternative |
+| Database performance     | Index optimization, read replicas, query optimization                  |
+| Cloudflare Images limits | Set up fallback to local storage if needed                             |
 
 ### Business Risks
-| Risk | Mitigation |
-|------|------------|
-| Content accuracy concerns | Rigorous peer review process, expert verification |
-| Legal/liability issues | Clear disclaimers, consult legal counsel, terms of service |
-| User adoption | SEO optimization, content marketing, practitioner partnerships |
-| Competitor differentiation | Focus on AI integration, comprehensive TCM+Western blend |
+
+| Risk                       | Mitigation                                                     |
+| -------------------------- | -------------------------------------------------------------- |
+| Content accuracy concerns  | Rigorous peer review process, expert verification              |
+| Legal/liability issues     | Clear disclaimers, consult legal counsel, terms of service     |
+| User adoption              | SEO optimization, content marketing, practitioner partnerships |
+| Competitor differentiation | Focus on AI integration, comprehensive TCM+Western blend       |
 
 ### Operational Risks
-| Risk | Mitigation |
-|------|------------|
-| Team turnover | Documentation, code comments, knowledge sharing |
-| Data loss | Automated backups, disaster recovery plan |
-| Security breach | Regular audits, penetration testing, security best practices |
+
+| Risk               | Mitigation                                                    |
+| ------------------ | ------------------------------------------------------------- |
+| Team turnover      | Documentation, code comments, knowledge sharing               |
+| Data loss          | Automated backups, disaster recovery plan                     |
+| Security breach    | Regular audits, penetration testing, security best practices  |
 | Scalability issues | Horizontal scaling plan, load testing, performance monitoring |
 
 ---
@@ -3308,5 +3380,5 @@ This comprehensive plan outlines a world-class holistic health platform that:
 
 **Ready to begin implementation?** Start with Phase 1: Foundation, setting up the monorepo, design system, and core Payload CMS collections.
 
-*Last Updated: 2025-10-04*
-*Version: 1.0.0*
+_Last Updated: 2025-10-04_
+_Version: 1.0.0_

@@ -1,13 +1,13 @@
+import { Leaf } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Leaf } from 'lucide-react'
 
 export default function NotFound() {
   return (
     <div className="container-custom flex min-h-[60vh] flex-col items-center justify-center py-12">
-      <Leaf className="h-16 w-16 text-earth-400 mb-6" />
-      <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">Page Not Found</h1>
-      <p className="text-lg text-gray-600 mb-8 text-center max-w-md">
+      <Leaf className="text-earth-400 mb-6 h-16 w-16" />
+      <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Page Not Found</h1>
+      <p className="mb-8 max-w-md text-center text-lg text-gray-600">
         The page you're looking for doesn't exist or has been moved.
       </p>
       <div className="flex gap-4">

@@ -11,7 +11,7 @@ export function Loading({ className, size = 'md', variant = 'spinner' }: Loading
     return (
       <div
         className={cn(
-          'animate-pulse rounded-md bg-earth-100',
+          'bg-earth-100 animate-pulse rounded-md',
           {
             'h-4': size === 'sm',
             'h-8': size === 'md',
@@ -33,7 +33,7 @@ export function Loading({ className, size = 'md', variant = 'spinner' }: Loading
     <div className={cn('flex items-center justify-center', className)}>
       <div
         className={cn(
-          'animate-spin rounded-full border-earth-200 border-t-earth-600',
+          'border-earth-200 border-t-earth-600 animate-spin rounded-full',
           sizeClasses[size]
         )}
         role="status"
@@ -54,5 +54,5 @@ export function LoadingPage() {
 }
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn('animate-pulse rounded-md bg-earth-100', className)} />
+  return <div className={cn('bg-earth-100 animate-pulse rounded-md', className)} />
 }

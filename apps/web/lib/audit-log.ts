@@ -98,9 +98,7 @@ export async function createAuditLog(entry: Partial<AuditLogEntry>): Promise<voi
     // Get request metadata
     const headersList = await headers()
     const ipAddress =
-      headersList.get('x-forwarded-for') ||
-      headersList.get('x-real-ip') ||
-      'unknown'
+      headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
     const userAgent = headersList.get('user-agent') || 'unknown'
 
     const auditEntry: AuditLogEntry = {
@@ -161,7 +159,7 @@ async function sendToLoggingService(entry: AuditLogEntry): Promise<void> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${loggingApiKey}`,
+        Authorization: `Bearer ${loggingApiKey}`,
       },
       body: JSON.stringify(entry),
     })
@@ -307,7 +305,7 @@ export const auditLog = {
     createAuditLog({
       action: AuditAction.SUSPICIOUS_ACTIVITY,
       userId,
-      details,
+      details: details as Record<string, unknown> | undefined,
       success: false,
       severity: AuditSeverity.CRITICAL,
     }),
@@ -316,10 +314,7 @@ export const auditLog = {
 /**
  * Middleware wrapper for automatic audit logging
  */
-export function withAuditLog(
-  action: AuditAction,
-  handler: (req: Request) => Promise<Response>
-) {
+export function withAuditLog(action: AuditAction, handler: (req: Request) => Promise<Response>) {
   return async (req: Request) => {
     let response: Response
 

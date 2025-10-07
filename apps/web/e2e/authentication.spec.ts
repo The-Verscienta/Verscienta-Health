@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test.describe('Authentication', () => {
   test('should display login page', async ({ page }) => {
@@ -127,7 +127,9 @@ test.describe('Authentication', () => {
     await passwordInput.fill('123')
 
     // Look for password strength indicator
-    const strengthIndicator = page.locator('[class*="password-strength"], [aria-label*="password strength"]')
+    const strengthIndicator = page.locator(
+      '[class*="password-strength"], [aria-label*="password strength"]'
+    )
     if (await strengthIndicator.isVisible()) {
       await expect(strengthIndicator).toBeVisible()
     }
@@ -156,7 +158,7 @@ test.describe('Authentication', () => {
 
     const emailInput = page.getByLabel(/email/i)
     const passwordInput = page.getByLabel(/password/i)
-    const submitButton = page.getByRole('button', { name: /log in|sign in/i })
+    const _submitButton = page.getByRole('button', { name: /log in|sign in/i })
 
     // Should be able to tab through form
     await emailInput.focus()

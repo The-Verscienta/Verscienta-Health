@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import {
-  getCloudflareImageUrl,
   getCloudflareImageSrcSet,
-  getImageVariant,
+  getCloudflareImageUrl,
   getImageBlurPlaceholder,
-  isCloudflareImagesEnabled,
+  getImageVariant,
   IMAGE_VARIANTS,
+  isCloudflareImagesEnabled,
 } from '../cloudflare-images'
 
 describe('cloudflare-images', () => {

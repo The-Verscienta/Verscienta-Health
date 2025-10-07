@@ -37,14 +37,16 @@ export async function searchIndex(
 
   try {
     const results = await searchClient.search({
-      requests: [{
-        indexName: ALGOLIA_INDEXES[indexName],
-        query,
-        page,
-        hitsPerPage,
-        ...(filters && { filters }),
-        ...(facetFilters && { facetFilters }),
-      }]
+      requests: [
+        {
+          indexName: ALGOLIA_INDEXES[indexName],
+          query,
+          page,
+          hitsPerPage,
+          ...(filters && { filters }),
+          ...(facetFilters && { facetFilters }),
+        },
+      ],
     })
 
     const result = results.results[0] as {
@@ -86,13 +88,16 @@ export async function searchMultipleIndexes(
         indexName: ALGOLIA_INDEXES[indexName],
         query,
         hitsPerPage: 5,
-      }))
+      })),
     })
 
-    return results.results.reduce((acc: Record<string, unknown[]>, result, index) => {
-      acc[String(indexes[index])] = (result as { hits: unknown[] }).hits
-      return acc
-    }, {} as Record<string, unknown[]>)
+    return results.results.reduce(
+      (acc: Record<string, unknown[]>, result, index) => {
+        acc[String(indexes[index])] = (result as { hits: unknown[] }).hits
+        return acc
+      },
+      {} as Record<string, unknown[]>
+    )
   } catch (error) {
     console.error('Error searching multiple indexes:', error)
     return {}

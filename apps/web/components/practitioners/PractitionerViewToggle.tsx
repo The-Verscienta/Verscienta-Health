@@ -1,11 +1,11 @@
 'use client'
 
+import { List, Map as MapIcon } from 'lucide-react'
 import { useState } from 'react'
 import { PractitionerCard } from '@/components/cards/PractitionerCard'
 import { PractitionerMap } from '@/components/maps/PractitionerMap'
-import { Pagination } from '@/components/ui/pagination'
 import { Button } from '@/components/ui/button'
-import { List, Map as MapIcon } from 'lucide-react'
+import { Pagination } from '@/components/ui/pagination'
 
 type PractitionerLocation = Practitioner & {
   latitude: number
@@ -60,7 +60,7 @@ export function PractitionerViewToggle({
   return (
     <>
       {/* View Toggle Buttons */}
-      <div className="flex justify-end mb-6 gap-2">
+      <div className="mb-6 flex justify-end gap-2">
         <Button
           variant={viewMode === 'list' ? 'default' : 'outline'}
           size="sm"
@@ -79,16 +79,14 @@ export function PractitionerViewToggle({
         >
           <MapIcon className="h-4 w-4" />
           Map View
-          {practitionersWithCoords.length === 0 && (
-            <span className="text-xs">(No locations)</span>
-          )}
+          {practitionersWithCoords.length === 0 && <span className="text-xs">(No locations)</span>}
         </Button>
       </div>
 
       {/* List View */}
       {viewMode === 'list' && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {practitioners.map((practitioner) => (
               <PractitionerCard
                 key={practitioner.id}
@@ -126,8 +124,9 @@ export function PractitionerViewToggle({
                 practitioners={practitionersWithCoords as PractitionerLocation[]}
                 className="h-[600px]"
               />
-              <p className="text-sm text-gray-600 mt-4 text-center">
-                Showing {practitionersWithCoords.length} of {practitioners.length} practitioners on map
+              <p className="mt-4 text-center text-sm text-gray-600">
+                Showing {practitionersWithCoords.length} of {practitioners.length} practitioners on
+                map
                 {practitionersWithCoords.length < practitioners.length && (
                   <span className="ml-1">
                     ({practitioners.length - practitionersWithCoords.length} without location data)
@@ -136,7 +135,7 @@ export function PractitionerViewToggle({
               </p>
             </>
           ) : (
-            <div className="text-center py-12">
+            <div className="py-12 text-center">
               <p className="text-gray-600">
                 No practitioners with location data available for map view.
               </p>

@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Crimson+Pro:wght@400;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-@import 'leaflet/dist/leaflet.css';
-@import 'leaflet.markercluster/dist/MarkerCluster.css';
-@import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Crimson+Pro:wght@400;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import "leaflet/dist/leaflet.css";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 @tailwind base;
 @tailwind components;
@@ -31,10 +31,10 @@
     --radius: 0.5rem;
 
     /* Font variables */
-    --font-inter: 'Inter', sans-serif;
-    --font-crimson: 'Crimson Pro', serif;
-    --font-jetbrains: 'JetBrains Mono', monospace;
-    --font-noto-serif-sc: 'Noto Serif SC', serif;
+    --font-inter: "Inter", sans-serif;
+    --font-crimson: "Crimson Pro", serif;
+    --font-jetbrains: "JetBrains Mono", monospace;
+    --font-noto-serif-sc: "Noto Serif SC", serif;
   }
 
   .dark {
@@ -75,73 +75,73 @@
   h4,
   h5,
   h6 {
-    @apply font-serif text-earth-900 dark:text-earth-100;
+    @apply text-earth-900 dark:text-earth-100 font-serif;
   }
 
   h1 {
-    @apply text-4xl md:text-5xl font-bold tracking-tight;
+    @apply text-4xl font-bold tracking-tight md:text-5xl;
   }
 
   h2 {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    @apply text-3xl font-bold tracking-tight md:text-4xl;
   }
 
   h3 {
-    @apply text-2xl md:text-3xl font-semibold;
+    @apply text-2xl font-semibold md:text-3xl;
   }
 
   h4 {
-    @apply text-xl md:text-2xl font-semibold;
+    @apply text-xl font-semibold md:text-2xl;
   }
 
   h5 {
-    @apply text-lg md:text-xl font-semibold;
+    @apply text-lg font-semibold md:text-xl;
   }
 
   h6 {
-    @apply text-base md:text-lg font-semibold;
+    @apply text-base font-semibold md:text-lg;
   }
 }
 
 @layer components {
   /* Button variants */
   .btn-primary {
-    @apply bg-earth-600 hover:bg-earth-700 text-white font-semibold px-6 py-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-earth-600 hover:bg-earth-700 rounded-lg px-6 py-3 font-semibold text-white shadow-sm transition-all duration-150 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-secondary {
-    @apply bg-sage-100 hover:bg-sage-200 text-sage-900 font-semibold px-6 py-3 rounded-lg border-2 border-sage-300 transition-all duration-150 disabled:opacity-50;
+    @apply bg-sage-100 hover:bg-sage-200 text-sage-900 border-sage-300 rounded-lg border-2 px-6 py-3 font-semibold transition-all duration-150 disabled:opacity-50;
   }
 
   .btn-outline {
-    @apply bg-transparent hover:bg-earth-50 text-earth-600 font-semibold px-6 py-3 rounded-lg border-2 border-earth-600 transition-all duration-150 disabled:opacity-50;
+    @apply hover:bg-earth-50 text-earth-600 border-earth-600 rounded-lg border-2 bg-transparent px-6 py-3 font-semibold transition-all duration-150 disabled:opacity-50;
   }
 
   .btn-ghost {
-    @apply bg-transparent hover:bg-earth-50 text-earth-700 font-medium px-4 py-2 rounded-md transition-all duration-150;
+    @apply hover:bg-earth-50 text-earth-700 rounded-md bg-transparent px-4 py-2 font-medium transition-all duration-150;
   }
 
   /* Card variants */
   .card-standard {
-    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-200;
+    @apply rounded-lg border border-gray-200 bg-white p-6 shadow-md transition-all duration-200 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800;
   }
 
   .card-feature {
-    @apply bg-gradient-to-br from-earth-50 to-sage-50 dark:from-earth-900 dark:to-sage-900 border-2 border-earth-200 dark:border-earth-700 rounded-xl p-8 shadow-lg;
+    @apply from-earth-50 to-sage-50 dark:from-earth-900 dark:to-sage-900 border-earth-200 dark:border-earth-700 rounded-xl border-2 bg-gradient-to-br p-8 shadow-lg;
   }
 
   .card-elevated {
-    @apply bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl;
+    @apply rounded-2xl bg-white p-8 shadow-xl dark:bg-gray-800;
   }
 
   /* Input styles */
   .input-standard {
-    @apply border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-earth-600 focus:border-transparent rounded-md px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500;
+    @apply focus:ring-earth-600 rounded-md border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder:text-gray-400 focus:border-transparent focus:ring-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500;
   }
 
   /* Badge variants */
   .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold tracking-wide;
   }
 
   .badge-earth {
@@ -162,30 +162,30 @@
 
   /* Conservation warning */
   .conservation-warning {
-    @apply p-3 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 rounded text-amber-900 dark:text-amber-200;
+    @apply rounded border-l-4 border-amber-500 bg-amber-50 p-3 text-amber-900 dark:bg-amber-900/20 dark:text-amber-200;
   }
 
   /* Safety warning levels */
   .safety-critical {
-    @apply p-4 bg-danger-light dark:bg-danger-dark/20 border-l-4 border-danger rounded;
+    @apply bg-danger-light dark:bg-danger-dark/20 border-danger rounded border-l-4 p-4;
   }
 
   .safety-high {
-    @apply p-4 bg-warning-light dark:bg-warning-dark/20 border-l-4 border-warning rounded;
+    @apply bg-warning-light dark:bg-warning-dark/20 border-warning rounded border-l-4 p-4;
   }
 
   .safety-moderate {
-    @apply p-4 bg-info-light dark:bg-info-dark/20 border-l-4 border-info rounded;
+    @apply bg-info-light dark:bg-info-dark/20 border-info rounded border-l-4 p-4;
   }
 
   /* Link styles */
   .link {
-    @apply text-earth-600 hover:text-earth-700 dark:text-earth-400 dark:hover:text-earth-300 underline-offset-4 hover:underline transition-colors;
+    @apply text-earth-600 hover:text-earth-700 dark:text-earth-400 dark:hover:text-earth-300 underline-offset-4 transition-colors hover:underline;
   }
 
   /* Container */
   .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 }
 
@@ -209,7 +209,7 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+    @apply rounded-full bg-gray-300 dark:bg-gray-600;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
@@ -218,7 +218,7 @@
 
   /* Focus visible utilities */
   .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-earth-600 focus-visible:ring-offset-2;
+    @apply focus-visible:ring-earth-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
   }
 }
 

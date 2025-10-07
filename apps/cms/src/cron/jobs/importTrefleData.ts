@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
-import { getTrefleClient } from '../../lib/trefle'
 import { findOrCreateHerb } from '../../lib/herbDeduplication'
+import { getTrefleClient } from '../../lib/trefle'
 
 interface TrefleImportStats {
   plantsProcessed: number
@@ -50,7 +50,7 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
     // Trefle returns 20 plants per page by default, so we'll fetch multiple pages per run
     // 120 requests/min ÷ 20 plants/page = 6 pages per run max (but we'll use 5 to be safe)
     const pagesPerRun = 5
-    let plantsThisRun = 0
+    let _plantsThisRun = 0
 
     for (let i = 0; i < pagesPerRun; i++) {
       const currentPage = stats.currentPage + i
@@ -84,7 +84,7 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
         for (const plant of data) {
           try {
             stats.plantsProcessed++
-            plantsThisRun++
+            _plantsThisRun++
 
             // Check if this is a medicinal/edible plant (we want herbs, not all plants)
             if (!isHerbCandidate(plant)) {
@@ -105,9 +105,7 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
             }
 
             // Prepare herb data
-            const slug = generateSlug(
-              plant.common_name || plant.scientific_name
-            )
+            const slug = generateSlug(plant.common_name || plant.scientific_name)
 
             const herbData = {
               name: plant.common_name || plant.scientific_name,
@@ -171,10 +169,7 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
             // Rate limiting: small delay between herb processing
             await new Promise((resolve) => setTimeout(resolve, 100))
           } catch (error) {
-            console.error(
-              `   ❌ Error processing ${plant.scientific_name}:`,
-              error
-            )
+            console.error(`   ❌ Error processing ${plant.scientific_name}:`, error)
             stats.errors++
           }
         }
@@ -228,9 +223,7 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
 /**
  * Get current import state
  */
-async function getImportState(
-  payload: Payload
-): Promise<{
+async function getImportState(payload: Payload): Promise<{
   currentPage: number
   isComplete: boolean
   lastRunAt: Date | null
@@ -245,11 +238,9 @@ async function getImportState(
       currentPage: state.currentPage || 1,
       isComplete: state.isComplete || false,
       lastRunAt: state.lastRunAt ? new Date(state.lastRunAt) : null,
-      lastCompletedAt: state.lastCompletedAt
-        ? new Date(state.lastCompletedAt)
-        : null,
+      lastCompletedAt: state.lastCompletedAt ? new Date(state.lastCompletedAt) : null,
     }
-  } catch (error) {
+  } catch (_error) {
     // State doesn't exist yet, create it
     try {
       await payload.updateGlobal({
@@ -323,9 +314,7 @@ function isHerbCandidate(plant: any): boolean {
   // Include herbs, subshrubs, and other non-woody plants
   if (
     plant.specifications?.growth_form &&
-    ['herb', 'graminoid', 'subshrub', 'forb'].includes(
-      plant.specifications.growth_form
-    )
+    ['herb', 'graminoid', 'subshrub', 'forb'].includes(plant.specifications.growth_form)
   ) {
     return true
   }
@@ -361,9 +350,7 @@ export async function resetTrefleImport(payload: Payload): Promise<void> {
 /**
  * Get import progress
  */
-export async function getTrefleImportProgress(
-  payload: Payload
-): Promise<{
+export async function getTrefleImportProgress(payload: Payload): Promise<{
   currentPage: number
   isComplete: boolean
   lastRunAt: Date | null
@@ -374,8 +361,7 @@ export async function getTrefleImportProgress(
 
   // Trefle has ~500,000 plants, 20 per page = ~25,000 pages
   const estimatedTotalPages = 25000
-  const estimatedPlantsRemaining =
-    (estimatedTotalPages - state.currentPage) * 20
+  const estimatedPlantsRemaining = (estimatedTotalPages - state.currentPage) * 20
 
   return {
     ...state,

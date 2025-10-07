@@ -1,10 +1,10 @@
-import { notFound } from 'next/navigation'
+import { Award, Book, Heart, Target, Users } from 'lucide-react'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { PractitionerCard } from '@/components/cards/PractitionerCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { PractitionerCard } from '@/components/cards/PractitionerCard'
-import { Book, Heart, Award, Users, Target } from 'lucide-react'
 
 interface Modality {
   id: string
@@ -86,34 +86,32 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
     <div className="container-custom py-12">
       {/* Hero Section */}
       <div className="mb-12">
-        <div className="flex items-start justify-between mb-4">
+        <div className="mb-4 flex items-start justify-between">
           <div className="flex-1">
-            <h1 className="text-4xl font-bold font-serif text-earth-900 mb-2">
-              {modality.title}
-            </h1>
+            <h1 className="text-earth-900 mb-2 font-serif text-4xl font-bold">{modality.title}</h1>
             {modality.origin && (
-              <p className="text-xl text-gray-600 mb-4">Origin: {modality.origin}</p>
+              <p className="mb-4 text-xl text-gray-600">Origin: {modality.origin}</p>
             )}
           </div>
-          <span className="text-sm font-mono text-gray-500">{modality.modalityId}</span>
+          <span className="font-mono text-sm text-gray-500">{modality.modalityId}</span>
         </div>
 
         {/* Description */}
         {modality.description && (
-          <p className="text-lg text-gray-700 mb-6">{modality.description}</p>
+          <p className="mb-6 text-lg text-gray-700">{modality.description}</p>
         )}
 
         {/* Quick Info */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           {modality.category && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">Category</h3>
+              <h3 className="mb-1 text-sm font-semibold text-gray-700">Category</h3>
               <Badge variant="sage">{modality.category}</Badge>
             </div>
           )}
           {modality.evidenceLevel && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">Evidence Level</h3>
+              <h3 className="mb-1 text-sm font-semibold text-gray-700">Evidence Level</h3>
               <Badge variant="gold">{modality.evidenceLevel}</Badge>
             </div>
           )}
@@ -136,7 +134,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Book className="mr-2 h-5 w-5 text-earth-600" />
+                  <Book className="text-earth-600 mr-2 h-5 w-5" />
                   Philosophy & Principles
                 </CardTitle>
               </CardHeader>
@@ -165,7 +163,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
                 <CardTitle>Key Concepts</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                <ul className="list-inside list-disc space-y-2 text-gray-700">
                   {modality.keyConcepts.map((concept: string, idx: number) => (
                     <li key={idx}>{concept}</li>
                   ))}
@@ -182,15 +180,15 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Target className="mr-2 h-5 w-5 text-earth-600" />
+                  <Target className="text-earth-600 mr-2 h-5 w-5" />
                   Key Techniques
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {modality.keyTechniques.map((technique, idx) => (
-                    <div key={idx} className="border border-gray-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-earth-900 mb-2">
+                    <div key={idx} className="rounded-lg border border-gray-200 p-4">
+                      <h4 className="text-earth-900 mb-2 font-semibold">
                         {typeof technique === 'string' ? technique : technique.name}
                       </h4>
                       {typeof technique === 'object' && technique.description && (
@@ -210,7 +208,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
                 <CardTitle>Diagnostic Methods</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                <ul className="list-inside list-disc space-y-2 text-gray-700">
                   {modality.diagnosticMethods.map((method: string, idx: number) => (
                     <li key={idx}>{method}</li>
                   ))}
@@ -226,7 +224,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
                 <CardTitle>Treatment Approaches</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                <ul className="list-inside list-disc space-y-2 text-gray-700">
                   {modality.treatmentApproaches.map((approach: string, idx: number) => (
                     <li key={idx}>{approach}</li>
                   ))}
@@ -243,12 +241,12 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Heart className="mr-2 h-5 w-5 text-earth-600" />
+                  <Heart className="text-earth-600 mr-2 h-5 w-5" />
                   Health Benefits
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
                   {modality.benefits.map((benefit: string, idx: number) => (
                     <li key={idx} className="flex items-start">
                       <span className="text-earth-600 mr-2">•</span>
@@ -302,7 +300,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
                 <CardTitle className="text-yellow-900">Contraindications</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc list-inside space-y-1 text-yellow-900">
+                <ul className="list-inside list-disc space-y-1 text-yellow-900">
                   {modality.contraindications.map((contra: string, idx: number) => (
                     <li key={idx}>{contra}</li>
                   ))}
@@ -319,7 +317,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Award className="mr-2 h-5 w-5 text-earth-600" />
+                  <Award className="text-earth-600 mr-2 h-5 w-5" />
                   Training Requirements
                 </CardTitle>
               </CardHeader>
@@ -347,7 +345,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
                           href={body.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-earth-600 hover:text-earth-700"
+                          className="text-earth-600 hover:text-earth-700 text-sm"
                         >
                           Visit Website →
                         </a>
@@ -376,11 +374,11 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
       {/* Related Practitioners */}
       {modality.practitioners && modality.practitioners.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-2xl font-bold font-serif text-earth-900 mb-6 flex items-center">
-            <Users className="mr-2 h-6 w-6 text-earth-600" />
+          <h2 className="text-earth-900 mb-6 flex items-center font-serif text-2xl font-bold">
+            <Users className="text-earth-600 mr-2 h-6 w-6" />
             Practitioners Specializing in {modality.title}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {modality.practitioners.slice(0, 6).map((practitioner) => (
               <PractitionerCard
                 key={practitioner.practitionerId}
@@ -398,7 +396,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             ))}
           </div>
           {modality.practitioners.length > 6 && (
-            <div className="text-center mt-6">
+            <div className="mt-6 text-center">
               <Link
                 href={`/practitioners?modality=${modality.slug}`}
                 className="text-earth-600 hover:text-earth-700 font-semibold"
@@ -429,7 +427,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
                     {resource.title} →
                   </a>
                   {resource.description && (
-                    <p className="text-sm text-gray-600 mt-1">{resource.description}</p>
+                    <p className="mt-1 text-sm text-gray-600">{resource.description}</p>
                   )}
                 </li>
               ))}
@@ -439,10 +437,10 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
       )}
 
       {/* Disclaimer */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
         <p className="text-sm text-yellow-900">
-          <strong>Disclaimer:</strong> This information is for educational purposes only.
-          Consult with a qualified healthcare provider before starting any new treatment modality.
+          <strong>Disclaimer:</strong> This information is for educational purposes only. Consult
+          with a qualified healthcare provider before starting any new treatment modality.
         </p>
       </div>
     </div>
@@ -460,6 +458,8 @@ export async function generateMetadata({ params }: ModalityPageProps) {
 
   return {
     title: `${modality.title} | Verscienta Health`,
-    description: modality.description || `Learn about ${modality.title}, its techniques, benefits, and training requirements.`,
+    description:
+      modality.description ||
+      `Learn about ${modality.title}, its techniques, benefits, and training requirements.`,
   }
 }

@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signUp } from '@/lib/auth-client'
-import { toast } from 'sonner'
 import { Leaf } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { signUp } from '@/lib/auth-client'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -71,17 +71,20 @@ export default function RegisterPage() {
     <div className="container-custom flex min-h-[80vh] items-center justify-center py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-earth-100">
-            <Leaf className="h-6 w-6 text-earth-600" />
+          <div className="bg-earth-100 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+            <Leaf className="text-earth-600 h-6 w-6" />
           </div>
-          <CardTitle className="text-2xl font-serif">Create Account</CardTitle>
+          <CardTitle className="font-serif text-2xl">Create Account</CardTitle>
           <CardDescription>Join Verscienta Health to access personalized features</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="text-sm font-semibold text-gray-700 mb-2 block">
+                <label
+                  htmlFor="firstName"
+                  className="mb-2 block text-sm font-semibold text-gray-700"
+                >
                   First Name
                 </label>
                 <Input
@@ -96,7 +99,10 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label htmlFor="lastName" className="text-sm font-semibold text-gray-700 mb-2 block">
+                <label
+                  htmlFor="lastName"
+                  className="mb-2 block text-sm font-semibold text-gray-700"
+                >
                   Last Name
                 </label>
                 <Input
@@ -112,7 +118,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="text-sm font-semibold text-gray-700 mb-2 block">
+              <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-700">
                 Email
               </label>
               <Input
@@ -127,7 +133,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="text-sm font-semibold text-gray-700 mb-2 block">
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-gray-700">
                 Password
               </label>
               <Input
@@ -139,11 +145,14 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 required
               />
-              <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
+              <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="text-sm font-semibold text-gray-700 mb-2 block">
+              <label
+                htmlFor="confirmPassword"
+                className="mb-2 block text-sm font-semibold text-gray-700"
+              >
                 Confirm Password
               </label>
               <Input
@@ -164,7 +173,7 @@ export default function RegisterPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/login" className="font-semibold text-earth-600 hover:text-earth-700">
+            <Link href="/login" className="text-earth-600 hover:text-earth-700 font-semibold">
               Sign in
             </Link>
           </p>

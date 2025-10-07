@@ -104,6 +104,7 @@ ENABLE_PERENUAL_IMPORT=true
 ```
 
 The import job will:
+
 - Run every minute
 - Process ~40 plants per run (2 pages × 20 plants)
 - Respect rate limits (1 second delay between requests)
@@ -265,6 +266,7 @@ Both Trefle and Perenual imports use smart deduplication:
 ### Example Merge
 
 **Existing Herb (from Trefle):**
+
 ```typescript
 {
   name: "Lavender",
@@ -279,6 +281,7 @@ Both Trefle and Perenual imports use smart deduplication:
 ```
 
 **New Data (from Perenual):**
+
 ```typescript
 {
   name: "English Lavender",
@@ -290,6 +293,7 @@ Both Trefle and Perenual imports use smart deduplication:
 ```
 
 **Merged Result:**
+
 ```typescript
 {
   name: "Lavender", // Existing preferred
@@ -340,12 +344,14 @@ console.log(`
 ### Our Implementation
 
 **Import Job** (Every Minute):
+
 - Fetches 2 pages per run
 - 20 plants per page = 40 plants/minute
 - 1 second delay between requests
 - ~5 hours to import all 10,000 plants
 
 **Built-in Protection**:
+
 - Request interceptor adds 1s delay
 - Response interceptor retries on 429
 - Automatic 60-second wait if rate limited
@@ -411,11 +417,13 @@ tail -f logs/cron.log
 ### Issue: Import not running
 
 **Check**:
+
 1. Is `PERENUAL_API_KEY` set?
 2. Is `ENABLE_PERENUAL_IMPORT=true`?
 3. Check cron logs for: `✓ Scheduled: Import Perenual Plant Database`
 
 **Solution**:
+
 ```bash
 # Verify environment
 echo $PERENUAL_API_KEY
@@ -432,6 +440,7 @@ echo $ENABLE_PERENUAL_IMPORT
 **Cause**: Deduplication failed or scientific names don't match
 
 **Solution**:
+
 ```typescript
 // Manual deduplication
 import { bulkDeduplicate } from './src/lib/herbDeduplication'
@@ -449,6 +458,7 @@ const result = await checkForDuplicates(payload, 'Scientific Name')
 **Cause**: Merge logic preferring new over existing
 
 **Solution**:
+
 - Review `mergeHerbData()` in `herbDeduplication.ts`
 - Existing non-null values should be preserved
 - Arrays should combine without duplicates
@@ -456,6 +466,7 @@ const result = await checkForDuplicates(payload, 'Scientific Name')
 ### Issue: Rate limit errors
 
 **Symptoms**:
+
 ```
 ❌ Perenual API rate limit reached. Waiting 60 seconds...
 ```
@@ -463,6 +474,7 @@ const result = await checkForDuplicates(payload, 'Scientific Name')
 **Cause**: Too many requests
 
 **Solution**:
+
 - Implementation auto-retries after 60s
 - Reduce `pagesPerRun` in import job from 2 to 1
 - Check Perenual dashboard for daily usage
@@ -470,12 +482,14 @@ const result = await checkForDuplicates(payload, 'Scientific Name')
 ### Issue: Import stuck on same page
 
 **Check**:
+
 ```typescript
 const progress = await getPerenualImportProgress(payload)
 console.log(progress.currentPage)
 ```
 
 **Solution**:
+
 ```typescript
 // Reset to restart
 await resetPerenualImport(payload)

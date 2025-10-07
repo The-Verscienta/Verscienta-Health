@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { SearchIcon } from 'lucide-react'
+import Link from 'next/link'
 import { UserNav } from '@/components/auth/UserNav'
 
 export function Header() {
@@ -8,27 +8,27 @@ export function Header() {
       <div className="container-custom flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold font-serif text-earth-900">Verscienta</span>
+          <span className="text-earth-900 font-serif text-2xl font-bold">Verscienta</span>
         </Link>
 
         {/* Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-          <Link href="/herbs" className="transition-colors hover:text-earth-600">
+        <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
+          <Link href="/herbs" className="hover:text-earth-600 transition-colors">
             Herbs
           </Link>
-          <Link href="/formulas" className="transition-colors hover:text-earth-600">
+          <Link href="/formulas" className="hover:text-earth-600 transition-colors">
             Formulas
           </Link>
-          <Link href="/conditions" className="transition-colors hover:text-earth-600">
+          <Link href="/conditions" className="hover:text-earth-600 transition-colors">
             Conditions
           </Link>
-          <Link href="/modalities" className="transition-colors hover:text-earth-600">
+          <Link href="/modalities" className="hover:text-earth-600 transition-colors">
             Modalities
           </Link>
-          <Link href="/practitioners" className="transition-colors hover:text-earth-600">
+          <Link href="/practitioners" className="hover:text-earth-600 transition-colors">
             Practitioners
           </Link>
-          <Link href="/symptom-checker" className="transition-colors hover:text-earth-600">
+          <Link href="/symptom-checker" className="hover:text-earth-600 transition-colors">
             Symptom Checker
           </Link>
         </nav>
@@ -37,7 +37,7 @@ export function Header() {
         <div className="flex items-center space-x-4">
           <Link
             href="/search"
-            className="flex items-center justify-center rounded-lg p-2 hover:bg-earth-50 transition-colors"
+            className="hover:bg-earth-50 flex items-center justify-center rounded-lg p-2 transition-colors"
             aria-label="Search"
           >
             <SearchIcon className="h-5 w-5 text-gray-700" />

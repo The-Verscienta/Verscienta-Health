@@ -5,6 +5,7 @@ Verscienta Health is committed to providing an accessible experience for all use
 ## 🎯 Accessibility Standards
 
 We aim to meet and exceed:
+
 - **WCAG 2.1 Level AA** compliance
 - **Section 508** compliance
 - **ADA** (Americans with Disabilities Act) compliance
@@ -32,6 +33,7 @@ All interactive elements are fully keyboard accessible:
 ```
 
 **Keyboard Shortcuts:**
+
 - `Tab` - Navigate forward
 - `Shift + Tab` - Navigate backward
 - `Enter` / `Space` - Activate buttons and links
@@ -43,6 +45,7 @@ All interactive elements are fully keyboard accessible:
 All dynamic components include proper ARIA attributes:
 
 **Search Components:**
+
 ```tsx
 <div role="search" aria-label="Herb search">
   <input
@@ -57,29 +60,23 @@ All dynamic components include proper ARIA attributes:
 ```
 
 **Algolia InstantSearch:**
+
 ```tsx
 <InstantSearch
   searchClient={searchClient}
   indexName="herbs"
   aria-label="Instant herb search results"
 >
-  <SearchBox
-    placeholder="Search herbs..."
-    aria-label="Search input"
-  />
-  <Hits
-    hitComponent={HerbCard}
-    aria-label="Search results"
-  />
+  <SearchBox placeholder="Search herbs..." aria-label="Search input" />
+  <Hits hitComponent={HerbCard} aria-label="Search results" />
 </InstantSearch>
 ```
 
 **Radix UI Components:**
+
 ```tsx
 <Dialog.Root>
-  <Dialog.Trigger aria-label="Open symptom checker">
-    Check Symptoms
-  </Dialog.Trigger>
+  <Dialog.Trigger aria-label="Open symptom checker">Check Symptoms</Dialog.Trigger>
   <Dialog.Content aria-describedby="symptom-description">
     <Dialog.Title>Symptom Checker</Dialog.Title>
     <Dialog.Description id="symptom-description">
@@ -94,11 +91,13 @@ All dynamic components include proper ARIA attributes:
 All color combinations meet WCAG AA standards (4.5:1 for normal text, 3:1 for large text):
 
 **Primary Colors:**
+
 - Earth-600 (#5d7a5d) on White: 7.2:1 ✅
 - Sage-600 (#527a5f) on White: 6.8:1 ✅
 - TCM Red (#c1272d) on White: 5.1:1 ✅
 
 **Status Colors:**
+
 - Success on White: 4.8:1 ✅
 - Warning on White: 4.6:1 ✅
 - Danger on White: 5.3:1 ✅
@@ -180,13 +179,13 @@ Clear, visible focus indicators for keyboard navigation:
 ```css
 /* Global focus styles in globals.css */
 *:focus-visible {
-  @apply outline-none ring-2 ring-earth-600 ring-offset-2;
+  @apply ring-earth-600 outline-none ring-2 ring-offset-2;
 }
 
 /* Skip to main content link */
 .skip-to-main {
-  @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50;
-  @apply bg-earth-600 text-white px-4 py-2 rounded;
+  @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50;
+  @apply bg-earth-600 rounded px-4 py-2 text-white;
 }
 ```
 
@@ -265,16 +264,19 @@ Dynamic content updates announced to screen readers:
 We use multiple tools for accessibility testing:
 
 1. **Playwright + axe-core** (CI/CD)
+
 ```bash
 pnpm test:a11y
 ```
 
 2. **Lighthouse CI** (CI/CD)
+
 ```bash
 lhci autorun
 ```
 
 3. **ESLint Plugin**
+
 ```bash
 pnpm lint
 ```
@@ -292,6 +294,7 @@ pnpm lint
 ### Browser Testing
 
 Test with these screen readers:
+
 - **NVDA** (Windows, Firefox)
 - **JAWS** (Windows, Chrome)
 - **VoiceOver** (macOS, Safari)
@@ -306,8 +309,7 @@ Test with these screen readers:
 import { forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 
-interface AccessibleButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AccessibleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary'
   loading?: boolean
   loadingText?: string
@@ -340,6 +342,7 @@ export const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonPr
 ### Common Patterns
 
 **Skip Links:**
+
 ```tsx
 <a href="#main-content" className="skip-to-main">
   Skip to main content
@@ -351,12 +354,14 @@ export const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonPr
 ```
 
 **Visually Hidden but Screen Reader Accessible:**
+
 ```tsx
 // Use the sr-only class from Tailwind
 <span className="sr-only">Screen reader only text</span>
 ```
 
 **Loading Skeletons:**
+
 ```tsx
 <div role="status" aria-live="polite" aria-label="Loading content">
   <div className="skeleton" aria-hidden="true">
@@ -369,16 +374,19 @@ export const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonPr
 ## 🔧 Tools & Resources
 
 ### Browser Extensions
+
 - **axe DevTools** - Automated accessibility testing
 - **WAVE** - Web accessibility evaluation tool
 - **Lighthouse** - Built into Chrome DevTools
 
 ### Documentation
+
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
 - [Radix UI Accessibility](https://www.radix-ui.com/primitives/docs/overview/accessibility)
 
 ### Testing Tools
+
 - [Pa11y](https://pa11y.org/) - Automated accessibility testing
 - [axe-core](https://github.com/dequelabs/axe-core) - Accessibility engine
 - [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) - CI/CD integration

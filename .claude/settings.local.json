@@ -13,7 +13,9 @@
       "Bash(do sed -i \"s|from ''payload/types''|from ''payload''|g\" \"$file\")",
       "Bash(done)",
       "Bash(tee:*)",
-      "Bash(iconv:*)"
+      "Bash(iconv:*)",
+      "Bash(npx prettier:*)",
+      "Bash(pnpm biome:*)"
     ],
     "deny": [],
     "ask": []

@@ -65,6 +65,7 @@ aws rds restore-db-instance-from-db-snapshot \
 ```
 
 **Status Check**:
+
 ```sql
 -- Check if encryption is enabled
 SELECT
@@ -476,6 +477,7 @@ AWS_KMS_KEY_ID=arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-12
 ## Support
 
 For questions about database encryption:
+
 - **Security Team**: security@verscienta.health
 - **DevOps Team**: devops@verscienta.health
 - **HIPAA Compliance**: compliance@verscienta.health

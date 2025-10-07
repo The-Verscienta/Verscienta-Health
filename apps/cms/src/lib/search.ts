@@ -92,12 +92,12 @@ export async function advancedFullTextSearch(
 
   try {
     // Use raw SQL for advanced full-text search with ranking
-    const db = payload.db
+    const _db = payload.db
 
-    const offset = (page - 1) * limit
+    const _offset = (page - 1) * limit
 
     // PostgreSQL full-text search query with ranking
-    const sqlQuery = `
+    const _sqlQuery = `
       SELECT
         *,
         ts_rank(
@@ -120,7 +120,7 @@ export async function advancedFullTextSearch(
       LIMIT $2 OFFSET $3
     `
 
-    const countQuery = `
+    const _countQuery = `
       SELECT COUNT(*) as count
       FROM ${collection}
       WHERE
@@ -235,10 +235,10 @@ export async function searchPractitionersByLocation(
 ): Promise<any[]> {
   try {
     // Use PostgreSQL's earth distance function
-    const db = payload.db
+    const _db = payload.db
 
     // Raw SQL query for geospatial search
-    const sqlQuery = `
+    const _sqlQuery = `
       SELECT
         *,
         earth_distance(
@@ -299,7 +299,7 @@ export async function autocompleteSearch(
       },
     })
 
-    return results.docs.map(doc => ({
+    return results.docs.map((doc) => ({
       id: String(doc.id),
       name: String(doc.name || ''),
       slug: String(doc.slug || ''),

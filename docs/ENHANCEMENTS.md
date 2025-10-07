@@ -7,6 +7,7 @@ This document details the comprehensive enhancements made to improve mobile resp
 ### Enhanced Tailwind Configuration
 
 **Custom Breakpoints:**
+
 ```typescript
 screens: {
   xs: '475px',    // Extra small devices
@@ -20,6 +21,7 @@ screens: {
 ```
 
 **Responsive Container Padding:**
+
 ```typescript
 container: {
   padding: {
@@ -33,6 +35,7 @@ container: {
 ```
 
 **Touch-Friendly Targets:**
+
 ```typescript
 minHeight: {
   'touch': '44px',     // WCAG minimum
@@ -49,6 +52,7 @@ minWidth: {
 **File:** `components/map/responsive-map.tsx`
 
 Features:
+
 - ✅ Automatic viewport adjustment for mobile devices
 - ✅ Touch gestures (pinch-to-zoom, drag-to-pan)
 - ✅ Marker clustering for better performance
@@ -58,6 +62,7 @@ Features:
 - ✅ "Pinch to zoom" hint for mobile users
 
 **Usage:**
+
 ```tsx
 <ResponsiveMap
   practitioners={practitioners}
@@ -74,6 +79,7 @@ Features:
 ### WCAG 2.1 AA+ Compliance
 
 **Implemented Features:**
+
 - ✅ Full keyboard navigation
 - ✅ Screen reader support (NVDA, JAWS, VoiceOver, TalkBack)
 - ✅ ARIA labels on all dynamic components
@@ -86,6 +92,7 @@ Features:
 ### Automated Testing
 
 **CI/CD Integration:**
+
 ```yaml
 # .github/workflows/ci.yml
 - Lighthouse CI (Performance, A11y, Best Practices, SEO)
@@ -94,12 +101,14 @@ Features:
 ```
 
 **Test Commands:**
+
 ```bash
 pnpm test:a11y    # Run accessibility tests
 lhci autorun      # Run Lighthouse CI
 ```
 
 **Lighthouse Thresholds:**
+
 - Performance: ≥ 90
 - Accessibility: ≥ 95
 - Best Practices: ≥ 90
@@ -113,6 +122,7 @@ lhci autorun      # Run Lighthouse CI
 **File:** `components/ui/responsive-image.tsx`
 
 Features:
+
 - ✅ Automatic lazy loading
 - ✅ Blur placeholder support
 - ✅ Responsive image sets
@@ -123,6 +133,7 @@ Features:
 - ✅ Image gallery with lazy loading
 
 **Usage:**
+
 ```tsx
 <ResponsiveImage
   src="/herbs/ginseng.jpg"
@@ -146,6 +157,7 @@ Features:
 ```
 
 **Performance Benefits:**
+
 - Reduced initial page load by 40-60%
 - Automatic WebP/AVIF format selection
 - Responsive srcsets for all devices
@@ -156,6 +168,7 @@ Features:
 ### PWA Features
 
 **Installability:**
+
 - ✅ Add to Home Screen (iOS & Android)
 - ✅ Standalone app experience
 - ✅ Custom app icons (72px - 512px)
@@ -163,12 +176,14 @@ Features:
 - ✅ App shortcuts
 
 **Offline Support:**
+
 - ✅ Service Worker caching
 - ✅ Static asset caching
 - ✅ API response caching
 - ✅ Offline fallback pages
 
 **Manifest.json:**
+
 ```json
 {
   "name": "Verscienta Health",
@@ -194,6 +209,7 @@ Features:
 ```
 
 **Caching Strategy:**
+
 ```typescript
 // next.config.ts
 runtimeCaching: [
@@ -202,16 +218,16 @@ runtimeCaching: [
     handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'google-fonts',
-      expiration: { maxAgeSeconds: 7 * 24 * 60 * 60 }
-    }
+      expiration: { maxAgeSeconds: 7 * 24 * 60 * 60 },
+    },
   },
   {
     urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
     handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'images',
-      expiration: { maxEntries: 64, maxAgeSeconds: 24 * 60 * 60 }
-    }
+      expiration: { maxEntries: 64, maxAgeSeconds: 24 * 60 * 60 },
+    },
   },
   // ... more caching rules
 ]
@@ -224,6 +240,7 @@ runtimeCaching: [
 **File:** `lib/seo.ts`
 
 **Features:**
+
 - ✅ Dynamic metadata generation
 - ✅ Open Graph tags
 - ✅ Twitter Cards
@@ -232,6 +249,7 @@ runtimeCaching: [
 - ✅ Schema.org structured data
 
 **Usage:**
+
 ```tsx
 // In page.tsx
 export async function generateMetadata({ params }) {
@@ -250,18 +268,22 @@ export async function generateMetadata({ params }) {
 ### Schema.org Structured Data
 
 **Herb Schema:**
+
 ```tsx
 <script type="application/ld+json">
-  {JSON.stringify(generateHerbSchema({
-    name: 'Ginseng',
-    scientificName: 'Panax ginseng',
-    description: '...',
-    url: 'https://verscienta.com/herbs/ginseng',
-  }))}
+  {JSON.stringify(
+    generateHerbSchema({
+      name: 'Ginseng',
+      scientificName: 'Panax ginseng',
+      description: '...',
+      url: 'https://verscienta.com/herbs/ginseng',
+    })
+  )}
 </script>
 ```
 
 **Practitioner Schema:**
+
 ```tsx
 <script type="application/ld+json">
   {JSON.stringify(generatePractitionerSchema({
@@ -274,6 +296,7 @@ export async function generateMetadata({ params }) {
 ```
 
 **Organization & Website Schema:**
+
 - WebSite schema with SearchAction
 - Organization schema with contact points
 - BreadcrumbList for navigation
@@ -281,6 +304,7 @@ export async function generateMetadata({ params }) {
 ### Sitemap & Robots.txt
 
 **Dynamic Sitemap:**
+
 ```typescript
 // app/sitemap.ts
 export default async function sitemap() {
@@ -289,7 +313,7 @@ export default async function sitemap() {
 
   return [
     ...staticRoutes,
-    ...herbs.map(herb => ({
+    ...herbs.map((herb) => ({
       url: `https://verscienta.com/herbs/${herb.slug}`,
       lastModified: herb.updatedAt,
       changeFrequency: 'monthly',
@@ -301,6 +325,7 @@ export default async function sitemap() {
 ```
 
 **Robots.txt:**
+
 ```typescript
 // app/robots.ts
 export default function robots() {
@@ -327,6 +352,7 @@ export default function robots() {
 ### Optimization Techniques
 
 **Image Optimization:**
+
 - Next.js Image component with automatic optimization
 - Lazy loading by default
 - Responsive image sets
@@ -334,17 +360,20 @@ export default function robots() {
 - Blur placeholders
 
 **Code Splitting:**
+
 - Automatic route-based splitting
 - Dynamic imports for heavy components
 - Tree-shaking unused code
 
 **Caching:**
+
 - Service Worker caching (PWA)
 - Static asset caching (1 year)
 - API response caching (24 hours)
 - Font caching (7 days)
 
 **Bundle Size:**
+
 - Total JS: < 200KB (gzipped)
 - Total CSS: < 50KB (gzipped)
 - First Load JS: < 100KB
@@ -354,6 +383,7 @@ export default function robots() {
 ### Lighthouse CI
 
 Automated performance testing on every PR:
+
 ```bash
 # lighthouserc.json
 {
@@ -371,12 +401,14 @@ Automated performance testing on every PR:
 ### Real User Monitoring (RUM)
 
 **Vercel Analytics:**
+
 - Core Web Vitals tracking
 - Real user performance metrics
 - Geographic distribution
 - Device & browser breakdown
 
 **Plausible Analytics (Privacy-First):**
+
 - Page views
 - Unique visitors
 - Referrers
@@ -409,17 +441,20 @@ Automated performance testing on every PR:
 ## 📱 Mobile-Specific Features
 
 ### Touch Gestures
+
 - Swipe navigation in galleries
 - Pinch-to-zoom on maps
 - Pull-to-refresh (coming soon)
 
 ### Adaptive Layouts
+
 - Collapsible navigation on mobile
 - Bottom sheet modals on mobile
 - Sticky headers on scroll
 - Touch-friendly form inputs
 
 ### Performance
+
 - Reduced JavaScript for mobile
 - Optimized images for mobile networks
 - Prefetching for faster navigation
@@ -427,6 +462,7 @@ Automated performance testing on every PR:
 ## 🌐 Multi-Language Support
 
 ### i18n Configuration
+
 ```typescript
 i18n: {
   locales: ['en', 'es', 'zh-CN', 'zh-TW'],
@@ -436,6 +472,7 @@ i18n: {
 ```
 
 ### SEO for Multi-Language
+
 ```tsx
 alternates: {
   canonical: url,
@@ -451,6 +488,7 @@ alternates: {
 ## 📈 Metrics & Benchmarks
 
 ### Before Enhancements
+
 - Lighthouse Performance: 75
 - Lighthouse Accessibility: 82
 - LCP: 3.8s
@@ -458,6 +496,7 @@ alternates: {
 - Mobile Score: 68
 
 ### After Enhancements
+
 - Lighthouse Performance: 94 ✅
 - Lighthouse Accessibility: 98 ✅
 - LCP: 1.9s ✅
@@ -469,6 +508,7 @@ alternates: {
 ## 🎯 Next Steps
 
 ### Planned Enhancements
+
 - [ ] WebSocket integration for real-time features
 - [ ] Service Worker push notifications
 - [ ] Advanced image compression with AVIF
@@ -478,6 +518,7 @@ alternates: {
 - [ ] High contrast mode
 
 ### Future Optimizations
+
 - [ ] Edge caching with Cloudflare Workers
 - [ ] Static generation for top pages
 - [ ] Incremental Static Regeneration (ISR)

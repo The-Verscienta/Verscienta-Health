@@ -145,18 +145,15 @@ export function mergeHerbData(
   // Helper to merge arrays without duplicates
   const mergeArrays = (arr1: any[] = [], arr2: any[] = []): any[] => {
     const combined = [...arr1, ...arr2]
-    return Array.from(new Set(combined.map(item => JSON.stringify(item)))).map(str => JSON.parse(str))
+    return Array.from(new Set(combined.map((item) => JSON.stringify(item)))).map((str) =>
+      JSON.parse(str)
+    )
   }
 
   // Helper to merge images specifically (checks URL to avoid exact duplicates)
-  const mergeImages = (
-    existing: any[] = [],
-    newImages: any[] = []
-  ): any[] => {
+  const mergeImages = (existing: any[] = [], newImages: any[] = []): any[] => {
     const existingUrls = new Set(existing.map((img) => img.url))
-    const uniqueNewImages = newImages.filter(
-      (img) => !existingUrls.has(img.url)
-    )
+    const uniqueNewImages = newImages.filter((img) => !existingUrls.has(img.url))
     return [...existing, ...uniqueNewImages]
   }
 
@@ -222,10 +219,7 @@ export function mergeHerbData(
   // Merge safety information
   if (newData.safetyInfo) {
     merged.safetyInfo = {
-      warnings: mergeArrays(
-        existing.safetyInfo?.warnings,
-        newData.safetyInfo?.warnings
-      ),
+      warnings: mergeArrays(existing.safetyInfo?.warnings, newData.safetyInfo?.warnings),
       contraindications: mergeArrays(
         existing.safetyInfo?.contraindications,
         newData.safetyInfo?.contraindications
@@ -324,8 +318,7 @@ export async function checkForDuplicates(
       const sources: string[] = []
       if (herb.botanicalData?.trefleId) sources.push('Trefle')
       if (herb.botanicalData?.perenualId) sources.push('Perenual')
-      if (!herb.botanicalData?.trefleId && !herb.botanicalData?.perenualId)
-        sources.push('Manual')
+      if (!herb.botanicalData?.trefleId && !herb.botanicalData?.perenualId) sources.push('Manual')
 
       return {
         id: herb.id,
@@ -351,9 +344,7 @@ export async function checkForDuplicates(
 /**
  * Bulk deduplicate herbs (for cleanup)
  */
-export async function bulkDeduplicate(
-  payload: Payload
-): Promise<{
+export async function bulkDeduplicate(payload: Payload): Promise<{
   processed: number
   merged: number
   deleted: number

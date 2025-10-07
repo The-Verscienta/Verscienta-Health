@@ -1,5 +1,5 @@
-import type { Payload } from 'payload'
 import { algoliasearch } from 'algoliasearch'
+import type { Payload } from 'payload'
 
 const algoliaClient = algoliasearch(
   process.env.ALGOLIA_APP_ID || '',

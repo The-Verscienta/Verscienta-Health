@@ -282,7 +282,9 @@ export const sortOptions = {
 /**
  * Get filter groups for a specific content type
  */
-export function getFilterGroups(contentType: 'herbs' | 'formulas' | 'conditions' | 'practitioners') {
+export function getFilterGroups(
+  contentType: 'herbs' | 'formulas' | 'conditions' | 'practitioners'
+) {
   switch (contentType) {
     case 'herbs':
       return herbFilterGroups
@@ -309,7 +311,8 @@ export function getSortOptions(contentType: 'herbs' | 'formulas' | 'conditions' 
  * This is a client-side filter for when server-side filtering is not available
  */
 export function applyFilters(items: unknown[], activeFilters: Record<string, string[]>) {
-  return items.filter((item) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return items.filter((item: any) => {
     return Object.entries(activeFilters).every(([filterId, values]) => {
       if (values.length === 0) return true
 
@@ -338,7 +341,9 @@ export function applyFilters(items: unknown[], activeFilters: Record<string, str
         case 'tcm_pattern':
           return values.some((v) => item.tcmPattern?.includes(v))
         case 'modality':
-          return values.some((v) => item.modalities?.map((m: {slug: string}) => m.slug).includes(v))
+          return values.some((v) =>
+            item.modalities?.map((m: { slug: string }) => m.slug).includes(v)
+          )
         case 'specialization':
           return values.some((v) => item.specializations?.includes(v))
         case 'availability':
@@ -361,25 +366,37 @@ export function applyFilters(items: unknown[], activeFilters: Record<string, str
  */
 export function applySorting(items: unknown[], sortValue: string) {
   const sorted = [...items]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type Item = any
 
   switch (sortValue) {
     case 'name_asc':
-      return sorted.sort((a, b) => (a.title || a.name).localeCompare(b.title || b.name))
+      return sorted.sort((a: Item, b: Item) => (a.title || a.name).localeCompare(b.title || b.name))
     case 'name_desc':
-      return sorted.sort((a, b) => (b.title || b.name).localeCompare(a.title || a.name))
+      return sorted.sort((a: Item, b: Item) => (b.title || b.name).localeCompare(a.title || a.name))
     case 'rating_desc':
-      return sorted.sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
+      return sorted.sort((a: Item, b: Item) => (b.averageRating || 0) - (a.averageRating || 0))
     case 'reviews_desc':
-      return sorted.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
+      return sorted.sort((a: Item, b: Item) => (b.reviewCount || 0) - (a.reviewCount || 0))
     case 'ingredients_desc':
-      return sorted.sort((a, b) => (b.ingredients?.length || 0) - (a.ingredients?.length || 0))
+      return sorted.sort(
+        (a: Item, b: Item) => (b.ingredients?.length || 0) - (a.ingredients?.length || 0)
+      )
     case 'severity_desc': {
       const severityOrder = { severe: 3, moderate: 2, mild: 1 }
-      return sorted.sort((a, b) => (severityOrder[b.severity as keyof typeof severityOrder] || 0) - (severityOrder[a.severity as keyof typeof severityOrder] || 0))
+      return sorted.sort(
+        (a: Item, b: Item) =>
+          (severityOrder[b.severity as keyof typeof severityOrder] || 0) -
+          (severityOrder[a.severity as keyof typeof severityOrder] || 0)
+      )
     }
     case 'severity_asc': {
       const severityOrderAsc = { mild: 1, moderate: 2, severe: 3 }
-      return sorted.sort((a, b) => (severityOrderAsc[a.severity as keyof typeof severityOrderAsc] || 0) - (severityOrderAsc[b.severity as keyof typeof severityOrderAsc] || 0))
+      return sorted.sort(
+        (a: Item, b: Item) =>
+          (severityOrderAsc[a.severity as keyof typeof severityOrderAsc] || 0) -
+          (severityOrderAsc[b.severity as keyof typeof severityOrderAsc] || 0)
+      )
     }
     case 'distance_asc':
       // Would require geolocation - placeholder for now

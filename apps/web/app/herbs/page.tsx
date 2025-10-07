@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { HerbCard } from '@/components/cards/HerbCard'
-import { Pagination } from '@/components/ui/pagination'
-import { Loading } from '@/components/ui/loading'
 import { SearchBar } from '@/components/search/SearchBar'
+import { Loading } from '@/components/ui/loading'
+import { Pagination } from '@/components/ui/pagination'
 
 interface HerbsPageProps {
   searchParams: {
@@ -18,9 +18,9 @@ interface Herb {
   slug: string
   scientificName?: string
   description: string
-  featuredImage?: unknown
-  tcmProperties?: unknown
-  westernProperties?: unknown
+  featuredImage?: { url: string; alt?: string }
+  tcmProperties?: { taste?: string[]; temperature?: string; category?: string }
+  westernProperties?: string[]
   averageRating?: number
   reviewCount?: number
 }
@@ -50,12 +50,10 @@ export default async function HerbsPage({ searchParams }: HerbsPageProps) {
     <div className="container-custom py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">
-          Herbal Database
-        </h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Explore our comprehensive collection of medicinal herbs with detailed information
-          on their properties, uses, and scientific research.
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Herbal Database</h1>
+        <p className="max-w-3xl text-lg text-gray-600">
+          Explore our comprehensive collection of medicinal herbs with detailed information on their
+          properties, uses, and scientific research.
         </p>
       </div>
 
@@ -77,14 +75,14 @@ export default async function HerbsPage({ searchParams }: HerbsPageProps) {
       {/* Herb Grid */}
       <Suspense fallback={<Loading />}>
         {herbs.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-gray-600">
               {query ? 'No herbs found matching your search.' : 'No herbs available yet.'}
             </p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {herbs.map((herb: Herb) => (
                 <HerbCard
                   key={herb.id}
@@ -104,11 +102,7 @@ export default async function HerbsPage({ searchParams }: HerbsPageProps) {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                baseUrl="/herbs"
-              />
+              <Pagination currentPage={page} totalPages={totalPages} baseUrl="/herbs" />
             )}
           </>
         )}
@@ -119,5 +113,6 @@ export default async function HerbsPage({ searchParams }: HerbsPageProps) {
 
 export const metadata = {
   title: 'Herbal Database | Verscienta Health',
-  description: 'Explore our comprehensive collection of medicinal herbs with detailed information on their properties, uses, and scientific research.',
+  description:
+    'Explore our comprehensive collection of medicinal herbs with detailed information on their properties, uses, and scientific research.',
 }

@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertTriangle } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function DisclaimerPage() {
   return (
-    <div className="container-custom py-12 max-w-4xl">
+    <div className="container-custom max-w-4xl py-12">
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <AlertTriangle className="h-8 w-8 text-tcm-600" />
-          <h1 className="text-4xl font-bold font-serif text-earth-900">Medical Disclaimer</h1>
+        <div className="mb-4 flex items-center gap-3">
+          <AlertTriangle className="text-tcm-600 h-8 w-8" />
+          <h1 className="text-earth-900 font-serif text-4xl font-bold">Medical Disclaimer</h1>
         </div>
         <p className="text-lg text-gray-600">
           Important information about the use of Verscienta Health
@@ -19,15 +19,16 @@ export default function DisclaimerPage() {
           <CardHeader>
             <CardTitle className="text-tcm-800">This is Not Medical Advice</CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-900 space-y-4">
+          <CardContent className="space-y-4 text-gray-900">
             <p className="font-semibold">
               The information provided on Verscienta Health is for educational and informational
               purposes only and is not intended as medical advice, diagnosis, or treatment.
             </p>
             <p>
-              Always seek the advice of your physician or other qualified health provider with
-              any questions you may have regarding a medical condition. Never disregard professional
-              medical advice or delay in seeking it because of something you have read on Verscienta Health.
+              Always seek the advice of your physician or other qualified health provider with any
+              questions you may have regarding a medical condition. Never disregard professional
+              medical advice or delay in seeking it because of something you have read on Verscienta
+              Health.
             </p>
           </CardContent>
         </Card>
@@ -37,12 +38,14 @@ export default function DisclaimerPage() {
             <CardTitle>Emergency Situations</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="font-semibold text-tcm-700">
-              If you think you may have a medical emergency, call your doctor or emergency services immediately.
+            <p className="text-tcm-700 font-semibold">
+              If you think you may have a medical emergency, call your doctor or emergency services
+              immediately.
             </p>
             <p>
               Verscienta Health does not recommend or endorse any specific tests, physicians,
-              products, procedures, opinions, or other information that may be mentioned on the platform.
+              products, procedures, opinions, or other information that may be mentioned on the
+              platform.
             </p>
           </CardContent>
         </Card>
@@ -56,7 +59,7 @@ export default function DisclaimerPage() {
               Our AI Symptom Checker uses artificial intelligence to provide educational information
               based on the symptoms you describe. This tool:
             </p>
-            <ul className="list-disc list-inside space-y-2">
+            <ul className="list-inside list-disc space-y-2">
               <li>Is NOT a substitute for professional medical diagnosis</li>
               <li>Should NOT be used to make treatment decisions</li>
               <li>May not account for your complete medical history</li>
@@ -78,7 +81,7 @@ export default function DisclaimerPage() {
               Information about herbs, supplements, and natural remedies provided on Verscienta
               Health is based on traditional use and available scientific research. However:
             </p>
-            <ul className="list-disc list-inside space-y-2">
+            <ul className="list-inside list-disc space-y-2">
               <li>Herbal products can have side effects and interactions with medications</li>
               <li>Quality and potency of herbal products can vary significantly</li>
               <li>Some herbs may be contraindicated for certain health conditions</li>
@@ -88,7 +91,7 @@ export default function DisclaimerPage() {
               Consult with a qualified healthcare provider, preferably one knowledgeable about
               herbal medicine, before using any herbal products, especially if you:
             </p>
-            <ul className="list-disc list-inside space-y-2 mt-2">
+            <ul className="mt-2 list-inside list-disc space-y-2">
               <li>Are pregnant or breastfeeding</li>
               <li>Have a chronic health condition</li>
               <li>Take prescription medications</li>
@@ -104,10 +107,10 @@ export default function DisclaimerPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              The practitioner directory is provided as a convenience to help users find
-              qualified professionals. Verscienta Health:
+              The practitioner directory is provided as a convenience to help users find qualified
+              professionals. Verscienta Health:
             </p>
-            <ul className="list-disc list-inside space-y-2">
+            <ul className="list-inside list-disc space-y-2">
               <li>Does not employ, endorse, or control listed practitioners</li>
               <li>Does not guarantee the qualifications, competence, or quality of services</li>
               <li>Cannot verify all credentials or licensing information</li>
@@ -129,7 +132,7 @@ export default function DisclaimerPage() {
               While we strive to provide accurate and up-to-date information based on traditional
               texts and scientific research:
             </p>
-            <ul className="list-disc list-inside space-y-2">
+            <ul className="list-inside list-disc space-y-2">
               <li>Scientific understanding of herbal medicine is constantly evolving</li>
               <li>Not all traditional uses have been validated by modern research</li>
               <li>Individual responses to herbal treatments can vary</li>
@@ -143,11 +146,11 @@ export default function DisclaimerPage() {
             <CardTitle>User Responsibility</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p>
-              By using Verscienta Health, you acknowledge and agree that:
-            </p>
-            <ul className="list-disc list-inside space-y-2">
-              <li>You are responsible for evaluating the accuracy and completeness of information</li>
+            <p>By using Verscienta Health, you acknowledge and agree that:</p>
+            <ul className="list-inside list-disc space-y-2">
+              <li>
+                You are responsible for evaluating the accuracy and completeness of information
+              </li>
               <li>You assume full responsibility for how you use the information provided</li>
               <li>You will consult appropriate healthcare professionals for medical decisions</li>
               <li>You understand the limitations of online health information</li>
@@ -174,12 +177,13 @@ export default function DisclaimerPage() {
             <CardTitle>Contact Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>
-              If you have questions about this medical disclaimer, please contact us at:
-            </p>
+            <p>If you have questions about this medical disclaimer, please contact us at:</p>
             <p className="mt-2">
               Email:{' '}
-              <a href="mailto:info@verscientahealth.com" className="text-earth-600 hover:text-earth-700">
+              <a
+                href="mailto:info@verscientahealth.com"
+                className="text-earth-600 hover:text-earth-700"
+              >
                 info@verscientahealth.com
               </a>
             </p>
@@ -187,13 +191,13 @@ export default function DisclaimerPage() {
         </Card>
       </div>
 
-      <div className="mt-8 bg-earth-50 border border-earth-200 rounded-lg p-6">
-        <p className="text-sm text-earth-900 font-semibold mb-2">
+      <div className="bg-earth-50 border-earth-200 mt-8 rounded-lg border p-6">
+        <p className="text-earth-900 mb-2 text-sm font-semibold">
           Last updated: {new Date().toLocaleDateString()}
         </p>
-        <p className="text-sm text-earth-800">
-          By using Verscienta Health, you acknowledge that you have read, understood, and
-          agree to this medical disclaimer.
+        <p className="text-earth-800 text-sm">
+          By using Verscienta Health, you acknowledge that you have read, understood, and agree to
+          this medical disclaimer.
         </p>
       </div>
     </div>

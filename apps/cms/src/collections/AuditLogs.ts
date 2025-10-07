@@ -16,9 +16,18 @@ export const AuditLogs: CollectionConfig = {
 
   admin: {
     useAsTitle: 'action',
-    defaultColumns: ['action', 'userId', 'userEmail', 'ipAddress', 'timestamp', 'severity', 'success'],
+    defaultColumns: [
+      'action',
+      'userId',
+      'userEmail',
+      'ipAddress',
+      'timestamp',
+      'severity',
+      'success',
+    ],
     group: 'Security',
-    description: 'HIPAA-compliant audit logs. These records are immutable and cannot be edited or deleted.',
+    description:
+      'HIPAA-compliant audit logs. These records are immutable and cannot be edited or deleted.',
   },
 
   // HIPAA Access Controls: Only admins and security officers can read

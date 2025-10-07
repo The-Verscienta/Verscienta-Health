@@ -224,17 +224,16 @@ export class TrefleClient {
   /**
    * Search for plants by scientific name
    */
-  async searchByScientificName(
-    scientificName: string
-  ): Promise<TrefleSearchResult[]> {
+  async searchByScientificName(scientificName: string): Promise<TrefleSearchResult[]> {
     try {
-      const response = await this.client.get<
-        TreflePaginatedResponse<TrefleSearchResult>
-      >('/plants/search', {
-        params: {
-          q: scientificName,
-        },
-      })
+      const response = await this.client.get<TreflePaginatedResponse<TrefleSearchResult>>(
+        '/plants/search',
+        {
+          params: {
+            q: scientificName,
+          },
+        }
+      )
 
       return response.data.data
     } catch (error) {
@@ -248,13 +247,14 @@ export class TrefleClient {
    */
   async searchByCommonName(commonName: string): Promise<TrefleSearchResult[]> {
     try {
-      const response = await this.client.get<
-        TreflePaginatedResponse<TrefleSearchResult>
-      >('/plants/search', {
-        params: {
-          q: commonName,
-        },
-      })
+      const response = await this.client.get<TreflePaginatedResponse<TrefleSearchResult>>(
+        '/plants/search',
+        {
+          params: {
+            q: commonName,
+          },
+        }
+      )
 
       return response.data.data
     } catch (error) {
@@ -268,9 +268,7 @@ export class TrefleClient {
    */
   async getPlantById(id: number): Promise<TrefleSpeciesDetail> {
     try {
-      const response = await this.client.get<{ data: TrefleSpeciesDetail }>(
-        `/plants/${id}`
-      )
+      const response = await this.client.get<{ data: TrefleSpeciesDetail }>(`/plants/${id}`)
 
       return response.data.data
     } catch (error) {
@@ -284,9 +282,7 @@ export class TrefleClient {
    */
   async getPlantBySlug(slug: string): Promise<TrefleSpeciesDetail> {
     try {
-      const response = await this.client.get<{ data: TrefleSpeciesDetail }>(
-        `/species/${slug}`
-      )
+      const response = await this.client.get<{ data: TrefleSpeciesDetail }>(`/species/${slug}`)
 
       return response.data.data
     } catch (error) {
@@ -304,15 +300,11 @@ export class TrefleClient {
   ): Promise<TrefleSearchResult | null> {
     try {
       // Try scientific name first
-      const scientificResults = await this.searchByScientificName(
-        scientificName
-      )
+      const scientificResults = await this.searchByScientificName(scientificName)
 
       // Exact match on scientific name
       const exactMatch = scientificResults.find(
-        (result) =>
-          result.scientific_name.toLowerCase() ===
-          scientificName.toLowerCase()
+        (result) => result.scientific_name.toLowerCase() === scientificName.toLowerCase()
       )
 
       if (exactMatch) {
@@ -347,10 +339,7 @@ export class TrefleClient {
   /**
    * Enrich herb data with Trefle information
    */
-  async enrichHerbData(herb: {
-    scientificName: string
-    name: string
-  }): Promise<{
+  async enrichHerbData(herb: { scientificName: string; name: string }): Promise<{
     trefleId: number | null
     trefleSlug: string | null
     family: string | null
@@ -401,8 +390,7 @@ export class TrefleClient {
         ediblePart: details.main_species?.edible_part || null,
         toxicity: details.main_species?.specifications?.toxicity || null,
         growthHabit: details.main_species?.specifications?.growth_habit || null,
-        averageHeight:
-          details.main_species?.specifications?.average_height?.cm || null,
+        averageHeight: details.main_species?.specifications?.average_height?.cm || null,
         sources:
           details.main_species?.sources?.map((source) => ({
             name: source.name,
@@ -437,9 +425,7 @@ export class TrefleClient {
 
       // Exact match
       const exactMatch = results.find(
-        (result) =>
-          result.scientific_name.toLowerCase() ===
-          scientificName.toLowerCase()
+        (result) => result.scientific_name.toLowerCase() === scientificName.toLowerCase()
       )
 
       if (exactMatch) {
@@ -454,9 +440,7 @@ export class TrefleClient {
       return {
         valid: false,
         matchedName: null,
-        suggestions: results
-          .slice(0, 5)
-          .map((result) => result.scientific_name),
+        suggestions: results.slice(0, 5).map((result) => result.scientific_name),
       }
     } catch (error) {
       console.error('Trefle validate scientific name error:', error)

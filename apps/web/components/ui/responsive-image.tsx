@@ -37,7 +37,9 @@ export function ResponsiveImage({
   const [hasError, setHasError] = useState(false)
 
   // Default sizes for responsive images
-  const defaultSizes = sizes || `
+  const defaultSizes =
+    sizes ||
+    `
     (max-width: 640px) 100vw,
     (max-width: 768px) 90vw,
     (max-width: 1024px) 80vw,
@@ -49,7 +51,7 @@ export function ResponsiveImage({
     return (
       <div
         className={cn(
-          'flex items-center justify-center bg-earth-100 text-earth-600',
+          'bg-earth-100 text-earth-600 flex items-center justify-center',
           aspectRatio && aspectRatios[aspectRatio],
           containerClassName
         )}
@@ -93,7 +95,7 @@ export function ResponsiveImage({
         blurDataURL={blurDataURL}
         className={cn(
           'transition-all duration-300',
-          isLoading ? 'blur-sm scale-105' : 'blur-0 scale-100',
+          isLoading ? 'scale-105 blur-sm' : 'scale-100 blur-0',
           className
         )}
         onLoad={() => setIsLoading(false)}
@@ -101,7 +103,7 @@ export function ResponsiveImage({
         {...props}
       />
       {isLoading && (
-        <div className="absolute inset-0 bg-earth-100 animate-pulse" aria-hidden="true" />
+        <div className="bg-earth-100 absolute inset-0 animate-pulse" aria-hidden="true" />
       )}
     </div>
   )
@@ -127,7 +129,11 @@ interface PractitionerImageProps extends Omit<ResponsiveImageProps, 'aspectRatio
   variant?: 'avatar' | 'profile' | 'card'
 }
 
-export function PractitionerImage({ variant = 'avatar', className, ...props }: PractitionerImageProps) {
+export function PractitionerImage({
+  variant = 'avatar',
+  className,
+  ...props
+}: PractitionerImageProps) {
   const variantStyles = {
     avatar: 'rounded-full',
     profile: 'rounded-lg',

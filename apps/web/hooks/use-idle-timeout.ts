@@ -1,5 +1,5 @@
-import { useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useRef } from 'react'
 
 /**
  * HIPAA Compliance: Idle Timeout Hook
@@ -109,14 +109,7 @@ export function useIdleTimeout({
     }
 
     // Events that indicate user activity
-    const events = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-      'click',
-    ]
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click']
 
     // Throttle activity detection (don't reset on every mousemove)
     let throttleTimeout: NodeJS.Timeout | null = null

@@ -28,6 +28,7 @@ Thank you for your interest in contributing to Verscienta Health! Whether you're
 ### Time Commitment
 
 Contributions can be as small or large as you like:
+
 - **5 minutes**: Fix a typo, improve a sentence
 - **1 hour**: Write documentation, add examples
 - **1 day**: Fix a bug, add a feature
@@ -40,12 +41,14 @@ Contributions can be as small or large as you like:
 ### 1. Introduction (5 minutes)
 
 **Start Here:**
+
 1. ⭐ Star the repository (shows support!)
 2. 📖 Read the [README.md](../README.md)
 3. 📋 Review the [Code of Conduct](../CODE_OF_CONDUCT.md)
 4. 💬 Introduce yourself in [GitHub Discussions](https://github.com/verscienta/verscienta-health/discussions)
 
 **Introduce Yourself:**
+
 ```markdown
 Hi everyone! 👋
 
@@ -85,6 +88,7 @@ pnpm dev
 ```
 
 **Verify Setup:**
+
 - ✅ Frontend loads at http://localhost:3000
 - ✅ CMS loads at http://localhost:3001/admin
 - ✅ No errors in console
@@ -162,6 +166,7 @@ verscienta-health/
 ### Technology Stack
 
 **Frontend (Next.js):**
+
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -171,6 +176,7 @@ verscienta-health/
 - **Maps**: Leaflet
 
 **Backend (Payload CMS):**
+
 - **Framework**: Payload CMS 3
 - **Database**: PostgreSQL 17
 - **ORM**: Drizzle
@@ -179,6 +185,7 @@ verscienta-health/
 - **Caching**: DragonflyDB
 
 **Services:**
+
 - **AI**: Grok AI (xAI)
 - **Email**: Resend
 - **Analytics**: Plausible
@@ -195,6 +202,7 @@ verscienta-health/
 5. **Users**: User accounts and preferences
 
 **Example Herb Schema:**
+
 ```typescript
 {
   name: "Ginseng",
@@ -213,12 +221,14 @@ verscienta-health/
 ### Key Concepts
 
 **Traditional Chinese Medicine (TCM):**
+
 - **Temperature**: Hot, Warm, Neutral, Cool, Cold
 - **Taste**: Sweet, Bitter, Sour, Pungent, Salty, Bland
 - **Meridians**: Organ systems (Lung, Spleen, Liver, etc.)
 - **Actions**: Therapeutic effects
 
 **Herbal Medicine Basics:**
+
 - **Herb**: Single plant medicine
 - **Formula**: Combination of herbs
 - **Dosage**: Amount and frequency
@@ -234,6 +244,7 @@ verscienta-health/
 **Good First Issues:**
 
 Look for issues labeled:
+
 - `good first issue` - Perfect for beginners
 - `documentation` - Documentation improvements
 - `help wanted` - Community help needed
@@ -247,12 +258,14 @@ https://github.com/verscienta/verscienta-health/issues?q=is%3Aissue+is%3Aopen+la
 #### Beginner (No coding required)
 
 **Documentation:**
+
 - Fix typos
 - Improve clarity
 - Add examples
 - Translate to other languages
 
 **Example:**
+
 ```bash
 # 1. Find a typo in docs/API_REFERENCE.md
 # 2. Fix it
@@ -267,11 +280,13 @@ git push origin docs/fix-typo-api-reference
 #### Intermediate (Basic coding)
 
 **Component Improvements:**
+
 - Add accessibility labels
 - Improve responsive design
 - Add unit tests
 
 **Example:**
+
 ```typescript
 // Before
 <button onClick={handleClick}>Submit</button>
@@ -289,6 +304,7 @@ git push origin docs/fix-typo-api-reference
 #### Advanced (Experienced)
 
 **Feature Development:**
+
 - New API endpoints
 - Complex UI components
 - Performance optimizations
@@ -298,16 +314,19 @@ git push origin docs/fix-typo-api-reference
 Let's make your first contribution by improving documentation:
 
 **Step 1: Choose a Task**
+
 ```bash
 # Let's add an example to API_REFERENCE.md
 ```
 
 **Step 2: Create a Branch**
+
 ```bash
 git checkout -b docs/add-python-example
 ```
 
 **Step 3: Make Changes**
+
 ```python
 # Add this to docs/API_REFERENCE.md under Python examples
 
@@ -318,28 +337,33 @@ print(f"Temperature: {herb['tcmProperties']['temperature']}")
 ```
 
 **Step 4: Commit**
+
 ```bash
 git add docs/API_REFERENCE.md
 git commit -m "docs: add Python example for getting herb by slug"
 ```
 
 **Step 5: Push**
+
 ```bash
 git push origin docs/add-python-example
 ```
 
 **Step 6: Create Pull Request**
+
 - Go to GitHub
 - Click "Compare & pull request"
 - Fill out the PR template
 - Submit!
 
 **Step 7: Respond to Feedback**
+
 - Address review comments
 - Update code as needed
 - Push changes to the same branch
 
 **Step 8: Celebrate! 🎉**
+
 - Your PR gets merged
 - You're now an official contributor!
 
@@ -350,27 +374,32 @@ git push origin docs/add-python-example
 ### Where to Communicate
 
 **GitHub Discussions** - General questions, ideas
+
 - Q&A: Ask questions
 - Ideas: Propose features
 - Show and Tell: Share your work
 
 **GitHub Issues** - Specific bugs and features
+
 - Bug Reports
 - Feature Requests
 - Tasks
 
 **Discord** - Real-time chat
+
 - #general: General discussion
 - #contributors: Contributor chat
 - #help: Get help
 - #random: Off-topic
 
 **Email** - Private matters
+
 - developers@verscienta.com
 
 ### Communication Tips
 
 **✅ Do:**
+
 - Search before asking (question might be answered)
 - Provide context and details
 - Be patient waiting for responses
@@ -378,6 +407,7 @@ git push origin docs/add-python-example
 - Share what you've tried
 
 **❌ Don't:**
+
 - Double-post in multiple channels
 - Expect instant responses
 - Demand attention or priority
@@ -386,12 +416,15 @@ git push origin docs/add-python-example
 ### Asking Good Questions
 
 **Bad Question:**
+
 > "The search doesn't work. Help!"
 
 **Good Question:**
+
 > "The search returns no results when I enter 'ginseng' in the search box on the /herbs page.
 >
 > **Steps to reproduce:**
+>
 > 1. Go to http://localhost:3000/herbs
 > 2. Type 'ginseng' in search box
 > 3. Press Enter
@@ -400,11 +433,13 @@ git push origin docs/add-python-example
 > **Actual:** 'No results found' message
 >
 > **What I've tried:**
+>
 > - Checked browser console (no errors)
 > - Verified herbs exist in database
 > - Tried different search terms (same issue)
 >
 > **Environment:**
+>
 > - Node: v20.10.0
 > - Browser: Chrome 120
 > - OS: macOS 14
@@ -418,21 +453,25 @@ git push origin docs/add-python-example
 ### Contribution Levels
 
 **1. First-Time Contributor**
+
 - Made 1 contribution
 - Understand basic workflow
 - Know how to submit PRs
 
 **2. Regular Contributor**
+
 - 5+ contributions
 - Familiar with codebase
 - Help others with questions
 
 **3. Trusted Contributor**
+
 - 25+ contributions
 - Consistent quality work
 - Can review PRs
 
 **4. Core Contributor**
+
 - 100+ contributions
 - Deep codebase knowledge
 - Help shape project direction
@@ -440,6 +479,7 @@ git push origin docs/add-python-example
 ### Learning Opportunities
 
 **Technologies to Learn:**
+
 - **TypeScript**: Strong typing for JavaScript
 - **React 19**: Modern React with hooks
 - **Next.js 15**: Full-stack React framework
@@ -458,11 +498,13 @@ git push origin docs/add-python-example
 ### Mentorship
 
 **Want a Mentor?**
+
 - Request in Discord #contributors channel
 - Specify what you want to learn
 - Commit to regular meetings
 
 **Want to Mentor?**
+
 - Let us know your expertise
 - We'll match you with mentees
 - Flexible time commitment
@@ -514,6 +556,7 @@ Now that you've completed the onboarding:
 5. ✅ Share your work in #show-and-tell
 
 **Questions?**
+
 - Ask in Discord #help
 - Create a discussion post
 - Email developers@verscienta.com

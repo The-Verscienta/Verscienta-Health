@@ -227,10 +227,7 @@ export async function getModalityBySlug(slug: string) {
  */
 export async function searchAll(query: string, page: number = 1) {
   const searchWhere = {
-    or: [
-      { title: { contains: query } },
-      { description: { contains: query } },
-    ],
+    or: [{ title: { contains: query } }, { description: { contains: query } }],
   }
 
   const [herbs, formulas, conditions] = await Promise.all([

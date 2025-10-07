@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Star } from 'lucide-react'
+import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface FormulaCardProps {
   formulaId: string
@@ -36,21 +36,21 @@ export function FormulaCard({
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-lg font-serif text-earth-900 group-hover:text-earth-700">
+              <CardTitle className="text-earth-900 group-hover:text-earth-700 font-serif text-lg">
                 {title}
               </CardTitle>
               {chineseName && (
-                <p className="mt-1 font-serif-sc text-sm text-tcm-600">{chineseName}</p>
+                <p className="font-serif-sc text-tcm-600 mt-1 text-sm">{chineseName}</p>
               )}
               {pinyin && <CardDescription className="mt-1 italic">{pinyin}</CardDescription>}
             </div>
-            <span className="text-xs font-mono text-gray-500">{formulaId}</span>
+            <span className="font-mono text-xs text-gray-500">{formulaId}</span>
           </div>
 
           {/* Rating */}
           {averageRating !== undefined && reviewCount !== undefined && reviewCount > 0 && (
             <div className="mt-2 flex items-center space-x-1 text-sm">
-              <Star className="h-4 w-4 fill-gold-600 text-gold-600" />
+              <Star className="fill-gold-600 text-gold-600 h-4 w-4" />
               <span className="font-semibold">{averageRating.toFixed(1)}</span>
               <span className="text-gray-500">({reviewCount})</span>
             </div>
@@ -59,9 +59,7 @@ export function FormulaCard({
 
         <CardContent>
           {/* Description */}
-          {description && (
-            <p className="mb-3 line-clamp-3 text-sm text-gray-600">{description}</p>
-          )}
+          {description && <p className="mb-3 line-clamp-3 text-sm text-gray-600">{description}</p>}
 
           {/* Metadata */}
           <div className="flex flex-wrap gap-2">

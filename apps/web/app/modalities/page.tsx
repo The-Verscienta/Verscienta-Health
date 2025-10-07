@@ -1,10 +1,10 @@
-import { Suspense } from 'react'
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Pagination } from '@/components/ui/pagination'
-import { Loading } from '@/components/ui/loading'
+import { Suspense } from 'react'
 import { SearchBar } from '@/components/search/SearchBar'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loading } from '@/components/ui/loading'
+import { Pagination } from '@/components/ui/pagination'
 
 interface ModalitiesPageProps {
   searchParams: {
@@ -43,21 +43,16 @@ export default async function ModalitiesPage({ searchParams }: ModalitiesPagePro
     <div className="container-custom py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold font-serif text-earth-900 mb-4">
-          Healing Modalities
-        </h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Explore various holistic healing modalities from Traditional Chinese Medicine,
-          Ayurveda, Western herbalism, and other complementary approaches to health and wellness.
+        <h1 className="text-earth-900 mb-4 font-serif text-4xl font-bold">Healing Modalities</h1>
+        <p className="max-w-3xl text-lg text-gray-600">
+          Explore various holistic healing modalities from Traditional Chinese Medicine, Ayurveda,
+          Western herbalism, and other complementary approaches to health and wellness.
         </p>
       </div>
 
       {/* Search */}
       <div className="mb-8 max-w-2xl">
-        <SearchBar
-          placeholder="Search modalities..."
-          defaultValue={query}
-        />
+        <SearchBar placeholder="Search modalities..." defaultValue={query} />
       </div>
 
       {/* Stats */}
@@ -70,29 +65,27 @@ export default async function ModalitiesPage({ searchParams }: ModalitiesPagePro
       {/* Modality Grid */}
       <Suspense fallback={<Loading />}>
         {modalities.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-gray-600">
               {query ? 'No modalities found matching your search.' : 'No modalities available yet.'}
             </p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {modalities.map((modality: Modality) => (
                 <Link key={modality.id} href={`/modalities/${modality.slug}`}>
-                  <Card className="h-full hover:shadow-xl transition-all duration-200 cursor-pointer group">
+                  <Card className="group h-full cursor-pointer transition-all duration-200 hover:shadow-xl">
                     <CardHeader>
                       <CardTitle className="text-earth-900 group-hover:text-earth-600 transition-colors">
                         {modality.title}
                       </CardTitle>
-                      {modality.origin && (
-                        <CardDescription>{modality.origin}</CardDescription>
-                      )}
+                      {modality.origin && <CardDescription>{modality.origin}</CardDescription>}
                     </CardHeader>
 
                     <CardContent className="space-y-4">
                       {modality.description && (
-                        <p className="text-sm text-gray-600 line-clamp-3">{modality.description}</p>
+                        <p className="line-clamp-3 text-sm text-gray-600">{modality.description}</p>
                       )}
 
                       {/* Category */}
@@ -105,7 +98,7 @@ export default async function ModalitiesPage({ searchParams }: ModalitiesPagePro
                       {/* Key Techniques */}
                       {modality.keyTechniques && modality.keyTechniques.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-gray-700 mb-1">
+                          <h4 className="mb-1 text-xs font-semibold text-gray-700">
                             Key Techniques:
                           </h4>
                           <div className="flex flex-wrap gap-1">
@@ -130,11 +123,7 @@ export default async function ModalitiesPage({ searchParams }: ModalitiesPagePro
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                baseUrl="/modalities"
-              />
+              <Pagination currentPage={page} totalPages={totalPages} baseUrl="/modalities" />
             )}
           </>
         )}
@@ -145,5 +134,6 @@ export default async function ModalitiesPage({ searchParams }: ModalitiesPagePro
 
 export const metadata = {
   title: 'Healing Modalities | Verscienta Health',
-  description: 'Explore various holistic healing modalities including Traditional Chinese Medicine, Ayurveda, and Western herbalism.',
+  description:
+    'Explore various holistic healing modalities including Traditional Chinese Medicine, Ayurveda, and Western herbalism.',
 }
