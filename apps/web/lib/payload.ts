@@ -5,6 +5,62 @@
 
 const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
 
+// Basic collection type interfaces
+export interface Herb {
+  id: string
+  title: string
+  slug: string
+  scientificName?: string
+  status: 'draft' | 'published'
+  createdAt: string
+  updatedAt: string
+  [key: string]: unknown
+}
+
+export interface Formula {
+  id: string
+  title: string
+  slug: string
+  description?: string
+  status: 'draft' | 'published'
+  createdAt: string
+  updatedAt: string
+  [key: string]: unknown
+}
+
+export interface Condition {
+  id: string
+  title: string
+  slug: string
+  description?: string
+  status: 'draft' | 'published'
+  createdAt: string
+  updatedAt: string
+  [key: string]: unknown
+}
+
+export interface Practitioner {
+  id: string
+  name: string
+  slug: string
+  bio?: string
+  status: 'draft' | 'published'
+  createdAt: string
+  updatedAt: string
+  [key: string]: unknown
+}
+
+export interface Modality {
+  id: string
+  title: string
+  slug: string
+  description?: string
+  status: 'draft' | 'published'
+  createdAt: string
+  updatedAt: string
+  [key: string]: unknown
+}
+
 export interface PayloadResponse<T> {
   docs: T[]
   totalDocs: number
@@ -25,7 +81,7 @@ export interface PayloadSingleResponse<T> {
 interface FetchOptions {
   page?: number
   limit?: number
-  where?: Record<string, any>
+  where?: Record<string, unknown>
   sort?: string
   depth?: number
 }
@@ -100,70 +156,70 @@ async function fetchBySlug<T>(
  * Fetch herbs with optional filters
  */
 export async function getHerbs(options: FetchOptions = {}) {
-  return fetchFromPayload<any>('herbs', options)
+  return fetchFromPayload<Herb>('herbs', options)
 }
 
 /**
  * Fetch a single herb by slug
  */
 export async function getHerbBySlug(slug: string) {
-  return fetchBySlug<any>('herbs', slug)
+  return fetchBySlug<Herb>('herbs', slug)
 }
 
 /**
  * Fetch formulas with optional filters
  */
 export async function getFormulas(options: FetchOptions = {}) {
-  return fetchFromPayload<any>('formulas', options)
+  return fetchFromPayload<Formula>('formulas', options)
 }
 
 /**
  * Fetch a single formula by slug
  */
 export async function getFormulaBySlug(slug: string) {
-  return fetchBySlug<any>('formulas', slug)
+  return fetchBySlug<Formula>('formulas', slug)
 }
 
 /**
  * Fetch conditions with optional filters
  */
 export async function getConditions(options: FetchOptions = {}) {
-  return fetchFromPayload<any>('conditions', options)
+  return fetchFromPayload<Condition>('conditions', options)
 }
 
 /**
  * Fetch a single condition by slug
  */
 export async function getConditionBySlug(slug: string) {
-  return fetchBySlug<any>('conditions', slug)
+  return fetchBySlug<Condition>('conditions', slug)
 }
 
 /**
  * Fetch practitioners with optional filters
  */
 export async function getPractitioners(options: FetchOptions = {}) {
-  return fetchFromPayload<any>('practitioners', options)
+  return fetchFromPayload<Practitioner>('practitioners', options)
 }
 
 /**
  * Fetch a single practitioner by slug
  */
 export async function getPractitionerBySlug(slug: string) {
-  return fetchBySlug<any>('practitioners', slug)
+  return fetchBySlug<Practitioner>('practitioners', slug)
 }
 
 /**
  * Fetch modalities with optional filters
  */
 export async function getModalities(options: FetchOptions = {}) {
-  return fetchFromPayload<any>('modalities', options)
+  return fetchFromPayload<Modality>('modalities', options)
 }
 
 /**
  * Fetch a single modality by slug
  */
 export async function getModalityBySlug(slug: string) {
-  return fetchBySlug<any>('modalities', slug)
+  return fetchBySlug<Modality>('modalities', slug)
 }
 
 /**
