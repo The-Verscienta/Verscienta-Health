@@ -12,7 +12,7 @@ interface HerbsPageProps {
 }
 
 // This will be replaced with actual Payload CMS API call
-async function getHerbs(page: number = 1, query?: string) {
+async function getHerbs(_page: number = 1, _query?: string) {
   // TODO: Replace with actual Payload CMS API call
   // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/herbs?page=${page}&limit=12${query ? `&where[title][contains]=${query}` : ''}`)
   // const data = await response.json()

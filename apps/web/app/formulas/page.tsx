@@ -12,7 +12,7 @@ interface FormulasPageProps {
   }
 }
 
-async function getFormulas(page: number = 1, query?: string, tradition?: string) {
+async function getFormulas(_page: number = 1, _query?: string, _tradition?: string) {
   // TODO: Replace with actual Payload CMS API call
   return {
     docs: [],

@@ -200,7 +200,6 @@ export async function storeEncryptedSymptomSubmission(
   }
 
   const symptomsStr = JSON.stringify(data.symptoms)
-  const userIdHash = hashUserId(data.userId)
 
   // Example using raw SQL (adjust for your ORM)
   await db.execute(`

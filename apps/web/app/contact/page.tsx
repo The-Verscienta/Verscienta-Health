@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Mail, MapPin, Phone } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function ContactPage() {

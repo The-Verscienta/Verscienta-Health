@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Star, MapPin, AlertTriangle, Leaf, Beaker, Book, Heart } from 'lucide-react'
+import { Star, MapPin, AlertTriangle, Leaf, Beaker, Book } from 'lucide-react'
 
 interface Herb {
   id: string

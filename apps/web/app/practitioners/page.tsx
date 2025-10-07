@@ -1,6 +1,4 @@
 import { Suspense } from 'react'
-import { PractitionerCard } from '@/components/cards/PractitionerCard'
-import { Pagination } from '@/components/ui/pagination'
 import { Loading } from '@/components/ui/loading'
 import { SearchBar } from '@/components/search/SearchBar'
 import { PractitionerViewToggle } from '@/components/practitioners/PractitionerViewToggle'
@@ -14,7 +12,7 @@ interface PractitionersPageProps {
   }
 }
 
-async function getPractitioners(page: number = 1, query?: string) {
+async function getPractitioners(_page: number = 1, _query?: string) {
   // TODO: Replace with actual Payload CMS API call
   return {
     docs: [],

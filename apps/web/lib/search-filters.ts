@@ -373,12 +373,14 @@ export function applySorting(items: any[], sortValue: string) {
       return sorted.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
     case 'ingredients_desc':
       return sorted.sort((a, b) => (b.ingredients?.length || 0) - (a.ingredients?.length || 0))
-    case 'severity_desc':
+    case 'severity_desc': {
       const severityOrder = { severe: 3, moderate: 2, mild: 1 }
       return sorted.sort((a, b) => (severityOrder[b.severity as keyof typeof severityOrder] || 0) - (severityOrder[a.severity as keyof typeof severityOrder] || 0))
-    case 'severity_asc':
+    }
+    case 'severity_asc': {
       const severityOrderAsc = { mild: 1, moderate: 2, severe: 3 }
       return sorted.sort((a, b) => (severityOrderAsc[a.severity as keyof typeof severityOrderAsc] || 0) - (severityOrderAsc[b.severity as keyof typeof severityOrderAsc] || 0))
+    }
     case 'distance_asc':
       // Would require geolocation - placeholder for now
       return sorted

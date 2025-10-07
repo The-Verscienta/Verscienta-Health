@@ -321,7 +321,6 @@ export function withAuditLog(
   handler: (req: Request) => Promise<Response>
 ) {
   return async (req: Request) => {
-    const startTime = Date.now()
     let response: Response
 
     try {
