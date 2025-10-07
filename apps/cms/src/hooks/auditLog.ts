@@ -62,9 +62,9 @@ export const auditLogAfterChange: CollectionAfterChangeHook = async ({
   const metadata = getRequestMetadata(req)
 
   // Calculate changes for updates
-  let changes = {}
-  let oldValues = {}
-  let newValues = {}
+  let changes: Record<string, any> = {}
+  let oldValues: Record<string, any> = {}
+  let newValues: Record<string, any> = {}
 
   if (operation === 'update' && previousDoc) {
     // Compare old and new values
@@ -85,10 +85,10 @@ export const auditLogAfterChange: CollectionAfterChangeHook = async ({
   const severity = determineSeverity(action, collection.slug)
 
   await createAuditLog(req.payload, {
-    user: req.user.id,
+    user: String(req.user.id),
     action,
     resource: collection.slug,
-    resourceId: doc.id,
+    resourceId: String(doc.id),
     changes: operation === 'update' ? changes : undefined,
     oldValues: operation === 'update' ? oldValues : undefined,
     newValues: operation === 'create' ? doc : newValues,
@@ -113,10 +113,10 @@ export const auditLogAfterDelete: CollectionAfterDeleteHook = async ({
   const metadata = getRequestMetadata(req)
 
   await createAuditLog(req.payload, {
-    user: req.user.id,
+    user: String(req.user.id),
     action: 'delete',
     resource: collection.slug,
-    resourceId: id,
+    resourceId: String(id),
     oldValues: doc,
     ...metadata,
     severity: 'warning',

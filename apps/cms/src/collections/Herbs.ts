@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublished } from '../access/isAdmin'
 import { algoliaSync } from '../hooks/algoliaSync'
 import { generateSlug } from '../hooks/generateSlug'
@@ -12,16 +12,15 @@ export const Herbs: CollectionConfig = {
     description: 'Comprehensive herb database with TCM and Western herbalism properties',
   },
   access: {
-    read: ({ req: { user } }) => {
-      if (user?.role === 'admin' || user?.role === 'editor') return true
-      return isPublished({ req: { user } })
+    read: ({ req }) => {
+      if (req.user?.role === 'admin' || req.user?.role === 'editor') return true
+      return isPublished({ req })
     },
     create: isAdminOrEditor,
     update: isAdminOrEditor,
     delete: ({ req: { user } }) => user?.role === 'admin',
   },
   hooks: {
-    beforeChange: [generateSlug('title')],
     afterChange: [algoliaSync('herbs')],
   },
   versions: {
@@ -46,6 +45,9 @@ export const Herbs: CollectionConfig = {
       type: 'text',
       unique: true,
       index: true,
+      hooks: {
+        beforeChange: [generateSlug('title')],
+      },
       admin: {
         position: 'sidebar',
         readOnly: true,

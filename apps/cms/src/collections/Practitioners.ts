@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor } from '../access/isAdmin'
 import { geocodeAddress } from '../hooks/geocodeAddress'
 import { generateSlug } from '../hooks/generateSlug'
@@ -25,7 +25,7 @@ export const Practitioners: CollectionConfig = {
     delete: ({ req: { user } }) => user?.role === 'admin',
   },
   hooks: {
-    beforeChange: [generateSlug('name'), geocodeAddress],
+    beforeChange: [geocodeAddress],
   },
   fields: [
     {
@@ -39,6 +39,9 @@ export const Practitioners: CollectionConfig = {
       type: 'text',
       unique: true,
       index: true,
+      hooks: {
+        beforeChange: [generateSlug('name')],
+      },
       admin: {
         position: 'sidebar',
         readOnly: true,

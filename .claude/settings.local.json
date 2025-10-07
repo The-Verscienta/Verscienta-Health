@@ -8,7 +8,11 @@
       "Bash(pnpm type-check:*)",
       "Bash(pnpm list:*)",
       "Bash(cat:*)",
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "Bash(for file in src/collections/*.ts src/collections/Users.ts)",
+      "Bash(do sed -i \"s|from ''payload/types''|from ''payload''|g\" \"$file\")",
+      "Bash(done)",
+      "Bash(tee:*)"
     ],
     "deny": [],
     "ask": []

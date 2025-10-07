@@ -1,5 +1,5 @@
-import type { CollectionAfterChangeHook } from 'payload/types'
-import algoliasearch from 'algoliasearch'
+import type { CollectionAfterChangeHook } from 'payload'
+import { algoliasearch } from 'algoliasearch'
 
 const client = algoliasearch(
   process.env.ALGOLIA_APP_ID!,

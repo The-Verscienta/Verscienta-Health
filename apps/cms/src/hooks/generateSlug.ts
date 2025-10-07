@@ -1,4 +1,4 @@
-import type { FieldHook } from 'payload/types'
+import type { FieldHook } from 'payload'
 
 /**
  * Generate a URL-friendly slug from a field value

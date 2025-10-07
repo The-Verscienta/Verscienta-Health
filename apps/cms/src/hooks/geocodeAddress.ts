@@ -1,4 +1,4 @@
-import type { CollectionBeforeChangeHook } from 'payload/types'
+import type { CollectionBeforeChangeHook } from 'payload'
 import axios from 'axios'
 
 /**

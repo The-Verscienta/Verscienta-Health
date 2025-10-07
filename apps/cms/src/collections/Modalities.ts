@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublished } from '../access/isAdmin'
 import { generateSlug } from '../hooks/generateSlug'
 
@@ -15,9 +15,6 @@ export const Modalities: CollectionConfig = {
     update: isAdminOrEditor,
     delete: ({ req: { user } }) => user?.role === 'admin',
   },
-  hooks: {
-    beforeChange: [generateSlug('title')],
-  },
   fields: [
     {
       name: 'title',
@@ -33,6 +30,9 @@ export const Modalities: CollectionConfig = {
       type: 'text',
       unique: true,
       index: true,
+      hooks: {
+        beforeChange: [generateSlug('title')],
+      },
       admin: {
         position: 'sidebar',
         readOnly: true,

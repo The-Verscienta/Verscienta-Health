@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublished } from '../access/isAdmin'
 import { algoliaSync } from '../hooks/algoliaSync'
 import { generateSlug } from '../hooks/generateSlug'
@@ -18,7 +18,6 @@ export const Formulas: CollectionConfig = {
     delete: ({ req: { user } }) => user?.role === 'admin',
   },
   hooks: {
-    beforeChange: [generateSlug('title')],
     afterChange: [algoliaSync('formulas')],
   },
   fields: [
@@ -36,6 +35,9 @@ export const Formulas: CollectionConfig = {
       type: 'text',
       unique: true,
       index: true,
+      hooks: {
+        beforeChange: [generateSlug('title')],
+      },
       admin: {
         position: 'sidebar',
         readOnly: true,
