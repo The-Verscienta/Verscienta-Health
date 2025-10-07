@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import cron from 'node-cron'
 import type { Payload } from 'payload'
 

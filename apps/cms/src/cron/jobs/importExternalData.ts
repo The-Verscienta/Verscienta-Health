@@ -86,15 +86,17 @@ async function fetchExternalData(
   source: ExternalDataSource
 ): Promise<any[]> {
   switch (source.type) {
-    case 'json':
+    case 'json': {
       const jsonResponse = await axios.get(source.url)
       return jsonResponse.data
+    }
 
-    case 'csv':
+    case 'csv': {
       const csvResponse = await axios.get(source.url, {
         responseType: 'stream',
       })
       return await parseCSV(csvResponse.data)
+    }
 
     case 'api':
       // Custom API handling

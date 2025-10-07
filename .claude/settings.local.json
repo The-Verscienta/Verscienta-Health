@@ -4,7 +4,11 @@
       "Read(//c/Users/pf1/OneDrive/Documents/GitHub/verscienta-drupal/**)",
       "Bash(pnpm add:*)",
       "Bash(pnpm remove:*)",
-      "Bash(pnpm build-storybook:*)"
+      "Bash(pnpm build-storybook:*)",
+      "Bash(pnpm type-check:*)",
+      "Bash(pnpm list:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm lint:*)"
     ],
     "deny": [],
     "ask": []

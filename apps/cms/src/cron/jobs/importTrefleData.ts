@@ -143,7 +143,7 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
                   ]
                 : [],
               habitat:
-                enrichedData.distributions?.native.length > 0
+                enrichedData.distributions?.native && enrichedData.distributions.native.length > 0
                   ? `Native to: ${enrichedData.distributions.native.slice(0, 5).join(', ')}`
                   : undefined,
               safetyInfo:
