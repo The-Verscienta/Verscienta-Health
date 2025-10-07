@@ -7,14 +7,22 @@ import { Pagination } from '@/components/ui/pagination'
 import { Button } from '@/components/ui/button'
 import { List, Map as MapIcon } from 'lucide-react'
 
+type PractitionerLocation = Practitioner & {
+  latitude: number
+  longitude: number
+}
+
 interface Practitioner {
   id: string
   practitionerId: string
   name: string
   slug: string
-  photo?: string
+  photo?: {
+    url: string
+    alt: string
+  }
   title?: string
-  modalities: Array<{ name: string }>
+  modalities: string[]
   address: {
     street?: string
     city?: string
@@ -115,7 +123,7 @@ export function PractitionerViewToggle({
           {practitionersWithCoords.length > 0 ? (
             <>
               <PractitionerMap
-                practitioners={practitionersWithCoords as any}
+                practitioners={practitionersWithCoords as PractitionerLocation[]}
                 className="h-[600px]"
               />
               <p className="text-sm text-gray-600 mt-4 text-center">

@@ -21,7 +21,10 @@ interface PractitionerLocation {
   slug: string
   name: string
   title?: string
-  photo?: string
+  photo?: {
+    url: string
+    alt: string
+  }
   latitude: number
   longitude: number
   address: {
@@ -31,7 +34,7 @@ interface PractitionerLocation {
     postalCode?: string
     country?: string
   }
-  modalities: Array<{ name: string }>
+  modalities: string[]
   averageRating?: number
   reviewCount?: number
   verificationStatus?: 'verified' | 'pending' | 'unverified'
@@ -114,7 +117,7 @@ export function PractitionerMap({
                   <div className="flex items-start gap-3 mb-2">
                     {practitioner.photo ? (
                       <img
-                        src={practitioner.photo}
+                        src={practitioner.photo?.url}
                         alt={practitioner.name}
                         className="w-12 h-12 rounded-full object-cover"
                       />
@@ -144,7 +147,7 @@ export function PractitionerMap({
                     <div className="flex flex-wrap gap-1 mb-2">
                       {practitioner.modalities.slice(0, 3).map((modality, idx) => (
                         <Badge key={idx} variant="outline" className="text-xs">
-                          {modality.name}
+                          {modality}
                         </Badge>
                       ))}
                       {practitioner.modalities.length > 3 && (

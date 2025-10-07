@@ -134,7 +134,7 @@ export function SearchFilters({
               return (
                 <Badge
                   key={`${groupId}-${value}`}
-                  variant="secondary"
+                  variant="outline"
                   className="gap-1 pr-1"
                 >
                   {option?.label || value}

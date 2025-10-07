@@ -12,6 +12,31 @@ import { Loading } from '@/components/ui/loading'
 import { User, Mail, Calendar, Heart, BookOpen, Star } from 'lucide-react'
 import { toast } from 'sonner'
 
+interface ExtendedUser {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  email: string
+  emailVerified: boolean
+  name: string
+  image?: string | null
+  role?: string
+  firstName?: string
+  lastName?: string
+  mfaEnabled?: boolean
+  mfaEnrolledAt?: Date
+}
+
+declare module '@/lib/auth-client' {
+  interface User {
+    role?: string
+    firstName?: string
+    lastName?: string
+    mfaEnabled?: boolean
+    mfaEnrolledAt?: Date
+  }
+}
+
 export default function ProfilePage() {
   const { data: session, isPending } = useSession()
   const router = useRouter()
@@ -180,7 +205,7 @@ export default function ProfilePage() {
 
                     <div>
                       <h4 className="text-sm font-semibold text-gray-700 mb-1">Role</h4>
-                      <Badge variant="default">{session.user.role || 'User'}</Badge>
+                      <Badge variant="default">{(session.user as ExtendedUser).role || 'User'}</Badge>
                     </div>
                   </div>
                 )}

@@ -122,7 +122,7 @@ test.describe('Search Functionality', () => {
     // Look for sort dropdown
     const sortSelect = page.locator('select').first()
     if (await sortSelect.isVisible()) {
-      await sortSelect.selectOption({ label: /name.*a-z/i })
+      await sortSelect.selectOption('name-a-z')
       await page.waitForTimeout(500)
 
       // Results should be reordered (we can't easily verify without knowing the data)

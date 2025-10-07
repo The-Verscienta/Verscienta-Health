@@ -156,8 +156,8 @@ test.describe('Accessibility Tests', () => {
 
     const focusedElement = await page.evaluateHandle(() => document.activeElement)
     const isInteractive = await focusedElement.evaluate((el) => {
-      const tagName = el?.tagName.toLowerCase()
-      return ['a', 'button', 'input', 'select', 'textarea'].includes(tagName)
+      const tagName = el?.tagName?.toLowerCase()
+      return tagName && ['a', 'button', 'input', 'select', 'textarea'].includes(tagName)
     })
 
     expect(isInteractive).toBeTruthy()
