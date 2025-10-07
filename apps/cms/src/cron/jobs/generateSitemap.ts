@@ -183,7 +183,7 @@ async function generateCollectionUrls(
 
     for (const doc of docs) {
       const url = `${baseUrl}${basePath}/${doc.slug}`
-      const lastmod = doc.updatedAt ? new Date(doc.updatedAt) : new Date()
+      const lastmod = doc.updatedAt ? new Date(doc.updatedAt as string | number | Date) : new Date()
       xml += generateUrlEntry(url, lastmod, 'weekly', priority)
     }
   } catch (error) {

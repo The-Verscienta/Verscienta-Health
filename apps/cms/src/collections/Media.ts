@@ -14,7 +14,6 @@ export const Media: CollectionConfig = {
     delete: ({ req: { user } }) => user?.role === 'admin' || user?.role === 'editor',
   },
   upload: {
-    staticURL: '/media',
     staticDir: 'media',
     mimeTypes: ['image/*', 'application/pdf'],
     imageSizes: [

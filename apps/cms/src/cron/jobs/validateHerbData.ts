@@ -72,7 +72,7 @@ export async function validateHerbDataJob(payload: Payload): Promise<void> {
       // Check for missing required fields
       if (!herb.scientificName) {
         issues.push({
-          herbId: herb.id,
+          herbId: String(herb.id),
           herbName: herb.name,
           field: 'scientificName',
           issue: 'Missing scientific name',
@@ -82,7 +82,7 @@ export async function validateHerbDataJob(payload: Payload): Promise<void> {
 
       if (!herb.description) {
         issues.push({
-          herbId: herb.id,
+          herbId: String(herb.id),
           herbName: herb.name,
           field: 'description',
           issue: 'Missing description',
@@ -95,7 +95,7 @@ export async function validateHerbDataJob(payload: Payload): Promise<void> {
         const fieldValue = getNestedField(herb, rule.field)
         if (fieldValue !== undefined && !rule.validator(fieldValue)) {
           issues.push({
-            herbId: herb.id,
+            herbId: String(herb.id),
             herbName: herb.name,
             field: rule.field,
             issue: rule.message,
@@ -114,7 +114,7 @@ export async function validateHerbDataJob(payload: Payload): Promise<void> {
 
           if (!formula) {
             issues.push({
-              herbId: herb.id,
+              herbId: String(herb.id),
               herbName: herb.name,
               field: 'relatedFormulas',
               issue: `Orphaned formula reference: ${formulaId}`,

@@ -272,33 +272,4 @@ export const AuditLogs: CollectionConfig = {
   // Enable timestamps (createdAt, updatedAt)
   // Note: updatedAt won't change since updates are blocked
   timestamps: true,
-
-  // Index for efficient querying
-  // Especially important for HIPAA compliance reports
-  indexes: [
-    {
-      fields: {
-        action: 1,
-        createdAt: -1,
-      },
-    },
-    {
-      fields: {
-        userId: 1,
-        createdAt: -1,
-      },
-    },
-    {
-      fields: {
-        ipAddress: 1,
-        createdAt: -1,
-      },
-    },
-    {
-      fields: {
-        severity: 1,
-        success: 1,
-      },
-    },
-  ],
 }

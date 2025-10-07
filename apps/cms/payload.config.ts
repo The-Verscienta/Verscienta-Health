@@ -1,4 +1,4 @@
-import { buildConfig } from 'payload/config'
+import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -27,14 +27,13 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  secret: process.env.PAYLOAD_SECRET || 'your-secret-key',
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
 
   admin: {
     user: Users.slug,
     meta: {
       titleSuffix: '- Verscienta Health',
-      favicon: '/favicon.ico',
-      ogImage: '/og-image.jpg',
     },
     dateFormat: 'MMMM do, yyyy',
   },
@@ -85,12 +84,6 @@ export default buildConfig({
     process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
     'http://localhost:3000',
   ],
-
-  rateLimit: {
-    trustProxy: true,
-    max: 2000,
-    window: 900000, // 15 minutes
-  },
 
   upload: {
     limits: {

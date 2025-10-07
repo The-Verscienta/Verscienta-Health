@@ -67,7 +67,14 @@ export async function fullTextSearch(
       ...searchQuery,
     })
 
-    return results
+    return {
+      docs: results.docs,
+      totalDocs: results.totalDocs,
+      page: results.page || 1,
+      totalPages: results.totalPages,
+      hasNextPage: results.hasNextPage,
+      hasPrevPage: results.hasPrevPage,
+    }
   } catch (error) {
     console.error('Full-text search error:', error)
     throw error
@@ -202,7 +209,14 @@ export async function searchHerbsByTCMProperties(
       page,
     })
 
-    return results
+    return {
+      docs: results.docs,
+      totalDocs: results.totalDocs,
+      page: results.page || 1,
+      totalPages: results.totalPages,
+      hasNextPage: results.hasNextPage,
+      hasPrevPage: results.hasPrevPage,
+    }
   } catch (error) {
     console.error('TCM properties search error:', error)
     throw error
@@ -285,7 +299,11 @@ export async function autocompleteSearch(
       },
     })
 
-    return results.docs
+    return results.docs.map(doc => ({
+      id: String(doc.id),
+      name: String(doc.name || ''),
+      slug: String(doc.slug || ''),
+    }))
   } catch (error) {
     console.error('Autocomplete search error:', error)
     return []

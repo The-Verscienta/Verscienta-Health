@@ -18,7 +18,7 @@ export const algoliaSync = (indexName: string): CollectionAfterChangeHook => {
       return
     }
 
-    const index = client.initIndex(`verscienta_${indexName}`)
+    const index = (client as any).initIndex(`verscienta_${indexName}`)
 
     try {
       if (operation === 'create' || operation === 'update') {

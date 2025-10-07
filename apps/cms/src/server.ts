@@ -1,8 +1,7 @@
 import express from 'express'
 import payload from 'payload'
 import { config } from 'dotenv'
-
-config()
+import configPayload from '../payload.config.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -15,11 +14,7 @@ app.get('/', (_, res) => {
 const start = async () => {
   // Initialize Payload
   await payload.init({
-    secret: process.env.PAYLOAD_SECRET!,
-    express: app,
-    onInit: async () => {
-      payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`)
-    },
+    config: configPayload,
   })
 
   // Add your own express routes here

@@ -1,4 +1,4 @@
-import type { Payload } from 'payload'
+import type { Payload, JsonObject, TypeWithID } from 'payload'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -97,12 +97,17 @@ async function gatherDigestContent(
   since: Date,
   stats: DigestStats
 ): Promise<{
-  herbs: any[]
-  formulas: any[]
-  conditions: any[]
-  practitioners: any[]
+  herbs: (JsonObject & TypeWithID)[]
+  formulas: (JsonObject & TypeWithID)[]
+  conditions: (JsonObject & TypeWithID)[]
+  practitioners: (JsonObject & TypeWithID)[]
 }> {
-  const content = {
+  const content: {
+    herbs: (JsonObject & TypeWithID)[]
+    formulas: (JsonObject & TypeWithID)[]
+    conditions: (JsonObject & TypeWithID)[]
+    practitioners: (JsonObject & TypeWithID)[]
+  } = {
     herbs: [],
     formulas: [],
     conditions: [],

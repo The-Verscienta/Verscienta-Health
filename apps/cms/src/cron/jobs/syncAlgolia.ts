@@ -84,7 +84,7 @@ async function syncCollection(
     const records = docs.map((doc) => transformForAlgolia(doc, collection))
 
     // Get Algolia index
-    const index = algoliaClient.initIndex(indexName)
+    const index = (algoliaClient as any).initIndex(indexName)
 
     // Replace all objects in the index
     await index.replaceAllObjects(records, {

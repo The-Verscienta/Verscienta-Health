@@ -145,7 +145,7 @@ export function mergeHerbData(
   // Helper to merge arrays without duplicates
   const mergeArrays = (arr1: any[] = [], arr2: any[] = []): any[] => {
     const combined = [...arr1, ...arr2]
-    return Array.from(new Set(combined.map(JSON.stringify))).map(JSON.parse)
+    return Array.from(new Set(combined.map(item => JSON.stringify(item)))).map(str => JSON.parse(str))
   }
 
   // Helper to merge images specifically (checks URL to avoid exact duplicates)
@@ -287,7 +287,7 @@ export async function findOrCreateHerb(
     })
 
     return {
-      id: newHerb.id,
+      id: String(newHerb.id),
       isNew: true,
       wasUpdated: false,
     }
