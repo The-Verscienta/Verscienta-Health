@@ -26,6 +26,8 @@
     "test:unit": "turbo run test:unit",
     "test:e2e": "turbo run test:e2e",
     "test:a11y": "turbo run test:a11y",
+    "storybook": "pnpm --filter web storybook",
+    "build-storybook": "pnpm --filter web build-storybook",
     "clean": "turbo run clean && rm -rf node_modules",
     "db:setup": "pnpm --filter cms db:setup",
     "db:migrate": "pnpm --filter cms db:migrate",

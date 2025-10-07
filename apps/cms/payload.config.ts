@@ -16,6 +16,12 @@ import { GrokInsights } from './src/collections/GrokInsights.js'
 import { Media } from './src/collections/Media.js'
 import { Users } from './src/collections/Users.js'
 import { AuditLogs } from './src/collections/AuditLogs.js'
+import { ImportLogs } from './src/collections/ImportLogs.js'
+import { ValidationReports } from './src/collections/ValidationReports.js'
+
+// Import globals
+import { TrefleImportState } from './src/globals/TrefleImportState.js'
+import { PerenualImportState } from './src/globals/PerenualImportState.js'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -45,6 +51,13 @@ export default buildConfig({
     Media,
     Users,
     AuditLogs,
+    ImportLogs,
+    ValidationReports,
+  ],
+
+  globals: [
+    TrefleImportState,
+    PerenualImportState,
   ],
 
   editor: lexicalEditor({}),

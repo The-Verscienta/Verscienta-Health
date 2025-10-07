@@ -17,16 +17,19 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "payload": "^3.58.0",
+    "@node-rs/crc32": "^1.10.6",
     "@payloadcms/db-postgres": "^3.58.0",
-    "@payloadcms/richtext-lexical": "^3.58.0",
     "@payloadcms/plugin-cloud-storage": "^3.58.0",
-    "express": "^4.21.2",
-    "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.38.3",
-    "postgres": "^3.4.5",
+    "@payloadcms/richtext-lexical": "^3.58.0",
     "algoliasearch": "^5.18.0",
     "axios": "^1.7.9",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.38.3",
+    "express": "^4.21.2",
+    "node-cron": "^4.2.1",
+    "payload": "^3.58.0",
+    "postgres": "^3.4.5",
     "sharp": "^0.33.5"
   },
   "devDependencies": {

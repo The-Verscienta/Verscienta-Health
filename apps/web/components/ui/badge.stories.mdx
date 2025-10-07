@@ -1,0 +1,418 @@
+import { Meta, Canvas, Story, Controls, Primary } from '@storybook/blocks'
+import * as BadgeStories from './badge.stories'
+import { Badge } from './badge'
+
+<Meta of={BadgeStories} />
+
+# Badge
+
+A small, non-interactive label component for displaying metadata, status, or categories.
+
+<Primary />
+
+## Overview
+
+The Badge component is used throughout Verscienta Health to display concise information like TCM properties, categories, statuses, and tags. It's designed to be visually distinct while maintaining readability.
+
+## Usage
+
+```tsx
+import { Badge } from '@/components/ui/badge'
+
+export default function Example() {
+  return <Badge variant="default">New</Badge>
+}
+```
+
+## Variants
+
+### Default
+Standard badge with subtle gray styling.
+
+<Canvas of={BadgeStories.Default} />
+
+### Sage (Verscienta Primary)
+Uses the platform's primary sage green color.
+
+<Canvas of={BadgeStories.Sage} />
+
+### TCM (Traditional Chinese Medicine)
+Red badge for TCM-related content.
+
+<Canvas of={BadgeStories.Tcm} />
+
+### Gold (Premium/Verified)
+Gold badge for premium or verified content.
+
+<Canvas of={BadgeStories.Gold} />
+
+### Success
+Green badge for positive statuses.
+
+<Canvas of={BadgeStories.Success} />
+
+### Warning
+Yellow/amber badge for warnings or cautions.
+
+<Canvas of={BadgeStories.Warning} />
+
+### Danger
+Red badge for errors or critical information.
+
+<Canvas of={BadgeStories.Danger} />
+
+### Info
+Blue badge for informational content.
+
+<Canvas of={BadgeStories.Info} />
+
+### Outline
+Transparent badge with border.
+
+<Canvas of={BadgeStories.Outline} />
+
+## TCM Properties Example
+
+Badges are commonly used to display TCM properties:
+
+<Canvas of={BadgeStories.TcmProperties} />
+
+```tsx
+<div className="flex flex-wrap gap-2">
+  <Badge variant="tcm">Hot</Badge>
+  <Badge variant="sage">Pungent</Badge>
+  <Badge variant="gold">Lung</Badge>
+  <Badge variant="info">Spleen</Badge>
+</div>
+```
+
+## Props
+
+<Controls />
+
+## Use Cases
+
+### Herb Properties
+
+```tsx
+<div className="space-y-2">
+  <div>
+    <span className="text-sm text-muted-foreground">Temperature:</span>
+    <Badge variant="tcm" className="ml-2">Warm</Badge>
+  </div>
+  <div>
+    <span className="text-sm text-muted-foreground">Taste:</span>
+    <Badge variant="sage" className="ml-2">Sweet</Badge>
+    <Badge variant="sage" className="ml-2">Bitter</Badge>
+  </div>
+  <div>
+    <span className="text-sm text-muted-foreground">Meridians:</span>
+    <Badge variant="gold" className="ml-2">Liver</Badge>
+    <Badge variant="gold" className="ml-2">Kidney</Badge>
+  </div>
+</div>
+```
+
+### Status Indicators
+
+```tsx
+{/* Herb status */}
+<Badge variant="success">Published</Badge>
+<Badge variant="warning">Draft</Badge>
+<Badge variant="danger">Archived</Badge>
+
+{/* Safety ratings */}
+<Badge variant="success">Safe</Badge>
+<Badge variant="warning">Use with Caution</Badge>
+<Badge variant="danger">Potentially Toxic</Badge>
+
+{/* Practitioner status */}
+<Badge variant="gold">Verified</Badge>
+<Badge variant="info">Accepting Patients</Badge>
+```
+
+### Categories and Tags
+
+```tsx
+<div className="flex flex-wrap gap-2">
+  <Badge variant="outline">Adaptogen</Badge>
+  <Badge variant="outline">Anti-inflammatory</Badge>
+  <Badge variant="outline">Immune Support</Badge>
+  <Badge variant="outline">Digestive Health</Badge>
+</div>
+```
+
+### Formula Traditions
+
+```tsx
+<Badge variant="tcm">Traditional Chinese Medicine</Badge>
+<Badge variant="sage">Western Herbalism</Badge>
+<Badge variant="info">Ayurveda</Badge>
+```
+
+### Counts and Metrics
+
+```tsx
+<div className="flex items-center gap-2">
+  <span className="text-sm">Reviews</span>
+  <Badge variant="default">127</Badge>
+</div>
+
+<div className="flex items-center gap-2">
+  <span className="text-sm">Rating</span>
+  <Badge variant="gold">4.8 ★</Badge>
+</div>
+```
+
+## Design Guidelines
+
+### When to Use
+
+- Display metadata (categories, tags, properties)
+- Show status or state
+- Highlight important attributes
+- Count indicators
+- TCM properties (temperature, taste, meridians)
+
+### When Not to Use
+
+- Don't use for interactive elements (use Button instead)
+- Don't use for long text (use Pills or Chips instead)
+- Don't use excessively (causes visual clutter)
+- Don't rely on color alone for meaning
+
+### Do's
+
+✅ Keep badge text short (1-3 words)
+✅ Use consistent variants for similar content types
+✅ Group related badges together
+✅ Provide context when color alone isn't sufficient
+✅ Use appropriate variant for the content type
+
+### Don'ts
+
+❌ Don't make badges clickable (use button or link)
+❌ Don't use more than 3-4 variants in one section
+❌ Don't use badges for long labels
+❌ Don't stack badges vertically (use horizontal wrapping)
+❌ Don't use badges as primary information conveyors
+
+## Accessibility
+
+### Best Practices
+
+- **Color Independence**: Don't rely solely on color to convey meaning
+- **Text Alternatives**: Ensure badge text is descriptive
+- **Contrast**: All badge variants meet WCAG AA contrast requirements
+- **Screen Readers**: Badge content is announced properly
+
+### Implementation
+
+```tsx
+{/* Good: Includes both visual and text indicators */}
+<Badge variant="success">
+  <CheckCircle className="mr-1 h-3 w-3" />
+  Published
+</Badge>
+
+{/* Good: Context is clear */}
+<span className="text-sm">Status:</span>
+<Badge variant="warning">Pending Review</Badge>
+
+{/* Avoid: Color alone conveys meaning */}
+<Badge variant="danger">•</Badge>
+```
+
+## Styling and Customization
+
+### Custom Colors
+
+```tsx
+<Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">
+  Custom Color
+</Badge>
+```
+
+### With Icons
+
+```tsx
+import { Leaf, Star, AlertTriangle } from 'lucide-react'
+
+<Badge variant="sage">
+  <Leaf className="mr-1 h-3 w-3" />
+  Organic
+</Badge>
+
+<Badge variant="gold">
+  <Star className="mr-1 h-3 w-3" />
+  Premium
+</Badge>
+
+<Badge variant="warning">
+  <AlertTriangle className="mr-1 h-3 w-3" />
+  Caution
+</Badge>
+```
+
+### Removable Badges (as Filter Pills)
+
+```tsx
+import { X } from 'lucide-react'
+
+<Badge variant="outline" className="pr-1">
+  Adaptogen
+  <button
+    onClick={() => removeFilter('adaptogen')}
+    className="ml-1 hover:bg-muted rounded-full p-0.5"
+    aria-label="Remove filter"
+  >
+    <X className="h-3 w-3" />
+  </button>
+</Badge>
+```
+
+### Size Variations
+
+```tsx
+{/* Small badge */}
+<Badge className="text-xs px-1.5 py-0.5">Small</Badge>
+
+{/* Default */}
+<Badge>Default</Badge>
+
+{/* Large */}
+<Badge className="text-sm px-3 py-1">Large</Badge>
+```
+
+## Component Combinations
+
+### With Avatar
+
+```tsx
+<div className="flex items-center gap-2">
+  <Avatar />
+  <div>
+    <p className="font-medium">Dr. Jane Smith</p>
+    <Badge variant="gold" className="text-xs">Verified Practitioner</Badge>
+  </div>
+</div>
+```
+
+### In Cards
+
+```tsx
+<Card>
+  <CardHeader>
+    <div className="flex items-start justify-between">
+      <CardTitle>Ginseng (Panax ginseng)</CardTitle>
+      <Badge variant="success">In Stock</Badge>
+    </div>
+  </CardHeader>
+  <CardContent>
+    <div className="flex flex-wrap gap-2 mt-2">
+      <Badge variant="tcm">Warm</Badge>
+      <Badge variant="sage">Sweet</Badge>
+      <Badge variant="sage">Bitter</Badge>
+    </div>
+  </CardContent>
+</Card>
+```
+
+### In Tables
+
+```tsx
+<Table>
+  <TableBody>
+    <TableRow>
+      <TableCell>Astragalus</TableCell>
+      <TableCell>
+        <Badge variant="success">Published</Badge>
+      </TableCell>
+      <TableCell>
+        <Badge variant="gold">Premium</Badge>
+      </TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## TCM-Specific Usage
+
+### Temperature Properties
+
+```tsx
+const temperatureVariant = {
+  Hot: 'danger',
+  Warm: 'warning',
+  Neutral: 'default',
+  Cool: 'info',
+  Cold: 'tcm'
+}
+
+<Badge variant={temperatureVariant[herb.temperature]}>
+  {herb.temperature}
+</Badge>
+```
+
+### Meridian Channels
+
+```tsx
+const meridianColors = {
+  Lung: 'bg-blue-100 text-blue-800',
+  'Large Intestine': 'bg-amber-100 text-amber-800',
+  Stomach: 'bg-yellow-100 text-yellow-800',
+  Spleen: 'bg-orange-100 text-orange-800',
+  Heart: 'bg-red-100 text-red-800',
+  // ... etc
+}
+
+{herb.meridians.map(meridian => (
+  <Badge key={meridian} className={meridianColors[meridian]}>
+    {meridian}
+  </Badge>
+))}
+```
+
+### Actions/Functions
+
+```tsx
+<div className="space-y-2">
+  <p className="text-sm font-medium">Actions:</p>
+  <div className="flex flex-wrap gap-2">
+    <Badge variant="sage">Tonifies Qi</Badge>
+    <Badge variant="sage">Strengthens Spleen</Badge>
+    <Badge variant="sage">Raises Yang</Badge>
+  </div>
+</div>
+```
+
+## Performance
+
+Badges are lightweight components with minimal performance impact. For lists with many badges:
+
+```tsx
+{/* Memoize badge rendering for large lists */}
+const BadgeList = React.memo(({ items }) => (
+  <div className="flex flex-wrap gap-2">
+    {items.map(item => (
+      <Badge key={item} variant="outline">{item}</Badge>
+    ))}
+  </div>
+))
+```
+
+## Related Components
+
+- **Button**: For interactive elements
+- **Chip**: For removable items
+- **Pill**: For rounded tag-like elements
+- **Tag**: For categorization with interaction
+
+## Technical Details
+
+The Badge component:
+- Uses `class-variance-authority` for variant management
+- Built with Tailwind CSS
+- Supports all HTML div attributes
+- Fully typed with TypeScript
+- Themeable via CSS variables

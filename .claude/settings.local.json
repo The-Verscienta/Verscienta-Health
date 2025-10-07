@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Read(//c/Users/pf1/OneDrive/Documents/GitHub/verscienta-drupal/**)",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm build-storybook:*)"
     ],
     "deny": [],
     "ask": []

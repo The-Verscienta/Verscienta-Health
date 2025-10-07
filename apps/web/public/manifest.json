@@ -1,0 +1,117 @@
+{
+  "name": "Verscienta Health - Holistic Herbal Medicine Platform",
+  "short_name": "Verscienta",
+  "description": "World-class holistic health platform bridging ancient herbal wisdom with modern science",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f8f5",
+  "theme_color": "#5d7a5d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical", "lifestyle", "education"],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Verscienta Health Homepage"
+    },
+    {
+      "src": "/screenshots/mobile-herbs.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Browse Herbs"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search Herbs",
+      "short_name": "Search",
+      "description": "Search for herbs and remedies",
+      "url": "/herbs?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/search-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Symptom Checker",
+      "short_name": "Symptoms",
+      "description": "Check your symptoms with AI",
+      "url": "/symptom-checker?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/symptom-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Find Practitioners",
+      "short_name": "Practitioners",
+      "description": "Find verified holistic practitioners",
+      "url": "/practitioners?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/practitioner-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

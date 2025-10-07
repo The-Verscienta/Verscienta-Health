@@ -1,0 +1,616 @@
+import { Meta, Canvas, Story, Controls, Primary } from '@storybook/blocks'
+import * as CardStories from './card.stories'
+
+<Meta of={CardStories} />
+
+# Card
+
+A flexible container component for grouping related content with consistent styling and structure.
+
+<Primary />
+
+## Overview
+
+The Card component is one of the most versatile UI elements in Verscienta Health. It provides a structured container for displaying herbs, formulas, practitioners, conditions, and other content in a visually organized manner.
+
+## Component Structure
+
+The Card is composed of multiple sub-components:
+
+- **Card**: The main container
+- **CardHeader**: Top section for titles and metadata
+- **CardTitle**: Primary heading
+- **CardDescription**: Supporting text below the title
+- **CardContent**: Main content area
+- **CardFooter**: Bottom section for actions or metadata
+
+## Usage
+
+```tsx
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+
+export default function Example() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Card Title</CardTitle>
+        <CardDescription>Card description goes here</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>Main content area</p>
+      </CardContent>
+      <CardFooter>
+        <p>Footer content</p>
+      </CardFooter>
+    </Card>
+  )
+}
+```
+
+## Basic Examples
+
+### Simple Card
+
+<Canvas of={CardStories.Simple} />
+
+### With Description
+
+<Canvas of={CardStories.WithDescription} />
+
+### With Footer
+
+<Canvas of={CardStories.WithFooter} />
+
+## Specialized Cards
+
+### Herb Card
+
+Display herb information with TCM properties:
+
+<Canvas of={CardStories.HerbCard} />
+
+```tsx
+<Card className="hover:shadow-lg transition-shadow">
+  <CardHeader>
+    <div className="flex items-start justify-between">
+      <div className="flex-1">
+        <CardTitle>Ginseng</CardTitle>
+        <CardDescription className="italic">
+          Panax ginseng
+        </CardDescription>
+      </div>
+      <Badge variant="gold">Premium</Badge>
+    </div>
+  </CardHeader>
+  <CardContent>
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        <Badge variant="tcm">Warm</Badge>
+        <Badge variant="sage">Sweet</Badge>
+        <Badge variant="sage">Slightly Bitter</Badge>
+      </div>
+      <p className="text-sm text-muted-foreground line-clamp-3">
+        Known as the "King of Herbs" in TCM, Ginseng tonifies Qi...
+      </p>
+    </div>
+  </CardContent>
+  <CardFooter className="flex justify-between">
+    <Button variant="outline" size="sm">Learn More</Button>
+    <Button size="sm">Add to Formula</Button>
+  </CardFooter>
+</Card>
+```
+
+### Practitioner Card
+
+Display practitioner profiles:
+
+<Canvas of={CardStories.PractitionerCard} />
+
+```tsx
+<Card>
+  <CardHeader>
+    <div className="flex items-start gap-4">
+      <Avatar className="h-16 w-16">
+        <AvatarImage src="/practitioners/jane-smith.jpg" />
+        <AvatarFallback>JS</AvatarFallback>
+      </Avatar>
+      <div className="flex-1">
+        <CardTitle className="flex items-center gap-2">
+          Dr. Jane Smith
+          <Badge variant="gold" className="text-xs">
+            <Shield className="mr-1 h-3 w-3" />
+            Verified
+          </Badge>
+        </CardTitle>
+        <CardDescription>
+          Licensed Acupuncturist, Herbalist
+        </CardDescription>
+      </div>
+    </div>
+  </CardHeader>
+  <CardContent className="space-y-3">
+    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <MapPin className="h-4 w-4" />
+      San Francisco, CA
+    </div>
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="outline">Acupuncture</Badge>
+      <Badge variant="outline">Herbal Medicine</Badge>
+      <Badge variant="outline">Women's Health</Badge>
+    </div>
+    <div className="flex items-center gap-1">
+      <Star className="h-4 w-4 fill-gold text-gold" />
+      <span className="font-medium">4.9</span>
+      <span className="text-sm text-muted-foreground">(127 reviews)</span>
+    </div>
+  </CardContent>
+  <CardFooter>
+    <Button className="w-full">Book Appointment</Button>
+  </CardFooter>
+</Card>
+```
+
+## Interactive Cards
+
+### Clickable Card
+
+<Canvas of={CardStories.Clickable} />
+
+```tsx
+<Card
+  className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02]"
+  onClick={() => router.push('/herbs/ginseng')}
+>
+  {/* Card content */}
+</Card>
+```
+
+### Card with Actions
+
+```tsx
+<Card>
+  <CardHeader className="pb-3">
+    <div className="flex items-start justify-between">
+      <div>
+        <CardTitle>Astragalus Root</CardTitle>
+        <CardDescription>Astragalus membranaceus</CardDescription>
+      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Duplicate</DropdownMenuItem>
+          <DropdownMenuItem className="text-destructive">
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  </CardHeader>
+  <CardContent>
+    {/* Content */}
+  </CardContent>
+</Card>
+```
+
+## Card Layouts
+
+### Grid Layout
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {herbs.map(herb => (
+    <Card key={herb.id}>
+      {/* Herb card content */}
+    </Card>
+  ))}
+</div>
+```
+
+### List Layout
+
+```tsx
+<div className="space-y-4">
+  {practitioners.map(practitioner => (
+    <Card key={practitioner.id} className="flex flex-col md:flex-row">
+      {/* Horizontal practitioner card */}
+    </Card>
+  ))}
+</div>
+```
+
+### Masonry Layout
+
+```tsx
+<div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+  {items.map(item => (
+    <Card key={item.id} className="break-inside-avoid">
+      {/* Variable height card content */}
+    </Card>
+  ))}
+</div>
+```
+
+## Advanced Patterns
+
+### Card with Image
+
+```tsx
+<Card className="overflow-hidden">
+  <div className="aspect-video relative">
+    <Image
+      src={herb.imageUrl}
+      alt={herb.name}
+      fill
+      className="object-cover"
+    />
+    <Badge
+      variant="gold"
+      className="absolute top-2 right-2"
+    >
+      Premium
+    </Badge>
+  </div>
+  <CardHeader>
+    <CardTitle>{herb.name}</CardTitle>
+    <CardDescription>{herb.scientificName}</CardDescription>
+  </CardHeader>
+  <CardContent>
+    {/* Content */}
+  </CardContent>
+</Card>
+```
+
+### Card with Tabs
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Ginseng Details</CardTitle>
+  </CardHeader>
+  <Tabs defaultValue="properties">
+    <TabsList className="px-6">
+      <TabsTrigger value="properties">Properties</TabsTrigger>
+      <TabsTrigger value="uses">Uses</TabsTrigger>
+      <TabsTrigger value="safety">Safety</TabsTrigger>
+    </TabsList>
+    <TabsContent value="properties" className="px-6 pb-6">
+      {/* Properties content */}
+    </TabsContent>
+    {/* Other tabs */}
+  </Tabs>
+</Card>
+```
+
+### Expandable Card
+
+```tsx
+const [isExpanded, setIsExpanded] = useState(false)
+
+<Card>
+  <CardHeader>
+    <CardTitle>Formula Ingredients</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className={isExpanded ? '' : 'line-clamp-3'}>
+      {/* Long content */}
+    </div>
+  </CardContent>
+  <CardFooter>
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={() => setIsExpanded(!isExpanded)}
+    >
+      {isExpanded ? 'Show Less' : 'Show More'}
+      <ChevronDown className={cn(
+        "ml-2 h-4 w-4 transition-transform",
+        isExpanded && "rotate-180"
+      )} />
+    </Button>
+  </CardFooter>
+</Card>
+```
+
+### Skeleton Loading
+
+```tsx
+<Card>
+  <CardHeader>
+    <Skeleton className="h-6 w-3/4" />
+    <Skeleton className="h-4 w-1/2 mt-2" />
+  </CardHeader>
+  <CardContent className="space-y-3">
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-2/3" />
+  </CardContent>
+</Card>
+```
+
+## Styling Variations
+
+### Custom Colors
+
+```tsx
+<Card className="bg-sage-50 border-sage-200">
+  {/* TCM-themed card */}
+</Card>
+
+<Card className="bg-gradient-to-br from-sage-50 to-gold-50">
+  {/* Gradient card */}
+</Card>
+```
+
+### Elevated Card
+
+```tsx
+<Card className="shadow-lg hover:shadow-xl transition-shadow">
+  {/* Content */}
+</Card>
+```
+
+### Bordered Card
+
+```tsx
+<Card className="border-2 border-sage-200">
+  {/* Content */}
+</Card>
+```
+
+### Dark Mode Support
+
+```tsx
+<Card className="dark:bg-slate-900 dark:border-slate-700">
+  {/* Content with dark mode support */}
+</Card>
+```
+
+## Design Guidelines
+
+### When to Use
+
+- Grouping related content
+- Displaying preview information
+- Creating clear visual hierarchy
+- Building dashboard layouts
+- Showing individual items in lists/grids
+
+### When Not to Use
+
+- For simple text content (use sections instead)
+- For primary navigation (use nav elements)
+- For single-line items (use list items)
+- When content doesn't need visual separation
+
+### Do's
+
+✅ Use consistent spacing within cards
+✅ Provide clear hierarchy (title → description → content)
+✅ Include relevant actions in footer
+✅ Use hover states for interactive cards
+✅ Maintain responsive layouts
+✅ Keep card height consistent in grids
+
+### Don'ts
+
+❌ Don't nest cards deeply (1 level max)
+❌ Don't overload cards with too much content
+❌ Don't use cards for every piece of content
+❌ Don't forget mobile responsiveness
+❌ Don't mix too many card styles on one page
+❌ Don't skip semantic HTML structure
+
+## Accessibility
+
+### Best Practices
+
+- **Semantic HTML**: Cards use proper div structure
+- **Keyboard Navigation**: Interactive cards are keyboard accessible
+- **Focus Indicators**: Clear focus states for clickable cards
+- **Screen Readers**: Proper heading hierarchy (h1-h6)
+- **Touch Targets**: Minimum 44x44px for interactive elements
+
+### Implementation
+
+```tsx
+{/* Clickable card with proper semantics */}
+<Card
+  role="article"
+  tabIndex={0}
+  onClick={() => navigate(url)}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      navigate(url)
+    }
+  }}
+  className="cursor-pointer focus:ring-2 focus:ring-sage-500"
+>
+  <CardHeader>
+    <CardTitle as="h3">{title}</CardTitle>
+  </CardHeader>
+</Card>
+
+{/* Card with action buttons */}
+<Card>
+  <CardHeader>
+    <CardTitle as="h2">{title}</CardTitle>
+  </CardHeader>
+  <CardContent>{content}</CardContent>
+  <CardFooter>
+    <Button aria-label={`Learn more about ${title}`}>
+      Learn More
+    </Button>
+  </CardFooter>
+</Card>
+```
+
+## Performance Optimization
+
+### Virtualization for Large Lists
+
+```tsx
+import { useVirtualizer } from '@tanstack/react-virtual'
+
+const parentRef = useRef<HTMLDivElement>(null)
+
+const virtualizer = useVirtualizer({
+  count: herbs.length,
+  getScrollElement: () => parentRef.current,
+  estimateSize: () => 200,
+  overscan: 5,
+})
+
+<div ref={parentRef} className="h-[600px] overflow-auto">
+  <div
+    style={{
+      height: `${virtualizer.getTotalSize()}px`,
+      position: 'relative',
+    }}
+  >
+    {virtualizer.getVirtualItems().map(virtualRow => (
+      <div
+        key={virtualRow.key}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: `${virtualRow.size}px`,
+          transform: `translateY(${virtualRow.start}px)`,
+        }}
+      >
+        <Card>{/* Card content */}</Card>
+      </div>
+    ))}
+  </div>
+</div>
+```
+
+### Lazy Loading Images
+
+```tsx
+<Card>
+  <div className="aspect-video relative bg-muted">
+    <Image
+      src={herb.imageUrl}
+      alt={herb.name}
+      fill
+      loading="lazy"
+      className="object-cover"
+    />
+  </div>
+  {/* Rest of card */}
+</Card>
+```
+
+### Memoization
+
+```tsx
+const HerbCard = React.memo(({ herb }) => (
+  <Card>
+    {/* Card content */}
+  </Card>
+))
+
+// In parent component
+{herbs.map(herb => (
+  <HerbCard key={herb.id} herb={herb} />
+))}
+```
+
+## Props
+
+### Card
+
+<Controls of={CardStories.Simple} />
+
+### CardHeader, CardContent, CardFooter
+
+All sub-components accept:
+- `className`: Additional CSS classes
+- All standard HTML div attributes
+- TypeScript: `React.HTMLAttributes<HTMLDivElement>`
+
+### CardTitle
+
+- `className`: Additional CSS classes
+- `as`: Heading level (h1-h6), default: h3
+- All standard HTML heading attributes
+
+### CardDescription
+
+- `className`: Additional CSS classes
+- All standard HTML paragraph attributes
+
+## Related Components
+
+- **Dialog**: For modal card-like content
+- **Sheet**: For sliding card-like panels
+- **Accordion**: For expandable card sections
+- **Tabs**: For multi-section cards
+
+## Technical Details
+
+The Card component:
+- Built with semantic HTML
+- Fully responsive with Tailwind CSS
+- Supports dark mode
+- TypeScript typed
+- Composable sub-components
+- Minimal CSS footprint
+- No JavaScript required (unless interactive)
+
+## Migration from Other UI Libraries
+
+### From Material-UI
+
+```tsx
+// Material-UI
+<Paper elevation={2}>
+  <CardContent>
+    <Typography variant="h5">Title</Typography>
+    <Typography variant="body2">Description</Typography>
+  </CardContent>
+</Paper>
+
+// Verscienta (shadcn/ui)
+<Card>
+  <CardHeader>
+    <CardTitle>Title</CardTitle>
+    <CardDescription>Description</CardDescription>
+  </CardHeader>
+</Card>
+```
+
+### From Bootstrap
+
+```tsx
+// Bootstrap
+<div className="card">
+  <div className="card-header">Title</div>
+  <div className="card-body">Content</div>
+  <div className="card-footer">Footer</div>
+</div>
+
+// Verscienta (shadcn/ui)
+<Card>
+  <CardHeader>
+    <CardTitle>Title</CardTitle>
+  </CardHeader>
+  <CardContent>Content</CardContent>
+  <CardFooter>Footer</CardFooter>
+</Card>
+```

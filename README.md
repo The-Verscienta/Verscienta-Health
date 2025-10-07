@@ -59,6 +59,16 @@ verscienta-health/
 - Grok AI (symptom analysis)
 - Cloudflare Turnstile (bot protection)
 - Resend (email)
+- DragonflyDB (high-performance Redis-compatible caching)
+- Trefle API (botanical database with 1M+ plants)
+- Perenual API (cultivation database with 10,000+ plants)
+
+**Advanced Features:**
+- Multi-factor Authentication (TOTP)
+- DragonflyDB Caching (self-hosted, 25x faster than Redis)
+- Audit Logging System
+- Database Optimization (full-text search, geospatial indexes)
+- Automated Jobs (cron-based data validation, backups, sitemap generation)
 
 ## 🚀 Quick Start
 
@@ -109,6 +119,10 @@ pnpm test             # Run all tests
 pnpm test:unit        # Run unit tests
 pnpm test:e2e         # Run E2E tests
 
+# Storybook
+pnpm storybook        # Run component documentation
+pnpm build-storybook  # Build static Storybook
+
 # Code Quality
 pnpm lint             # Lint all code
 pnpm type-check       # TypeScript type checking
@@ -123,13 +137,35 @@ pnpm db:studio        # Open Drizzle Studio
 
 ## 📚 Documentation
 
-- [**Comprehensive Implementation Plan**](./VERSCIENTA_HEALTH_COMPREHENSIVE_PLAN.md) - Complete technical specification
+### Getting Started
 - [**Setup Guide**](./docs/SETUP.md) - Detailed installation and configuration
-- [**API Documentation**](./docs/API.md) - REST and GraphQL API reference
-- [**Component Library**](./docs/COMPONENTS.md) - UI component documentation
+- [**Comprehensive Implementation Plan**](./VERSCIENTA_HEALTH_COMPREHENSIVE_PLAN.md) - Complete technical specification
+- [**Contributor Onboarding**](./docs/CONTRIBUTOR_ONBOARDING.md) - New contributor guide
+
+### API & Integration
+- [**API Reference**](./docs/API_REFERENCE.md) - Complete API documentation
+- [**API Integration Examples**](./docs/API_INTEGRATION_EXAMPLES.md) - Code examples in multiple languages
+- [**Interactive API Docs**](https://verscienta.com/api-docs) - Swagger UI (live)
+
+### Development
+- [**Contributing Guide**](./CONTRIBUTING.md) - How to contribute
+- [**Code of Conduct**](./CODE_OF_CONDUCT.md) - Community guidelines
+- [**Storybook**](./docs/STORYBOOK.md) - Interactive component documentation (`pnpm storybook`)
 - [**Design System**](./docs/DESIGN_SYSTEM.md) - Colors, typography, spacing
+
+### Features & Configuration
+- [**Advanced Features**](./docs/ADVANCED_FEATURES.md) - Caching, MFA, audit logging, automation
+- [**DragonflyDB Setup**](./docs/DRAGONFLYDB_SETUP.md) - High-performance caching setup
+- [**Plant Data Integrations**](./docs/PLANT_DATA_INTEGRATIONS.md) - Complete guide to Trefle + Perenual with deduplication
+  - [Trefle Integration](./docs/TREFLE_INTEGRATION.md) - Botanical database enrichment with 1M+ plants
+  - [Perenual Integration](./docs/PERENUAL_INTEGRATION.md) - Cultivation database with 10K+ plants
+- [**Enhancements**](./docs/ENHANCEMENTS.md) - Platform enhancements and optimizations
+- [**Accessibility**](./docs/ACCESSIBILITY.md) - WCAG 2.1 AA+ compliance guide
+
+### Deployment
 - [**Deployment Guide**](./docs/DEPLOYMENT.md) - Production deployment instructions
-- [**Migration Guide**](./docs/MIGRATION.md) - Migrating from Drupal
+- [**Deployment Quickstart**](./DEPLOYMENT_QUICKSTART.md) - 30-minute deployment guide
+- [**Coolify Deployment**](./COOLIFY_DEPLOYMENT.md) - Self-hosted deployment with Coolify
 
 ## 🎨 Design System
 
@@ -197,13 +233,35 @@ Traditional and modern formulas:
 ## 🔐 Security
 
 - **Authentication**: better-auth with OAuth (Google, GitHub) + email/password
+- **Multi-Factor Authentication**: TOTP-based MFA for admin and practitioner accounts
 - **Authorization**: Role-based access control (User, Herbalist, Practitioner, Editor, Admin)
+- **Audit Logging**: Comprehensive audit trail for all sensitive operations
 - **Input Validation**: Zod schemas on all forms and API routes
-- **Rate Limiting**: Protection on sensitive endpoints
+- **Rate Limiting**: Protection on sensitive endpoints (Redis-based)
 - **CAPTCHA**: Cloudflare Turnstile on public forms
 - **HTTPS**: Enforced in production
 - **PII Protection**: Data anonymization before AI processing
 - **CSRF/XSS Protection**: Built-in with Next.js and Payload
+- **Database Backups**: Automated daily backups with retention policy
+
+## ♿ Accessibility
+
+- **WCAG 2.1 AA+** compliant
+- **Full keyboard navigation**
+- **Screen reader optimized** (NVDA, JAWS, VoiceOver, TalkBack)
+- **ARIA labels** on all dynamic components
+- **Touch-friendly targets** (minimum 44x44px)
+- **Automated testing** with Lighthouse CI and axe-core
+- See [Accessibility Guide](./docs/ACCESSIBILITY.md) for details
+
+## 📱 Progressive Web App (PWA)
+
+- **Installable** on iOS, Android, and desktop
+- **Offline support** with service worker caching
+- **App shortcuts** for quick access to key features
+- **Push notifications** ready (opt-in)
+- **Standalone mode** for app-like experience
+- **Optimized caching** for fonts, images, and API responses
 
 ## 🌍 Internationalization
 
@@ -246,6 +304,23 @@ pnpm test:a11y
 
 Automated accessibility testing with axe-core.
 
+### Performance Testing
+
+```bash
+# Lighthouse CI (runs in CI/CD)
+lhci autorun
+
+# Local Lighthouse audit
+pnpm build && pnpm start
+# Then run Lighthouse in Chrome DevTools
+```
+
+**Performance Targets:**
+- Lighthouse Performance: ≥ 90
+- Lighthouse Accessibility: ≥ 95
+- LCP: < 2.5s
+- CLS: < 0.1
+
 ## 📊 Analytics
 
 - **Vercel Analytics**: Performance monitoring, Web Vitals
@@ -286,9 +361,65 @@ docker-compose up -d
 
 See [Deployment Quick Start](./DEPLOYMENT_QUICKSTART.md) for step-by-step instructions.
 
+## 🌐 Public API
+
+Verscienta Health provides a public API for developers to integrate herbal medicine data into their applications.
+
+**Features:**
+- 📖 **15,000+ Herbs** with TCM and Western properties
+- 🧪 **Formulas Database** with precise ingredient information
+- 🏥 **Health Conditions** with recommended treatments
+- 👨‍⚕️ **Practitioner Directory** with location search
+- 🤖 **AI Symptom Analysis** (requires API key)
+- 🔍 **Full-Text Search** across all content
+
+**Getting Started:**
+1. View [Interactive API Documentation](https://verscienta.com/api-docs) (Swagger UI)
+2. Read the [API Reference](./docs/API_REFERENCE.md)
+3. Check [Integration Examples](./docs/API_INTEGRATION_EXAMPLES.md) (JavaScript, Python, PHP, Ruby)
+4. Request an API key at [verscienta.com/developers](https://verscienta.com/developers)
+
+**Rate Limits:**
+- Public endpoints: 100 requests per 10 minutes
+- Authenticated: 1000 requests per hour
+- AI endpoints: 20 requests per 10 minutes
+
+**Quick Example:**
+```bash
+# Get all herbs with Warm temperature
+curl "https://verscienta.com/api/herbs?temperature=Warm&page=1&limit=10"
+
+# Get specific herb details
+curl "https://verscienta.com/api/herbs/ginseng"
+```
+
 ## 🤝 Contributing
 
-This is a proprietary project. For contribution guidelines, please contact the development team.
+We welcome contributions from the community! While Verscienta Health is a proprietary project, we appreciate help in several areas:
+
+**How to Contribute:**
+- 📝 **Documentation**: Fix typos, improve clarity, add examples, translate content
+- 🐛 **Bug Reports**: Report issues with detailed reproduction steps
+- 💡 **Feature Suggestions**: Share ideas for improvements
+- 🌿 **Content**: Submit herb information, formulas, or practitioner profiles (with citations)
+- 🆘 **Community Support**: Help answer questions and support other users
+
+**Get Started:**
+1. Read our [Contributing Guide](./CONTRIBUTING.md)
+2. Review the [Code of Conduct](./CODE_OF_CONDUCT.md)
+3. Check [Contributor Onboarding](./docs/CONTRIBUTOR_ONBOARDING.md)
+4. Find a [good first issue](https://github.com/verscienta/verscienta-health/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+5. Join our [Discord Community](https://discord.gg/verscienta)
+
+**Recognition:**
+- Contributors are recognized in our README and release notes
+- Significant contributions earn special mentions
+- Active contributors may be invited to join the core team
+
+**Questions?**
+- GitHub Discussions: https://github.com/verscienta/verscienta-health/discussions
+- Email: developers@verscienta.com
+- Discord: https://discord.gg/verscienta
 
 ## 📝 License
 
