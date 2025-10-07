@@ -12,6 +12,21 @@ interface FormulasPageProps {
   }
 }
 
+interface Formula {
+  id: string
+  formulaId: string
+  title: string
+  slug: string
+  chineseName?: string
+  pinyin?: string
+  description: string
+  category: string
+  tradition: string
+  ingredients?: unknown[]
+  averageRating?: number
+  reviewCount?: number
+}
+
 async function getFormulas(_page: number = 1, _query?: string, _tradition?: string) {
   // TODO: Replace with actual Payload CMS API call
   return {
@@ -69,7 +84,7 @@ export default async function FormulasPage({ searchParams }: FormulasPageProps) 
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {formulas.map((formula: any) => (
+              {formulas.map((formula: Formula) => (
                 <FormulaCard
                   key={formula.id}
                   formulaId={formula.formulaId}

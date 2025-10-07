@@ -12,7 +12,8 @@
       "Bash(for file in src/collections/*.ts src/collections/Users.ts)",
       "Bash(do sed -i \"s|from ''payload/types''|from ''payload''|g\" \"$file\")",
       "Bash(done)",
-      "Bash(tee:*)"
+      "Bash(tee:*)",
+      "Bash(iconv:*)"
     ],
     "deny": [],
     "ask": []

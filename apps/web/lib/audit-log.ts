@@ -202,7 +202,7 @@ async function storeInDatabase(entry: AuditLogEntry): Promise<void> {
 /**
  * Send security alert for critical events
  */
-async function sendSecurityAlert(message: string, details: any): Promise<void> {
+async function sendSecurityAlert(message: string, details: unknown): Promise<void> {
   // Send to security team via email, Slack, PagerDuty, etc.
   console.error('[SECURITY ALERT]', message, details)
 
@@ -262,7 +262,7 @@ export const auditLog = {
       severity: AuditSeverity.INFO,
     }),
 
-  updatePHI: (userId: string, resourceType: string, resourceId: string, changes: any) =>
+  updatePHI: (userId: string, resourceType: string, resourceId: string, changes: unknown) =>
     createAuditLog({
       action: AuditAction.PHI_UPDATE,
       userId,
@@ -303,7 +303,7 @@ export const auditLog = {
       severity: AuditSeverity.ERROR,
     }),
 
-  suspiciousActivity: (userId: string | undefined, details: any) =>
+  suspiciousActivity: (userId: string | undefined, details: unknown) =>
     createAuditLog({
       action: AuditAction.SUSPICIOUS_ACTIVITY,
       userId,

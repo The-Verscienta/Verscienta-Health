@@ -308,7 +308,7 @@ export function getSortOptions(contentType: 'herbs' | 'formulas' | 'conditions' 
  * Apply filters to search results
  * This is a client-side filter for when server-side filtering is not available
  */
-export function applyFilters(items: any[], activeFilters: Record<string, string[]>) {
+export function applyFilters(items: unknown[], activeFilters: Record<string, string[]>) {
   return items.filter((item) => {
     return Object.entries(activeFilters).every(([filterId, values]) => {
       if (values.length === 0) return true
@@ -338,7 +338,7 @@ export function applyFilters(items: any[], activeFilters: Record<string, string[
         case 'tcm_pattern':
           return values.some((v) => item.tcmPattern?.includes(v))
         case 'modality':
-          return values.some((v) => item.modalities?.map((m: any) => m.slug).includes(v))
+          return values.some((v) => item.modalities?.map((m: {slug: string}) => m.slug).includes(v))
         case 'specialization':
           return values.some((v) => item.specializations?.includes(v))
         case 'availability':
@@ -359,7 +359,7 @@ export function applyFilters(items: any[], activeFilters: Record<string, string[
 /**
  * Apply sorting to search results
  */
-export function applySorting(items: any[], sortValue: string) {
+export function applySorting(items: unknown[], sortValue: string) {
   const sorted = [...items]
 
   switch (sortValue) {

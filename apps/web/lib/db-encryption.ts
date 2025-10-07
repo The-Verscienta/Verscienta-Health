@@ -186,7 +186,7 @@ export async function verifyEncryptionSetup(): Promise<{
  * This is a reference implementation showing how to use encryption
  */
 export async function storeEncryptedSymptomSubmission(
-  db: any, // Your database connection
+  db: unknown, // Your database connection
   data: {
     userId: string
     symptoms: string[]
@@ -225,7 +225,7 @@ export async function storeEncryptedSymptomSubmission(
  * This is a reference implementation showing how to decrypt data
  */
 export async function getEncryptedSymptomSubmission(
-  db: any, // Your database connection
+  db: unknown, // Your database connection
   submissionId: string
 ): Promise<{
   id: string
@@ -271,7 +271,7 @@ export async function getEncryptedSymptomSubmission(
  * Log encryption operation for audit trail
  */
 export async function logEncryptionOperation(
-  db: any,
+  db: unknown,
   operation: {
     eventType: 'encrypt' | 'decrypt' | 'key_rotation'
     tableName: string

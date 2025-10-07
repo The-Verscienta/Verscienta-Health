@@ -98,7 +98,7 @@ export function OptimizedImage({
     : { width: width || 800, height: height }
 
   const imgWidth = width || dimensions.width
-  const imgHeight = height || (dimensions as any).height
+  const imgHeight = height || (dimensions as { height?: number }).height
 
   // Handle image load error
   const handleError = () => {

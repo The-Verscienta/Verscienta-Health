@@ -13,6 +13,16 @@ interface ModalitiesPageProps {
   }
 }
 
+interface Modality {
+  id: string
+  slug: string
+  title: string
+  origin?: string
+  description?: string
+  category?: string
+  keyTechniques?: string[]
+}
+
 async function getModalities(_page: number = 1, _query?: string) {
   // TODO: Replace with actual Payload CMS API call
   return {
@@ -68,7 +78,7 @@ export default async function ModalitiesPage({ searchParams }: ModalitiesPagePro
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {modalities.map((modality: any) => (
+              {modalities.map((modality: Modality) => (
                 <Link key={modality.id} href={`/modalities/${modality.slug}`}>
                   <Card className="h-full hover:shadow-xl transition-all duration-200 cursor-pointer group">
                     <CardHeader>

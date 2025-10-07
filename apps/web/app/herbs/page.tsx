@@ -11,6 +11,20 @@ interface HerbsPageProps {
   }
 }
 
+interface Herb {
+  id: string
+  herbId: string
+  title: string
+  slug: string
+  scientificName?: string
+  description: string
+  featuredImage?: unknown
+  tcmProperties?: unknown
+  westernProperties?: unknown
+  averageRating?: number
+  reviewCount?: number
+}
+
 // This will be replaced with actual Payload CMS API call
 async function getHerbs(_page: number = 1, _query?: string) {
   // TODO: Replace with actual Payload CMS API call
@@ -71,7 +85,7 @@ export default async function HerbsPage({ searchParams }: HerbsPageProps) {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {herbs.map((herb: any) => (
+              {herbs.map((herb: Herb) => (
                 <HerbCard
                   key={herb.id}
                   herbId={herb.herbId}

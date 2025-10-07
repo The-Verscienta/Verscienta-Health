@@ -135,7 +135,7 @@ export interface PractitionerSchema {
 }
 
 export function generatePractitionerSchema(practitioner: PractitionerSchema) {
-  const schema: any = {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Physician',
     name: practitioner.name,
@@ -197,7 +197,7 @@ export interface ConditionSchema {
 }
 
 export function generateConditionSchema(condition: ConditionSchema) {
-  const schema: any = {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'MedicalCondition',
     name: condition.name,

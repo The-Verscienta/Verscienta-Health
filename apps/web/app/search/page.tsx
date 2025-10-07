@@ -18,11 +18,42 @@ import {
   applySorting,
 } from '@/lib/search-filters'
 
+interface SearchHerb {
+  objectID: string
+  herbId: string
+  [key: string]: unknown
+}
+
+interface SearchFormula {
+  objectID: string
+  formulaId: string
+  [key: string]: unknown
+}
+
+interface SearchCondition {
+  objectID: string
+  conditionId: string
+  [key: string]: unknown
+}
+
+interface SearchPractitioner {
+  objectID: string
+  practitionerId: string
+  [key: string]: unknown
+}
+
+interface SearchResults {
+  herbs: SearchHerb[]
+  formulas: SearchFormula[]
+  conditions: SearchCondition[]
+  practitioners: SearchPractitioner[]
+}
+
 export default function SearchPage() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
 
-  const [results, setResults] = useState<any>({
+  const [results, setResults] = useState<SearchResults>({
     herbs: [],
     formulas: [],
     conditions: [],
@@ -186,7 +217,7 @@ export default function SearchPage() {
                   Herbs ({filteredHerbs.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredHerbs.slice(0, 6).map((herb: any) => (
+                  {filteredHerbs.slice(0, 6).map((herb: SearchHerb) => (
                     <HerbCard key={herb.objectID} {...herb} herbId={herb.herbId} />
                   ))}
                 </div>
@@ -207,7 +238,7 @@ export default function SearchPage() {
                   Formulas ({filteredFormulas.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredFormulas.slice(0, 6).map((formula: any) => (
+                  {filteredFormulas.slice(0, 6).map((formula: SearchFormula) => (
                     <FormulaCard
                       key={formula.objectID}
                       {...formula}
@@ -232,7 +263,7 @@ export default function SearchPage() {
                   Conditions ({filteredConditions.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredConditions.slice(0, 6).map((condition: any) => (
+                  {filteredConditions.slice(0, 6).map((condition: SearchCondition) => (
                     <ConditionCard
                       key={condition.objectID}
                       {...condition}
@@ -257,7 +288,7 @@ export default function SearchPage() {
                   Practitioners ({filteredPractitioners.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredPractitioners.slice(0, 6).map((practitioner: any) => (
+                  {filteredPractitioners.slice(0, 6).map((practitioner: SearchPractitioner) => (
                     <PractitionerCard
                       key={practitioner.objectID}
                       {...practitioner}
@@ -299,7 +330,7 @@ export default function SearchPage() {
               <div className="lg:col-span-3">
                 {filteredHerbs.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredHerbs.map((herb: any) => (
+                    {filteredHerbs.map((herb: SearchHerb) => (
                       <HerbCard key={herb.objectID} {...herb} herbId={herb.herbId} />
                     ))}
                   </div>
@@ -334,7 +365,7 @@ export default function SearchPage() {
               <div className="lg:col-span-3">
                 {filteredFormulas.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredFormulas.map((formula: any) => (
+                    {filteredFormulas.map((formula: SearchFormula) => (
                       <FormulaCard
                         key={formula.objectID}
                         {...formula}
@@ -373,7 +404,7 @@ export default function SearchPage() {
               <div className="lg:col-span-3">
                 {filteredConditions.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredConditions.map((condition: any) => (
+                    {filteredConditions.map((condition: SearchCondition) => (
                       <ConditionCard
                         key={condition.objectID}
                         {...condition}
@@ -412,7 +443,7 @@ export default function SearchPage() {
               <div className="lg:col-span-3">
                 {filteredPractitioners.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredPractitioners.map((practitioner: any) => (
+                    {filteredPractitioners.map((practitioner: SearchPractitioner) => (
                       <PractitionerCard
                         key={practitioner.objectID}
                         {...practitioner}

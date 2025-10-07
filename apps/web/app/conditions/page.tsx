@@ -12,6 +12,18 @@ interface ConditionsPageProps {
   }
 }
 
+interface Condition {
+  id: string
+  conditionId: string
+  title: string
+  slug: string
+  description: string
+  category: string
+  severity: string
+  relatedHerbs?: unknown[]
+  relatedFormulas?: unknown[]
+}
+
 async function getConditions(_page: number = 1, _query?: string, _category?: string) {
   // TODO: Replace with actual Payload CMS API call
   return {
@@ -69,7 +81,7 @@ export default async function ConditionsPage({ searchParams }: ConditionsPagePro
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {conditions.map((condition: any) => (
+              {conditions.map((condition: Condition) => (
                 <ConditionCard
                   key={condition.id}
                   conditionId={condition.conditionId}
