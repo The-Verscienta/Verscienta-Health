@@ -7,6 +7,83 @@ import { HerbCard } from '@/components/cards/HerbCard'
 import { FormulaCard } from '@/components/cards/FormulaCard'
 import { AlertCircle, Leaf, Pill, Activity, Brain } from 'lucide-react'
 
+interface Symptom {
+  id: string
+  title: string
+  slug: string
+}
+
+interface Herb {
+  id: string
+  herbId: string
+  title: string
+  slug: string
+  scientificName?: string
+  description?: string
+  featuredImage?: {
+    url: string
+    alt: string
+  }
+  tcmProperties?: {
+    taste?: string[]
+    temperature?: string
+    category?: string
+  }
+  westernProperties?: string[]
+  averageRating?: number
+  reviewCount?: number
+}
+
+interface Ingredient {
+  id: string
+  herbId: string
+  name: string
+  amount?: string
+}
+
+interface Formula {
+  id: string
+  formulaId: string
+  title: string
+  slug: string
+  chineseName?: string
+  pinyin?: string
+  description?: string
+  category?: string
+  tradition?: string
+  ingredients?: Ingredient[]
+  ingredientCount?: number
+  averageRating?: number
+  reviewCount?: number
+}
+
+interface Condition {
+  id: string
+  title: string
+  conditionId: string
+  description?: string
+  alternativeNames?: string[]
+  category?: string
+  severity?: 'mild' | 'moderate' | 'severe'
+  affectedSystems?: string[]
+  commonSymptoms?: string[]
+  relatedSymptoms?: Symptom[]
+  westernCauses?: string[]
+  riskFactors?: string[]
+  diagnosis?: string[]
+  conventionalTreatment?: string[]
+  tcmPattern?: string[]
+  tcmCauses?: string[]
+  affectedMeridians?: string[]
+  tcmDiagnosis?: string[]
+  treatmentPrinciples?: string[]
+  lifestyleRecommendations?: string[]
+  dietaryRecommendations?: string[]
+  relatedHerbs?: Herb[]
+  relatedFormulas?: Formula[]
+  emergencySymptoms?: string[]
+}
+
 interface ConditionPageProps {
   params: {
     slug: string
@@ -14,7 +91,7 @@ interface ConditionPageProps {
 }
 
 // This will be replaced with actual Payload CMS API call
-async function getCondition(slug: string) {
+async function getCondition(_slug: string): Promise<Condition | null> {
   // TODO: Replace with actual Payload CMS API call
   // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/conditions?where[slug][equals]=${slug}&depth=2`)
   // const data = await response.json()
@@ -31,6 +108,9 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
     notFound()
   }
 
+  // TypeScript doesn't understand that notFound() throws, so we assert the type
+  const validCondition = condition as NonNullable<typeof condition>
+
   const severityColors = {
     mild: 'sage',
     moderate: 'gold',
@@ -44,20 +124,20 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <h1 className="text-4xl font-bold font-serif text-earth-900 mb-2">
-              {condition.title}
+              {validCondition.title}
             </h1>
-            {condition.alternativeNames && condition.alternativeNames.length > 0 && (
+            {validCondition.alternativeNames && validCondition.alternativeNames.length > 0 && (
               <p className="text-lg text-gray-600 mb-4">
-                Also known as: {condition.alternativeNames.join(', ')}
+                Also known as: {validCondition.alternativeNames.join(', ')}
               </p>
             )}
           </div>
-          <span className="text-sm font-mono text-gray-500">{condition.conditionId}</span>
+          <span className="text-sm font-mono text-gray-500">{validCondition.conditionId}</span>
         </div>
 
         {/* Description */}
-        {condition.description && (
-          <p className="text-lg text-gray-700 mb-6">{condition.description}</p>
+        {validCondition.description && (
+          <p className="text-lg text-gray-700 mb-6">{validCondition.description}</p>
         )}
 
         {/* Quick Info */}
@@ -133,7 +213,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {condition.relatedSymptoms.map((symptom: any) => (
+                  {condition.relatedSymptoms.map((symptom) => (
                     <Link
                       key={symptom.id}
                       href={`/symptoms/${symptom.slug}`}
@@ -334,7 +414,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
             Helpful Herbs
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {condition.relatedHerbs.slice(0, 6).map((herb: any) => (
+            {condition.relatedHerbs.slice(0, 6).map((herb) => (
               <HerbCard
                 key={herb.id}
                 herbId={herb.herbId}
@@ -361,7 +441,7 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
             Recommended Formulas
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {condition.relatedFormulas.slice(0, 6).map((formula: any) => (
+            {condition.relatedFormulas.slice(0, 6).map((formula) => (
               <FormulaCard
                 key={formula.id}
                 formulaId={formula.formulaId}

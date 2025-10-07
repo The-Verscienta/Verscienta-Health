@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/search/SearchBar'
-import { HerbIcon, BrainIcon, MapPinIcon, BookOpenIcon } from 'lucide-react'
+import { HeartIcon, BrainIcon, MapPinIcon, BookOpenIcon } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -68,7 +68,7 @@ export default function HomePage() {
             <div className="card-feature text-center">
               <div className="mb-4 flex justify-center">
                 <div className="rounded-full bg-earth-600 p-4">
-                  <HerbIcon className="h-8 w-8 text-white" />
+                  <HeartIcon className="h-8 w-8 text-white" />
                 </div>
               </div>
               <h3 className="mb-3 text-xl font-semibold text-earth-900">

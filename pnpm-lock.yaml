@@ -207,6 +207,9 @@ importers:
       node-cron:
         specifier: ^4.2.1
         version: 4.2.1
+      otplib:
+        specifier: ^12.0.1
+        version: 12.0.1
       react:
         specifier: ^19.0.0
         version: 19.2.0
@@ -280,12 +283,21 @@ importers:
       '@types/node':
         specifier: ^22.10.5
         version: 22.18.8
+      '@types/otplib':
+        specifier: ^10.0.0
+        version: 10.0.0
+      '@types/qrcode':
+        specifier: ^1.5.5
+        version: 1.5.5
       '@types/react':
         specifier: ^19.0.6
         version: 19.2.0
       '@types/react-dom':
         specifier: ^19.0.2
         version: 19.2.0(@types/react@19.2.0)
+      '@types/swagger-ui-react':
+        specifier: ^5.18.0
+        version: 5.18.0
       '@vitejs/plugin-react':
         specifier: ^4.3.4
         version: 4.7.0(vite@5.4.20(@types/node@22.18.8)(sass@1.77.4)(terser@5.44.0))
@@ -2401,6 +2413,21 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
+  '@otplib/core@12.0.1':
+    resolution: {integrity: sha512-4sGntwbA/AC+SbPhbsziRiD+jNDdIzsZ3JUyfZwjtKyc/wufl1pnSIaG4Uqx8ymPagujub0o92kgBnB89cuAMA==}
+
+  '@otplib/plugin-crypto@12.0.1':
+    resolution: {integrity: sha512-qPuhN3QrT7ZZLcLCyKOSNhuijUi9G5guMRVrxq63r9YNOxxQjPm59gVxLM+7xGnHnM6cimY57tuKsjK7y9LM1g==}
+
+  '@otplib/plugin-thirty-two@12.0.1':
+    resolution: {integrity: sha512-MtT+uqRso909UkbrrYpJ6XFjj9D+x2Py7KjTO9JDPhL0bJUYVu5kFP4TFZW4NFAywrAtFRxOVY261u0qwb93gA==}
+
+  '@otplib/preset-default@12.0.1':
+    resolution: {integrity: sha512-xf1v9oOJRyXfluBhMdpOkr+bsE+Irt+0D5uHtvg6x1eosfmHCsCC6ej/m7FXiWqdo0+ZUI6xSKDhJwc8yfiOPQ==}
+
+  '@otplib/preset-v11@12.0.1':
+    resolution: {integrity: sha512-9hSetMI7ECqbFiKICrNa4w70deTUfArtwXykPUvSHWOdzOlfa9ajglu7mNCntlvxycTiOAXkQGwjQCzzDEMRMg==}
+
   '@payloadcms/db-postgres@3.58.0':
     resolution: {integrity: sha512-btLC9W2Jycl0an+C4wSBTzLlTe1ZLEglR4CP8ldVizqiX92oXFFGUxyLo7PZHiM03YS5WRB6DTB21sBtMGqv8A==}
     peerDependencies:
@@ -3617,11 +3644,18 @@ packages:
   '@types/node@22.18.8':
     resolution: {integrity: sha512-pAZSHMiagDR7cARo/cch1f3rXy0AEXwsVsVH09FcyeJVAzCnGgmYis7P3JidtTUjyadhTeSo8TgRPswstghDaw==}
 
+  '@types/otplib@10.0.0':
+    resolution: {integrity: sha512-fxgTy0WQiylowcAuKgCdMW/DcWAz/Qo/GZjY5sLD7/z12RXXjIardQnsZU2iSHWFznVlE+7VstBWZnHUA8aF8Q==}
+    deprecated: This is a stub types definition. otplib provides its own type definitions, so you do not need this installed.
+
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
   '@types/pg@8.10.2':
     resolution: {integrity: sha512-MKFs9P6nJ+LAeHLU3V0cODEOgyThJ3OAnmOlsZsxux6sfQs3HRXR5bBn7xG5DjckEFhTAxsXi7k7cd0pCMxpJw==}
+
+  '@types/qrcode@1.5.5':
+    resolution: {integrity: sha512-CdfBi/e3Qk+3Z/fXYShipBT13OJ2fDO2Q2w5CIP5anLTLIndQG9z6P1cnm+8zCWSpm5dnxMFd/uREtb0EXuQzg==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -3662,6 +3696,9 @@ packages:
 
   '@types/serve-static@1.15.9':
     resolution: {integrity: sha512-dOTIuqpWLyl3BBXU3maNQsS4A3zuuoYRNIvYSxxhebPfXg2mzWQEPne/nlJ37yOse6uGgR386uTpdsx4D0QZWA==}
+
+  '@types/swagger-ui-react@5.18.0':
+    resolution: {integrity: sha512-c2M9adVG7t28t1pq19K9Jt20VLQf0P/fwJwnfcmsVVsdkwCWhRmbKDu+tIs0/NGwJ/7GY8lBx+iKZxuDI5gDbw==}
 
   '@types/through@0.0.33':
     resolution: {integrity: sha512-HsJ+z3QuETzP3cswwtzt2vEIiHBk/dCcHGhbmG5X3ecnwFD/lPrMpliGXxSCg03L9AhrdwA4Oz/qfspkDW+xGQ==}
@@ -6796,6 +6833,9 @@ packages:
     resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
     engines: {node: '>=0.10.0'}
 
+  otplib@12.0.1:
+    resolution: {integrity: sha512-xDGvUOQjop7RDgxTQ+o4pOol0/3xSZzawTiPKRrHnQWAy0WjhNs/5HdIDJCrqC4MBynmjXgULc6YfioaxZeFgg==}
+
   own-keys@1.0.1:
     resolution: {integrity: sha512-qFOyK5PjiWZd+QQIh+1jhdb9LpxTF0qs7Pm8o5QHYZ0M3vKqSqzsZaEB6oWlxZ+q2sJBMI/Ktgd2N5ZwQoRHfg==}
     engines: {node: '>= 0.4'}
@@ -8246,6 +8286,10 @@ packages:
     resolution: {integrity: sha512-nIVck8DK+GM/0Frwd+nIhZ84pR/BX7rmXMfYwyg+Sri5oGVE99/E3KvXqpC2xHFxyqXyGHTKBSioxxplrO4I4w==}
     engines: {node: '>=10'}
     hasBin: true
+
+  thirty-two@1.0.2:
+    resolution: {integrity: sha512-OEI0IWCe+Dw46019YLl6V10Us5bi574EvlJEOcAkB29IzQ/mYD1A6RyNHLjZPiHCmuodxvgF6U+vZO1L15lxVA==}
+    engines: {node: '>=0.2.6'}
 
   thread-stream@3.1.0:
     resolution: {integrity: sha512-OqyPZ9u96VohAyMfJykzmivOrY2wfMSf3C5TtFJVgN+Hm6aj+voFhlK+kZEIv2FBh1X6Xp3DlnCOfEQ3B2J86A==}
@@ -10942,6 +10986,29 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
+  '@otplib/core@12.0.1': {}
+
+  '@otplib/plugin-crypto@12.0.1':
+    dependencies:
+      '@otplib/core': 12.0.1
+
+  '@otplib/plugin-thirty-two@12.0.1':
+    dependencies:
+      '@otplib/core': 12.0.1
+      thirty-two: 1.0.2
+
+  '@otplib/preset-default@12.0.1':
+    dependencies:
+      '@otplib/core': 12.0.1
+      '@otplib/plugin-crypto': 12.0.1
+      '@otplib/plugin-thirty-two': 12.0.1
+
+  '@otplib/preset-v11@12.0.1':
+    dependencies:
+      '@otplib/core': 12.0.1
+      '@otplib/plugin-crypto': 12.0.1
+      '@otplib/plugin-thirty-two': 12.0.1
+
   '@payloadcms/db-postgres@3.58.0(@upstash/redis@1.35.4)(kysely@0.28.7)(payload@3.58.0(graphql@16.11.0)(typescript@5.9.3))(postgres@3.4.7)':
     dependencies:
       '@payloadcms/drizzle': 3.58.0(@types/pg@8.10.2)(@upstash/redis@1.35.4)(kysely@0.28.7)(payload@3.58.0(graphql@16.11.0)(typescript@5.9.3))(pg@8.16.3)(postgres@3.4.7)
@@ -12795,6 +12862,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/otplib@10.0.0':
+    dependencies:
+      otplib: 12.0.1
+
   '@types/parse-json@4.0.2': {}
 
   '@types/pg@8.10.2':
@@ -12802,6 +12873,10 @@ snapshots:
       '@types/node': 22.18.8
       pg-protocol: 1.10.3
       pg-types: 4.1.0
+
+  '@types/qrcode@1.5.5':
+    dependencies:
+      '@types/node': 22.18.8
 
   '@types/qs@6.14.0': {}
 
@@ -12845,6 +12920,10 @@ snapshots:
       '@types/http-errors': 2.0.5
       '@types/node': 22.18.8
       '@types/send': 0.17.5
+
+  '@types/swagger-ui-react@5.18.0':
+    dependencies:
+      '@types/react': 19.2.0
 
   '@types/through@0.0.33':
     dependencies:
@@ -16439,6 +16518,12 @@ snapshots:
 
   os-tmpdir@1.0.2: {}
 
+  otplib@12.0.1:
+    dependencies:
+      '@otplib/core': 12.0.1
+      '@otplib/preset-default': 12.0.1
+      '@otplib/preset-v11': 12.0.1
+
   own-keys@1.0.1:
     dependencies:
       get-intrinsic: 1.3.0
@@ -18051,6 +18136,8 @@ snapshots:
       acorn: 8.15.0
       commander: 2.20.3
       source-map-support: 0.5.21
+
+  thirty-two@1.0.2: {}
 
   thread-stream@3.1.0:
     dependencies:

@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -17,6 +16,63 @@ import {
   BookOpen,
 } from 'lucide-react'
 
+interface Practitioner {
+  id: string
+  name: string
+  slug: string
+  title?: string
+  credentials?: string[]
+  practitionerId?: string
+  photo?: {
+    url?: string
+    alt?: string
+  }
+  address?: {
+    street?: string
+    city?: string
+    state?: string
+    postalCode?: string
+    country?: string
+  }
+  phone?: string
+  email?: string
+  website?: string
+  acceptingNewPatients?: boolean
+  offersVirtualConsultations?: boolean
+  offersHomeVisits?: boolean
+  verificationStatus?: string
+  averageRating?: number
+  reviewCount?: number
+  modalities?: string[]
+  specializations?: string[]
+  bio?: string
+  philosophy?: string
+  languagesSpoken?: string[]
+  insuranceAccepted?: string[]
+  servicesOffered?: string[]
+  initialConsultationFee?: number
+  followUpFee?: number
+  officeHours?: string[]
+  education?: {
+    degree: string
+    institution: string
+    year?: string
+  }[]
+  certifications?: {
+    name: string
+    issuingOrganization?: string
+    year?: string
+  }[]
+  yearsInPractice?: number
+  reviews?: {
+    id: string
+    rating: number
+    author: string
+    date: string
+    content: string
+  }[]
+}
+
 interface PractitionerPageProps {
   params: {
     slug: string
@@ -24,7 +80,7 @@ interface PractitionerPageProps {
 }
 
 // This will be replaced with actual Payload CMS API call
-async function getPractitioner(slug: string) {
+async function getPractitioner(_slug: string): Promise<Practitioner | null> {
   // TODO: Replace with actual Payload CMS API call
   // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/practitioners?where[slug][equals]=${slug}&depth=2`)
   // const data = await response.json()
@@ -61,7 +117,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
             <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg shadow-lg">
               {practitioner.photo ? (
                 <Image
-                  src={practitioner.photo.url}
+                  src={practitioner.photo?.url || '/placeholder-practitioner.jpg'}
                   alt={practitioner.photo.alt || practitioner.name}
                   fill
                   className="object-cover"
@@ -159,7 +215,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
             </div>
 
             {/* Rating */}
-            {practitioner.averageRating && practitioner.reviewCount > 0 && (
+            {practitioner.averageRating && practitioner.reviewCount && practitioner.reviewCount > 0 && (
               <div className="flex items-center space-x-2 mb-6">
                 <div className="flex items-center">
                   <Star className="h-5 w-5 fill-gold-600 text-gold-600" />
@@ -352,7 +408,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {practitioner.education.map((edu: any, idx: number) => (
+                  {practitioner.education.map((edu, idx: number) => (
                     <div key={idx} className="border-b border-gray-200 pb-3 last:border-0">
                       <h4 className="font-semibold text-gray-900">{edu.degree}</h4>
                       <p className="text-gray-700">{edu.institution}</p>
@@ -372,7 +428,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {practitioner.certifications.map((cert: any, idx: number) => (
+                  {practitioner.certifications.map((cert, idx: number) => (
                     <div key={idx} className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                       <div>
@@ -409,7 +465,7 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
         <TabsContent value="reviews" className="space-y-6">
           {practitioner.reviews && practitioner.reviews.length > 0 ? (
             <div className="space-y-4">
-              {practitioner.reviews.map((review: any) => (
+              {practitioner.reviews.map((review) => (
                 <Card key={review.id}>
                   <CardContent className="pt-6">
                     <div className="flex items-start justify-between mb-3">

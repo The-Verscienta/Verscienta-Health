@@ -5,6 +5,61 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Star, AlertTriangle, Leaf, Book, Heart } from 'lucide-react'
 
+interface Formula {
+  id: string
+  title: string
+  formulaId: string
+  slug: string
+  description?: string
+  tradition?: string
+  chineseName?: string
+  pinyin?: string
+  category?: string
+  ingredientCount?: number
+  averageRating?: number
+  reviewCount?: number
+  ingredients?: {
+    herbId: string
+    name: string
+    amount?: string
+    herb?: {
+      slug?: string
+      title?: string
+      scientificName?: string
+    }
+    role?: string
+    quantity?: string
+    unit?: string
+    percentage?: number
+    notes?: string
+  }[]
+  indications?: string[]
+  actions?: string[]
+  relatedConditions?: {
+    id: string
+    slug: string
+    title: string
+    description?: string
+  }[]
+  tcmPattern?: string
+  preparationMethod?: string
+  dosage?: string
+  administration?: string
+  modifications?: string[]
+  contraindications?: string[]
+  cautions?: string[]
+  drugInteractions?: string[]
+  traditionalSource?: string
+  sourceDate?: string
+  relatedFormulas?: {
+    id: string
+    title: string
+    slug: string
+    chineseName?: string
+    category?: string
+  }[]
+}
+
 interface FormulaPageProps {
   params: {
     slug: string
@@ -12,7 +67,7 @@ interface FormulaPageProps {
 }
 
 // This will be replaced with actual Payload CMS API call
-async function getFormula(slug: string) {
+async function getFormula(_slug: string): Promise<Formula | null> {
   // TODO: Replace with actual Payload CMS API call
   // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/formulas?where[slug][equals]=${slug}&depth=2`)
   // const data = await response.json()
@@ -64,7 +119,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
         </div>
 
         {/* Rating */}
-        {formula.averageRating && formula.reviewCount > 0 && (
+        {formula.averageRating && formula.reviewCount && formula.reviewCount > 0 && (
           <div className="flex items-center space-x-2 mb-6">
             <div className="flex items-center">
               <Star className="h-5 w-5 fill-gold-600 text-gold-600" />
@@ -119,7 +174,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
             <CardContent>
               {formula.ingredients && formula.ingredients.length > 0 ? (
                 <div className="space-y-4">
-                  {formula.ingredients.map((ingredient: any, idx: number) => (
+                  {formula.ingredients.map((ingredient, idx) => (
                     <div key={idx} className="border-b border-gray-200 pb-4 last:border-0">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
@@ -246,7 +301,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {formula.relatedConditions.map((condition: any) => (
+                  {formula.relatedConditions.map((condition) => (
                     <Link
                       key={condition.id}
                       href={`/conditions/${condition.slug}`}
@@ -387,7 +442,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
         <div className="mb-12">
           <h2 className="text-2xl font-bold font-serif text-earth-900 mb-6">Similar Formulas</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {formula.relatedFormulas.slice(0, 3).map((related: any) => (
+            {formula.relatedFormulas.slice(0, 3).map((related) => (
               <Link
                 key={related.id}
                 href={`/formulas/${related.slug}`}

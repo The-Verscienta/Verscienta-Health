@@ -6,6 +6,53 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Star, MapPin, AlertTriangle, Leaf, Beaker, Book, Heart } from 'lucide-react'
 
+interface Herb {
+  id: string
+  title: string
+  herbId: string
+  slug: string
+  scientificName?: string
+  chineseName?: string
+  description?: string
+  featuredImage?: {
+    url: string
+    alt?: string
+  }
+  family?: string
+  genus?: string
+  species?: string
+  partUsed?: string
+  averageRating?: number
+  reviewCount?: number
+  tcmProperties?: {
+    taste?: string[]
+    temperature?: string
+    category?: string
+    meridians?: string[]
+    functions?: string[]
+  }
+  westernProperties?: string[]
+  nativeRegions?: string[]
+  activeConstituents?: {
+    name: string
+    percentage?: string
+    effects?: string
+  }[]
+  dosageInfo?: {
+    standardDosage?: string
+  }
+  preparationMethods?: string[]
+  contraindications?: string[]
+  drugInteractions?: string[]
+  sideEffects?: string[]
+  relatedHerbs?: {
+    id: string
+    title: string
+    slug: string
+    scientificName?: string
+  }[]
+}
+
 interface HerbPageProps {
   params: {
     slug: string
@@ -13,7 +60,7 @@ interface HerbPageProps {
 }
 
 // This will be replaced with actual Payload CMS API call
-async function getHerb(slug: string) {
+async function getHerb(_slug: string): Promise<Herb | null> {
   // TODO: Replace with actual Payload CMS API call
   // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/herbs?where[slug][equals]=${slug}`)
   // const data = await response.json()
@@ -68,7 +115,7 @@ export default async function HerbPage({ params }: HerbPageProps) {
             </div>
 
             {/* Rating */}
-            {herb.averageRating && herb.reviewCount > 0 && (
+            {herb.averageRating && herb.reviewCount && herb.reviewCount > 0 && (
               <div className="flex items-center space-x-2 mb-4">
                 <div className="flex items-center">
                   <Star className="h-5 w-5 fill-gold-600 text-gold-600" />
@@ -235,7 +282,7 @@ export default async function HerbPage({ params }: HerbPageProps) {
             <CardContent>
               {herb.activeConstituents && herb.activeConstituents.length > 0 ? (
                 <div className="space-y-4">
-                  {herb.activeConstituents.map((compound: any, idx: number) => (
+                  {herb.activeConstituents.map((compound, idx) => (
                     <div key={idx} className="border-b border-gray-200 pb-3 last:border-0">
                       <h4 className="font-semibold text-gray-900">{compound.name}</h4>
                       {compound.percentage && (
@@ -334,7 +381,7 @@ export default async function HerbPage({ params }: HerbPageProps) {
         <div className="mb-12">
           <h2 className="text-2xl font-bold font-serif text-earth-900 mb-6">Related Herbs</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {herb.relatedHerbs.slice(0, 3).map((related: any) => (
+            {herb.relatedHerbs.slice(0, 3).map((related) => (
               <Link
                 key={related.id}
                 href={`/herbs/${related.slug}`}

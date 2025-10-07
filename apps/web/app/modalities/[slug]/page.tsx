@@ -6,6 +6,58 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PractitionerCard } from '@/components/cards/PractitionerCard'
 import { Book, Heart, Award, Users, Target } from 'lucide-react'
 
+interface Modality {
+  id: string
+  title: string
+  modalityId: string
+  slug: string
+  description?: string
+  origin?: string
+  overview?: string
+  history?: string
+  category?: string
+  evidenceLevel?: string
+  philosophy?: string
+  keyConcepts?: string[]
+  keyTechniques?: (string | { name: string; description?: string })[]
+  diagnosticMethods?: string[]
+  treatmentApproaches?: string[]
+  benefits?: string[]
+  commonConditionsTreated?: (string | { id: string; title: string; slug: string })[]
+  scientificEvidence?: string
+  contraindications?: string[]
+  trainingRequirements?: string
+  certificationBodies?: {
+    name: string
+    website?: string
+  }[]
+  continuingEducation?: string
+  practitioners?: {
+    practitionerId: string
+    name: string
+    slug: string
+    photo?: {
+      url: string
+      alt: string
+    }
+    title?: string
+    modalities?: string[]
+    address?: {
+      city?: string
+      state?: string
+    }
+    averageRating?: number
+    reviewCount?: number
+    verificationStatus?: 'verified' | 'pending' | 'unverified'
+  }[]
+  resources?: {
+    title: string
+    url: string
+    type: string
+    description?: string
+  }[]
+}
+
 interface ModalityPageProps {
   params: {
     slug: string
@@ -13,7 +65,7 @@ interface ModalityPageProps {
 }
 
 // This will be replaced with actual Payload CMS API call
-async function getModality(slug: string) {
+async function getModality(_slug: string): Promise<Modality | null> {
   // TODO: Replace with actual Payload CMS API call
   // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/modalities?where[slug][equals]=${slug}&depth=2`)
   // const data = await response.json()
@@ -136,7 +188,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {modality.keyTechniques.map((technique: any, idx: number) => (
+                  {modality.keyTechniques.map((technique, idx) => (
                     <div key={idx} className="border border-gray-200 rounded-lg p-4">
                       <h4 className="font-semibold text-earth-900 mb-2">
                         {typeof technique === 'string' ? technique : technique.name}
@@ -216,7 +268,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {modality.commonConditionsTreated.map((condition: any) => (
+                  {modality.commonConditionsTreated.map((condition) => (
                     <Link
                       key={typeof condition === 'string' ? condition : condition.id}
                       href={`/conditions/${typeof condition === 'string' ? '#' : condition.slug}`}
@@ -285,7 +337,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
-                  {modality.certificationBodies.map((body: any, idx: number) => (
+                  {modality.certificationBodies.map((body, idx) => (
                     <li key={idx} className="border-b border-gray-200 pb-2 last:border-0">
                       <h4 className="font-semibold text-gray-900">
                         {typeof body === 'string' ? body : body.name}
@@ -329,9 +381,9 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             Practitioners Specializing in {modality.title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {modality.practitioners.slice(0, 6).map((practitioner: any) => (
+            {modality.practitioners.slice(0, 6).map((practitioner) => (
               <PractitionerCard
-                key={practitioner.id}
+                key={practitioner.practitionerId}
                 practitionerId={practitioner.practitionerId}
                 name={practitioner.name}
                 slug={practitioner.slug}
@@ -366,7 +418,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              {modality.resources.map((resource: any, idx: number) => (
+              {modality.resources.map((resource, idx) => (
                 <li key={idx}>
                   <a
                     href={resource.url}
