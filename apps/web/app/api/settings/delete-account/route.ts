@@ -4,6 +4,8 @@ import { auth } from '@/lib/auth'
 import { sendAdminNotification } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * Account Deletion with HIPAA Compliance
  *

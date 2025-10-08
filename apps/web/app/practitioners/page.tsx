@@ -30,17 +30,17 @@ interface Practitioner {
 }
 
 interface PractitionersPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     q?: string
     modality?: string
     location?: string
-  }
+  }>
 }
 
 export default async function PractitionersPage({ searchParams }: PractitionersPageProps) {
-  const page = Number(searchParams.page) || 1
-  const query = searchParams.q
+  const { page: pageParam, q: query } = await searchParams
+  const page = Number(pageParam) || 1
 
   const { docs, totalPages, totalDocs } = await getPractitioners(page, 12, query)
   const practitioners = docs as Practitioner[]

@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * Hash a backup code for secure storage
  * Uses SHA-256 for one-way hashing

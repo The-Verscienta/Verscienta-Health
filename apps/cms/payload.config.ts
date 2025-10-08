@@ -59,7 +59,18 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL,
+      // Connection pooling best practices for production
+      max: process.env.NODE_ENV === 'production' ? 20 : 10, // Max connections
+      min: process.env.NODE_ENV === 'production' ? 5 : 2, // Min connections
+      idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
+      connectionTimeoutMillis: 5000, // Timeout for new connection attempts
+      maxUses: 7500, // Recycle connection after 7500 uses
+      allowExitOnIdle: process.env.NODE_ENV !== 'production', // Allow graceful shutdown in dev
     },
+    // Push database changes without down migrations (Payload v3 default)
+    push: process.env.NODE_ENV === 'development',
+    // Enable migrations in production
+    migrationDir: './migrations',
   }),
 
   typescript: {

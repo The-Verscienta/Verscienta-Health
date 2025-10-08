@@ -208,9 +208,3 @@ export default function ContactPage() {
     </div>
   )
 }
-
-export const metadata = {
-  title: 'Contact Us | Verscienta Health',
-  description:
-    "Get in touch with Verscienta Health. We're here to answer your questions about herbal medicine and our platform.",
-}

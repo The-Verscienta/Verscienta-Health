@@ -86,13 +86,14 @@ interface Condition {
 }
 
 interface ConditionPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function ConditionPage({ params }: ConditionPageProps) {
-  const { docs } = await getConditionBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getConditionBySlug(slug)
   const condition = docs[0] as Condition | undefined
 
   if (!condition) {
@@ -467,7 +468,8 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
 }
 
 export async function generateMetadata({ params }: ConditionPageProps) {
-  const { docs } = await getConditionBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getConditionBySlug(slug)
   const condition = docs[0] as Condition | undefined
 
   if (!condition) {

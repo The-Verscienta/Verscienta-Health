@@ -6,11 +6,11 @@ import { Pagination } from '@/components/ui/pagination'
 import { getConditions } from '@/lib/payload-api'
 
 interface ConditionsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     q?: string
     category?: string
-  }
+  }>
 }
 
 interface Condition {
@@ -26,8 +26,8 @@ interface Condition {
 }
 
 export default async function ConditionsPage({ searchParams }: ConditionsPageProps) {
-  const page = Number(searchParams.page) || 1
-  const query = searchParams.q
+  const { page: pageParam, q: query } = await searchParams
+  const page = Number(pageParam) || 1
   // Note: category filtering can be added to the API client if needed
 
   const { docs, totalPages, totalDocs } = await getConditions(page, 12, query)

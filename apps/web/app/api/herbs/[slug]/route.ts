@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cacheKeys, cacheTTL, withCache } from '@/lib/cache'
 import { getHerbBySlug } from '@/lib/payload-api'
 
-export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   try {
-    const { slug } = params
+    const { slug } = await params
 
     // Use cache wrapper
     const herb = await withCache(cacheKeys.herb(slug), cacheTTL.herb, async () => {

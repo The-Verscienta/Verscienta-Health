@@ -22,7 +22,13 @@
       "Bash(npm run type-check:*)",
       "Bash(npx tsc:*)",
       "Bash(npx next lint:*)",
-      "Bash(pnpm lint:fix:*)"
+      "Bash(pnpm lint:fix:*)",
+      "Bash(for file in app/api-docs/page.tsx app/login/page.tsx app/profile/page.tsx app/register/page.tsx app/search/page.tsx app/settings/page.tsx app/symptom-checker/page.tsx)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(pnpm build:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npx better-auth:*)",
+      "WebFetch(domain:payloadcms.com)"
     ],
     "deny": [],
     "ask": []

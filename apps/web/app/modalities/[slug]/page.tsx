@@ -60,13 +60,14 @@ interface Modality {
 }
 
 interface ModalityPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function ModalityPage({ params }: ModalityPageProps) {
-  const { docs } = await getModalityBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getModalityBySlug(slug)
   const modality = docs[0] as Modality | undefined
 
   if (!modality) {
@@ -439,7 +440,8 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
 }
 
 export async function generateMetadata({ params }: ModalityPageProps) {
-  const { docs } = await getModalityBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getModalityBySlug(slug)
   const modality = docs[0] as Modality | undefined
 
   if (!modality) {

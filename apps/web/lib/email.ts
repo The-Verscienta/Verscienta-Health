@@ -11,8 +11,16 @@ import { Resend } from 'resend'
  * - Admin alerts
  */
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy-load Resend client to avoid build-time errors
+let resendClient: Resend | null = null
+
+function getResendClient(): Resend {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY || 'dummy_key_for_build'
+    resendClient = new Resend(apiKey)
+  }
+  return resendClient
+}
 
 // Default sender email
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Verscienta Health <noreply@verscientahealth.com>'
@@ -24,7 +32,7 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@verscientahealth.com'
  * Check if email service is configured
  */
 export function isEmailConfigured(): boolean {
-  return !!process.env.RESEND_API_KEY
+  return !!process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'dummy_key_for_build'
 }
 
 /**
@@ -42,7 +50,7 @@ export async function sendMagicLinkEmail({
     return
   }
 
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: FROM_EMAIL,
     to: email,
     subject: 'Sign in to Verscienta Health',
@@ -91,7 +99,7 @@ export async function sendContactFormEmail({
     return
   }
 
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     replyTo: email,
@@ -133,7 +141,7 @@ export async function sendAdminNotification({
     return
   }
 
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     subject: `[Verscienta Health] ${subject}`,
@@ -180,7 +188,7 @@ export async function sendSecurityAlert({
     return
   }
 
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     subject: `[SECURITY ALERT] ${type.replace(/_/g, ' ').toUpperCase()}`,

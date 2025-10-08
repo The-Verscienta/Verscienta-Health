@@ -55,13 +55,14 @@ interface Herb {
 }
 
 interface HerbPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function HerbPage({ params }: HerbPageProps) {
-  const { docs } = await getHerbBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getHerbBySlug(slug)
   const herb = docs[0] as Herb | undefined
 
   if (!herb) {
@@ -411,7 +412,8 @@ export default async function HerbPage({ params }: HerbPageProps) {
 }
 
 export async function generateMetadata({ params }: HerbPageProps) {
-  const { docs } = await getHerbBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getHerbBySlug(slug)
   const herb = docs[0] as Herb | undefined
 
   if (!herb) {

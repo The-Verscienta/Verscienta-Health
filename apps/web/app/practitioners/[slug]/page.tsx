@@ -75,13 +75,14 @@ interface Practitioner {
 }
 
 interface PractitionerPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function PractitionerPage({ params }: PractitionerPageProps) {
-  const { docs } = await getPractitionerBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getPractitionerBySlug(slug)
   const practitioner = docs[0] as Practitioner | undefined
 
   if (!practitioner) {
@@ -501,7 +502,8 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
 }
 
 export async function generateMetadata({ params }: PractitionerPageProps) {
-  const { docs } = await getPractitionerBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getPractitionerBySlug(slug)
   const practitioner = docs[0] as Practitioner | undefined
 
   if (!practitioner) {

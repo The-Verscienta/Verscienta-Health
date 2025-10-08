@@ -62,13 +62,14 @@ interface Formula {
 }
 
 interface FormulaPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function FormulaPage({ params }: FormulaPageProps) {
-  const { docs } = await getFormulaBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getFormulaBySlug(slug)
   const formula = docs[0] as Formula | undefined
 
   if (!formula) {
@@ -469,7 +470,8 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
 }
 
 export async function generateMetadata({ params }: FormulaPageProps) {
-  const { docs } = await getFormulaBySlug(params.slug)
+  const { slug } = await params
+  const { docs } = await getFormulaBySlug(slug)
   const formula = docs[0] as Formula | undefined
 
   if (!formula) {

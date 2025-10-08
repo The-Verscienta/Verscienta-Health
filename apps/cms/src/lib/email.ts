@@ -10,8 +10,16 @@ import { Resend } from 'resend'
  * - Failed jobs
  */
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy-load Resend client to avoid build-time errors
+let resendClient: Resend | null = null
+
+function getResendClient(): Resend {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY || 'dummy_key_for_build'
+    resendClient = new Resend(apiKey)
+  }
+  return resendClient
+}
 
 // Default sender and admin emails
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Verscienta CMS <cms@verscientahealth.com>'
@@ -21,7 +29,7 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@verscientahealth.com'
  * Check if email service is configured
  */
 export function isEmailConfigured(): boolean {
-  return !!process.env.RESEND_API_KEY
+  return !!process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'dummy_key_for_build'
 }
 
 /**
@@ -48,7 +56,7 @@ export async function sendCronJobCompletionEmail({
     ? `⚠️ [CMS] ${jobName} completed with errors`
     : `✅ [CMS] ${jobName} completed successfully`
 
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     subject,
@@ -118,7 +126,7 @@ export async function sendValidationErrorEmail({
     return
   }
 
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     subject: `⚠️ [CMS] Validation errors in ${jobName}`,
@@ -192,7 +200,7 @@ export async function sendJobFailureAlert({
     return
   }
 
-  await resend.emails.send({
+  await getResendClient().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     subject: `🚨 [CMS] Job Failed: ${jobName}`,

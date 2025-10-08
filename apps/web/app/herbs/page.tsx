@@ -6,10 +6,10 @@ import { Pagination } from '@/components/ui/pagination'
 import { getHerbs } from '@/lib/payload-api'
 
 interface HerbsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     q?: string
-  }
+  }>
 }
 
 interface Herb {
@@ -27,8 +27,8 @@ interface Herb {
 }
 
 export default async function HerbsPage({ searchParams }: HerbsPageProps) {
-  const page = Number(searchParams.page) || 1
-  const query = searchParams.q
+  const { page: pageParam, q: query } = await searchParams
+  const page = Number(pageParam) || 1
 
   const { docs, totalPages, totalDocs } = await getHerbs(page, 12, query)
   const herbs = docs as Herb[]

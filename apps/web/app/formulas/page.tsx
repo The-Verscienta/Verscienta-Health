@@ -6,11 +6,11 @@ import { Pagination } from '@/components/ui/pagination'
 import { getFormulas } from '@/lib/payload-api'
 
 interface FormulasPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     q?: string
     tradition?: string
-  }
+  }>
 }
 
 interface Formula {
@@ -29,8 +29,8 @@ interface Formula {
 }
 
 export default async function FormulasPage({ searchParams }: FormulasPageProps) {
-  const page = Number(searchParams.page) || 1
-  const query = searchParams.q
+  const { page: pageParam, q: query } = await searchParams
+  const page = Number(pageParam) || 1
   // Note: tradition filtering can be added to the API client if needed
 
   const { docs, totalPages, totalDocs } = await getFormulas(page, 12, query)

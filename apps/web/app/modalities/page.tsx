@@ -8,10 +8,10 @@ import { Pagination } from '@/components/ui/pagination'
 import { getModalities } from '@/lib/payload-api'
 
 interface ModalitiesPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     q?: string
-  }
+  }>
 }
 
 interface Modality {
@@ -25,8 +25,8 @@ interface Modality {
 }
 
 export default async function ModalitiesPage({ searchParams }: ModalitiesPageProps) {
-  const page = Number(searchParams.page) || 1
-  const query = searchParams.q
+  const { page: pageParam, q: query } = await searchParams
+  const page = Number(pageParam) || 1
 
   const { docs, totalPages, totalDocs } = await getModalities(page, 12)
   const modalities = docs as Modality[]
