@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getFormulaBySlug } from '@/lib/payload-api'
 
 interface Formula {
   id: string
@@ -66,19 +67,9 @@ interface FormulaPageProps {
   }
 }
 
-// This will be replaced with actual Payload CMS API call
-async function getFormula(_slug: string): Promise<Formula | null> {
-  // TODO: Replace with actual Payload CMS API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/formulas?where[slug][equals]=${slug}&depth=2`)
-  // const data = await response.json()
-  // if (!data.docs || data.docs.length === 0) return null
-  // return data.docs[0]
-
-  return null
-}
-
 export default async function FormulaPage({ params }: FormulaPageProps) {
-  const formula = await getFormula(params.slug)
+  const { docs } = await getFormulaBySlug(params.slug)
+  const formula = docs[0] as Formula | undefined
 
   if (!formula) {
     notFound()
@@ -478,7 +469,8 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
 }
 
 export async function generateMetadata({ params }: FormulaPageProps) {
-  const formula = await getFormula(params.slug)
+  const { docs } = await getFormulaBySlug(params.slug)
+  const formula = docs[0] as Formula | undefined
 
   if (!formula) {
     return {

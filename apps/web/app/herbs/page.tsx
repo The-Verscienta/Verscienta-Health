@@ -3,6 +3,7 @@ import { HerbCard } from '@/components/cards/HerbCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
+import { getHerbs } from '@/lib/payload-api'
 
 interface HerbsPageProps {
   searchParams: {
@@ -25,26 +26,12 @@ interface Herb {
   reviewCount?: number
 }
 
-// This will be replaced with actual Payload CMS API call
-async function getHerbs(_page: number = 1, _query?: string) {
-  // TODO: Replace with actual Payload CMS API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/herbs?page=${page}&limit=12${query ? `&where[title][contains]=${query}` : ''}`)
-  // const data = await response.json()
-
-  // Mock data for now
-  return {
-    docs: [],
-    totalPages: 0,
-    page: 1,
-    totalDocs: 0,
-  }
-}
-
 export default async function HerbsPage({ searchParams }: HerbsPageProps) {
   const page = Number(searchParams.page) || 1
   const query = searchParams.q
 
-  const { docs: herbs, totalPages, totalDocs } = await getHerbs(page, query)
+  const { docs, totalPages, totalDocs } = await getHerbs(page, 12, query)
+  const herbs = docs as Herb[]
 
   return (
     <div className="container-custom py-12">
@@ -83,7 +70,7 @@ export default async function HerbsPage({ searchParams }: HerbsPageProps) {
         ) : (
           <>
             <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {herbs.map((herb: Herb) => (
+              {herbs.map((herb) => (
                 <HerbCard
                   key={herb.id}
                   herbId={herb.herbId}

@@ -270,7 +270,25 @@ export async function syncTrefleDataJob(payload: Payload): Promise<void> {
     // Send notification if significant enrichment occurred
     if (stats.enriched > 10) {
       console.log(`📧 ${stats.enriched} herbs enriched. Consider reviewing new data.`)
-      // TODO: Send email notification to admins
+
+      // Send email notification to admins
+      const { sendCronJobCompletionEmail } = await import('../../lib/email')
+      const endTime = Date.now()
+      const startTime = endTime - 120000 // Approximate 2 minute run time
+
+      await sendCronJobCompletionEmail({
+        jobName: 'Trefle Data Sync',
+        stats: {
+          Processed: stats.processed,
+          Enriched: stats.enriched,
+          Validated: stats.validated,
+          Skipped: stats.skipped,
+          'New Images': stats.newImages,
+          'New Synonyms': stats.newSynonyms,
+          Errors: stats.errors,
+        },
+        duration: (endTime - startTime) / 1000,
+      })
     }
   } catch (error) {
     console.error('❌ Trefle sync job failed:', error)

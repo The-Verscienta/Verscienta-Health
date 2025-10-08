@@ -15,7 +15,14 @@
       "Bash(tee:*)",
       "Bash(iconv:*)",
       "Bash(npx prettier:*)",
-      "Bash(pnpm biome:*)"
+      "Bash(pnpm biome:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm test:unit:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next lint:*)",
+      "Bash(pnpm lint:fix:*)"
     ],
     "deny": [],
     "ask": []

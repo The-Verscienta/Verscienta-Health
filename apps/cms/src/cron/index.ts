@@ -111,7 +111,14 @@ export function initializeCronJobs(payload: Payload): void {
         console.log(`✅ Job completed: ${name} (${duration}ms)`)
       } catch (error) {
         console.error(`❌ Job failed: ${name}`, error)
-        // TODO: Send alert/notification for failed jobs
+
+        // Send alert for failed jobs
+        const { sendJobFailureAlert } = await import('../lib/email')
+        await sendJobFailureAlert({
+          jobName: name,
+          error: error instanceof Error ? error.message : String(error),
+          stackTrace: error instanceof Error ? error.stack : undefined,
+        })
       }
     })
 
@@ -163,10 +170,26 @@ export function listCronJobs(): Array<{
   enabled: boolean
   nextRun?: Date
 }> {
-  return cronJobs.map(({ name, schedule, enabled }) => ({
-    name,
-    schedule,
-    enabled,
-    // TODO: Calculate next run time
-  }))
+  const cronParser = require('cron-parser')
+
+  return cronJobs.map(({ name, schedule, enabled }) => {
+    let nextRun: Date | undefined
+
+    if (enabled) {
+      try {
+        // Parse cron schedule and get next execution time
+        const interval = cronParser.parseExpression(schedule)
+        nextRun = interval.next().toDate()
+      } catch (error) {
+        console.error(`Failed to parse cron schedule for ${name}:`, error)
+      }
+    }
+
+    return {
+      name,
+      schedule,
+      enabled,
+      nextRun,
+    }
+  })
 }

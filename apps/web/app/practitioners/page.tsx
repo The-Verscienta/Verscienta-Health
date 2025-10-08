@@ -2,6 +2,32 @@ import { Suspense } from 'react'
 import { PractitionerViewToggle } from '@/components/practitioners/PractitionerViewToggle'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
+import { getPractitioners } from '@/lib/payload-api'
+
+interface Practitioner {
+  id: string
+  practitionerId: string
+  name: string
+  slug: string
+  photo?: {
+    url: string
+    alt: string
+  }
+  title?: string
+  modalities: string[]
+  address: {
+    street?: string
+    city?: string
+    state?: string
+    postalCode?: string
+    country?: string
+  }
+  latitude?: number
+  longitude?: number
+  averageRating?: number
+  reviewCount?: number
+  verificationStatus?: 'verified' | 'pending' | 'unverified'
+}
 
 interface PractitionersPageProps {
   searchParams: {
@@ -12,21 +38,12 @@ interface PractitionersPageProps {
   }
 }
 
-async function getPractitioners(_page: number = 1, _query?: string) {
-  // TODO: Replace with actual Payload CMS API call
-  return {
-    docs: [],
-    totalPages: 0,
-    page: 1,
-    totalDocs: 0,
-  }
-}
-
 export default async function PractitionersPage({ searchParams }: PractitionersPageProps) {
   const page = Number(searchParams.page) || 1
   const query = searchParams.q
 
-  const { docs: practitioners, totalPages, totalDocs } = await getPractitioners(page, query)
+  const { docs, totalPages, totalDocs } = await getPractitioners(page, 12, query)
+  const practitioners = docs as Practitioner[]
 
   return (
     <div className="container-custom py-12">

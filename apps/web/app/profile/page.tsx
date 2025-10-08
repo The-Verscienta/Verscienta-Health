@@ -81,9 +81,27 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement profile update
-    toast.success('Profile updated successfully')
-    setIsEditing(false)
+
+    try {
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update profile')
+      }
+
+      toast.success('Profile updated successfully')
+      setIsEditing(false)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to update profile')
+    }
   }
 
   return (

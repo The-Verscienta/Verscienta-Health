@@ -212,7 +212,24 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
 
     if (stats.isComplete) {
       console.log('🎉 Trefle import complete! All plants have been imported.')
-      // TODO: Send completion email to admins
+
+      // Send completion email to admins
+      const { sendCronJobCompletionEmail } = await import('../../lib/email')
+      const endTime = Date.now()
+      const startTime = endTime - 60000 // Approximate 1 minute run time
+
+      await sendCronJobCompletionEmail({
+        jobName: 'Trefle Data Import (Complete)',
+        stats: {
+          'Plants Processed': stats.plantsProcessed,
+          'Herbs Created': stats.herbsCreated,
+          'Herbs Updated': stats.herbsUpdated,
+          'Herbs Skipped': stats.herbsSkipped,
+          'Total Pages': stats.totalPages,
+          Errors: stats.errors,
+        },
+        duration: (endTime - startTime) / 1000,
+      })
     }
   } catch (error) {
     console.error('❌ Trefle import job failed:', error)

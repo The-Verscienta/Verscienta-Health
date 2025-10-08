@@ -49,16 +49,36 @@ export default function SettingsPage() {
       return
     }
 
-    if (newPassword.length < 8) {
-      toast.error('Password must be at least 8 characters')
+    if (newPassword.length < 12) {
+      toast.error('Password must be at least 12 characters')
       return
     }
 
-    // TODO: Implement password change
-    toast.success('Password updated successfully')
-    setCurrentPassword('')
-    setNewPassword('')
-    setConfirmPassword('')
+    try {
+      const response = await fetch('/api/settings/password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update password')
+      }
+
+      toast.success('Password updated successfully')
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to update password')
+    }
   }
 
   const handleDeleteAccount = async () => {
@@ -67,10 +87,29 @@ export default function SettingsPage() {
       return
     }
 
-    // TODO: Implement account deletion
-    toast.success('Account deleted successfully')
-    await signOut()
-    router.push('/')
+    try {
+      const response = await fetch('/api/settings/delete-account', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          password: deleteConfirmation, // In production, ask for actual password
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete account')
+      }
+
+      toast.success('Account deleted successfully')
+      await signOut()
+      router.push('/')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete account')
+    }
   }
 
   return (

@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getPractitionerBySlug } from '@/lib/payload-api'
 
 interface Practitioner {
   id: string
@@ -79,19 +80,9 @@ interface PractitionerPageProps {
   }
 }
 
-// This will be replaced with actual Payload CMS API call
-async function getPractitioner(_slug: string): Promise<Practitioner | null> {
-  // TODO: Replace with actual Payload CMS API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/practitioners?where[slug][equals]=${slug}&depth=2`)
-  // const data = await response.json()
-  // if (!data.docs || data.docs.length === 0) return null
-  // return data.docs[0]
-
-  return null
-}
-
 export default async function PractitionerPage({ params }: PractitionerPageProps) {
-  const practitioner = await getPractitioner(params.slug)
+  const { docs } = await getPractitionerBySlug(params.slug)
+  const practitioner = docs[0] as Practitioner | undefined
 
   if (!practitioner) {
     notFound()
@@ -510,7 +501,8 @@ export default async function PractitionerPage({ params }: PractitionerPageProps
 }
 
 export async function generateMetadata({ params }: PractitionerPageProps) {
-  const practitioner = await getPractitioner(params.slug)
+  const { docs } = await getPractitionerBySlug(params.slug)
+  const practitioner = docs[0] as Practitioner | undefined
 
   if (!practitioner) {
     return {

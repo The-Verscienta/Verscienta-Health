@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getHerbBySlug } from '@/lib/payload-api'
 
 interface Herb {
   id: string
@@ -59,19 +60,9 @@ interface HerbPageProps {
   }
 }
 
-// This will be replaced with actual Payload CMS API call
-async function getHerb(_slug: string): Promise<Herb | null> {
-  // TODO: Replace with actual Payload CMS API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/herbs?where[slug][equals]=${slug}`)
-  // const data = await response.json()
-  // if (!data.docs || data.docs.length === 0) return null
-  // return data.docs[0]
-
-  return null
-}
-
 export default async function HerbPage({ params }: HerbPageProps) {
-  const herb = await getHerb(params.slug)
+  const { docs } = await getHerbBySlug(params.slug)
+  const herb = docs[0] as Herb | undefined
 
   if (!herb) {
     notFound()
@@ -420,7 +411,8 @@ export default async function HerbPage({ params }: HerbPageProps) {
 }
 
 export async function generateMetadata({ params }: HerbPageProps) {
-  const herb = await getHerb(params.slug)
+  const { docs } = await getHerbBySlug(params.slug)
+  const herb = docs[0] as Herb | undefined
 
   if (!herb) {
     return {

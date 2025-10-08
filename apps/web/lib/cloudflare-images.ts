@@ -31,21 +31,24 @@ export interface CloudflareImageOptions {
 }
 
 /**
- * Cloudflare Images base configuration
+ * Get Cloudflare Images configuration (dynamically)
  */
-const CLOUDFLARE_CONFIG = {
-  accountId: process.env.CLOUDFLARE_ACCOUNT_ID || process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID,
-  deliveryUrl:
-    process.env.CLOUDFLARE_IMAGES_DELIVERY_URL ||
-    process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_DELIVERY_URL,
-  apiToken: process.env.CLOUDFLARE_IMAGES_API_TOKEN,
+function getCloudflareConfig() {
+  return {
+    accountId: process.env.CLOUDFLARE_ACCOUNT_ID || process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID,
+    deliveryUrl:
+      process.env.CLOUDFLARE_IMAGES_DELIVERY_URL ||
+      process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_DELIVERY_URL,
+    apiToken: process.env.CLOUDFLARE_IMAGES_API_TOKEN,
+  }
 }
 
 /**
  * Check if Cloudflare Images is configured
  */
 export function isCloudflareImagesEnabled(): boolean {
-  return !!(CLOUDFLARE_CONFIG.accountId && CLOUDFLARE_CONFIG.deliveryUrl)
+  const config = getCloudflareConfig()
+  return !!(config.accountId && config.deliveryUrl)
 }
 
 /**
@@ -64,7 +67,7 @@ export function getCloudflareImageUrl(
     return imageId
   }
 
-  const { accountId, deliveryUrl } = CLOUDFLARE_CONFIG
+  const { accountId, deliveryUrl } = getCloudflareConfig()
 
   // If using a named variant
   if (options.variant) {
@@ -154,7 +157,8 @@ export async function uploadToCloudflareImages(
   url: string
   variants: string[]
 }> {
-  if (!CLOUDFLARE_CONFIG.apiToken || !CLOUDFLARE_CONFIG.accountId) {
+  const config = getCloudflareConfig()
+  if (!config.apiToken || !config.accountId) {
     throw new Error('Cloudflare Images API token and account ID are required for uploads')
   }
 
@@ -166,11 +170,11 @@ export async function uploadToCloudflareImages(
   }
 
   const response = await fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_CONFIG.accountId}/images/v1`,
+    `https://api.cloudflare.com/client/v4/accounts/${config.accountId}/images/v1`,
     {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${CLOUDFLARE_CONFIG.apiToken}`,
+        Authorization: `Bearer ${config.apiToken}`,
       },
       body: formData,
     }
@@ -199,16 +203,17 @@ export async function uploadToCloudflareImages(
  * @returns Success status
  */
 export async function deleteFromCloudflareImages(imageId: string): Promise<boolean> {
-  if (!CLOUDFLARE_CONFIG.apiToken || !CLOUDFLARE_CONFIG.accountId) {
+  const config = getCloudflareConfig()
+  if (!config.apiToken || !config.accountId) {
     throw new Error('Cloudflare Images API token and account ID are required for deletion')
   }
 
   const response = await fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_CONFIG.accountId}/images/v1/${imageId}`,
+    `https://api.cloudflare.com/client/v4/accounts/${config.accountId}/images/v1/${imageId}`,
     {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${CLOUDFLARE_CONFIG.apiToken}`,
+        Authorization: `Bearer ${config.apiToken}`,
       },
     }
   )

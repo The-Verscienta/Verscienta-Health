@@ -3,6 +3,7 @@ import { FormulaCard } from '@/components/cards/FormulaCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
+import { getFormulas } from '@/lib/payload-api'
 
 interface FormulasPageProps {
   searchParams: {
@@ -27,22 +28,13 @@ interface Formula {
   reviewCount?: number
 }
 
-async function getFormulas(_page: number = 1, _query?: string, _tradition?: string) {
-  // TODO: Replace with actual Payload CMS API call
-  return {
-    docs: [],
-    totalPages: 0,
-    page: 1,
-    totalDocs: 0,
-  }
-}
-
 export default async function FormulasPage({ searchParams }: FormulasPageProps) {
   const page = Number(searchParams.page) || 1
   const query = searchParams.q
-  const tradition = searchParams.tradition
+  // Note: tradition filtering can be added to the API client if needed
 
-  const { docs: formulas, totalPages, totalDocs } = await getFormulas(page, query, tradition)
+  const { docs, totalPages, totalDocs } = await getFormulas(page, 12, query)
+  const formulas = docs as Formula[]
 
   return (
     <div className="container-custom py-12">
@@ -82,7 +74,7 @@ export default async function FormulasPage({ searchParams }: FormulasPageProps) 
         ) : (
           <>
             <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {formulas.map((formula: Formula) => (
+              {formulas.map((formula) => (
                 <FormulaCard
                   key={formula.id}
                   formulaId={formula.formulaId}

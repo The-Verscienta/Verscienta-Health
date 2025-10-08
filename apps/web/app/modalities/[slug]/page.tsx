@@ -5,6 +5,7 @@ import { PractitionerCard } from '@/components/cards/PractitionerCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getModalityBySlug } from '@/lib/payload-api'
 
 interface Modality {
   id: string
@@ -64,19 +65,9 @@ interface ModalityPageProps {
   }
 }
 
-// This will be replaced with actual Payload CMS API call
-async function getModality(_slug: string): Promise<Modality | null> {
-  // TODO: Replace with actual Payload CMS API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/modalities?where[slug][equals]=${slug}&depth=2`)
-  // const data = await response.json()
-  // if (!data.docs || data.docs.length === 0) return null
-  // return data.docs[0]
-
-  return null
-}
-
 export default async function ModalityPage({ params }: ModalityPageProps) {
-  const modality = await getModality(params.slug)
+  const { docs } = await getModalityBySlug(params.slug)
+  const modality = docs[0] as Modality | undefined
 
   if (!modality) {
     notFound()
@@ -448,7 +439,8 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
 }
 
 export async function generateMetadata({ params }: ModalityPageProps) {
-  const modality = await getModality(params.slug)
+  const { docs } = await getModalityBySlug(params.slug)
+  const modality = docs[0] as Modality | undefined
 
   if (!modality) {
     return {

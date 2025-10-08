@@ -148,7 +148,22 @@ export async function middleware(request: NextRequest) {
     const currentCount = config.requests - rateLimit.remaining
     if (currentCount > 1000) {
       console.error(`[SECURITY] Possible DoS attack from ${clientId}`)
-      // TODO: Send alert to security team via webhook
+
+      // Send security alert (fire and forget - don't block the response)
+      fetch(`${request.nextUrl.origin}/api/internal/security-alert`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'suspicious_activity',
+          message: `Possible DoS attack detected from ${clientId}`,
+          details: {
+            clientId,
+            requestCount: currentCount,
+            endpoint: request.nextUrl.pathname,
+            timestamp: new Date().toISOString(),
+          },
+        }),
+      }).catch(console.error)
     }
 
     return new NextResponse(

@@ -1,9 +1,8 @@
-import { PrismaClient } from '@prisma/client'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { twoFactor } from 'better-auth/plugins'
-
-const prisma = new PrismaClient()
+import { magicLink, twoFactor } from 'better-auth/plugins'
+import { sendMagicLinkEmail } from './email'
+import { prisma } from './prisma'
 
 /**
  * Better Auth Configuration
@@ -11,6 +10,7 @@ const prisma = new PrismaClient()
  * Security Features:
  * - Email/password authentication with bcrypt
  * - OAuth (Google, GitHub)
+ * - Magic Link (passwordless email authentication)
  * - Multi-Factor Authentication (TOTP)
  * - Session management with HIPAA-compliant timeouts
  * - Rate limiting
@@ -74,11 +74,22 @@ export const auth = betterAuth({
     window: 60, // 60 seconds
     max: 10, // 10 requests per window
   },
-  // HIPAA: Multi-Factor Authentication
+  // HIPAA: Multi-Factor Authentication & Passwordless Authentication
   // Recommended for all users, required for admin/PHI access
   plugins: [
+    // Magic Link - passwordless email authentication
+    // Users receive a one-time link via email to sign in
+    magicLink({
+      // Link expires after 5 minutes
+      expiresIn: 60 * 5,
+      // Send magic link via email
+      sendMagicLink: async ({ email, url }) => {
+        await sendMagicLinkEmail({ email, url })
+      },
+    }),
+    // TOTP-based 2FA (Time-based One-Time Password)
+    // Compatible with Google Authenticator, Authy, etc.
     twoFactor({
-      // TOTP (Time-based One-Time Password) - compatible with Google Authenticator, Authy, etc.
       issuer: 'Verscienta Health',
     }),
   ],

@@ -6,6 +6,7 @@ import { HerbCard } from '@/components/cards/HerbCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getConditionBySlug } from '@/lib/payload-api'
 
 interface Symptom {
   id: string
@@ -90,19 +91,9 @@ interface ConditionPageProps {
   }
 }
 
-// This will be replaced with actual Payload CMS API call
-async function getCondition(_slug: string): Promise<Condition | null> {
-  // TODO: Replace with actual Payload CMS API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_CMS_URL}/api/conditions?where[slug][equals]=${slug}&depth=2`)
-  // const data = await response.json()
-  // if (!data.docs || data.docs.length === 0) return null
-  // return data.docs[0]
-
-  return null
-}
-
 export default async function ConditionPage({ params }: ConditionPageProps) {
-  const condition = await getCondition(params.slug)
+  const { docs } = await getConditionBySlug(params.slug)
+  const condition = docs[0] as Condition | undefined
 
   if (!condition) {
     notFound()
@@ -476,7 +467,8 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
 }
 
 export async function generateMetadata({ params }: ConditionPageProps) {
-  const condition = await getCondition(params.slug)
+  const { docs } = await getConditionBySlug(params.slug)
+  const condition = docs[0] as Condition | undefined
 
   if (!condition) {
     return {

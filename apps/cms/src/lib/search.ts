@@ -91,60 +91,34 @@ export async function advancedFullTextSearch(
   const { query, collection, limit = 20, page = 1 } = options
 
   try {
-    // Use raw SQL for advanced full-text search with ranking
-    const _db = payload.db
-
-    const _offset = (page - 1) * limit
-
-    // PostgreSQL full-text search query with ranking
-    const _sqlQuery = `
-      SELECT
-        *,
-        ts_rank(
-          to_tsvector('english',
-            coalesce(name, '') || ' ' ||
-            coalesce(scientific_name, '') || ' ' ||
-            coalesce(description, '')
-          ),
-          plainto_tsquery('english', $1)
-        ) as rank
-      FROM ${collection}
-      WHERE
-        status = 'published' AND
-        to_tsvector('english',
-          coalesce(name, '') || ' ' ||
-          coalesce(scientific_name, '') || ' ' ||
-          coalesce(description, '')
-        ) @@ plainto_tsquery('english', $1)
-      ORDER BY rank DESC
-      LIMIT $2 OFFSET $3
-    `
-
-    const _countQuery = `
-      SELECT COUNT(*) as count
-      FROM ${collection}
-      WHERE
-        status = 'published' AND
-        to_tsvector('english',
-          coalesce(name, '') || ' ' ||
-          coalesce(scientific_name, '') || ' ' ||
-          coalesce(description, '')
-        ) @@ plainto_tsquery('english', $1)
-    `
-
-    // Execute queries (this is a placeholder - adjust for your DB adapter)
-    // const docs = await db.query(sqlQuery, [query, limit, offset])
-    // const { count } = await db.query(countQuery, [query])
-
-    // For now, return empty results
-    // TODO: Implement actual database query execution
-    return {
-      docs: [],
-      totalDocs: 0,
+    // Use Payload's built-in search with multiple field matching
+    const result = await payload.find({
+      collection: collection as 'herbs' | 'formulas' | 'conditions',
+      where: {
+        and: [
+          { status: { equals: 'published' } },
+          {
+            or: [
+              { title: { contains: query } },
+              { name: { contains: query } },
+              { scientificName: { contains: query } },
+              { description: { contains: query } },
+            ],
+          },
+        ],
+      },
+      limit,
       page,
-      totalPages: 0,
-      hasNextPage: false,
-      hasPrevPage: false,
+      sort: '-createdAt', // Sort by newest first (no ranking available in Payload)
+    })
+
+    return {
+      docs: result.docs,
+      totalDocs: result.totalDocs,
+      page: result.page || 1,
+      totalPages: result.totalPages,
+      hasNextPage: result.hasNextPage,
+      hasPrevPage: result.hasPrevPage,
     }
   } catch (error) {
     console.error('Advanced full-text search error:', error)
@@ -234,35 +208,75 @@ export async function searchPractitionersByLocation(
   limit: number = 20
 ): Promise<any[]> {
   try {
-    // Use PostgreSQL's earth distance function
-    const _db = payload.db
+    // Fetch practitioners and calculate distance client-side
+    // Note: For large datasets, consider using PostGIS extension with raw SQL queries
+    const practitioners = await payload.find({
+      collection: 'practitioners',
+      where: {
+        and: [
+          { status: { equals: 'published' } },
+          { acceptingNewPatients: { equals: true } },
+          { latitude: { exists: true } },
+          { longitude: { exists: true } },
+        ],
+      },
+      limit: 1000, // Fetch more to filter by distance
+    })
 
-    // Raw SQL query for geospatial search
-    const _sqlQuery = `
-      SELECT
-        *,
-        earth_distance(
-          ll_to_earth($1, $2),
-          ll_to_earth(latitude, longitude)
-        ) / 1000 as distance_km
-      FROM practitioners
-      WHERE
-        status = 'published' AND
-        accepting_patients = true AND
-        earth_box(ll_to_earth($1, $2), $3 * 1000) @> ll_to_earth(latitude, longitude)
-      ORDER BY distance_km
-      LIMIT $4
-    `
+    // Calculate distance using Haversine formula
+    const practitionersWithDistance = practitioners.docs
+      .map((practitioner) => {
+        const lat = practitioner.latitude
+        const lon = practitioner.longitude
 
-    // Execute query (placeholder)
-    // const practitioners = await db.query(sqlQuery, [latitude, longitude, radiusKm, limit])
+        if (typeof lat !== 'number' || typeof lon !== 'number') {
+          return null
+        }
 
-    // TODO: Implement actual database query execution
-    return []
+        const distance = calculateDistance(latitude, longitude, lat, lon)
+
+        return {
+          ...practitioner,
+          distance_km: distance,
+        }
+      })
+      .filter((p) => p !== null && p.distance_km <= radiusKm)
+      .sort((a, b) => (a?.distance_km || 0) - (b?.distance_km || 0))
+      .slice(0, limit)
+
+    return practitionersWithDistance
   } catch (error) {
     console.error('Location search error:', error)
     throw error
   }
+}
+
+/**
+ * Calculate distance between two coordinates using Haversine formula
+ * Returns distance in kilometers
+ */
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371 // Earth's radius in kilometers
+  const dLat = toRad(lat2 - lat1)
+  const dLon = toRad(lon2 - lon1)
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  const distance = R * c
+
+  return distance
+}
+
+function toRad(degrees: number): number {
+  return (degrees * Math.PI) / 180
 }
 
 /**

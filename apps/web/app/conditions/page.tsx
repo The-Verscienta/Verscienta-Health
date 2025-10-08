@@ -3,6 +3,7 @@ import { ConditionCard } from '@/components/cards/ConditionCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
+import { getConditions } from '@/lib/payload-api'
 
 interface ConditionsPageProps {
   searchParams: {
@@ -24,22 +25,13 @@ interface Condition {
   relatedFormulas?: unknown[]
 }
 
-async function getConditions(_page: number = 1, _query?: string, _category?: string) {
-  // TODO: Replace with actual Payload CMS API call
-  return {
-    docs: [],
-    totalPages: 0,
-    page: 1,
-    totalDocs: 0,
-  }
-}
-
 export default async function ConditionsPage({ searchParams }: ConditionsPageProps) {
   const page = Number(searchParams.page) || 1
   const query = searchParams.q
-  const category = searchParams.category
+  // Note: category filtering can be added to the API client if needed
 
-  const { docs: conditions, totalPages, totalDocs } = await getConditions(page, query, category)
+  const { docs, totalPages, totalDocs } = await getConditions(page, 12, query)
+  const conditions = docs as Condition[]
 
   return (
     <div className="container-custom py-12">
@@ -76,7 +68,7 @@ export default async function ConditionsPage({ searchParams }: ConditionsPagePro
         ) : (
           <>
             <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {conditions.map((condition: Condition) => (
+              {conditions.map((condition) => (
                 <ConditionCard
                   key={condition.id}
                   conditionId={condition.conditionId}

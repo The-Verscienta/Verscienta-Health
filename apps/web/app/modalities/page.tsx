@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
+import { getModalities } from '@/lib/payload-api'
 
 interface ModalitiesPageProps {
   searchParams: {
@@ -23,21 +24,12 @@ interface Modality {
   keyTechniques?: string[]
 }
 
-async function getModalities(_page: number = 1, _query?: string) {
-  // TODO: Replace with actual Payload CMS API call
-  return {
-    docs: [],
-    totalPages: 0,
-    page: 1,
-    totalDocs: 0,
-  }
-}
-
 export default async function ModalitiesPage({ searchParams }: ModalitiesPageProps) {
   const page = Number(searchParams.page) || 1
   const query = searchParams.q
 
-  const { docs: modalities, totalPages, totalDocs } = await getModalities(page, query)
+  const { docs, totalPages, totalDocs } = await getModalities(page, 12)
+  const modalities = docs as Modality[]
 
   return (
     <div className="container-custom py-12">
@@ -73,7 +65,7 @@ export default async function ModalitiesPage({ searchParams }: ModalitiesPagePro
         ) : (
           <>
             <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {modalities.map((modality: Modality) => (
+              {modalities.map((modality) => (
                 <Link key={modality.id} href={`/modalities/${modality.slug}`}>
                   <Card className="group h-full cursor-pointer transition-all duration-200 hover:shadow-xl">
                     <CardHeader>

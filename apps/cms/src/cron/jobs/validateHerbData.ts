@@ -153,7 +153,18 @@ export async function validateHerbDataJob(payload: Payload): Promise<void> {
     // Send notification if there are critical errors
     if (errors.length > 0) {
       console.warn(`⚠️  Found ${errors.length} critical validation errors!`)
-      // TODO: Send email notification to admins
+
+      // Send email notification to admins
+      const { sendValidationErrorEmail } = await import('../../lib/email')
+      await sendValidationErrorEmail({
+        jobName: 'Herb Data Validation',
+        errors: errors.map((error) => ({
+          field: error.field,
+          message: error.issue,
+          recordId: error.herbId,
+        })),
+        totalRecords: herbs.docs.length,
+      })
     }
   } catch (error) {
     console.error('❌ Validation job failed:', error)
