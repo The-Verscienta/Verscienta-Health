@@ -11,6 +11,15 @@ app.get('/', (_, res) => {
   res.redirect('/admin')
 })
 
+// Health check endpoint for Docker and monitoring
+app.get('/api/health', (_, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'verscienta-cms',
+  })
+})
+
 const start = async () => {
   // Initialize Payload
   await payload.init({

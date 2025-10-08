@@ -2,6 +2,18 @@
 
 This guide covers deploying Verscienta Health to a server running Coolify.
 
+> **Last Updated:** 2025
+> **Status:** Production-ready with required pre-deployment fix
+
+## ⚠️ Critical Pre-Deployment Requirements
+
+Before deploying, you MUST:
+1. ✅ Add health check endpoint to CMS (see Step 7)
+2. ✅ Review and set all required environment variables
+3. ✅ Configure Cloudflare R2 storage
+4. ✅ Set up Algolia search indexes
+5. ✅ Configure Resend for email delivery
+
 ## 📋 Overview
 
 **Deployment Platform:** Coolify (Self-hosted)
@@ -11,7 +23,40 @@ This guide covers deploying Verscienta Health to a server running Coolify.
 - Next.js Frontend (Port 3000)
 - Payload CMS Backend (Port 3001)
 - PostgreSQL 17+ Database
-- Redis (optional, for caching)
+- Redis (recommended for production rate limiting)
+
+**Key Technologies:**
+- Better Auth (authentication with Prisma)
+- Algolia (search)
+- Cloudflare R2 (media storage)
+- Resend (email delivery)
+- Payload CMS (headless CMS)
+
+---
+
+## 📝 Important Environment Variable Notes
+
+This guide uses the correct environment variables as found in `.env.example`:
+
+**Authentication:**
+- ✅ `AUTH_SECRET` and `AUTH_URL` (not BETTER_AUTH_*)
+- ✅ Uses Prisma with Better Auth
+
+**CMS Connection:**
+- ✅ `PAYLOAD_PUBLIC_SERVER_URL` (not NEXT_PUBLIC_CMS_URL)
+- ✅ `NEXT_PUBLIC_APP_URL` for CORS (not FRONTEND_URL)
+
+**Email:**
+- ✅ Resend API (`RESEND_API_KEY`, `RESEND_FROM_EMAIL`)
+- ✅ Not generic SMTP
+
+**Storage:**
+- ✅ Cloudflare R2 with S3-compatible API
+- ✅ Not direct Cloudflare Images API
+
+**Rate Limiting:**
+- ✅ Redis/Upstash recommended for production
+- ✅ `REDIS_URL` and `REDIS_TOKEN`
 
 ---
 
@@ -58,121 +103,20 @@ Coolify uses Docker, so we need Dockerfiles for each service.
 
 ---
 
-## 🐳 Step 2: Create Docker Configuration
+## 🐳 Step 2: Docker Configuration (Already Included)
 
-### 2.1 Frontend Dockerfile (`apps/web/Dockerfile`)
+**Note:** Dockerfiles are already present in the repository at:
+- `apps/web/Dockerfile` (Frontend)
+- `apps/cms/Dockerfile` (Backend)
 
-Create this file:
+These Dockerfiles include:
+- ✅ Multi-stage builds for optimization
+- ✅ Non-root user setup for security
+- ✅ Health check endpoints
+- ✅ Proper file permissions
+- ✅ Standalone Next.js output (already configured)
 
-```dockerfile
-# Build stage
-FROM node:20-alpine AS builder
-
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
-
-# Set working directory
-WORKDIR /app
-
-# Copy workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY apps/web/package.json ./apps/web/
-COPY packages ./packages
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Copy source code
-COPY apps/web ./apps/web
-
-# Build the application
-RUN pnpm --filter web build
-
-# Production stage
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
-
-# Copy necessary files
-COPY --from=builder /app/apps/web/.next/standalone ./
-COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder /app/apps/web/public ./apps/web/public
-
-# Set environment
-ENV NODE_ENV=production
-ENV PORT=3000
-
-EXPOSE 3000
-
-# Start the application
-CMD ["node", "apps/web/server.js"]
-```
-
-### 2.2 Backend Dockerfile (`apps/cms/Dockerfile`)
-
-Create this file:
-
-```dockerfile
-# Build stage
-FROM node:20-alpine AS builder
-
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
-
-# Set working directory
-WORKDIR /app
-
-# Copy workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY apps/cms/package.json ./apps/cms/
-COPY packages ./packages
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Copy source code
-COPY apps/cms ./apps/cms
-
-# Build the application
-RUN pnpm --filter cms build
-
-# Production stage
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
-
-# Copy built application
-COPY --from=builder /app/apps/cms/dist ./dist
-COPY --from=builder /app/apps/cms/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-
-# Set environment
-ENV NODE_ENV=production
-ENV PORT=3001
-
-EXPOSE 3001
-
-# Start the application
-CMD ["node", "dist/server.js"]
-```
-
-### 2.3 Update Next.js Config
-
-Update `apps/web/next.config.ts` to enable standalone output:
-
-```typescript
-export default {
-  // ... existing config
-  output: 'standalone',
-  // ... rest of config
-}
-```
+**No additional Dockerfile setup is needed.** The Next.js config already has `output: 'standalone'` enabled (apps/web/next.config.ts:9).
 
 ---
 
@@ -232,30 +176,37 @@ PORT=3001
 # Database
 DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
 
+# Database provider (for encryption detection)
+# Options: 'aws-rds', 'digitalocean', 'supabase', 'render', 'custom'
+DATABASE_PROVIDER=custom
+
 # Payload CMS
 PAYLOAD_SECRET=<generate-a-secure-random-string-64-chars>
+PAYLOAD_PUBLIC_SERVER_URL=https://backend.verscienta.com
 
-# Algolia
+# Algolia Search
 ALGOLIA_APP_ID=your_algolia_app_id
-ALGOLIA_ADMIN_KEY=your_algolia_admin_key
+ALGOLIA_ADMIN_API_KEY=your_algolia_admin_key
 
-# Cloudflare Images
+# Cloudflare R2 Storage (for media uploads)
 CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
-CLOUDFLARE_IMAGES_API_TOKEN=your_cloudflare_token
+CLOUDFLARE_ACCESS_KEY_ID=your_r2_access_key_id
+CLOUDFLARE_SECRET_ACCESS_KEY=your_r2_secret_access_key
+CLOUDFLARE_BUCKET_NAME=verscienta-media
+CLOUDFLARE_ACCOUNT_HASH=your_account_hash
 
-# Email (Optional)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your_smtp_user
-SMTP_PASSWORD=your_smtp_password
-EMAIL_FROM=cms@verscienta.com
+# Email (Resend)
+RESEND_API_KEY=your_resend_api_key
+RESEND_FROM_EMAIL=noreply@verscienta.com
 
-# Frontend URL (for CORS)
-FRONTEND_URL=https://verscienta.com
-
-# Nominatim (Geocoding)
-NOMINATIM_USER_AGENT=Verscienta Health App
+# Frontend URL (for CORS) - Use NEXT_PUBLIC_APP_URL
+NEXT_PUBLIC_APP_URL=https://verscienta.com
 ```
+
+**Important Notes:**
+- The CMS uses `NEXT_PUBLIC_APP_URL` for CORS configuration, not `FRONTEND_URL`
+- Email is sent via Resend, not generic SMTP
+- Media storage uses Cloudflare R2 (S3-compatible), not the Images API directly
 
 ### 4.3 Configure Domain
 
@@ -272,8 +223,13 @@ After deployment, run migrations:
 3. Run:
 
 ```bash
-pnpm db:push
+# Run database migrations (production)
+pnpm db:migrate
+
+# Note: db:push is for development only - never use in production
 ```
+
+**Important:** The `db:push` command is for development only. Always use `db:migrate` in production to properly track schema changes.
 
 ---
 
@@ -298,16 +254,16 @@ NEXT_PUBLIC_APP_URL=https://verscienta.com
 PORT=3000
 
 # Payload CMS API
-NEXT_PUBLIC_CMS_URL=https://backend.verscienta.com
+PAYLOAD_PUBLIC_SERVER_URL=https://backend.verscienta.com
 
-# Database (for Better Auth)
+# Database (for Better Auth and Prisma)
 DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
 
 # Better Auth
-BETTER_AUTH_SECRET=<generate-a-secure-random-string-64-chars>
-BETTER_AUTH_URL=https://verscienta.com
+AUTH_SECRET=<generate-a-secure-random-string-64-chars>
+AUTH_URL=https://verscienta.com
 
-# OAuth (Optional)
+# OAuth Providers (Optional)
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 GITHUB_CLIENT_ID=your_github_client_id
@@ -315,32 +271,61 @@ GITHUB_CLIENT_SECRET=your_github_client_secret
 
 # Algolia Search
 NEXT_PUBLIC_ALGOLIA_APP_ID=your_algolia_app_id
-NEXT_PUBLIC_ALGOLIA_SEARCH_KEY=your_algolia_search_key
+NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY=your_algolia_search_key
 
-# Cloudflare Images
+# Cloudflare (for images)
+CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
+CLOUDFLARE_ACCOUNT_HASH=your_account_hash
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
-NEXT_PUBLIC_CLOUDFLARE_IMAGES_URL=https://imagedelivery.net/your_hash
 
-# Grok AI
+# Grok AI (xAI)
 GROK_API_KEY=your_grok_api_key
 
-# Email (for Better Auth)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your_smtp_user
-SMTP_PASSWORD=your_smtp_password
-EMAIL_FROM=noreply@verscienta.com
+# Email (Resend - for Better Auth magic links)
+RESEND_API_KEY=your_resend_api_key
+RESEND_FROM_EMAIL=noreply@verscienta.com
 
-# Cloudflare Turnstile (Optional)
+# Cloudflare Turnstile (CAPTCHA - Optional)
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_site_key
 TURNSTILE_SECRET_KEY=your_turnstile_secret_key
+
+# Redis/Upstash (Rate Limiting - Recommended for Production)
+REDIS_URL=your_upstash_redis_url
+REDIS_TOKEN=your_upstash_redis_token
+
+# Security & HIPAA Compliance (Optional but Recommended)
+SESSION_TIMEOUT=86400  # 24 hours
+PHI_SESSION_TIMEOUT=900  # 15 minutes for PHI pages
+REQUIRE_MFA_FOR_ADMIN=true
+REQUIRE_MFA_FOR_PHI_ACCESS=false
 ```
+
+**Important Notes:**
+- The frontend uses `PAYLOAD_PUBLIC_SERVER_URL`, not `NEXT_PUBLIC_CMS_URL`
+- Better Auth uses `AUTH_SECRET` and `AUTH_URL`, not `BETTER_AUTH_*`
+- Email is sent via Resend, not generic SMTP
+- Redis/Upstash is highly recommended for production rate limiting
+- For HIPAA compliance, consider enabling MFA for PHI access
 
 ### 5.3 Configure Domain
 
 1. Set **Domain:** `verscienta.com`
 2. Enable **HTTPS** (Let's Encrypt)
 3. Click **Deploy**
+
+### 5.4 Generate Prisma Client (Post-Deployment)
+
+After the frontend is deployed, you may need to generate the Prisma client for Better Auth:
+
+1. Go to the web service in Coolify
+2. Click **Terminal**
+3. Run:
+
+```bash
+npx prisma generate
+```
+
+This is typically handled during the build process, but if you encounter database connection issues, regenerate the Prisma client.
 
 ---
 
@@ -364,21 +349,92 @@ Coolify will automatically:
 
 ---
 
-## 🔧 Step 7: Post-Deployment Configuration
+## ⚠️ Step 7: Add Health Check Endpoint for CMS (Critical)
 
-### 7.1 Create Admin User
+**IMPORTANT:** The CMS Dockerfile includes a health check that references `/api/health`, but this endpoint doesn't exist yet. You need to add it before deployment.
+
+### 7.1 Add Health Endpoint to CMS
+
+Edit `apps/cms/src/server.ts` and add a health check endpoint:
+
+```typescript
+// Add this after the root redirect and before start()
+app.get('/api/health', (_, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'verscienta-cms',
+  })
+})
+```
+
+The complete server.ts should look like:
+
+```typescript
+import { config } from 'dotenv'
+import express from 'express'
+import payload from 'payload'
+import configPayload from '../payload.config.js'
+
+const app = express()
+const PORT = process.env.PORT || 3001
+
+// Redirect root to Admin panel
+app.get('/', (_, res) => {
+  res.redirect('/admin')
+})
+
+// Health check endpoint for Docker
+app.get('/api/health', (_, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'verscienta-cms',
+  })
+})
+
+const start = async () => {
+  // Initialize Payload
+  await payload.init({
+    config: configPayload,
+  })
+
+  // Add your own express routes here
+
+  app.listen(PORT, async () => {
+    payload.logger.info(`Server listening on port ${PORT}`)
+    payload.logger.info(`Admin URL: http://localhost:${PORT}/admin`)
+  })
+}
+
+start()
+```
+
+### 7.2 Commit and Push
+
+```bash
+git add apps/cms/src/server.ts
+git commit -m "Add health check endpoint for CMS"
+git push
+```
+
+---
+
+## 🔧 Step 8: Post-Deployment Configuration
+
+### 8.1 Create Admin User
 
 1. Access Payload CMS: `https://backend.verscienta.com/admin`
 2. Create your first admin account
 3. This will be your super admin with full access
 
-### 7.2 Configure CORS
+### 8.2 Verify CORS Configuration
 
-Ensure Payload CMS allows requests from your frontend domain.
+The Payload CMS CORS is configured via the `NEXT_PUBLIC_APP_URL` environment variable in `apps/cms/payload.config.ts` (line 84).
 
-In `apps/cms/payload.config.ts`, the CORS is configured via `FRONTEND_URL` env variable.
+Ensure the environment variable is set correctly to your frontend domain.
 
-### 7.3 Set Up Algolia Indexes
+### 8.3 Set Up Algolia Indexes
 
 1. Go to Algolia dashboard
 2. Create indexes:
@@ -389,7 +445,7 @@ In `apps/cms/payload.config.ts`, the CORS is configured via `FRONTEND_URL` env v
    - `verscienta_modalities`
 3. Configure searchable attributes (see SETUP_GUIDE.md)
 
-### 7.4 Test the Application
+### 8.4 Test the Application
 
 1. Visit `https://verscienta.com`
 2. Test authentication (login/register)
@@ -400,9 +456,9 @@ In `apps/cms/payload.config.ts`, the CORS is configured via `FRONTEND_URL` env v
 
 ---
 
-## 📊 Step 8: Monitoring & Logging
+## 📊 Step 9: Monitoring & Logging
 
-### 8.1 Coolify Built-in Monitoring
+### 9.1 Coolify Built-in Monitoring
 
 Coolify provides:
 
@@ -411,7 +467,7 @@ Coolify provides:
 - Logs viewer
 - Restart policies
 
-### 8.2 Application Logging
+### 9.2 Application Logging
 
 Both applications log to stdout/stderr, which Coolify captures.
 
@@ -421,7 +477,7 @@ To view logs:
 2. Click **Logs**
 3. Filter by time range or search keywords
 
-### 8.3 Set Up Alerts (Optional)
+### 9.3 Set Up Alerts (Optional)
 
 Configure Coolify to send alerts:
 
@@ -431,34 +487,43 @@ Configure Coolify to send alerts:
 
 ---
 
-## 🔐 Security Best Practices
+## 🔐 Step 10: Security Best Practices
 
-### 8.1 Environment Variables
+### 10.1 Environment Variables
 
 - ✅ Use strong, random secrets (64+ characters)
 - ✅ Never commit secrets to Git
 - ✅ Rotate secrets periodically
 - ✅ Use different secrets for staging/production
 
-### 8.2 Database Security
+### 10.2 Database Security
 
 - ✅ Use strong database passwords
 - ✅ Restrict database access to application containers only
 - ✅ Enable SSL/TLS for database connections
 - ✅ Set up regular backups
+- ✅ Configure `DATABASE_PROVIDER` for encryption at rest detection
 
-### 8.3 Network Security
+### 10.3 Network Security
 
 - ✅ Use HTTPS only (enforced by Coolify/Let's Encrypt)
 - ✅ Configure firewall rules
 - ✅ Use Cloudflare for DDoS protection (optional)
-- ✅ Enable rate limiting
+- ✅ Enable rate limiting with Redis/Upstash
+
+### 10.4 HIPAA Compliance Considerations
+
+- ✅ Enable session timeouts (especially for PHI pages)
+- ✅ Consider enabling MFA for admin and PHI access
+- ✅ Enable audit logging
+- ✅ Use encrypted database connections
+- ✅ Implement proper access controls
 
 ---
 
-## 🔄 Backup & Recovery
+## 🔄 Step 11: Backup & Recovery
 
-### 9.1 Database Backups
+### 11.1 Database Backups
 
 Coolify can automatically backup PostgreSQL:
 
@@ -469,20 +534,23 @@ Coolify can automatically backup PostgreSQL:
    - Retention (30 days recommended)
    - Storage location
 
-### 9.2 Manual Backup
+### 11.2 Manual Backup
 
 ```bash
 # SSH into your server
 ssh user@your-server.com
 
-# Backup database
+# Backup database (or use the pnpm command)
 docker exec verscienta-db pg_dump -U verscienta_user verscienta_health > backup-$(date +%Y%m%d).sql
+
+# Or from within the CMS container:
+pnpm db:backup
 
 # Download backup
 scp user@your-server.com:backup-*.sql ./backups/
 ```
 
-### 9.3 Restore from Backup
+### 11.3 Restore from Backup
 
 ```bash
 # Upload backup to server
@@ -494,7 +562,7 @@ docker exec -i verscienta-db psql -U verscienta_user verscienta_health < backup.
 
 ---
 
-## 🚨 Troubleshooting
+## 🚨 Step 12: Troubleshooting
 
 ### Application won't start
 
@@ -526,9 +594,9 @@ docker exec -i verscienta-db psql -U verscienta_user verscienta_health < backup.
 
 ---
 
-## 📈 Performance Optimization
+## 📈 Step 13: Performance Optimization
 
-### 10.1 Enable Caching
+### 13.1 Enable Caching
 
 Add Redis for session storage:
 
@@ -536,16 +604,16 @@ Add Redis for session storage:
 2. Update Better Auth config to use Redis
 3. Configure Next.js caching
 
-### 10.2 CDN Configuration
+### 13.2 CDN Configuration
 
 Use Cloudflare as CDN:
 
 1. Point DNS to Cloudflare
 2. Enable caching rules
 3. Configure page rules
-4. Enable Cloudflare Images
+4. Use Cloudflare R2 for media storage (already configured)
 
-### 10.3 Resource Limits
+### 13.3 Resource Limits
 
 Set appropriate Docker resource limits in Coolify:
 
@@ -553,9 +621,18 @@ Set appropriate Docker resource limits in Coolify:
 - **Backend:** 2GB RAM, 1 CPU
 - **Database:** 2GB RAM, 1 CPU
 
+### 13.4 Enable Redis for Production
+
+Use Upstash Redis for:
+- Rate limiting
+- Session storage
+- Caching
+
+Set the `REDIS_URL` and `REDIS_TOKEN` environment variables.
+
 ---
 
-## 🔄 Scaling
+## 🔄 Step 14: Scaling
 
 ### Horizontal Scaling
 
@@ -588,23 +665,75 @@ Coolify supports multiple replicas:
 
 ## ✅ Deployment Checklist
 
-- [ ] Server with Coolify installed
-- [ ] Git repository connected to Coolify
-- [ ] PostgreSQL database created
-- [ ] Environment variables configured
-- [ ] Dockerfiles created and tested
-- [ ] Backend (CMS) deployed and accessible
-- [ ] Frontend deployed and accessible
-- [ ] Database migrations run
-- [ ] Admin user created
-- [ ] Algolia indexes configured
+### Pre-Deployment
+- [ ] Server with Coolify installed and configured
+- [ ] Git repository pushed and accessible
+- [ ] PostgreSQL 17+ database created in Coolify
+- [ ] Algolia account and indexes created
+- [ ] Cloudflare R2 bucket created and configured
+- [ ] Resend API key obtained
+- [ ] Redis/Upstash account created (optional but recommended)
+- [ ] **Critical:** Health check endpoint added to CMS (Step 7)
+
+### Backend (CMS) Deployment
+- [ ] CMS service created in Coolify
+- [ ] Dockerfile location set: `apps/cms/Dockerfile`
+- [ ] Build context set: `.` (root)
+- [ ] All CMS environment variables configured
+- [ ] Domain configured: `backend.verscienta.com`
 - [ ] SSL/HTTPS enabled
-- [ ] Backups configured
-- [ ] Monitoring set up
-- [ ] Test all functionality
-- [ ] DNS configured correctly
+- [ ] CMS deployed successfully
+- [ ] Database migrations run (`pnpm db:migrate`)
+- [ ] Health endpoint accessible: `/api/health`
+- [ ] Admin user created
+
+### Frontend (Web) Deployment
+- [ ] Web service created in Coolify
+- [ ] Dockerfile location set: `apps/web/Dockerfile`
+- [ ] Build context set: `.` (root)
+- [ ] All web environment variables configured
+- [ ] Domain configured: `verscienta.com`
+- [ ] SSL/HTTPS enabled
+- [ ] Frontend deployed successfully
+- [ ] Prisma client generated (if needed)
+- [ ] Health endpoint accessible: `/api/health`
+
+### Post-Deployment Configuration
+- [ ] Algolia indexes populated
+- [ ] Test authentication (login/register)
+- [ ] Test content creation in CMS
+- [ ] Test search functionality
+- [ ] Test AI symptom checker
+- [ ] Verify media uploads work (Cloudflare R2)
+- [ ] Test email delivery (Resend)
 - [ ] OAuth providers configured (if using)
+- [ ] Rate limiting tested (Redis)
+
+### Operations
+- [ ] Automatic deployments via webhooks configured
+- [ ] Database backups scheduled
+- [ ] Monitoring and alerts configured
+- [ ] Logs accessible and reviewed
+- [ ] DNS configured correctly
+- [ ] Cloudflare CDN configured (optional)
+- [ ] Security headers verified
+- [ ] HIPAA compliance measures enabled (if applicable)
+
+### Final Verification
+- [ ] All services running and healthy
+- [ ] No errors in logs
+- [ ] Performance acceptable
+- [ ] All features working as expected
+- [ ] Backup and restore tested
+- [ ] Security audit completed
 
 ---
 
-**Deployment Status:** Ready for production with Coolify! 🚀
+**Deployment Status:** Production-ready after completing checklist! 🚀
+
+**Important Reminders:**
+1. Never use `db:push` in production (use `db:migrate`)
+2. Always use strong, random secrets (64+ characters)
+3. Enable Redis for production rate limiting
+4. Configure proper session timeouts for HIPAA compliance
+5. Test backup restoration before going live
