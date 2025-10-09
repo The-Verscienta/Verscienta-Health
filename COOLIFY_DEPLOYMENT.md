@@ -181,12 +181,52 @@ Both plugins are production-ready and require no additional setup beyond environ
 
 ## 🗄️ Step 3: Set Up PostgreSQL Database
 
-### 3.1 Create Database in Coolify
+### 3.1 Choose Database Provider
 
+**Option A: Supabase PostgreSQL in Coolify (Recommended)**
+
+Coolify now supports deploying Supabase PostgreSQL directly! This gives you:
+- ✅ **Encryption at rest** (automatic - HIPAA compliant)
+- ✅ **SSL/TLS encryption** (built-in with verify-full)
+- ✅ **Self-hosted** (full control on your infrastructure)
+- ✅ **Built-in backup support** via Coolify
+- ✅ **All Supabase PostgreSQL features** (extensions, security)
+
+**To deploy Supabase PostgreSQL in Coolify:**
 1. Go to Coolify dashboard
 2. Navigate to **Databases**
 3. Click **+ New Database**
-4. Select **PostgreSQL 17**
+4. Select **Supabase PostgreSQL** (not regular PostgreSQL)
+5. Configure:
+   - **Name:** `verscienta-db`
+   - **Username:** `verscienta_user`
+   - **Password:** Generate a strong password (32+ characters)
+   - **Database Name:** `verscienta_health`
+   - **Enable SSL:** Yes (automatic with Supabase)
+6. Click **Deploy**
+7. Coolify will provide connection string with SSL enabled
+8. Set `DATABASE_PROVIDER=supabase` in environment variables
+
+**Option B: Managed Supabase Cloud**
+
+Use Supabase's hosted service:
+1. Create project at https://supabase.com
+2. Go to **Settings** → **Database**
+3. Copy **Connection Pooling** string (uses port 6543 with PgBouncer)
+4. Connection string format:
+   ```
+   postgresql://postgres.[PROJECT_ID]:[PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=verify-full&pgbouncer=true
+   ```
+5. Set `DATABASE_PROVIDER=supabase` in environment variables
+6. Free tier: 500MB database, 2GB bandwidth, automatic backups
+
+**Option C: Standard PostgreSQL in Coolify**
+
+For development or if you need custom configuration:
+1. Go to Coolify dashboard
+2. Navigate to **Databases**
+3. Click **+ New Database**
+4. Select **PostgreSQL 17** (standard)
 5. Configure:
    - **Name:** `verscienta-db`
    - **Username:** `verscienta_user`
@@ -194,21 +234,49 @@ Both plugins are production-ready and require no additional setup beyond environ
    - **Database Name:** `verscienta_health`
 6. Click **Deploy**
 
-### 3.2 Note Database Connection Details
+**⚠️ IMPORTANT for HIPAA Compliance (Standard PostgreSQL only):**
+- Enable SSL/TLS with `sslmode=verify-full` in production
+- Configure encryption at rest (use `DATABASE_ENCRYPTION_KEY`)
+- Set up regular automated backups in Coolify
+- Enable audit logging
+- Restrict network access
 
-Coolify will provide you with:
+**Recommendation:** Use **Supabase PostgreSQL in Coolify** (Option A) for the best of both worlds - self-hosted control with enterprise security features built-in.
 
-- **Host:** Internal Docker network hostname
-- **Port:** Usually 5432
-- **Database:** verscienta_health
-- **User:** verscienta_user
-- **Password:** [generated password]
+### 3.2 Configure Database Connection
 
-Connection string format:
-
+**For Supabase PostgreSQL in Coolify (Recommended):**
+```env
+# Coolify will provide the connection string (usually internal Docker network)
+DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health?sslmode=require
+DATABASE_PROVIDER=supabase
+# SSL is automatically handled by Supabase PostgreSQL image
 ```
-postgresql://verscienta_user:PASSWORD@HOST:5432/verscienta_health
+
+**For Managed Supabase Cloud:**
+```env
+DATABASE_URL=postgresql://postgres.[PROJECT_ID]:[PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=verify-full&pgbouncer=true
+DATABASE_PROVIDER=supabase
 ```
+
+**For Standard PostgreSQL (Development):**
+```env
+DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
+DATABASE_PROVIDER=custom
+```
+
+**For Standard PostgreSQL with SSL (Production):**
+```env
+DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health?sslmode=verify-full&sslrootcert=/path/to/ca-certificate.crt
+DATABASE_PROVIDER=custom
+DATABASE_ENCRYPTION_KEY=[generate-with-openssl-rand-base64-32]
+```
+
+**SSL Mode Options (in order of security):**
+- `disable` - No SSL (development only - NOT for production)
+- `require` - SSL required but doesn't verify certificate (acceptable for Supabase in Coolify)
+- `verify-ca` - Verifies certificate is from trusted CA
+- `verify-full` - **Most secure** - Verifies certificate + hostname (REQUIRED for HIPAA with external connections)
 
 ---
 
@@ -232,12 +300,20 @@ Add these environment variables in Coolify:
 NODE_ENV=production
 PORT=3001
 
-# Database
-DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
+# Database - Choose one option below:
 
-# Database provider (for encryption detection)
-# Options: 'aws-rds', 'digitalocean', 'supabase', 'render', 'custom'
-DATABASE_PROVIDER=custom
+# Option A: Supabase (Recommended)
+DATABASE_URL=postgresql://postgres.[PROJECT_ID]:[PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=verify-full&pgbouncer=true
+DATABASE_PROVIDER=supabase
+
+# Option B: Self-hosted with SSL (Production)
+# DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health?sslmode=verify-full
+# DATABASE_PROVIDER=custom
+# DATABASE_ENCRYPTION_KEY=<generate-with-openssl-rand-base64-32>
+
+# Option C: Self-hosted without SSL (Development only - NOT for production)
+# DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
+# DATABASE_PROVIDER=custom
 
 # Payload CMS
 PAYLOAD_SECRET=<generate-a-secure-random-string-64-chars>
@@ -317,8 +393,19 @@ PORT=3000
 PAYLOAD_PUBLIC_SERVER_URL=https://backend.verscienta.com
 NEXT_PUBLIC_CMS_URL=https://backend.verscienta.com
 
-# Database (for Better Auth and Prisma)
-DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
+# Database (for Better Auth and Prisma) - Choose one option:
+
+# Option A: Supabase (Recommended)
+DATABASE_URL=postgresql://postgres.[PROJECT_ID]:[PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=verify-full&pgbouncer=true
+DATABASE_PROVIDER=supabase
+
+# Option B: Self-hosted with SSL (Production)
+# DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health?sslmode=verify-full
+# DATABASE_PROVIDER=custom
+
+# Option C: Self-hosted without SSL (Development only - NOT for production)
+# DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
+# DATABASE_PROVIDER=custom
 
 # Better Auth (v1.3+)
 BETTER_AUTH_SECRET=<generate-a-secure-random-string-64-chars>
@@ -645,11 +732,15 @@ Configure Coolify to send alerts:
 
 ### 10.2 Database Security
 
-- ✅ Use strong database passwords
+- ✅ **Use managed PostgreSQL** (Supabase recommended) with encryption at rest
+- ✅ **Enable SSL with `verify-full` mode** (REQUIRED for HIPAA compliance)
+- ✅ Use strong database passwords (32+ characters)
 - ✅ Restrict database access to application containers only
-- ✅ Enable SSL/TLS for database connections
-- ✅ Set up regular backups
-- ✅ Configure `DATABASE_PROVIDER` for encryption at rest detection
+- ✅ Set up automated backups with point-in-time recovery
+- ✅ Configure `DATABASE_PROVIDER=supabase` for automatic encryption detection
+- ✅ Use connection pooling (PgBouncer) for production workloads
+- ✅ Monitor database logs for suspicious activity
+- ✅ Rotate database credentials periodically (every 90 days)
 
 ### 10.3 Network Security
 
@@ -815,7 +906,10 @@ Coolify supports multiple replicas:
 ### Pre-Deployment
 - [ ] Server with Coolify installed and configured
 - [ ] Git repository pushed and accessible
-- [ ] PostgreSQL 17+ database created in Coolify
+- [ ] **Database setup complete** - Choose one:
+  - [ ] Supabase PostgreSQL deployed in Coolify (recommended)
+  - [ ] Managed Supabase Cloud project created with connection pooling
+  - [ ] Standard PostgreSQL 17+ with SSL configured (`sslmode=verify-full`)
 - [ ] Algolia account and indexes created
 - [ ] **Cloudflare R2 bucket created and configured** (for S3 storage plugin)
 - [ ] Resend API key obtained
