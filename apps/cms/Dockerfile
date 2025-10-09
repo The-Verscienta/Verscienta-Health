@@ -20,9 +20,10 @@ COPY --chown=payloadcms:nodejs apps/web/package.json ./apps/web/
 COPY --chown=payloadcms:nodejs packages/api-types/package.json ./packages/api-types/
 COPY --chown=payloadcms:nodejs packages/api-client/package.json ./packages/api-client/
 
-# Install dependencies (production only)
-# Skip prepare scripts (husky) in production
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+# Install dependencies (including devDependencies for TypeScript)
+# Payload CMS needs tsx to run TypeScript server
+# Skip prepare scripts (husky) to avoid git hooks
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Copy source code
 COPY --chown=payloadcms:nodejs packages ./packages
@@ -42,6 +43,6 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3001/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the application directly using Node and the built server
+# Start the application using tsx (TypeScript execution)
 WORKDIR /app/apps/cms
-CMD ["node", "src/server.ts"]
+CMD ["../../node_modules/.bin/tsx", "src/server.ts"]
