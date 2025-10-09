@@ -21,7 +21,8 @@ COPY --chown=payloadcms:nodejs packages/api-types/package.json ./packages/api-ty
 COPY --chown=payloadcms:nodejs packages/api-client/package.json ./packages/api-client/
 
 # Install dependencies (production only)
-RUN pnpm install --frozen-lockfile --prod
+# Skip prepare scripts (husky) in production
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 # Copy source code
 COPY --chown=payloadcms:nodejs packages ./packages
