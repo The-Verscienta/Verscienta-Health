@@ -13,13 +13,22 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 # Copy all package.json files for dependency installation
 COPY apps/web/package.json ./apps/web/
 COPY apps/cms/package.json ./apps/cms/
+COPY packages/api-types/package.json ./packages/api-types/
+COPY packages/api-client/package.json ./packages/api-client/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
+# Copy shared packages (needed for build)
+COPY packages ./packages
+
 # Copy source code
 COPY apps/web ./apps/web
 COPY apps/cms ./apps/cms
+
+# Build shared packages first (needed by web app)
+RUN pnpm --filter @verscienta/api-types build || true
+RUN pnpm --filter @verscienta/api-client build || true
 
 # Build the Next.js application
 ENV NEXT_TELEMETRY_DISABLED=1
