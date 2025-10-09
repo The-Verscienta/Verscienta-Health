@@ -1,0 +1,29 @@
+{
+  "name": "@verscienta/api-client",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Type-safe API client for Verscienta Health - works with React, React Native, Flutter (via dart bridge)",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@verscienta/api-types": "workspace:*",
+    "axios": "^1.12.2"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,7 +1,15 @@
 import { algoliasearch } from 'algoliasearch'
 import type { CollectionAfterChangeHook } from 'payload'
 
-const client = algoliasearch(process.env.ALGOLIA_APP_ID!, process.env.ALGOLIA_ADMIN_API_KEY!)
+// Initialize client lazily to avoid errors during build
+let client: ReturnType<typeof algoliasearch> | null = null
+
+function getAlgoliaClient() {
+  if (!client && process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_ADMIN_API_KEY) {
+    client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY)
+  }
+  return client
+}
 
 /**
  * Sync Payload documents to Algolia search index
@@ -10,12 +18,13 @@ const client = algoliasearch(process.env.ALGOLIA_APP_ID!, process.env.ALGOLIA_AD
 export const algoliaSync = (indexName: string): CollectionAfterChangeHook => {
   return async ({ doc, operation, req }) => {
     // Skip if Algolia is not configured
-    if (!process.env.ALGOLIA_APP_ID || !process.env.ALGOLIA_ADMIN_API_KEY) {
-      console.warn('Algolia not configured, skipping sync')
+    const algoliaClient = getAlgoliaClient()
+    if (!algoliaClient) {
+      // Silently skip in development/build without env vars
       return
     }
 
-    const index = (client as any).initIndex(`verscienta_${indexName}`)
+    const index = (algoliaClient as any).initIndex(`verscienta_${indexName}`)
 
     try {
       if (operation === 'create' || operation === 'update') {

@@ -15,6 +15,10 @@ export const Symptoms: CollectionConfig = {
     update: isAdminOrEditor,
     delete: ({ req: { user } }) => user?.role === 'admin',
   },
+  versions: {
+    drafts: true,
+    maxPerDoc: 50,
+  },
   fields: [
     {
       name: 'title',

@@ -138,8 +138,15 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-.claude/
+.claude/settings.local.json
+.claude/settings.json
 
 .vscode/
+
+.turbo/
+
+.husky/
+
+.github/
 
 copilot-instructions.md

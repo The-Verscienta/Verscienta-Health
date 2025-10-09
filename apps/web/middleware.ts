@@ -119,10 +119,72 @@ function generateCSP(): string {
 }
 
 /**
+ * Get allowed origins for CORS
+ */
+function getAllowedOrigins(): string[] {
+  const webUrl = process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'
+
+  // In development, allow all localhost origins
+  if (process.env.NODE_ENV === 'development') {
+    return [
+      webUrl,
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:8081', // React Native Metro
+      'http://localhost:19000', // Expo
+      'http://localhost:19006', // Expo web
+      'capacitor://localhost', // Capacitor iOS
+    ]
+  }
+
+  // In production, only allow specific origins
+  return [
+    webUrl,
+    'https://verscienta.com',
+    'https://www.verscienta.com',
+    'https://staging.verscienta.com',
+    // Mobile app origins
+    'capacitor://localhost', // Capacitor iOS
+    'http://localhost', // Capacitor Android
+    // Add production mobile app custom schemes when available:
+    // 'verscienta-app://',
+  ]
+}
+
+/**
+ * Add CORS headers if origin is allowed
+ */
+function addCORSHeaders(response: NextResponse, origin: string | null): void {
+  if (!origin) return
+
+  const allowedOrigins = getAllowedOrigins()
+  const isAllowed = allowedOrigins.includes(origin)
+
+  if (isAllowed) {
+    response.headers.set('Access-Control-Allow-Origin', origin)
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+    response.headers.set(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization, X-API-Key, X-Requested-With, X-Client-Version, X-Device-Id'
+    )
+    response.headers.set('Access-Control-Allow-Credentials', 'true')
+    response.headers.set('Access-Control-Max-Age', '86400')
+  }
+}
+
+/**
  * Main middleware function
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const origin = request.headers.get('origin')
+
+  // Handle CORS preflight requests
+  if (request.method === 'OPTIONS') {
+    const response = new NextResponse(null, { status: 204 })
+    addCORSHeaders(response, origin)
+    return response
+  }
 
   // Get client identifier
   const clientId = getClientIdentifier(request)
@@ -186,6 +248,9 @@ export async function middleware(request: NextRequest) {
 
   // Create response with security headers
   const response = NextResponse.next()
+
+  // CORS headers (for mobile apps)
+  addCORSHeaders(response, origin)
 
   // Rate limit headers (inform client of current limits)
   response.headers.set('X-RateLimit-Limit', String(rateLimit.limit))

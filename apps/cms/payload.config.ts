@@ -1,5 +1,7 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -55,6 +57,56 @@ export default buildConfig({
   globals: [TrefleImportState, PerenualImportState],
 
   editor: lexicalEditor({}),
+
+  plugins: [
+    s3Storage({
+      collections: {
+        media: true, // Enable S3 storage for media collection
+      },
+      bucket: process.env.CLOUDFLARE_BUCKET_NAME || 'verscienta-media',
+      config: {
+        credentials: {
+          accessKeyId: process.env.CLOUDFLARE_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.CLOUDFLARE_SECRET_ACCESS_KEY || '',
+        },
+        region: 'auto', // Cloudflare R2 uses 'auto' for region
+        // Cloudflare R2 endpoint format
+        endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+      },
+    }),
+    seoPlugin({
+      collections: ['herbs', 'conditions', 'formulas', 'practitioners', 'modalities', 'symptoms', 'reviews'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }: { doc: any }) => `${doc?.name || doc?.title || 'Verscienta Health'}`,
+      generateDescription: ({ doc }: { doc: any }) => {
+        // Try to extract first 160 chars from various text fields
+        let text = doc?.description || doc?.summary || doc?.bio || doc?.comment || ''
+
+        // Handle richText fields (Lexical format) - extract plain text
+        if (text && typeof text === 'object' && text.root) {
+          // Simple extraction from Lexical JSON
+          const extractText = (node: any): string => {
+            if (node.text) return node.text
+            if (node.children) {
+              return node.children.map(extractText).join(' ')
+            }
+            return ''
+          }
+          text = extractText(text.root)
+        }
+
+        if (typeof text === 'string' && text.length > 0) {
+          return text.slice(0, 160)
+        }
+        return 'Discover holistic health wisdom on Verscienta Health'
+      },
+      generateURL: ({ doc, collectionConfig }: any) => {
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://verscienta.com'
+        const slug = doc?.slug || doc?.id
+        return `${baseUrl}/${collectionConfig?.slug}/${slug}`
+      },
+    }),
+  ],
 
   db: postgresAdapter({
     pool: {

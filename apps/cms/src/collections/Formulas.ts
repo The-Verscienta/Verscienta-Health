@@ -20,6 +20,10 @@ export const Formulas: CollectionConfig = {
   hooks: {
     afterChange: [algoliaSync('formulas')],
   },
+  versions: {
+    drafts: true,
+    maxPerDoc: 50,
+  },
   fields: [
     {
       name: 'title',

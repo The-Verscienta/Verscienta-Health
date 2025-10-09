@@ -30,6 +30,8 @@ verscienta-health/
 │   ├── web/          # Next.js 15.5.4 frontend
 │   └── cms/          # Payload CMS 3.58.0 backend
 ├── packages/
+│   ├── api-types/    # Shared TypeScript type definitions for API
+│   ├── api-client/   # Platform-agnostic API client (web/mobile)
 │   ├── ui/           # Shared UI components
 │   ├── types/        # Shared TypeScript types
 │   └── utils/        # Shared utilities
@@ -152,6 +154,7 @@ pnpm db:studio        # Open Drizzle Studio
 - [**API Reference**](./docs/API_REFERENCE.md) - Complete API documentation
 - [**API Integration Examples**](./docs/API_INTEGRATION_EXAMPLES.md) - Code examples in multiple languages
 - [**Interactive API Docs**](https://verscienta.com/api-docs) - Swagger UI (live)
+- [**Mobile App Development Guide**](./MOBILE_APP_GUIDE.md) - Build iOS, Android & Windows apps
 
 ### Development
 
@@ -276,6 +279,38 @@ Traditional and modern formulas:
 - **Push notifications** ready (opt-in)
 - **Standalone mode** for app-like experience
 - **Optimized caching** for fonts, images, and API responses
+
+## 📲 Mobile App Development
+
+Verscienta Health is ready for native mobile app development with **full type-safe API client** and **shared types** for iOS, Android, and Windows.
+
+**Features:**
+- 🔧 **Type-safe API client** (`@verscienta/api-client`) - works with React Native, Expo, Flutter
+- 📝 **Shared TypeScript types** (`@verscienta/api-types`) - 100+ type definitions
+- 🌐 **CORS configured** for mobile origins (Capacitor, React Native Metro, Expo)
+- 🖼️ **Image optimization API** for mobile bandwidth efficiency
+- 📡 **Offline sync support** with incremental data updates
+- 🔔 **Push notifications** ready (iOS APNs, Android FCM)
+- 📱 **App configuration API** for remote feature flags
+
+**Getting Started:**
+
+See the comprehensive [Mobile App Development Guide](./MOBILE_APP_GUIDE.md) for:
+- React Native/Expo setup and integration
+- Flutter setup with Dart wrapper examples
+- Authentication flows (email/password, OAuth, MFA)
+- Offline-first architecture patterns
+- Push notifications setup
+- Complete code examples
+
+**Quick Example (React Native):**
+
+```typescript
+import { VerslientaClient } from '@verscienta/api-client'
+
+const api = new VerslientaClient({ baseURL: 'https://verscienta.com' })
+const herbs = await api.herbs.list({ page: 1, temperature: 'Warm' })
+```
 
 ## 🌍 Internationalization
 

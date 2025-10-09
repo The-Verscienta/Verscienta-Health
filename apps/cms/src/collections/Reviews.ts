@@ -40,6 +40,10 @@ export const Reviews: CollectionConfig = {
       }
     },
   },
+  versions: {
+    drafts: true,
+    maxPerDoc: 50,
+  },
   fields: [
     {
       name: 'rating',

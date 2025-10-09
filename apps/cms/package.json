@@ -22,10 +22,12 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.906.0",
     "@node-rs/crc32": "^1.10.6",
-    "@payloadcms/db-postgres": "^3.58.0",
-    "@payloadcms/plugin-cloud-storage": "^3.58.0",
-    "@payloadcms/richtext-lexical": "^3.58.0",
+    "@payloadcms/db-postgres": "^3.59.1",
+    "@payloadcms/plugin-seo": "^3.59.1",
+    "@payloadcms/richtext-lexical": "^3.59.1",
+    "@payloadcms/storage-s3": "^3.59.1",
     "algoliasearch": "^5.18.0",
     "axios": "^1.7.9",
     "cron-parser": "^5.4.0",
@@ -35,7 +37,7 @@
     "express": "^4.21.2",
     "ioredis": "^5.8.0",
     "node-cron": "^4.2.1",
-    "payload": "^3.58.0",
+    "payload": "^3.59.1",
     "postgres": "^3.4.5",
     "resend": "^6.1.2",
     "sharp": "^0.33.5"

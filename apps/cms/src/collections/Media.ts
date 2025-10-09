@@ -14,7 +14,8 @@ export const Media: CollectionConfig = {
     delete: ({ req: { user } }) => user?.role === 'admin' || user?.role === 'editor',
   },
   upload: {
-    staticDir: 'media',
+    // staticDir is not needed when using cloud storage plugin
+    // The plugin handles storage automatically via Cloudflare R2
     mimeTypes: ['image/*', 'application/pdf'],
     imageSizes: [
       {

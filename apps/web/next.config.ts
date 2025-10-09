@@ -1,6 +1,11 @@
 import type { NextConfig } from 'next'
+import withBundleAnalyzer from '@next/bundle-analyzer'
 // @ts-expect-error - next-pwa has no types
 import withPWA from 'next-pwa'
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -104,8 +109,8 @@ const nextConfig: NextConfig = {
   }),
 }
 
-// Wrap with PWA plugin
-export default withPWA({
+// Wrap with PWA plugin and Bundle Analyzer
+export default bundleAnalyzer(withPWA({
   dest: 'public',
   register: true,
   skipWaiting: true,
@@ -255,4 +260,4 @@ export default withPWA({
       },
     },
   ],
-})(nextConfig)
+})(nextConfig))

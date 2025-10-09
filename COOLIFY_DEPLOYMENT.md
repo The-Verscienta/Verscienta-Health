@@ -1,26 +1,29 @@
 # Coolify Deployment Guide - Verscienta Health
 
-This guide covers deploying Verscienta Health to a server running Coolify.
+This guide covers deploying Verscienta Health to a server running Coolify with full mobile app support.
 
-> **Last Updated:** 2025
-> **Status:** Production-ready with required pre-deployment fix
+> **Last Updated:** January 2025
+> **Status:** Production-ready with mobile infrastructure
+> **New Features:** Mobile API, Push Notifications, Dynamic Sitemap, Analytics
 
 ## ⚠️ Critical Pre-Deployment Requirements
 
 Before deploying, you MUST:
-1. ✅ Add health check endpoint to CMS (see Step 7)
-2. ✅ Review and set all required environment variables
-3. ✅ Configure Cloudflare R2 storage
-4. ✅ Set up Algolia search indexes
-5. ✅ Configure Resend for email delivery
+1. ✅ Add health check endpoint to CMS (already done!)
+2. ✅ Run Prisma migration for device tokens (Step 5.5)
+3. ✅ Review and set all required environment variables
+4. ✅ Configure Cloudflare R2 storage
+5. ✅ Set up Algolia search indexes
+6. ✅ Configure Resend for email delivery
+7. ✅ Build shared packages (@verscienta/api-types, @verscienta/api-client)
 
 ## 📋 Overview
 
 **Deployment Platform:** Coolify (Self-hosted)
-**Architecture:** Monorepo (Turborepo + pnpm)
+**Architecture:** Monorepo (Turborepo + pnpm) with mobile app support
 **Services Required:**
 
-- Next.js Frontend (Port 3000)
+- Next.js Frontend (Port 3000) with mobile APIs
 - Payload CMS Backend (Port 3001)
 - PostgreSQL 17+ Database
 - Redis (recommended for production rate limiting)
@@ -31,6 +34,17 @@ Before deploying, you MUST:
 - Cloudflare R2 (media storage)
 - Resend (email delivery)
 - Payload CMS (headless CMS)
+- Vercel Analytics & Speed Insights
+- Mobile API infrastructure (React Native, Expo, Flutter ready)
+
+**Mobile Features (New!):**
+- 📱 Type-safe API client (`@verscienta/api-client`)
+- 📝 Shared TypeScript types (`@verscienta/api-types`)
+- 🔔 Push notification support (iOS APNs, Android FCM)
+- 📡 Offline sync API for mobile apps
+- 🖼️ Mobile-optimized image API
+- 📱 App configuration API with feature flags
+- 🗺️ Dynamic sitemap generation with CMS data
 
 ---
 
@@ -39,24 +53,33 @@ Before deploying, you MUST:
 This guide uses the correct environment variables as found in `.env.example`:
 
 **Authentication:**
-- ✅ `AUTH_SECRET` and `AUTH_URL` (not BETTER_AUTH_*)
+- ✅ `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL` (Better Auth v1.3+)
+- ✅ Legacy support for `AUTH_SECRET` and `AUTH_URL` (if needed)
 - ✅ Uses Prisma with Better Auth
 
 **CMS Connection:**
-- ✅ `PAYLOAD_PUBLIC_SERVER_URL` (not NEXT_PUBLIC_CMS_URL)
-- ✅ `NEXT_PUBLIC_APP_URL` for CORS (not FRONTEND_URL)
+- ✅ `PAYLOAD_PUBLIC_SERVER_URL` - Backend URL for API calls
+- ✅ `NEXT_PUBLIC_CMS_URL` - Frontend reference to CMS
+- ✅ `NEXT_PUBLIC_APP_URL` for CORS and metadata
 
 **Email:**
 - ✅ Resend API (`RESEND_API_KEY`, `RESEND_FROM_EMAIL`)
 - ✅ Not generic SMTP
 
 **Storage:**
-- ✅ Cloudflare R2 with S3-compatible API
+- ✅ Cloudflare R2 with S3-compatible API (`@payloadcms/storage-s3`)
 - ✅ Not direct Cloudflare Images API
+- ✅ `CLOUDFLARE_IMAGES_ENABLED=false` for mobile image optimization
 
 **Rate Limiting:**
 - ✅ Redis/Upstash recommended for production
 - ✅ `REDIS_URL` and `REDIS_TOKEN`
+
+**Mobile Apps (New!):**
+- ✅ `MOBILE_OFFLINE_MODE` - Enable offline sync support
+- ✅ `MOBILE_PUSH_NOTIFICATIONS` - Enable push notification endpoints
+- ✅ `MIN_SUPPORTED_APP_VERSION` - Force update mechanism
+- ✅ CORS configured for Capacitor, React Native, Expo origins
 
 ---
 
@@ -117,6 +140,42 @@ These Dockerfiles include:
 - ✅ Standalone Next.js output (already configured)
 
 **No additional Dockerfile setup is needed.** The Next.js config already has `output: 'standalone'` enabled (apps/web/next.config.ts:9).
+
+---
+
+## 🔌 Step 2.5: Payload CMS Plugins (Already Configured)
+
+The CMS includes the following official Payload plugins:
+
+### **1. Cloud Storage Plugin (`@payloadcms/storage-s3`)**
+- Uploads media files to Cloudflare R2 (S3-compatible storage)
+- Automatically handles image resizing (thumbnail, medium, large, hero)
+- **Status:** ✅ Configured in `apps/cms/payload.config.ts`
+- **Required Env Vars:** See Step 4.2 below
+
+### **2. SEO Plugin (`@payloadcms/plugin-seo`)**
+- Provides SEO management UI for content editors
+- Auto-generates meta titles, descriptions, Open Graph tags
+- Includes preview of how content appears in Google/social media
+- **Collections:** herbs, conditions, formulas, practitioners, modalities, symptoms, reviews
+- **Status:** ✅ Configured in `apps/cms/payload.config.ts`
+
+Both plugins are production-ready and require no additional setup beyond environment variables.
+
+**Installed Dependencies:**
+```json
+{
+  "@payloadcms/storage-s3": "^3.59.1",
+  "@payloadcms/plugin-seo": "^3.59.1",
+  "@aws-sdk/client-s3": "^3.906.0"
+}
+```
+
+**Key Features:**
+- ✅ Media files automatically uploaded to R2 on save
+- ✅ SEO fields appear in edit view for all content
+- ✅ Image variants (thumbnail, medium, large, hero) auto-generated
+- ✅ SEO preview shows Google/Facebook/Twitter appearance
 
 ---
 
@@ -251,17 +310,23 @@ Add these environment variables:
 # App Configuration
 NODE_ENV=production
 NEXT_PUBLIC_APP_URL=https://verscienta.com
+NEXT_PUBLIC_WEB_URL=https://verscienta.com
 PORT=3000
 
 # Payload CMS API
 PAYLOAD_PUBLIC_SERVER_URL=https://backend.verscienta.com
+NEXT_PUBLIC_CMS_URL=https://backend.verscienta.com
 
 # Database (for Better Auth and Prisma)
 DATABASE_URL=postgresql://verscienta_user:PASSWORD@verscienta-db:5432/verscienta_health
 
-# Better Auth
-AUTH_SECRET=<generate-a-secure-random-string-64-chars>
-AUTH_URL=https://verscienta.com
+# Better Auth (v1.3+)
+BETTER_AUTH_SECRET=<generate-a-secure-random-string-64-chars>
+BETTER_AUTH_URL=https://verscienta.com
+
+# Legacy Auth Variables (if needed for compatibility)
+# AUTH_SECRET=<generate-a-secure-random-string-64-chars>
+# AUTH_URL=https://verscienta.com
 
 # OAuth Providers (Optional)
 GOOGLE_CLIENT_ID=your_google_client_id
@@ -277,6 +342,7 @@ NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY=your_algolia_search_key
 CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
 CLOUDFLARE_ACCOUNT_HASH=your_account_hash
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
+CLOUDFLARE_IMAGES_ENABLED=false  # For mobile image optimization API
 
 # Grok AI (xAI)
 GROK_API_KEY=your_grok_api_key
@@ -298,14 +364,23 @@ SESSION_TIMEOUT=86400  # 24 hours
 PHI_SESSION_TIMEOUT=900  # 15 minutes for PHI pages
 REQUIRE_MFA_FOR_ADMIN=true
 REQUIRE_MFA_FOR_PHI_ACCESS=false
+
+# Mobile App Configuration (New!)
+MOBILE_OFFLINE_MODE=true  # Enable offline sync API
+MOBILE_PUSH_NOTIFICATIONS=true  # Enable push notification endpoints
+# MIN_SUPPORTED_APP_VERSION=1.0.0  # Optional: force update mechanism
+
+# CORS for Mobile Apps (comma-separated, optional - middleware handles defaults)
+# ALLOWED_CORS_ORIGINS=verscienta-app://,capacitor://localhost
 ```
 
 **Important Notes:**
-- The frontend uses `PAYLOAD_PUBLIC_SERVER_URL`, not `NEXT_PUBLIC_CMS_URL`
-- Better Auth uses `AUTH_SECRET` and `AUTH_URL`, not `BETTER_AUTH_*`
+- Better Auth v1.3+ uses `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`
+- Both `PAYLOAD_PUBLIC_SERVER_URL` and `NEXT_PUBLIC_CMS_URL` should point to backend
 - Email is sent via Resend, not generic SMTP
 - Redis/Upstash is highly recommended for production rate limiting
 - For HIPAA compliance, consider enabling MFA for PHI access
+- **Mobile features require database migration** (see Step 5.5)
 
 ### 5.3 Configure Domain
 
@@ -326,6 +401,46 @@ npx prisma generate
 ```
 
 This is typically handled during the build process, but if you encounter database connection issues, regenerate the Prisma client.
+
+### 5.5 Run Database Migration for Device Tokens (Required for Mobile Features)
+
+**Critical:** Mobile push notification support requires a database migration to add the `DeviceToken` table.
+
+1. Go to the web service in Coolify
+2. Click **Terminal**
+3. Run the migration:
+
+```bash
+# Method 1: Development (quick - for dev/staging)
+npx prisma db push
+
+# Method 2: Production (recommended - creates migration file)
+npx prisma migrate deploy
+```
+
+**What this does:**
+- Creates `DeviceToken` table for storing push notification tokens
+- Adds relation to `User` table (optional - devices can register before login)
+- Creates indexes for `userId` and `platform` for performance
+- Enables cascading delete (tokens removed when user deleted)
+
+**Verify migration:**
+
+```bash
+# Check table exists
+npx prisma studio
+
+# Or test the endpoint
+curl -X POST https://verscienta.com/api/mobile/register-device \
+  -H "Content-Type: application/json" \
+  -d '{"deviceToken":"test","platform":"ios"}'
+```
+
+**If migration fails:**
+- Check database connection (`DATABASE_URL`)
+- Ensure Prisma Client was generated (`npx prisma generate`)
+- Review migration file: `apps/web/prisma/migrations/`
+- See troubleshooting: `MIGRATION_DEVICE_TOKENS.md`
 
 ---
 
@@ -447,12 +562,44 @@ Ensure the environment variable is set correctly to your frontend domain.
 
 ### 8.4 Test the Application
 
+**Core Features:**
 1. Visit `https://verscienta.com`
 2. Test authentication (login/register)
 3. Create a test herb entry in CMS
 4. Verify it appears on frontend
 5. Test search functionality
 6. Test AI symptom checker
+
+**Mobile Features (New!):**
+
+7. **Test Mobile APIs:**
+   ```bash
+   # Device registration
+   curl -X POST https://verscienta.com/api/mobile/register-device \
+     -H "Content-Type: application/json" \
+     -d '{"deviceToken":"test-token-123","platform":"ios"}'
+
+   # Mobile sync
+   curl -X POST https://verscienta.com/api/mobile/sync \
+     -H "Content-Type: application/json" \
+     -d '{"collections":["herbs"]}'
+
+   # App configuration
+   curl https://verscienta.com/api/mobile/config
+
+   # Image optimization
+   curl "https://verscienta.com/api/images?url=https://example.com/image.jpg&w=400&q=80&f=webp"
+   ```
+
+8. **Test Dynamic Sitemap:**
+   - Visit: `https://verscienta.com/server-sitemap.xml`
+   - Verify individual herb/formula/condition URLs are listed
+   - Check `lastmod` dates are accurate
+   - Submit to Google Search Console
+
+9. **Test Analytics (if deployed on Vercel):**
+   - Analytics should automatically track page views
+   - Speed Insights should report Web Vitals
 
 ---
 
@@ -670,10 +817,11 @@ Coolify supports multiple replicas:
 - [ ] Git repository pushed and accessible
 - [ ] PostgreSQL 17+ database created in Coolify
 - [ ] Algolia account and indexes created
-- [ ] Cloudflare R2 bucket created and configured
+- [ ] **Cloudflare R2 bucket created and configured** (for S3 storage plugin)
 - [ ] Resend API key obtained
 - [ ] Redis/Upstash account created (optional but recommended)
-- [ ] **Critical:** Health check endpoint added to CMS (Step 7)
+- [ ] **Critical:** Health check endpoint added to CMS (already done!)
+- [ ] **New:** Shared packages built (`@verscienta/api-types`, `@verscienta/api-client`)
 
 ### Backend (CMS) Deployment
 - [ ] CMS service created in Coolify
@@ -691,20 +839,22 @@ Coolify supports multiple replicas:
 - [ ] Web service created in Coolify
 - [ ] Dockerfile location set: `apps/web/Dockerfile`
 - [ ] Build context set: `.` (root)
-- [ ] All web environment variables configured
+- [ ] All web environment variables configured (including mobile vars)
 - [ ] Domain configured: `verscienta.com`
 - [ ] SSL/HTTPS enabled
 - [ ] Frontend deployed successfully
 - [ ] Prisma client generated (if needed)
+- [ ] **New:** Device token migration run (`npx prisma migrate deploy`)
 - [ ] Health endpoint accessible: `/api/health`
 
 ### Post-Deployment Configuration
 - [ ] Algolia indexes populated
 - [ ] Test authentication (login/register)
 - [ ] Test content creation in CMS
+- [ ] **Test SEO plugin** - Create content and verify SEO tab appears
 - [ ] Test search functionality
 - [ ] Test AI symptom checker
-- [ ] Verify media uploads work (Cloudflare R2)
+- [ ] **Verify media uploads work (Cloudflare R2)** - Upload image in CMS
 - [ ] Test email delivery (Resend)
 - [ ] OAuth providers configured (if using)
 - [ ] Rate limiting tested (Redis)

@@ -27,6 +27,10 @@ export const Practitioners: CollectionConfig = {
   hooks: {
     beforeChange: [geocodeAddress],
   },
+  versions: {
+    drafts: true,
+    maxPerDoc: 50,
+  },
   fields: [
     {
       name: 'name',
@@ -68,6 +72,17 @@ export const Practitioners: CollectionConfig = {
       name: 'profileImage',
       type: 'upload',
       relationTo: 'media',
+      label: 'Profile Photo',
+    },
+    {
+      name: 'photos',
+      type: 'upload',
+      relationTo: 'media',
+      hasMany: true, // Bulk upload support - select multiple files at once
+      label: 'Photo Gallery',
+      admin: {
+        description: 'Additional photos of practice, clinic, or treatments (bulk upload supported)',
+      },
     },
     {
       name: 'bio',

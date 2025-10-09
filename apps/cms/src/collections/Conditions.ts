@@ -19,6 +19,10 @@ export const Conditions: CollectionConfig = {
   hooks: {
     afterChange: [algoliaSync('conditions')],
   },
+  versions: {
+    drafts: true,
+    maxPerDoc: 50,
+  },
   fields: [
     {
       name: 'title',
