@@ -111,6 +111,10 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL,
+      // SSL configuration for managed databases (Supabase, DigitalOcean, etc.)
+      ssl: process.env.DATABASE_URL?.includes('sslmode=require')
+        ? { rejectUnauthorized: false }
+        : false,
       // Connection pooling best practices for production
       max: process.env.NODE_ENV === 'production' ? 20 : 10, // Max connections
       min: process.env.NODE_ENV === 'production' ? 5 : 2, // Min connections

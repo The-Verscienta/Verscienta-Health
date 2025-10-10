@@ -40,6 +40,10 @@ ENV NODE_OPTIONS="--no-deprecation"
 
 EXPOSE 3001
 
+# Health check using curl
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:3001/api/health || exit 1
+
 # Start the application using tsx via npx (no symlinks needed)
 WORKDIR /app/apps/cms
 CMD ["npx", "tsx", "src/server.ts"]
