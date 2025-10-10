@@ -1,5 +1,5 @@
-import { getServerSideSitemap } from 'next-sitemap'
 import type { ISitemapField } from 'next-sitemap'
+import { getServerSideSitemap } from 'next-sitemap'
 
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://verscienta.com'

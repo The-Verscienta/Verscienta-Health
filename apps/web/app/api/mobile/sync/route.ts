@@ -1,5 +1,5 @@
+import type { Condition, Formula, Herb, SyncRequest, SyncResponse } from '@verscienta/api-types'
 import { NextRequest, NextResponse } from 'next/server'
-import type { SyncRequest, SyncResponse, Herb, Formula, Condition } from '@verscienta/api-types'
 
 /**
  * Mobile Sync API
@@ -28,11 +28,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch updated herbs if requested
     if (collections.includes('herbs')) {
-      const herbs = await fetchUpdatedData<Herb>(
-        'herbs',
-        lastSyncedAt,
-        MAX_ITEMS_PER_COLLECTION
-      )
+      const herbs = await fetchUpdatedData<Herb>('herbs', lastSyncedAt, MAX_ITEMS_PER_COLLECTION)
       response.herbs = herbs.docs
       response.hasMore = response.hasMore || herbs.hasMore
     }

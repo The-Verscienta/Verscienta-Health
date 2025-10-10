@@ -64,7 +64,7 @@ export async function importTrefleDataJob(payload: Payload): Promise<void> {
           },
         })
 
-        const { data, links, meta } = response.data
+        const { data, meta } = response.data
 
         if (!data || data.length === 0) {
           console.log('✅ No more plants to import - import complete!')

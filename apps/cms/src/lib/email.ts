@@ -92,7 +92,10 @@ export async function sendCronJobCompletionEmail({
             <div style="margin-top: 16px; background-color: #fef2f2; padding: 12px; border-radius: 6px; border-left: 4px solid #dc2626;">
               <h3 style="color: #dc2626; margin-top: 0;">Errors (${errors.length})</h3>
               <ul style="margin: 0; padding-left: 20px;">
-                ${errors.slice(0, 10).map((error) => `<li style="margin: 4px 0;">${error}</li>`).join('')}
+                ${errors
+                  .slice(0, 10)
+                  .map((error) => `<li style="margin: 4px 0;">${error}</li>`)
+                  .join('')}
                 ${errors.length > 10 ? `<li style="margin: 4px 0;"><em>... and ${errors.length - 10} more</em></li>` : ''}
               </ul>
             </div>

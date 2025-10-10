@@ -73,7 +73,7 @@ export async function backupDatabaseJob(payload: Payload): Promise<void> {
       --if-exists`
 
     try {
-      const { stdout, stderr } = await execAsync(pgDumpCommand, {
+      const { stderr } = await execAsync(pgDumpCommand, {
         maxBuffer: 1024 * 1024 * 100, // 100MB buffer
       })
 

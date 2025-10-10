@@ -21,28 +21,28 @@
  * ```
  */
 
-import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios'
 import type {
-  Herb,
-  Formula,
+  ApiError,
+  AppConfig,
+  AuthResponse,
   Condition,
-  Practitioner,
+  Formula,
+  Herb,
   HerbListRequest,
+  LoginRequest,
   PaginatedResponse,
+  PaginationParams,
+  Practitioner,
+  RegisterRequest,
   SearchRequest,
   SearchResponse,
   SymptomAnalysisRequest,
   SymptomAnalysisResponse,
-  AuthResponse,
-  LoginRequest,
-  RegisterRequest,
-  User,
-  ApiError,
-  PaginationParams,
-  AppConfig,
   SyncRequest,
   SyncResponse,
+  User,
 } from '@verscienta/api-types'
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 
 export interface VerslientaClientConfig {
   baseURL: string
@@ -259,10 +259,9 @@ export class VerslientaClient {
      * Get paginated list of practitioners
      */
     list: async (params?: PaginationParams): Promise<PaginatedResponse<Practitioner>> => {
-      const response = await this.axios.get<PaginatedResponse<Practitioner>>(
-        '/api/practitioners',
-        { params }
-      )
+      const response = await this.axios.get<PaginatedResponse<Practitioner>>('/api/practitioners', {
+        params,
+      })
       return response.data
     },
 
@@ -308,9 +307,7 @@ export class VerslientaClient {
      * Analyze symptoms and get herb recommendations
      * Requires authentication
      */
-    analyzeSymptoms: async (
-      data: SymptomAnalysisRequest
-    ): Promise<SymptomAnalysisResponse> => {
+    analyzeSymptoms: async (data: SymptomAnalysisRequest): Promise<SymptomAnalysisResponse> => {
       const response = await this.axios.post<SymptomAnalysisResponse>(
         '/api/grok/symptom-analysis',
         data

@@ -77,7 +77,10 @@ export async function GET(request: NextRequest) {
 
     // Create response with proper headers
     const headers = new Headers()
-    headers.set('Content-Type', imageResponse.headers.get('Content-Type') || `image/${params.format}`)
+    headers.set(
+      'Content-Type',
+      imageResponse.headers.get('Content-Type') || `image/${params.format}`
+    )
     headers.set('Cache-Control', 'public, max-age=31536000, immutable')
     headers.set('X-Image-Optimized', 'true')
 

@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+
+import cronParser from 'cron-parser'
 import cron from 'node-cron'
 import type { Payload } from 'payload'
 import { backupDatabaseJob } from './jobs/backupDatabase'
@@ -170,8 +172,6 @@ export function listCronJobs(): Array<{
   enabled: boolean
   nextRun?: Date
 }> {
-  const cronParser = require('cron-parser')
-
   return cronJobs.map(({ name, schedule, enabled }) => {
     let nextRun: Date | undefined
 

@@ -91,7 +91,8 @@ export const Herbs: CollectionConfig = {
       hasMany: true, // Bulk upload support - select multiple files at once
       label: 'Quick Photo Gallery',
       admin: {
-        description: 'Upload multiple herb photos at once (for detailed categorization, use "Additional Images" section below)',
+        description:
+          'Upload multiple herb photos at once (for detailed categorization, use "Additional Images" section below)',
       },
     },
 

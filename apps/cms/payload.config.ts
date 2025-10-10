@@ -75,24 +75,33 @@ export default buildConfig({
       },
     }),
     seoPlugin({
-      collections: ['herbs', 'conditions', 'formulas', 'practitioners', 'modalities', 'symptoms', 'reviews'],
+      collections: [
+        'herbs',
+        'conditions',
+        'formulas',
+        'practitioners',
+        'modalities',
+        'symptoms',
+        'reviews',
+      ],
       uploadsCollection: 'media',
-      generateTitle: ({ doc }: { doc: any }) => `${doc?.name || doc?.title || 'Verscienta Health'}`,
-      generateDescription: ({ doc }: { doc: any }) => {
+      generateTitle: ({ doc }: { doc: Record<string, unknown> }) =>
+        `${(doc?.name as string) || (doc?.title as string) || 'Verscienta Health'}`,
+      generateDescription: ({ doc }: { doc: Record<string, unknown> }) => {
         // Try to extract first 160 chars from various text fields
         let text = doc?.description || doc?.summary || doc?.bio || doc?.comment || ''
 
         // Handle richText fields (Lexical format) - extract plain text
         if (text && typeof text === 'object' && text.root) {
           // Simple extraction from Lexical JSON
-          const extractText = (node: any): string => {
-            if (node.text) return node.text
+          const extractText = (node: Record<string, unknown>): string => {
+            if (node.text) return node.text as string
             if (node.children) {
-              return node.children.map(extractText).join(' ')
+              return (node.children as Record<string, unknown>[]).map(extractText).join(' ')
             }
             return ''
           }
-          text = extractText(text.root)
+          text = extractText(text.root as Record<string, unknown>)
         }
 
         if (typeof text === 'string' && text.length > 0) {
@@ -100,10 +109,16 @@ export default buildConfig({
         }
         return 'Discover holistic health wisdom on Verscienta Health'
       },
-      generateURL: ({ doc, collectionConfig }: any) => {
+      generateURL: ({
+        doc,
+        collectionConfig,
+      }: {
+        doc: Record<string, unknown>
+        collectionConfig: Record<string, unknown>
+      }) => {
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://verscienta.com'
-        const slug = doc?.slug || doc?.id
-        return `${baseUrl}/${collectionConfig?.slug}/${slug}`
+        const slug = (doc?.slug as string) || (doc?.id as string)
+        return `${baseUrl}/${collectionConfig?.slug as string}/${slug}`
       },
     }),
   ],

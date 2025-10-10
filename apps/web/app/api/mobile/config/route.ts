@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import type { AppConfig } from '@verscienta/api-types'
+import { NextResponse } from 'next/server'
 
 /**
  * Mobile App Configuration API
