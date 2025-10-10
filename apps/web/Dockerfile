@@ -37,8 +37,8 @@ RUN pnpm --filter web build
 # Production stage
 FROM node:20-alpine AS runner
 
-# Install curl for healthchecks
-RUN apk add --no-cache curl
+# Install curl and wget for healthchecks
+RUN apk add --no-cache curl wget
 
 WORKDIR /app
 

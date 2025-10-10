@@ -1,8 +1,8 @@
 # Production stage
 FROM node:20-alpine AS runner
 
-# Install curl for healthchecks and pnpm
-RUN apk add --no-cache curl && \
+# Install curl and wget for healthchecks, and pnpm
+RUN apk add --no-cache curl wget && \
     corepack enable && corepack prepare pnpm@9.15.0 --activate
 
 # Set working directory
