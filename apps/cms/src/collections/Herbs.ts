@@ -652,6 +652,7 @@ export const Herbs: CollectionConfig = {
           name: 'drugInteractions',
           type: 'array',
           label: 'Drug Interactions',
+          dbName: 'drug_int',
           fields: [
             {
               name: 'drugName',
@@ -662,6 +663,7 @@ export const Herbs: CollectionConfig = {
               name: 'interactionType',
               type: 'select',
               required: true,
+              dbName: 'type',
               options: [
                 { label: 'Major', value: 'major' },
                 { label: 'Moderate', value: 'moderate' },
