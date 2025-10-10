@@ -30,6 +30,10 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY --chown=payloadcms:nodejs packages ./packages
 COPY --chown=payloadcms:nodejs apps/cms ./apps/cms
 
+# Copy entrypoint script
+COPY --chown=payloadcms:nodejs apps/cms/entrypoint.sh /app/apps/cms/entrypoint.sh
+RUN chmod +x /app/apps/cms/entrypoint.sh
+
 USER payloadcms
 
 # Set environment variables
@@ -44,6 +48,6 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:3001/api/health || exit 1
 
-# Start the application using tsx via npx (no symlinks needed)
+# Start the application using entrypoint script
 WORKDIR /app/apps/cms
-CMD ["npx", "tsx", "src/server.ts"]
+ENTRYPOINT ["/app/apps/cms/entrypoint.sh"]
