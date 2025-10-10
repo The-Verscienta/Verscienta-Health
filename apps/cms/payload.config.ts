@@ -126,9 +126,16 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL,
-      // SSL configuration for managed databases (Supabase, DigitalOcean, etc.)
+      // SSL configuration for managed databases
       ssl: process.env.DATABASE_URL?.includes('sslmode=require')
-        ? { rejectUnauthorized: false }
+        ? {
+            rejectUnauthorized: true,
+            ca: process.env.DATABASE_SSL_CERT
+              ? process.env.DATABASE_SSL_CERT
+              : process.env.DATABASE_SSL_CA_PATH
+                ? require('fs').readFileSync(process.env.DATABASE_SSL_CA_PATH).toString()
+                : require('fs').readFileSync('/var/lib/postgresql/certs/server.crt').toString(),
+          }
         : false,
       // Connection pooling best practices for production
       max: process.env.NODE_ENV === 'production' ? 20 : 10, // Max connections
