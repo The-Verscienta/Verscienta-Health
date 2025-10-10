@@ -1,8 +1,9 @@
 # Production stage
 FROM node:20-alpine AS runner
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+# Install curl for healthchecks and pnpm
+RUN apk add --no-cache curl && \
+    corepack enable && corepack prepare pnpm@9.15.0 --activate
 
 # Set working directory
 WORKDIR /app
@@ -38,10 +39,6 @@ ENV HOSTNAME="0.0.0.0"
 ENV NODE_OPTIONS="--no-deprecation"
 
 EXPOSE 3001
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3001/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Start the application using tsx via npx (no symlinks needed)
 WORKDIR /app/apps/cms
