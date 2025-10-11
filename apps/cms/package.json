@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" payload dev",
     "build": "echo 'Payload CMS 3.x does not require build step'",
-    "start": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" npx tsx src/server.ts",
+    "start": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" payload serve",
     "generate:types": "payload generate:types",
     "generate:schema": "payload generate:graphQLSchema",
     "db:init": "psql -U postgres -f scripts/setup-database.sql",
