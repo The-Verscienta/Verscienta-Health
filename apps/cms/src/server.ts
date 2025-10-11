@@ -16,21 +16,39 @@ app.get('/api/health', (_, res) => {
 })
 
 const start = async () => {
-  // Initialize Payload with Express app
-  await payload.init({
-    express: app,
-    config: configPayload,
-  })
+  try {
+    // Initialize Payload with Express app
+    console.log('[DEBUG] About to initialize Payload...')
+    await payload.init({
+      express: app,
+      config: configPayload,
+    })
+    console.log('[DEBUG] Payload initialized successfully')
+    console.log('[DEBUG] Payload admin route should be at:', configPayload.routes?.admin || '/admin')
 
-  // Redirect root to Admin panel (after Payload routes)
-  app.get('/', (_, res) => {
-    res.redirect('/admin')
-  })
+    // Redirect root to Admin panel (after Payload routes)
+    app.get('/', (_, res) => {
+      res.redirect('/admin')
+    })
 
-  app.listen(PORT, async () => {
-    payload.logger.info(`Server listening on port ${PORT}`)
-    payload.logger.info(`Admin URL: http://localhost:${PORT}/admin`)
-  })
+    app.listen(PORT, async () => {
+      payload.logger.info(`Server listening on port ${PORT}`)
+      payload.logger.info(`Admin URL: http://localhost:${PORT}/admin`)
+
+      // Log all registered routes for debugging
+      console.log('[DEBUG] Registered routes:')
+      app._router.stack.forEach((middleware: any) => {
+        if (middleware.route) {
+          console.log(`  ${Object.keys(middleware.route.methods)} ${middleware.route.path}`)
+        } else if (middleware.name === 'router') {
+          console.log('  Router middleware mounted')
+        }
+      })
+    })
+  } catch (error) {
+    console.error('[ERROR] Failed to start server:', error)
+    process.exit(1)
+  }
 }
 
 start()
