@@ -1,7 +1,6 @@
 import { config } from 'dotenv'
 import express from 'express'
 import payload from 'payload'
-import configPayload from '../payload.config.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -17,14 +16,13 @@ app.get('/api/health', (_, res) => {
 
 const start = async () => {
   try {
-    // Initialize Payload with Express app
+    // Initialize Payload - it will automatically find payload.config.ts
     console.log('[DEBUG] About to initialize Payload...')
     await payload.init({
       express: app,
-      config: configPayload,
     })
     console.log('[DEBUG] Payload initialized successfully')
-    console.log('[DEBUG] Payload admin route should be at:', configPayload.routes?.admin || '/admin')
+    console.log('[DEBUG] Payload admin route should be at: /admin')
 
     // Redirect root to Admin panel (after Payload routes)
     app.get('/', (_, res) => {
