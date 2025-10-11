@@ -6,12 +6,7 @@ import configPayload from '../payload.config.js'
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Redirect root to Admin panel
-app.get('/', (_, res) => {
-  res.redirect('/admin')
-})
-
-// Health check endpoint for Docker and monitoring
+// Health check endpoint for Docker and monitoring (before Payload routes)
 app.get('/api/health', (_, res) => {
   res.status(200).json({
     status: 'healthy',
@@ -21,12 +16,16 @@ app.get('/api/health', (_, res) => {
 })
 
 const start = async () => {
-  // Initialize Payload
+  // Initialize Payload with Express app
   await payload.init({
+    express: app,
     config: configPayload,
   })
 
-  // Add your own express routes here
+  // Redirect root to Admin panel (after Payload routes)
+  app.get('/', (_, res) => {
+    res.redirect('/admin')
+  })
 
   app.listen(PORT, async () => {
     payload.logger.info(`Server listening on port ${PORT}`)
