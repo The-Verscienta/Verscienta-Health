@@ -1,0 +1,23 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "curl", "wget"]
+
+[phases.install]
+cmds = [
+  "corepack enable",
+  "corepack prepare pnpm@9.15.0 --activate",
+  "pnpm install --frozen-lockfile --ignore-scripts"
+]
+
+[phases.build]
+cmds = [
+  "echo 'No build step required for Payload CMS 3.x'"
+]
+
+[start]
+cmd = "npx tsx apps/cms/src/server.ts"
+
+[variables]
+NODE_ENV = "production"
+PORT = "3001"
+HOSTNAME = "0.0.0.0"
+NODE_OPTIONS = "--no-deprecation"

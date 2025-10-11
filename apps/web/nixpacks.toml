@@ -1,0 +1,25 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "curl", "wget"]
+
+[phases.install]
+cmds = [
+  "corepack enable",
+  "corepack prepare pnpm@9.15.0 --activate",
+  "pnpm install --frozen-lockfile"
+]
+
+[phases.build]
+cmds = [
+  "pnpm --filter @verscienta/api-types build || true",
+  "pnpm --filter @verscienta/api-client build || true",
+  "pnpm --filter web build"
+]
+
+[start]
+cmd = "node apps/web/server.js"
+
+[variables]
+NODE_ENV = "production"
+PORT = "3000"
+HOSTNAME = "0.0.0.0"
+NEXT_TELEMETRY_DISABLED = "1"
