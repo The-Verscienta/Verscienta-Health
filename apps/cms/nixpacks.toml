@@ -14,7 +14,7 @@ cmds = [
 ]
 
 [start]
-cmd = "npx tsx apps/cms/src/server.ts"
+cmd = "pnpm --filter cms start"
 
 [variables]
 NODE_ENV = "production"
