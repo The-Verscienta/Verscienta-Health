@@ -1,28 +1,32 @@
 import { config } from 'dotenv'
 import express from 'express'
 import payload from 'payload'
+import configPayload from '../payload.config.js'
 
-const app = express()
 const PORT = process.env.PORT || 3001
-
-// Health check endpoint for Docker and monitoring (before Payload routes)
-app.get('/api/health', (_, res) => {
-  res.status(200).json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    service: 'verscienta-cms',
-  })
-})
 
 const start = async () => {
   try {
-    // Initialize Payload - it will automatically find payload.config.ts
+    // Initialize Payload without Express - let it create its own
     console.log('[DEBUG] About to initialize Payload...')
     await payload.init({
-      express: app,
+      config: configPayload,
     })
     console.log('[DEBUG] Payload initialized successfully')
-    console.log('[DEBUG] Payload admin route should be at: /admin')
+
+    // Get Payload's Express app
+    const app = payload.express()
+    console.log('[DEBUG] Got Payload express app')
+
+    // Add our health check endpoint
+    app.get('/api/health', (_, res) => {
+      res.status(200).json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        service: 'verscienta-cms',
+      })
+    })
+    console.log('[DEBUG] Added health check endpoint')
 
     // Redirect root to Admin panel (after Payload routes)
     app.get('/', (_, res) => {
