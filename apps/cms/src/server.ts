@@ -3,22 +3,12 @@ import express from 'express'
 import payload from 'payload'
 import configPayload from '../payload.config.js'
 
+const app = express()
 const PORT = process.env.PORT || 3001
 
 const start = async () => {
   try {
-    // Initialize Payload without Express - let it create its own
-    console.log('[DEBUG] About to initialize Payload...')
-    await payload.init({
-      config: configPayload,
-    })
-    console.log('[DEBUG] Payload initialized successfully')
-
-    // Get Payload's Express app
-    const app = payload.express()
-    console.log('[DEBUG] Got Payload express app')
-
-    // Add our health check endpoint
+    // Health check endpoint BEFORE Payload initialization
     app.get('/api/health', (_, res) => {
       res.status(200).json({
         status: 'healthy',
@@ -26,12 +16,16 @@ const start = async () => {
         service: 'verscienta-cms',
       })
     })
-    console.log('[DEBUG] Added health check endpoint')
 
-    // Redirect root to Admin panel (after Payload routes)
-    app.get('/', (_, res) => {
-      res.redirect('/admin')
+    // Initialize Payload with our Express app
+    console.log('[DEBUG] About to initialize Payload...')
+    await payload.init({
+      express: app,
+      config: configPayload,
     })
+    console.log('[DEBUG] Payload initialized successfully')
+
+    // DO NOT add custom routes after Payload init - let Payload handle everything
 
     app.listen(PORT, async () => {
       payload.logger.info(`Server listening on port ${PORT}`)
