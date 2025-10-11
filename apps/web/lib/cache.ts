@@ -1,20 +1,46 @@
 import { Ratelimit } from '@upstash/ratelimit'
 import Redis from 'ioredis'
 
+// Parse Redis URL if provided (format: redis://[:password@]host:port[/db])
+function getRedisConfig() {
+  const redisUrl = process.env.REDIS_URL
+
+  if (redisUrl) {
+    try {
+      const url = new URL(redisUrl)
+      return {
+        host: url.hostname,
+        port: parseInt(url.port || '6379'),
+        password: url.password || undefined,
+        db: parseInt(url.pathname.slice(1) || '0'),
+        tls: url.protocol === 'rediss:' ? {} : undefined,
+      }
+    } catch (error) {
+      console.error('Failed to parse REDIS_URL:', error)
+    }
+  }
+
+  // Fallback to individual env vars
+  return {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT || '6379'),
+    password: process.env.REDIS_PASSWORD || undefined,
+    db: parseInt(process.env.REDIS_DB || '0'),
+  }
+}
+
 // Initialize DragonflyDB client (Redis-compatible)
 export const redis = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
-  password: process.env.REDIS_PASSWORD || undefined,
-  db: parseInt(process.env.REDIS_DB || '0'),
+  ...getRedisConfig(),
   // Connection options for production
   maxRetriesPerRequest: 3,
   retryStrategy(times) {
     const delay = Math.min(times * 50, 2000)
     return delay
   },
-  // Disable in development if Redis is not available
-  lazyConnect: process.env.NODE_ENV === 'development',
+  // Enable lazy connect during build or development
+  // CI is set to 'true' during Nixpacks/Docker builds
+  lazyConnect: process.env.NODE_ENV === 'development' || process.env.CI === 'true',
 })
 
 // Handle connection events
