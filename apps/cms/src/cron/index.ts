@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-import cronParser from 'cron-parser'
+import CronExpressionParser from 'cron-parser'
 import cron from 'node-cron'
 import type { Payload } from 'payload'
 import { backupDatabaseJob } from './jobs/backupDatabase'
@@ -178,7 +178,7 @@ export function listCronJobs(): Array<{
     if (enabled) {
       try {
         // Parse cron schedule and get next execution time
-        const interval = cronParser.parseExpression(schedule)
+        const interval = CronExpressionParser.parse(schedule)
         nextRun = interval.next().toDate()
       } catch (error) {
         console.error(`Failed to parse cron schedule for ${name}:`, error)

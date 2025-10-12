@@ -109,13 +109,7 @@ export default buildConfig({
         }
         return 'Discover holistic health wisdom on Verscienta Health'
       },
-      generateURL: ({
-        doc,
-        collectionConfig,
-      }: {
-        doc: Record<string, unknown>
-        collectionConfig: Record<string, unknown>
-      }) => {
+      generateURL: ({ doc, collectionConfig }) => {
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://verscienta.com'
         const slug = (doc?.slug as string) || (doc?.id as string)
         return `${baseUrl}/${collectionConfig?.slug as string}/${slug}`
