@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next dev -p 3001",
     "build": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next build",
-    "start": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" PORT=${PORT:-3001} next start",
+    "db:init": "tsx src/scripts/init-db.ts",
+    "start": "pnpm db:init && cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" PORT=${PORT:-3001} next start",
     "generate:types": "payload generate:types",
     "generate:schema": "payload generate:graphQLSchema",
-    "db:init": "psql -U postgres -f scripts/setup-database.sql",
     "db:setup": "tsx src/scripts/setup-db.ts",
     "db:migrate": "payload migrate",
     "db:migrate:create": "payload migrate:create",
