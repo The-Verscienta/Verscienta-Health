@@ -142,10 +142,9 @@ export default buildConfig({
       maxUses: 7500, // Recycle connection after 7500 uses
       allowExitOnIdle: process.env.NODE_ENV !== 'production', // Allow graceful shutdown in dev
     },
-    // Push database changes without down migrations (Payload v3 default)
-    push: process.env.NODE_ENV === 'development',
-    // Enable migrations in production
-    migrationDir: './migrations',
+    // Use push mode to auto-sync schema (simpler for initial deployment)
+    // Switch to migrations later for production: push: false, migrationDir: './migrations'
+    push: true,
   }),
 
   typescript: {
