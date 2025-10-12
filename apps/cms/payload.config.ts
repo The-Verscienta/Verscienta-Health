@@ -4,6 +4,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
 import { buildConfig } from 'payload'
+import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { AuditLogs } from './src/collections/AuditLogs'
 import { Conditions } from './src/collections/Conditions'
@@ -37,6 +38,8 @@ export default buildConfig({
     },
     dateFormat: 'MMMM do, yyyy',
   },
+
+  sharp,
 
   collections: [
     Herbs,

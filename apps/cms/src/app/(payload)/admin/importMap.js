@@ -6,6 +6,7 @@ import { MetaTitleComponent as MetaTitleComponent_1 } from '@payloadcms/plugin-s
 import { MetaImageComponent as MetaImageComponent_2 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_3 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_4 } from '@payloadcms/plugin-seo/client'
+import { S3ClientUploadHandler as S3ClientUploadHandler_5 } from '@payloadcms/storage-s3/client'
 
 export const importMap = {
   '@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell': RscEntryLexicalCell,
@@ -15,4 +16,5 @@ export const importMap = {
   '@payloadcms/plugin-seo/client#MetaImageComponent': MetaImageComponent_2,
   '@payloadcms/plugin-seo/client#MetaDescriptionComponent': MetaDescriptionComponent_3,
   '@payloadcms/plugin-seo/client#PreviewComponent': PreviewComponent_4,
+  '@payloadcms/storage-s3/client#S3ClientUploadHandler': S3ClientUploadHandler_5,
 }
