@@ -92,7 +92,7 @@ export default buildConfig({
         let text = doc?.description || doc?.summary || doc?.bio || doc?.comment || ''
 
         // Handle richText fields (Lexical format) - extract plain text
-        if (text && typeof text === 'object' && text.root) {
+        if (text && typeof text === 'object' && 'root' in text) {
           // Simple extraction from Lexical JSON
           const extractText = (node: Record<string, unknown>): string => {
             if (node.text) return node.text as string
