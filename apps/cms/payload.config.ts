@@ -142,9 +142,11 @@ export default buildConfig({
       maxUses: 7500, // Recycle connection after 7500 uses
       allowExitOnIdle: process.env.NODE_ENV !== 'production', // Allow graceful shutdown in dev
     },
-    // Use push mode to auto-sync schema (simpler for initial deployment)
-    // Switch to migrations later for production: push: false, migrationDir: './migrations'
+    // Force push mode even in production for auto-schema sync
+    // IMPORTANT: push: true is required for initial deployment to create tables
     push: true,
+    // Disable migrations since we're using push mode
+    disableIndexHints: false,
   }),
 
   typescript: {
