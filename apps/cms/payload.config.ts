@@ -145,8 +145,6 @@ export default buildConfig({
     // Force push mode even in production for auto-schema sync
     // IMPORTANT: push: true is required for initial deployment to create tables
     push: true,
-    // Disable migrations since we're using push mode
-    disableIndexHints: false,
   }),
 
   typescript: {
