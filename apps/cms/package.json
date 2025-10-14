@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next dev -p 3001",
     "build": "cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" next build",
-    "start": "payload migrate && cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" PORT=${PORT:-3001} next start",
+    "start": "pnpm exec payload migrate && cross-env NODE_OPTIONS=\"${NODE_OPTIONS} --no-deprecation\" PORT=${PORT:-3001} next start",
     "generate:types": "payload generate:types",
     "generate:schema": "payload generate:graphQLSchema",
     "db:setup": "tsx src/scripts/setup-db.ts",
