@@ -20,6 +20,26 @@ const nextConfig = {
   experimental: {
     reactCompiler: false,
   },
+  // Fix ChunkLoadError - use contenthash instead of chunkhash for deterministic builds
+  // See: https://github.com/vercel/next.js/issues/65856
+  webpack: (config) => {
+    config.output.filename = config.output.filename.replace('[chunkhash]', '[contenthash]')
+    config.output.chunkFilename = config.output.chunkFilename.replace('[chunkhash]', '[contenthash]')
+    return config
+  },
+  // Cache headers for proper static asset caching
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' }],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+    ]
+  },
 }
 
 export default withPayload(nextConfig)
