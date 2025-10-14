@@ -1,42 +1,41 @@
 #!/usr/bin/env tsx
 /**
  * Database initialization script
- * Ensures database schema is synced before starting the server
+ * Runs migrations to ensure database schema is up to date
  */
 
+import { migrate } from 'payload/database'
 import { getPayload } from 'payload'
 import config from '../../payload.config'
 
 async function initDatabase() {
-  console.log('🔄 Initializing database schema...')
+  console.log('🔄 Running database migrations...')
   console.log('📊 NODE_ENV:', process.env.NODE_ENV)
-  console.log('📦 Push mode:', 'enabled')
 
   try {
-    // Initialize Payload - this triggers schema sync with push: true
+    // Initialize Payload first
     const payload = await getPayload({ config })
-
     console.log('✅ Payload initialized successfully')
+
+    // Run migrations
+    console.log('📦 Running migrations...')
+    await migrate({
+      payload,
+    })
+    console.log('✅ Migrations completed successfully')
 
     // Verify database connection by checking if we can query
     try {
-      await payload.find({
+      const count = await payload.count({
         collection: 'users',
-        limit: 0,
       })
-      console.log('✅ Database tables verified - users table exists')
+      console.log(`✅ Database verified - users table exists (${count.totalDocs} users)`)
     } catch (error: any) {
-      if (error?.message?.includes('does not exist')) {
-        console.error('❌ Database tables were not created!')
-        console.error('   This might be because push mode is disabled in production.')
-        console.error('   Please check payload.config.ts and ensure push: true is set.')
-        process.exit(1)
-      }
-      // Other errors are okay (like no users found)
-      console.log('✅ Database tables appear to be present')
+      console.error('❌ Database verification failed:', error.message)
+      process.exit(1)
     }
 
-    console.log('✅ Database schema initialized successfully')
+    console.log('✅ Database initialization complete')
 
     // Gracefully close the connection
     process.exit(0)
