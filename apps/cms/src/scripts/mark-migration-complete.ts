@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
- * Mark the initial migration as completed
- * This is needed because push mode already created the schema
+ * Prepare database for initial migration
+ * Drops existing enum types so migration can run cleanly
  */
 
 import postgres from 'postgres'
@@ -17,56 +17,76 @@ const sql = postgres(DATABASE_URL, {
   ssl: DATABASE_URL.includes('sslmode=require') ? { rejectUnauthorized: true } : false,
 })
 
-async function markMigrationComplete() {
+async function runInitialMigration() {
   try {
-    console.log('📝 Checking if migration table exists...')
+    console.log('📝 Checking if tables exist...')
 
-    // Check if payload_migrations table exists
-    const tableExists = await sql`
+    // Check if users table exists
+    const usersTableExists = await sql`
       SELECT EXISTS (
         SELECT FROM information_schema.tables
         WHERE table_schema = 'public'
-        AND table_name = 'payload_migrations'
+        AND table_name = 'users'
       );
     `
 
-    if (!tableExists[0].exists) {
-      console.log('⚠️  payload_migrations table does not exist, creating it...')
-      await sql`
-        CREATE TABLE IF NOT EXISTS "payload_migrations" (
-          "id" serial PRIMARY KEY NOT NULL,
-          "name" varchar,
-          "batch" numeric,
-          "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-          "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
-        );
-      `
-      console.log('✅ Created payload_migrations table')
+    if (usersTableExists[0].exists) {
+      console.log('✅ Tables already exist, skipping migration')
+      await sql.end()
+      process.exit(0)
     }
 
-    // Check if migration record already exists
-    const existing = await sql`
-      SELECT * FROM payload_migrations WHERE name = '20251014_033400'
+    console.log('⚠️  Tables do not exist, running initial migration...')
+
+    // Drop all existing enum types to allow migration to run cleanly
+    console.log('🧹 Dropping existing enum types...')
+
+    const enumTypes = await sql`
+      SELECT typname
+      FROM pg_type
+      WHERE typtype = 'e'
+      AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
     `
 
-    if (existing.length > 0) {
-      console.log('✅ Migration 20251014_033400 is already marked as complete')
-    } else {
-      // Insert migration record
-      await sql`
-        INSERT INTO payload_migrations (name, batch, created_at, updated_at)
-        VALUES ('20251014_033400', 1, NOW(), NOW())
-      `
-      console.log('✅ Marked migration 20251014_033400 as complete')
+    for (const enumType of enumTypes) {
+      try {
+        await sql.unsafe(`DROP TYPE IF EXISTS public."${enumType.typname}" CASCADE`)
+        console.log(`  Dropped type: ${enumType.typname}`)
+      } catch (error) {
+        console.warn(`  Could not drop type ${enumType.typname}:`, error.message)
+      }
     }
+
+    console.log('✅ Enum types dropped')
+
+    // Delete any existing migration record
+    await sql`
+      DELETE FROM payload_migrations WHERE name = '20251014_033400'
+    `.catch(() => {
+      // Table might not exist yet, ignore error
+    })
+
+    // Create payload_migrations table if it doesn't exist
+    await sql`
+      CREATE TABLE IF NOT EXISTS "payload_migrations" (
+        "id" serial PRIMARY KEY NOT NULL,
+        "name" varchar,
+        "batch" numeric,
+        "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+        "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+      );
+    `
+
+    console.log('✅ Ready for migration to run')
+    console.log('   Payload migrate will now create all schema objects...')
 
     await sql.end()
     process.exit(0)
   } catch (error) {
-    console.error('❌ Error marking migration as complete:', error)
+    console.error('❌ Error running migration:', error)
     await sql.end()
     process.exit(1)
   }
 }
 
-markMigrationComplete()
+runInitialMigration()
