@@ -23,6 +23,8 @@ import { ValidationReports } from './src/collections/ValidationReports'
 import { PerenualImportState } from './src/globals/PerenualImportState'
 // Import globals
 import { TrefleImportState } from './src/globals/TrefleImportState'
+// Import migrations for production runtime
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -146,6 +148,8 @@ export default buildConfig({
     push: process.env.NODE_ENV !== 'production',
     // Migration directory
     migrationDir: './migrations',
+    // Run migrations at startup in production (for long-running containers)
+    prodMigrations: migrations,
   }),
 
   typescript: {
