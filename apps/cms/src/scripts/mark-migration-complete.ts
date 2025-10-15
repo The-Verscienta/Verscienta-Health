@@ -53,7 +53,8 @@ async function runInitialMigration() {
         await sql.unsafe(`DROP TYPE IF EXISTS public."${enumType.typname}" CASCADE`)
         console.log(`  Dropped type: ${enumType.typname}`)
       } catch (error) {
-        console.warn(`  Could not drop type ${enumType.typname}:`, error.message)
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        console.warn(`  Could not drop type ${enumType.typname}:`, errorMessage)
       }
     }
 
