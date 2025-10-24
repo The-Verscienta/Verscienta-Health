@@ -76,9 +76,6 @@ export const redis = new Redis({
   connectTimeout: 10000, // 10 seconds
   commandTimeout: 5000, // 5 seconds per command
   keepAlive: 30000, // 30 seconds keepalive
-
-  // Connection pool limits (prevent resource exhaustion)
-  maxRetriesPerRequest: 3,
   maxLoadingRetryTime: 2000,
 
   // Reconnection strategy

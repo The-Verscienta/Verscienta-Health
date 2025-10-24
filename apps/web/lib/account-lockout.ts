@@ -102,7 +102,7 @@ export async function recordFailedAttempt(
     })
 
     // Add current attempt with timestamp as score
-    await redis.zadd(key, { score: now, member: attempt })
+    await redis.zadd(key, now, attempt)
 
     // Remove old attempts outside the window
     await redis.zremrangebyscore(key, 0, cutoff)

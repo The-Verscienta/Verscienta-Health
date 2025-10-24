@@ -29,6 +29,7 @@
     "symptomChecker": "Symptom Checker",
     "about": "About",
     "contact": "Contact",
+    "faq": "FAQ",
     "login": "Login",
     "register": "Register",
     "profile": "Profile",
@@ -431,6 +432,91 @@
     "metadata": {
       "title": "Medical Disclaimer | Verscienta Health",
       "description": "Important medical disclaimer and safety information for using Verscienta Health."
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about Verscienta Health and Traditional Chinese Medicine",
+    "metadata": {
+      "title": "FAQ | Verscienta Health",
+      "description": "Frequently asked questions about Verscienta Health, Traditional Chinese Medicine, herbs, and our practitioner directory."
+    },
+    "general": {
+      "title": "General Questions",
+      "subtitle": "Learn about our platform and how to use it",
+      "q1": {
+        "question": "What is Verscienta Health?",
+        "answer": "Verscienta Health is a comprehensive platform bridging ancient herbal wisdom with modern science. We provide evidence-based information about Traditional Chinese Medicine (TCM) herbs, formulas, conditions, and a directory of qualified practitioners. Our goal is to empower you to make informed decisions about your health and wellness."
+      },
+      "q2": {
+        "question": "How do I use this platform?",
+        "answer": "You can search our extensive database of herbs and formulas, explore health conditions and their TCM approaches, use our AI-powered symptom checker, and find qualified practitioners in your area. Simply use the search bar or navigation menu to explore different sections of the platform."
+      },
+      "q3": {
+        "question": "Is the information on Verscienta Health reliable?",
+        "answer": "Yes. All information is carefully researched and cross-referenced with scientific literature, traditional TCM texts, and modern clinical studies. We integrate data from trusted sources including the NCCIH, PubMed, and botanical databases. However, this information is for educational purposes only and should not replace professional medical advice."
+      },
+      "q4": {
+        "question": "Do I need to create an account?",
+        "answer": "No, you can browse herbs, formulas, and practitioner profiles without an account. However, creating a free account allows you to save favorites, track your health journey, and receive personalized recommendations based on your interests."
+      }
+    },
+    "tcm": {
+      "title": "Traditional Chinese Medicine & Herbs",
+      "subtitle": "Understanding TCM and herbal medicine",
+      "q1": {
+        "question": "What is Traditional Chinese Medicine (TCM)?",
+        "answer": "Traditional Chinese Medicine is a comprehensive medical system that has been practiced for thousands of years. It includes various practices such as acupuncture, herbal medicine, massage (Tui Na), exercise (Qi Gong), and dietary therapy. TCM views the body as an interconnected system and focuses on restoring balance and harmony to promote health."
+      },
+      "q2": {
+        "question": "Are Chinese herbs safe?",
+        "answer": "When used appropriately and under the guidance of a qualified practitioner, Chinese herbs are generally safe. However, like any medicine, they can have side effects and may interact with pharmaceutical medications. Always consult with a licensed healthcare provider before starting any herbal regimen, especially if you are pregnant, nursing, or taking other medications."
+      },
+      "q3": {
+        "question": "How are TCM formulas different from single herbs?",
+        "answer": "TCM formulas are carefully crafted combinations of multiple herbs working synergistically. Each herb in a formula has a specific role: some are primary herbs that address the main concern, while others support, enhance, or moderate the effects. This balanced approach is a hallmark of traditional Chinese herbal medicine and often provides more comprehensive and gentler effects than using single herbs alone."
+      },
+      "q4": {
+        "question": "Can I combine TCM with conventional Western medicine?",
+        "answer": "Many people successfully integrate TCM with conventional medicine. However, it's crucial to inform all your healthcare providers about any herbs, supplements, or treatments you're using to avoid potential interactions. A qualified TCM practitioner can work with your medical doctor to create a safe, complementary treatment plan."
+      }
+    },
+    "practitioners": {
+      "title": "Practitioner Directory",
+      "subtitle": "Finding and working with TCM practitioners",
+      "q1": {
+        "question": "How do I find a qualified TCM practitioner?",
+        "answer": "Use our practitioner directory to search by location, specialty, and modality. All listed practitioners have verified credentials and licenses. You can read their profiles, view their specialties, check reviews from other patients, and contact them directly through the platform."
+      },
+      "q2": {
+        "question": "What should I expect in my first TCM consultation?",
+        "answer": "Your first consultation typically includes a comprehensive health history, tongue and pulse diagnosis, and discussion of your current concerns. The practitioner will assess your overall constitution and create a personalized treatment plan, which may include herbal formulas, acupuncture, dietary recommendations, or lifestyle modifications. Most initial consultations last 60-90 minutes."
+      },
+      "q3": {
+        "question": "Are practitioners on Verscienta Health licensed?",
+        "answer": "Yes. We verify the credentials and licenses of all practitioners listed on our platform. Requirements vary by state and country, but all practitioners must hold current, valid licenses to practice acupuncture, herbology, or Traditional Chinese Medicine in their jurisdiction."
+      }
+    },
+    "privacy": {
+      "title": "Privacy & Safety",
+      "subtitle": "How we protect your information",
+      "q1": {
+        "question": "How is my personal information protected?",
+        "answer": "We take your privacy seriously. All personal data is encrypted and stored securely. We comply with HIPAA regulations for any health-related information. We never sell your personal information to third parties. For detailed information, please review our Privacy Policy."
+      },
+      "q2": {
+        "question": "Can I use Verscienta Health instead of seeing a doctor?",
+        "answer": "No. Verscienta Health is an educational platform designed to inform and empower you, not to diagnose or treat medical conditions. The information provided should complement, not replace, professional medical care. Always consult with qualified healthcare providers for diagnosis and treatment of any health condition."
+      },
+      "q3": {
+        "question": "Is the symptom checker a diagnostic tool?",
+        "answer": "No. Our AI-powered symptom checker is an educational tool that provides information about possible TCM patterns and approaches based on symptoms you describe. It is not a diagnostic tool and should not be used as a substitute for professional medical evaluation. Always seek care from qualified healthcare providers for proper diagnosis and treatment."
+      }
+    },
+    "cta": {
+      "title": "Still Have Questions?",
+      "description": "Can't find the answer you're looking for? Our support team is here to help.",
+      "button": "Contact Us"
     }
   }
 }

@@ -29,6 +29,7 @@
     "symptomChecker": "Verificador de Síntomas",
     "about": "Acerca de",
     "contact": "Contacto",
+    "faq": "Preguntas Frecuentes",
     "login": "Iniciar Sesión",
     "register": "Registrarse",
     "profile": "Perfil",
@@ -308,6 +309,91 @@
     "metadata": {
       "title": "Aviso Médico | Verscienta Health",
       "description": "Aviso médico importante e información de seguridad para usar Verscienta Health."
+    }
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Encuentra respuestas a preguntas comunes sobre Verscienta Health y la Medicina Tradicional China",
+    "metadata": {
+      "title": "Preguntas Frecuentes | Verscienta Health",
+      "description": "Preguntas frecuentes sobre Verscienta Health, Medicina Tradicional China, hierbas y nuestro directorio de profesionales."
+    },
+    "general": {
+      "title": "Preguntas Generales",
+      "subtitle": "Aprende sobre nuestra plataforma y cómo usarla",
+      "q1": {
+        "question": "¿Qué es Verscienta Health?",
+        "answer": "Verscienta Health es una plataforma integral que une la sabiduría herbal antigua con la ciencia moderna. Proporcionamos información basada en evidencia sobre hierbas de la Medicina Tradicional China (MTC), fórmulas, condiciones y un directorio de profesionales calificados. Nuestro objetivo es empoderarte para tomar decisiones informadas sobre tu salud y bienestar."
+      },
+      "q2": {
+        "question": "¿Cómo uso esta plataforma?",
+        "answer": "Puedes buscar en nuestra extensa base de datos de hierbas y fórmulas, explorar condiciones de salud y sus enfoques en MTC, usar nuestro verificador de síntomas con IA, y encontrar profesionales calificados en tu área. Simplemente usa la barra de búsqueda o el menú de navegación para explorar diferentes secciones de la plataforma."
+      },
+      "q3": {
+        "question": "¿Es confiable la información en Verscienta Health?",
+        "answer": "Sí. Toda la información está cuidadosamente investigada y verificada con literatura científica, textos tradicionales de MTC y estudios clínicos modernos. Integramos datos de fuentes confiables incluyendo NCCIH, PubMed y bases de datos botánicas. Sin embargo, esta información es solo para fines educativos y no debe reemplazar el consejo médico profesional."
+      },
+      "q4": {
+        "question": "¿Necesito crear una cuenta?",
+        "answer": "No, puedes explorar hierbas, fórmulas y perfiles de profesionales sin una cuenta. Sin embargo, crear una cuenta gratuita te permite guardar favoritos, rastrear tu viaje de salud y recibir recomendaciones personalizadas basadas en tus intereses."
+      }
+    },
+    "tcm": {
+      "title": "Medicina Tradicional China y Hierbas",
+      "subtitle": "Entendiendo la MTC y la medicina herbal",
+      "q1": {
+        "question": "¿Qué es la Medicina Tradicional China (MTC)?",
+        "answer": "La Medicina Tradicional China es un sistema médico integral que se ha practicado durante miles de años. Incluye varias prácticas como acupuntura, medicina herbal, masaje (Tui Na), ejercicio (Qi Gong) y terapia dietética. La MTC ve el cuerpo como un sistema interconectado y se enfoca en restaurar el equilibrio y la armonía para promover la salud."
+      },
+      "q2": {
+        "question": "¿Son seguras las hierbas chinas?",
+        "answer": "Cuando se usan apropiadamente y bajo la guía de un profesional calificado, las hierbas chinas son generalmente seguras. Sin embargo, como cualquier medicina, pueden tener efectos secundarios y pueden interactuar con medicamentos farmacéuticos. Siempre consulta con un proveedor de atención médica licenciado antes de comenzar cualquier régimen herbal, especialmente si estás embarazada, amamantando o tomando otros medicamentos."
+      },
+      "q3": {
+        "question": "¿En qué se diferencian las fórmulas de MTC de las hierbas individuales?",
+        "answer": "Las fórmulas de MTC son combinaciones cuidadosamente elaboradas de múltiples hierbas que trabajan sinérgicamente. Cada hierba en una fórmula tiene un papel específico: algunas son hierbas principales que abordan la preocupación principal, mientras que otras apoyan, mejoran o moderan los efectos. Este enfoque equilibrado es un sello distintivo de la medicina herbal china tradicional y a menudo proporciona efectos más completos y suaves que el uso de hierbas individuales solas."
+      },
+      "q4": {
+        "question": "¿Puedo combinar la MTC con la medicina occidental convencional?",
+        "answer": "Muchas personas integran exitosamente la MTC con la medicina convencional. Sin embargo, es crucial informar a todos tus proveedores de atención médica sobre cualquier hierba, suplemento o tratamiento que estés usando para evitar posibles interacciones. Un profesional calificado de MTC puede trabajar con tu médico para crear un plan de tratamiento seguro y complementario."
+      }
+    },
+    "practitioners": {
+      "title": "Directorio de Profesionales",
+      "subtitle": "Encontrar y trabajar con profesionales de MTC",
+      "q1": {
+        "question": "¿Cómo encuentro un profesional de MTC calificado?",
+        "answer": "Usa nuestro directorio de profesionales para buscar por ubicación, especialidad y modalidad. Todos los profesionales listados tienen credenciales y licencias verificadas. Puedes leer sus perfiles, ver sus especialidades, consultar reseñas de otros pacientes y contactarlos directamente a través de la plataforma."
+      },
+      "q2": {
+        "question": "¿Qué debo esperar en mi primera consulta de MTC?",
+        "answer": "Tu primera consulta típicamente incluye un historial de salud integral, diagnóstico de lengua y pulso, y discusión de tus preocupaciones actuales. El profesional evaluará tu constitución general y creará un plan de tratamiento personalizado, que puede incluir fórmulas herbales, acupuntura, recomendaciones dietéticas o modificaciones de estilo de vida. La mayoría de las consultas iniciales duran 60-90 minutos."
+      },
+      "q3": {
+        "question": "¿Los profesionales en Verscienta Health tienen licencia?",
+        "answer": "Sí. Verificamos las credenciales y licencias de todos los profesionales listados en nuestra plataforma. Los requisitos varían según el estado y el país, pero todos los profesionales deben tener licencias actuales y válidas para practicar acupuntura, herbología o Medicina Tradicional China en su jurisdicción."
+      }
+    },
+    "privacy": {
+      "title": "Privacidad y Seguridad",
+      "subtitle": "Cómo protegemos tu información",
+      "q1": {
+        "question": "¿Cómo está protegida mi información personal?",
+        "answer": "Tomamos tu privacidad en serio. Todos los datos personales están encriptados y almacenados de forma segura. Cumplimos con las regulaciones HIPAA para cualquier información relacionada con la salud. Nunca vendemos tu información personal a terceros. Para información detallada, consulta nuestra Política de Privacidad."
+      },
+      "q2": {
+        "question": "¿Puedo usar Verscienta Health en lugar de ver a un médico?",
+        "answer": "No. Verscienta Health es una plataforma educativa diseñada para informarte y empoderarte, no para diagnosticar o tratar condiciones médicas. La información proporcionada debe complementar, no reemplazar, la atención médica profesional. Siempre consulta con proveedores de atención médica calificados para el diagnóstico y tratamiento de cualquier condición de salud."
+      },
+      "q3": {
+        "question": "¿Es el verificador de síntomas una herramienta de diagnóstico?",
+        "answer": "No. Nuestro verificador de síntomas con IA es una herramienta educativa que proporciona información sobre posibles patrones y enfoques de MTC basados en los síntomas que describes. No es una herramienta de diagnóstico y no debe usarse como sustituto de la evaluación médica profesional. Siempre busca atención de proveedores de atención médica calificados para un diagnóstico y tratamiento adecuados."
+      }
+    },
+    "cta": {
+      "title": "¿Aún Tienes Preguntas?",
+      "description": "¿No encuentras la respuesta que buscas? Nuestro equipo de soporte está aquí para ayudarte.",
+      "button": "Contáctanos"
     }
   }
 }

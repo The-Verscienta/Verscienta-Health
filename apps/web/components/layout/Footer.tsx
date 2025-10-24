@@ -98,6 +98,14 @@ export function Footer() {
                   {t('nav.contact')}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/faq"
+                  className="hover:text-earth-600 text-gray-600 transition-colors"
+                >
+                  {t('nav.faq')}
+                </Link>
+              </li>
             </ul>
           </div>
 

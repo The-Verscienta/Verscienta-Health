@@ -78,10 +78,10 @@ export interface ConditionData extends BaseEntity {
 /**
  * Utility: Create JSON-LD script tag data
  */
-export function createJsonLd<T extends Thing>(data: WithContext<T>): WithContext<T> {
+export function createJsonLd<T extends Thing>(data: T): WithContext<T> {
   return {
     '@context': 'https://schema.org',
-    ...data,
+    ...(data as object),
   } as WithContext<T>
 }
 

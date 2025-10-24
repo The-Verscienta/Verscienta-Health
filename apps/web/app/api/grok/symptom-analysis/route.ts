@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { headers } from 'next/headers'
+import { createHash } from 'crypto'
 import { auditLog } from '@/lib/audit-log'
+import { auth } from '@/lib/auth'
 
 const GROK_API_URL = 'https://api.x.ai/v1/chat/completions'
 const GROK_API_KEY = process.env.GROK_API_KEY
@@ -11,8 +14,14 @@ const GROK_API_KEY = process.env.GROK_API_KEY
  * 1. NO personally identifiable information (PII) is sent to Grok AI
  * 2. Only symptom descriptions (anonymized) are transmitted
  * 3. User data is NOT included in the prompt
- * 4. All requests are audit logged
+ * 4. All requests are audit logged with:
+ *    - User ID and session ID
+ *    - IP address and user agent
+ *    - Hashed symptoms (for linking, not reverse engineering)
+ *    - Timestamp
+ *    - PHI access flag
  * 5. Rate limiting prevents abuse
+ * 6. Audit logs retained for 7 years (HIPAA requirement)
  */
 
 interface SymptomAnalysisRequest {
@@ -78,9 +87,45 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'At least one symptom is required' }, { status: 400 })
     }
 
-    // HIPAA: Audit log symptom submission
-    // Note: In production, extract userId from session
-    await auditLog.submitSymptoms(undefined, symptoms)
+    // HIPAA: Extract user session for audit logging
+    const session = await auth.api.getSession({ headers: await headers() })
+    const userId = session?.user?.id
+    const userEmail = session?.user?.email
+    const sessionId = session?.session?.id
+
+    // HIPAA: Create one-way hash of symptoms for audit trail
+    // This allows linking related submissions without storing actual symptoms
+    const symptomsHash = createHash('sha256')
+      .update(symptoms.join('|'))
+      .digest('hex')
+      .substring(0, 16) // First 16 chars for brevity
+
+    // HIPAA: Get request metadata
+    const headersList = await headers()
+    const ipAddress =
+      headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
+    const userAgent = headersList.get('user-agent') || 'unknown'
+
+    // HIPAA: Comprehensive PHI access audit log
+    await auditLog.submitSymptoms(userId, symptoms)
+
+    // Additional detailed logging for HIPAA compliance
+    console.log('[PHI ACCESS] Symptom Checker', {
+      timestamp: new Date().toISOString(),
+      userId: userId || 'anonymous',
+      userEmail: userEmail || 'anonymous',
+      sessionId: sessionId || 'none',
+      action: 'SYMPTOM_SUBMIT',
+      symptomCount: symptoms.length,
+      symptomsHash, // One-way hash, not reversible
+      severity,
+      duration: duration ? 'provided' : 'not_provided',
+      additionalInfo: additionalInfo ? 'provided' : 'not_provided',
+      ipAddress,
+      userAgent,
+      phiFlag: true, // Mark as PHI access
+      retentionYears: 7, // HIPAA requirement
+    })
 
     // HIPAA: Sanitize all inputs to remove PII before sending to external AI
     const sanitizedSymptoms = symptoms.map((s) => sanitizeInput(s))

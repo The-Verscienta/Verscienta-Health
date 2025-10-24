@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs'
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { auditLog } from '@/lib/audit-log'
+import { sendEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
 
@@ -97,14 +99,83 @@ export async function POST(request: Request) {
       data: { password: hashedPassword },
     })
 
-    console.log('Password changed successfully:', {
+    // SECURITY: Invalidate all sessions except the current one
+    // This forces re-authentication on all other devices
+    const currentSessionId = session.session.id
+    const invalidatedSessions = await prisma.session.deleteMany({
+      where: {
+        userId: session.user.id,
+        id: {
+          not: currentSessionId, // Keep current session active
+        },
+      },
+    })
+
+    console.log('[SECURITY] Password changed, sessions invalidated:', {
       userId: session.user.id,
+      currentSessionId,
+      invalidatedCount: invalidatedSessions.count,
       timestamp: new Date().toISOString(),
     })
 
+    // HIPAA: Audit log password change
+    await auditLog.createAuditLog({
+      action: 'PASSWORD_CHANGE' as any,
+      userId: session.user.id,
+      userEmail: session.user.email,
+      sessionId: currentSessionId,
+      success: true,
+      severity: 'INFO' as any,
+      details: {
+        invalidatedSessions: invalidatedSessions.count,
+      },
+    })
+
+    // SECURITY: Send notification email
+    try {
+      await sendEmail({
+        to: session.user.email,
+        subject: 'Password Changed - Verscienta Health',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2c5f2d;">Password Successfully Changed</h2>
+
+            <p>Hello,</p>
+
+            <p>Your password was successfully changed on <strong>${new Date().toLocaleString()}</strong>.</p>
+
+            <div style="background-color: #f0f7f0; border-left: 4px solid #2c5f2d; padding: 15px; margin: 20px 0;">
+              <p style="margin: 0;"><strong>Security Notice:</strong></p>
+              <p style="margin: 10px 0 0 0;">
+                For your security, you have been logged out of all other devices.
+                You will need to sign in again on those devices.
+              </p>
+            </div>
+
+            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
+              <p style="margin: 0;"><strong>Didn't change your password?</strong></p>
+              <p style="margin: 10px 0 0 0;">
+                If you did not make this change, your account may be compromised.
+                Please contact our security team immediately at <a href="mailto:security@verscienta.com">security@verscienta.com</a>.
+              </p>
+            </div>
+
+            <p style="color: #666; font-size: 12px; margin-top: 30px;">
+              This is an automated security notification from Verscienta Health.
+              This action was performed from IP address: ${request.headers.get('x-forwarded-for') || 'unknown'}.
+            </p>
+          </div>
+        `,
+      })
+    } catch (emailError) {
+      // Don't fail the password change if email fails
+      console.error('[EMAIL] Failed to send password change notification:', emailError)
+    }
+
     return NextResponse.json({
       success: true,
-      message: 'Password updated successfully',
+      message: 'Password updated successfully. You have been logged out of all other devices.',
+      invalidatedSessions: invalidatedSessions.count,
     })
   } catch (error) {
     console.error('Password change error:', error)

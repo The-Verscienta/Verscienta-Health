@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
 
   // Enable experimental features
   experimental: {
+    // Enable smooth page transitions using View Transitions API (Next.js 15.2+)
+    // Provides native browser transitions between routes with graceful fallback
+    // Supported in Chrome, Edge, Opera; falls back to instant navigation in others
+    viewTransition: true,
     // Optimize package imports for tree-shaking
     optimizePackageImports: [
       'lucide-react',
@@ -109,17 +113,6 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
-
-  // PWA Configuration
-  // Disable in development to avoid caching issues
-  ...(process.env.NODE_ENV === 'production' && {
-    pwa: {
-      dest: 'public',
-      register: true,
-      skipWaiting: true,
-      disable: false,
-    },
-  }),
 }
 
 // Wrap with next-intl, PWA plugin, Bundle Analyzer, and Sentry

@@ -200,9 +200,9 @@ export async function checkCertificateExpiration(
           const issueDate = new Date(cert.valid_from)
           const daysUntilExpiry = Math.floor((expiryDate.getTime() - now) / (1000 * 60 * 60 * 24))
 
-          // Extract subject and issuer
-          const subject = cert.subject?.CN || cert.subject?.commonName || null
-          const issuer = cert.issuer?.CN || cert.issuer?.commonName || null
+          // Extract subject and issuer (CN = Common Name)
+          const subject = cert.subject?.CN || null
+          const issuer = cert.issuer?.CN || null
 
           const result: CertExpiryResult = {
             isValid: daysUntilExpiry > 0,

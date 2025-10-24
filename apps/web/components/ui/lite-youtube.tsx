@@ -16,7 +16,7 @@
  * @see https://github.com/paulirish/lite-youtube-embed
  */
 
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import 'lite-youtube-embed/src/lite-yt-embed.css'
 
 export interface LiteYouTubeProps {
@@ -121,36 +121,35 @@ export function LiteYouTube({
     ? `https://i.ytimg.com/vi/${playlistId}/hqdefault.jpg`
     : `https://i.ytimg.com/vi/${videoId}/${posterQuality}.jpg`
 
-  // Build params string
-  const paramString = params ? `params="${params}"` : ''
-  const playlistParam = playlistId ? `playlists="${playlistId}"` : ''
-  const noCookieAttr = noCookie ? 'nocookie' : ''
-  const announceAttr = announce ? `announce="${announce}"` : ''
+  // Build the props object for the custom element
+  const liteYouTubeProps: Record<string, any> = {
+    videoid: videoId,
+    posterquality: posterQuality,
+    className: `max-w-full ${className}`,
+    style: {
+      backgroundImage: `url('${posterUrl}')`,
+    },
+  }
 
-  return (
-    <lite-youtube
-      videoid={videoId}
-      posterquality={posterQuality}
-      {...(playlistId && { playlistid: playlistId })}
-      {...(params && { params })}
-      {...(noCookie && { nocookie: '' })}
-      {...(announce && { announce })}
-      {...(mobileResolution && { mobileResolution })}
-      className={`max-w-full ${className}`}
-      style={{
-        backgroundImage: `url('${posterUrl}')`,
-      }}
+  if (playlistId) liteYouTubeProps.playlistid = playlistId
+  if (params) liteYouTubeProps.params = params
+  if (noCookie) liteYouTubeProps.nocookie = ''
+  if (announce) liteYouTubeProps.announce = announce
+  if (mobileResolution) liteYouTubeProps.mobileResolution = mobileResolution
+
+  // Use React.createElement to bypass JSX type checking for custom element
+  return React.createElement(
+    'lite-youtube',
+    liteYouTubeProps,
+    <a
+      href={`https://www.youtube.com/watch?v=${videoId}${playlistId ? `&list=${playlistId}` : ''}${params ? `&${params}` : ''}`}
+      className="lty-playbtn"
+      title={`Play ${title}`}
+      target="_blank"
+      rel="noopener noreferrer"
     >
-      <a
-        href={`https://www.youtube.com/watch?v=${videoId}${playlistId ? `&list=${playlistId}` : ''}${params ? `&${params}` : ''}`}
-        className="lty-playbtn"
-        title={`Play ${title}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span className="lyt-visually-hidden">{title}</span>
-      </a>
-    </lite-youtube>
+      <span className="lyt-visually-hidden">{title}</span>
+    </a>
   )
 }
 

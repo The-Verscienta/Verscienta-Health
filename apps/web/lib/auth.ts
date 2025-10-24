@@ -1,12 +1,12 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { magicLink, twoFactor } from 'better-auth/plugins'
-// import { createAuthMiddleware } from 'better-auth/api'
+import { createAuthMiddleware } from 'better-auth/api'
 import { sendMagicLinkEmail } from './email'
 import { prisma } from './prisma'
-// import { sessionLogger } from './session-logger'
-// import { accountLockout } from './account-lockout'
-// import { securityMonitor } from './security-monitor'
+import { sessionLogger } from './session-logger'
+import { accountLockout } from './account-lockout'
+import { securityMonitor } from './security-monitor'
 
 /**
  * Better Auth Configuration
@@ -117,7 +117,7 @@ export const auth = betterAuth({
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       // Check if account is locked before allowing login
-      if (ctx.path === '/sign-in/email') {
+      if (ctx.path === '/sign-in/email' && ctx.method === 'POST') {
         try {
           const email = ctx.body?.email
 
@@ -126,231 +126,171 @@ export const auth = betterAuth({
 
             if (!allowed) {
               console.warn(`[Account Security] Login blocked for locked account: ${email}`)
-
-              // Throw error to block login
               throw new Error(reason || 'Account is locked')
             }
           }
         } catch (error) {
-          console.error('Account lockout check error:', error)
-          // Re-throw to block login
+          console.error('[Account Security] Lockout check error:', error)
           throw error
         }
       }
     }),
     after: createAuthMiddleware(async (ctx) => {
       try {
-        // Log successful email sign-ins, clear account lockout & track session security
-        if (ctx.path === '/sign-in/email') {
+        // Extract session and user from context
+        const contextData = ctx.context as any
+        const session = contextData?.session
+        const user = contextData?.user
+        const ipAddress = ctx.headers?.get('x-forwarded-for') || undefined
+        const userAgent = ctx.headers?.get('user-agent') || undefined
+
+        // Handle successful email sign-ins
+        if (ctx.path === '/sign-in/email' && ctx.method === 'POST' && session && user) {
           try {
-            // Only log successful sign-ins (response is ok)
-            if (context.response && context.responseStatus === 200) {
-              const body = await context.request?.json().catch(() => ({}))
-              const session = context.context.session
-              const user = context.context.user
-              const ipAddress = context.request?.headers.get('x-forwarded-for') || undefined
-              const userAgent = context.request?.headers.get('user-agent') || undefined
+            // Clear failed login attempts
+            await accountLockout.recordSuccess(user.email)
 
-              if (session && user) {
-                // Clear failed login attempts on successful login
-                await accountLockout.recordSuccess(user.email)
+            // Track session for security monitoring
+            await securityMonitor.trackSession({
+              userId: user.id,
+              sessionId: session.id || session.token || 'unknown',
+              ipAddress,
+              userAgent,
+              deviceId: undefined,
+            })
 
-                // Track session for security monitoring
-                await securityMonitor.trackSession({
-                  userId: user.id,
-                  sessionId: session.id || session.token || 'unknown',
-                  ipAddress,
-                  userAgent,
-                  deviceId: undefined, // TODO: Add device fingerprinting
-                })
+            // Detect unusual login patterns
+            await securityMonitor.detectUnusualLoginPattern({
+              userId: user.id,
+              userEmail: user.email,
+              timestamp: new Date(),
+              ipAddress,
+            })
 
-                // Detect unusual login patterns
-                await securityMonitor.detectUnusualLoginPattern({
-                  userId: user.id,
-                  userEmail: user.email,
-                  timestamp: new Date(),
-                  ipAddress,
-                })
+            // Log successful login
+            await sessionLogger.loginSuccess({
+              sessionId: session.id || session.token || 'unknown',
+              userId: user.id,
+              userEmail: user.email,
+              ipAddress,
+              userAgent,
+              provider: 'email',
+            })
 
-                await sessionLogger.loginSuccess({
-                  sessionId: session.id || session.token || 'unknown',
-                  userId: user.id,
-                  userEmail: user.email,
-                  ipAddress,
-                  userAgent,
-                  provider: 'email',
-                })
-
-                await sessionLogger.sessionStart({
-                  sessionId: session.id || session.token || 'unknown',
-                  userId: user.id,
-                  userEmail: user.email,
-                  ipAddress,
-                  userAgent,
-                  expiresAt: session.expiresAt
-                    ? new Date(session.expiresAt)
-                    : new Date(Date.now() + 60 * 60 * 24 * 1000),
-                })
-              }
-            }
+            // Log session start
+            await sessionLogger.sessionStart({
+              sessionId: session.id || session.token || 'unknown',
+              userId: user.id,
+              userEmail: user.email,
+              ipAddress,
+              userAgent,
+              expiresAt: session.expiresAt
+                ? new Date(session.expiresAt)
+                : new Date(Date.now() + 60 * 60 * 24 * 1000),
+            })
           } catch (error) {
-            // Don't fail the request if logging fails
-            console.error('Session logging error (sign-in):', error)
+            console.error('[Session] Logging error (sign-in):', error)
           }
-        },
-      },
-      {
-        // Log failed sign-ins & record for account lockout
-        matcher: (context) => context.path === '/sign-in/email' && context.method === 'POST',
-        handler: async (context) => {
+        }
+
+        // Handle failed email sign-ins (when no session/user but path matched)
+        if (ctx.path === '/sign-in/email' && ctx.method === 'POST' && (!session || !user)) {
           try {
-            // Log failed sign-ins (response is not ok)
-            if (context.response && context.responseStatus !== 200) {
-              const body = await context.request?.json().catch(() => ({}))
-              const email = (body as any)?.email || 'unknown'
-              const ipAddress = context.request?.headers.get('x-forwarded-for') || undefined
-              const userAgent = context.request?.headers.get('user-agent') || undefined
+            const email = ctx.body?.email || 'unknown'
 
-              // Record failed attempt for account lockout
-              if (email !== 'unknown') {
-                await accountLockout.recordFailure(email, { ipAddress, userAgent })
-              }
-
-              await sessionLogger.loginFailure({
-                sessionId: 'failed-' + Date.now(),
-                userEmail: email,
-                ipAddress,
-                userAgent,
-                reason: 'Invalid credentials or unverified email',
-              })
+            if (email !== 'unknown') {
+              await accountLockout.recordFailure(email, { ipAddress, userAgent })
             }
+
+            await sessionLogger.loginFailure({
+              sessionId: 'failed-' + Date.now(),
+              userEmail: email,
+              ipAddress,
+              userAgent,
+              reason: 'Invalid credentials or unverified email',
+            })
           } catch (error) {
-            console.error('Session logging error (failed sign-in):', error)
+            console.error('[Session] Logging error (failed sign-in):', error)
           }
-        },
-      },
-      {
-        // Log OAuth sign-ins
-        matcher: (context) =>
-          (context.path === '/sign-in/social' || context.path?.includes('/callback/')) &&
-          context.method === 'GET',
-        handler: async (context) => {
+        }
+
+        // Handle OAuth sign-ins
+        if (
+          (ctx.path === '/sign-in/social' || ctx.path?.includes('/callback/')) &&
+          session &&
+          user
+        ) {
           try {
-            if (context.response && context.responseStatus === 200) {
-              const session = context.context.session
-              const user = context.context.user
+            const provider = ctx.path?.includes('google')
+              ? 'google'
+              : ('github' as 'google' | 'github')
 
-              if (session && user) {
-                const provider =
-                  context.path?.includes('google') ? 'google' : ('github' as 'google' | 'github')
-
-                await sessionLogger.oauthSuccess({
-                  sessionId: session.id || session.token || 'unknown',
-                  userId: user.id,
-                  userEmail: user.email,
-                  provider,
-                })
-              }
-            }
+            await sessionLogger.oauthSuccess({
+              sessionId: session.id || session.token || 'unknown',
+              userId: user.id,
+              userEmail: user.email,
+              provider,
+            })
           } catch (error) {
-            console.error('Session logging error (OAuth):', error)
+            console.error('[Session] Logging error (OAuth):', error)
           }
-        },
-      },
-      {
-        // Log magic link sign-ins
-        matcher: (context) => context.path === '/magic-link/verify' && context.method === 'GET',
-        handler: async (context) => {
-          try {
-            if (context.response && context.responseStatus === 200) {
-              const session = context.context.session
-              const user = context.context.user
+        }
 
-              if (session && user) {
-                await sessionLogger.magicLinkClicked({
-                  sessionId: session.id || session.token || 'unknown',
-                  userId: user.id,
-                  userEmail: user.email,
-                })
-              }
-            }
+        // Handle magic link sign-ins
+        if (ctx.path === '/magic-link/verify' && session && user) {
+          try {
+            await sessionLogger.magicLinkClicked({
+              sessionId: session.id || session.token || 'unknown',
+              userId: user.id,
+              userEmail: user.email,
+            })
           } catch (error) {
-            console.error('Session logging error (magic link):', error)
+            console.error('[Session] Logging error (magic link):', error)
           }
-        },
-      },
-      {
-        // Log sign-outs & remove session from security monitoring
-        matcher: (context) => context.path === '/sign-out' && context.method === 'POST',
-        handler: async (context) => {
-          try {
-            // Get session before it's destroyed
-            const session = context.context.session
-            const user = context.context.user
+        }
 
+        // Handle sign-outs
+        if (ctx.path === '/sign-out' && ctx.method === 'POST' && session && user) {
+          try {
+            await securityMonitor.removeSession(
+              session.id || session.token || 'unknown',
+              user.id
+            )
+
+            await sessionLogger.logout({
+              sessionId: session.id || session.token || 'unknown',
+              userId: user.id,
+              manual: true,
+            })
+          } catch (error) {
+            console.error('[Session] Logging error (sign-out):', error)
+          }
+        }
+
+        // Handle MFA verification
+        if (ctx.path === '/two-factor/verify' && ctx.method === 'POST') {
+          try {
             if (session && user) {
-              // Remove session from security monitoring
-              await securityMonitor.removeSession(
-                session.id || session.token || 'unknown',
-                user.id
-              )
-
-              await sessionLogger.logout({
+              await sessionLogger.mfaSuccess({
                 sessionId: session.id || session.token || 'unknown',
                 userId: user.id,
-                manual: true,
+              })
+            } else {
+              // MFA verification failed (no session/user)
+              await sessionLogger.mfaFailure({
+                sessionId: 'failed-mfa-' + Date.now(),
+                userId: user?.id || 'unknown',
               })
             }
           } catch (error) {
-            console.error('Session logging error (sign-out):', error)
+            console.error('[Session] Logging error (MFA):', error)
           }
-        },
-      },
-      {
-        // Log MFA verification success
-        matcher: (context) =>
-          context.path === '/two-factor/verify' && context.method === 'POST',
-        handler: async (context) => {
-          try {
-            if (context.response && context.responseStatus === 200) {
-              const session = context.context.session
-              const user = context.context.user
-
-              if (session && user) {
-                await sessionLogger.mfaSuccess({
-                  sessionId: session.id || session.token || 'unknown',
-                  userId: user.id,
-                })
-              }
-            }
-          } catch (error) {
-            console.error('Session logging error (MFA success):', error)
-          }
-        },
-      },
-      {
-        // Log MFA verification failure
-        matcher: (context) =>
-          context.path === '/two-factor/verify' && context.method === 'POST',
-        handler: async (context) => {
-          try {
-            if (context.response && context.responseStatus !== 200) {
-              const session = context.context.session
-              const user = context.context.user
-
-              if (session && user) {
-                await sessionLogger.mfaFailure({
-                  sessionId: session.id || session.token || 'unknown',
-                  userId: user.id,
-                })
-              }
-            }
-          } catch (error) {
-            console.error('Session logging error (MFA failure):', error)
-          }
-        },
-      },
-    ],
+        }
+      } catch (error) {
+        // Don't fail the request if logging fails
+        console.error('[Session] Hook error:', error)
+      }
+    }),
   },
 })
 

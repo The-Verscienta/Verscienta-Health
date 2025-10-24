@@ -156,6 +156,9 @@ export const SquareVideo: StoryObj<typeof LiteYouTubeEmbed> = {
  * Multiple videos in a grid
  */
 export const MultipleVideos: Story = {
+  args: {
+    videoId: 'jNQXAC9IVRw', // Default video ID (not used in custom render)
+  },
   render: () => (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       <LiteYouTubeEmbed videoId="jNQXAC9IVRw" title="First YouTube Video" />
@@ -182,6 +185,9 @@ export const MultipleVideos: Story = {
  * Herb education example for Verscienta Health
  */
 export const HerbEducation: Story = {
+  args: {
+    videoId: 'herb_video_id', // Placeholder for herb education video
+  },
   render: () => (
     <div className="mx-auto max-w-3xl space-y-4">
       <div>
@@ -210,6 +216,9 @@ export const HerbEducation: Story = {
  * TCM diagnosis educational series
  */
 export const TCMEducationSeries: Story = {
+  args: {
+    videoId: 'tcm_video_id', // Placeholder for TCM education video
+  },
   render: () => (
     <div className="mx-auto max-w-3xl space-y-6">
       <h2 className="text-3xl font-bold">TCM Diagnosis Fundamentals</h2>
