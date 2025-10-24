@@ -43,7 +43,9 @@
       "Bash(pnpm test:unit cache-tls.test.ts --run)",
       "Bash(pnpm test:unit cert-monitor.test.ts --run)",
       "Bash(if not exist \"__tests__\" mkdir __tests__)",
-      "Bash(pnpm test:unit Header.test.tsx Footer.test.tsx --run)"
+      "Bash(pnpm test:unit Header.test.tsx Footer.test.tsx --run)",
+      "Bash(pnpm add lite-youtube-embed)",
+      "Bash(pnpm test:unit lite-youtube.test.tsx --run)"
     ],
     "deny": [],
     "ask": []

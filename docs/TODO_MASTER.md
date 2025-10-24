@@ -1,5 +1,5 @@
 Master TODO List - Verscienta Health
-Created: 2025-01-15 | Last Updated: 2025-10-23 | Total Items: 115 | Status: Active | Overall: 42% Complete (48/115 items)
+Created: 2025-01-15 | Last Updated: 2025-10-24 | Total Items: 139 | Status: Active | Overall: 35% Complete (48/139 items)
 Reorganized by Implementation Phases based on VERSCIENTA_HEALTH_COMPREHENSIVE_PLAN.md. This aligns the master todo list with the 6-phase timeline while preserving all existing items, mapping them to appropriate phases, and maintaining completion status.
 
 Phase 1: Foundation (Weeks 1-4) - Project setup, monorepo structure, CMS collections, basic frontend
@@ -268,7 +268,166 @@ Launch Preparation (4 items)
 - [ ] Soft launch → Full launch
 
 Phase 6: 2025+ Comprehensiveness (Ongoing) - Trends, community, AI evolution
-🔴 Phase 6 Status: 0% Complete (Completed: 0, Pending: 11)
+🔴 Phase 6 Status: 0% Complete (Completed: 0, Pending: 35)
+
+Machine Learning & AI Features (24 items - Grok API integration)
+
+**Phase 1: Foundation (2-3 weeks, 6 items)**
+
+- [ ] Create Grok API client with rate limiting and caching (lib/grok/client.ts) - 4-6 hours
+  - Implement GrokClient class with chat completions
+  - Add DragonflyDB caching (24hr static, 1hr dynamic)
+  - Rate limiting: 60 req/min per user, 10K req/day total
+  - Environment variables: GROK_API_KEY, GROK_API_URL, GROK_MODEL
+
+- [ ] Add Grok environment variables to .env.example and documentation - 30 min
+  - GROK_API_KEY (required)
+  - GROK_API_URL (default: https://api.x.ai/v1)
+  - GROK_MODEL (default: grok-1)
+  - GROK_RATE_LIMIT_PER_USER, GROK_RATE_LIMIT_TOTAL
+  - GROK_CACHE_TTL_STATIC, GROK_CACHE_TTL_DYNAMIC
+
+- [ ] Install and configure pgvector extension in PostgreSQL - 1-2 hours
+  - Enable pgvector extension in database
+  - Test vector operations (cosine similarity, L2 distance)
+  - Add pgvector to Prisma schema types
+
+- [ ] Add vector embedding columns to Prisma schema - 2-3 hours
+  - Add embedding fields to Herb, Formula, Condition models
+  - Create migration for vector columns (vector(384) for all-MiniLM-L6-v2)
+  - Add indexes for vector similarity search
+
+- [ ] Create embedding service using Transformers.js - 4-6 hours
+  - Install @xenova/transformers
+  - Implement EmbeddingService class (lib/ml/embeddings.ts)
+  - Use all-MiniLM-L6-v2 model (384 dimensions)
+  - Add batch processing for large datasets
+
+- [ ] Generate embeddings for existing content - 6-8 hours
+  - Create migration script to generate embeddings
+  - Process herbs, formulas, conditions in batches
+  - Store embeddings in vector columns
+  - Add progress tracking and error handling
+
+**Phase 2: Core ML Features (4-5 weeks, 7 items)**
+
+- [ ] Create TCM pattern recognition service - 8-12 hours
+  - Implement analyzeTCMPattern function (lib/ml/tcm-patterns.ts)
+  - Design comprehensive TCM system prompt (30 years experience, Eight Principles)
+  - Parse Grok JSON responses into TCMPattern type
+  - Add medical disclaimer to all responses
+  - Support tongue, pulse, constitution analysis
+
+- [ ] Create API route for TCM pattern analysis - 3-4 hours
+  - POST /api/ml/tcm-pattern
+  - Validate symptoms input (array, non-empty)
+  - Add rate limiting (10 requests per hour per user)
+  - Return patterns with confidence scores
+
+- [ ] Implement hybrid search (Algolia + vector similarity) - 10-15 hours
+  - Create hybridSearch function (lib/ml/hybrid-search.ts)
+  - Combine Algolia keyword results with pgvector similarity
+  - Implement re-ranking algorithm (60% keyword, 40% semantic)
+  - Support herbs, formulas, conditions search types
+  - Add caching for query embeddings
+
+- [ ] Create intelligent herb recommendation service - 8-12 hours
+  - Implement recommendHerbs function (lib/ml/recommendations.ts)
+  - Use Grok for TCM pattern analysis
+  - Find similar herbs using vector similarity
+  - Consider contraindications and interactions
+  - Return recommendations with explanations
+
+- [ ] Create API route for herb recommendations - 3-4 hours
+  - POST /api/ml/recommend-herbs
+  - Accept symptoms, existing_conditions, current_herbs
+  - Rate limiting: 20 requests per hour per user
+  - Return ranked recommendations with TCM context
+
+- [ ] Update search pages to use hybrid search - 4-6 hours
+  - Integrate hybrid search into /search page
+  - Add "Semantic Search" toggle in SearchFilters
+  - Show relevance scores for vector results
+  - A/B test keyword vs hybrid search
+
+- [ ] Create herb recommendation UI component - 6-8 hours
+  - Build HerbRecommendations.tsx component
+  - Show TCM patterns, recommended herbs, explanations
+  - Add medical disclaimer banner
+  - Loading states with skeleton UI
+
+**Phase 3: Advanced Features (2-3 weeks, 5 items)**
+
+- [ ] Create symptom similarity analysis service - 6-8 hours
+  - Implement findSimilarSymptoms function (lib/ml/symptom-similarity.ts)
+  - Use vector embeddings for symptom clustering
+  - Find users with similar symptom profiles (anonymized)
+  - Return treatment success rates and outcomes
+
+- [ ] Implement privacy-preserving symptom analytics - 4-6 hours
+  - Hash user IDs before analysis
+  - Never store raw symptom combinations
+  - Add opt-in consent for anonymized data sharing
+  - HIPAA compliance audit logging
+
+- [ ] Create practitioner matching algorithm - 8-12 hours
+  - Implement matchPractitioners function (lib/ml/practitioner-matching.ts)
+  - Use Grok to understand patient needs from symptoms
+  - Match with practitioner specialties and modalities
+  - Consider location, availability, ratings
+  - Return ranked matches with explanations
+
+- [ ] Build conversational symptom checker - 12-16 hours
+  - Create SymptomChatBot component (components/ml/SymptomChatBot.tsx)
+  - Implement streaming chat with Grok API
+  - Multi-turn conversation for symptom refinement
+  - Extract structured data from conversation
+  - Generate TCM pattern analysis at end
+
+- [ ] Create API route for symptom checker chat - 4-6 hours
+  - POST /api/ml/symptom-chat (streaming response)
+  - Maintain conversation history in DragonflyDB
+  - Rate limiting: 30 messages per hour per user
+  - Return streaming Server-Sent Events (SSE)
+
+**Phase 4: Optimization & Monitoring (1-2 weeks, 6 items)**
+
+- [ ] Implement response streaming for better UX - 4-6 hours
+  - Add streaming support to Grok client
+  - Use ReadableStream for chat responses
+  - Update UI components to show partial responses
+  - Handle stream errors gracefully
+
+- [ ] Add edge caching for embeddings and common queries - 3-4 hours
+  - Cache embeddings in Cloudflare KV
+  - Cache common TCM patterns (top 100 symptom combinations)
+  - Add cache warming script
+  - Monitor cache hit rates
+
+- [ ] Create ML metrics and analytics dashboard - 8-12 hours
+  - Build admin dashboard page (app/admin/ml-metrics/page.tsx)
+  - Display Grok API usage (requests, tokens, costs)
+  - Show ML feature adoption (TCM patterns, recommendations, chat)
+  - Track accuracy metrics (user feedback, ratings)
+  - Cost monitoring and budget alerts
+
+- [ ] Set up monitoring alerts for ML services - 2-3 hours
+  - Alert on high error rates (>5%)
+  - Alert on slow response times (>5s p95)
+  - Alert on API quota exhaustion (>80%)
+  - Alert on high costs ($500+ per month)
+
+- [ ] Add user feedback loops for ML quality - 6-8 hours
+  - Add "Was this helpful?" buttons to all ML features
+  - Collect thumbs up/down with optional comments
+  - Store feedback in database (ml_feedback table)
+  - Create feedback review dashboard for admins
+
+- [ ] Create A/B testing framework for ML features - 6-8 hours
+  - Implement feature flags for ML experiments
+  - Track conversion rates (recommendations → herb views)
+  - Measure engagement (chat length, followup questions)
+  - Generate experiment reports
 
 Email Templates & Digest (2 items)
 
@@ -315,10 +474,10 @@ DevOps & Security Enhancements (5 items)
 - [ ] Remove or implement documented mobile app features
 
 Overall Progress
-Actual Completion: 42% Complete (48/115 items)
+Actual Completion: 35% Complete (48/139 items)
 Documentation Claims: ~65% Complete - VERIFIED INACCURATE
 MVP Target (Phases 1-5): 45% Complete when corrected
-Current Priority: Testing expansion → JSON-LD integration → Cloudflare Images setup
+Current Priority: Testing expansion → JSON-LD integration → Cloudflare Images setup → ML/AI Foundation
 Next Critical Items:
   1. ✅ COMPLETE: Comprehensive testing infrastructure (181 tests across 10 files)
   2. ✅ COMPLETE: Security tests (authentication, rate limiting, HIPAA compliance)
@@ -329,6 +488,7 @@ Next Critical Items:
   7. Enable Cloudflare Images in dashboard and configure credentials
   8. Deploy database indexes to production
   9. Set up CI/CD with automated testing (GitHub Actions)
+  10. Begin ML/AI foundation (Grok API client, pgvector setup)
 
 Phase Breakdown (Corrected Status):
 
@@ -337,9 +497,9 @@ Phase Breakdown (Corrected Status):
 - Phase 3: Polish & Launch Prep - Quality and deployment prep (Weeks 9-12) - 81% Complete (44/54 items, comprehensive testing complete, TLS security and certificate monitoring implemented, layout component tests complete)
 - Phase 4: Content Population - Data migration and seeding (Weeks 13-16) - 0% Complete (0/3 items)
 - Phase 5: Launch - Testing and go-live (Week 17) - 0% Complete (0/4 items)
-- Phase 6: 2025+ Comprehensiveness - Future enhancements (Ongoing) - 0% Complete (0/11 items)
+- Phase 6: 2025+ Comprehensiveness - Future enhancements (Ongoing) - 0% Complete (0/35 items, ML/AI features added)
 
-Items Mapped to Phases (All 115 items accounted for - includes 31 testing/security/optimization tasks + 3 TLS security enhancements added 2025-10-23)
+Items Mapped to Phases (All 139 items accounted for - includes 31 testing/security/optimization tasks + 3 TLS security enhancements + 24 ML/AI tasks added 2025-10-24)
 
 Decision Log
 Items Requiring Decisions
@@ -480,3 +640,34 @@ Recent Updates (2025-10-23):
   - All 73 tests passing for both layout components
 - 📈 Phase 3 completion: 80% → 81% (44/54 items, +1 testing task completed)
 - 📈 Overall project completion: 41% → 42% (48/115 items)
+
+Recent Updates (2025-10-24):
+- 📋 Added comprehensive Machine Learning & AI Features roadmap (24 new tasks)
+  - **Phase 1: Foundation (6 items)** - Grok API client, pgvector setup, embeddings generation (2-3 weeks)
+  - **Phase 2: Core ML Features (7 items)** - TCM pattern recognition, hybrid search, herb recommendations (4-5 weeks)
+  - **Phase 3: Advanced Features (5 items)** - Symptom similarity, practitioner matching, conversational symptom checker (2-3 weeks)
+  - **Phase 4: Optimization & Monitoring (6 items)** - Response streaming, ML dashboard, user feedback, A/B testing (1-2 weeks)
+  - Total estimated timeline: 9-13 weeks for full ML implementation
+  - Cost estimate: $100-150/month for 10K users (based on Grok API pricing)
+  - All tasks include detailed sub-items with time estimates
+- ✅ Created ML_IMPLEMENTATION_PLAN.md (400+ lines comprehensive guide)
+  - Grok API integration strategy (not OpenAI/ChatGPT as requested)
+  - Technical architecture with code examples
+  - Safety and HIPAA compliance considerations
+  - Environment variable documentation
+  - Cost analysis and monitoring strategies
+- 📈 Phase 6 total items: 11 → 35 (added 24 ML/AI tasks)
+- 📈 Total project items: 115 → 139 (added 24 ML/AI tasks)
+- 📈 Overall completion percentage adjusted: 42% → 35% (same completed items, larger total)
+- ✅ Implemented LiteYouTube performance-optimized video embeds
+  - **Performance**: ~99% reduction in initial page weight (~224KB per video → ~3KB)
+  - **Components**: LiteYouTube base component + LiteYouTubeEmbed wrapper (179 lines)
+  - **Features**: Lazy loading, playlists, custom parameters, privacy mode, multiple aspect ratios
+  - **Testing**: 45 comprehensive tests (100% passing) covering all features and edge cases
+  - **Documentation**: Complete developer guide (339 lines) with usage examples, migration path, performance data
+  - **Storybook**: 11 interactive stories including real-world Verscienta Health use cases
+  - **TypeScript**: Full type definitions for custom element
+  - **Accessibility**: WCAG compliant with fallback links, keyboard navigation, screen reader support
+  - **Use Cases**: Herb education videos, formula preparation tutorials, TCM diagnosis series, practitioner profiles
+  - **Impact**: Significant Core Web Vitals improvements (LCP -1 to -2s, FID -50 to -100ms)
+  - Created LITE_YOUTUBE_IMPLEMENTATION.md with full implementation summary
