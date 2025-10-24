@@ -1,6 +1,12 @@
-import Link from 'next/link'
+'use client'
+
+import { Link } from '@/i18n/routing'
+import { useTranslations } from 'next-intl'
 
 export function Footer() {
+  const t = useTranslations()
+  const footerT = useTranslations('footer')
+
   return (
     <footer className="bg-earth-50 border-t border-gray-200 dark:bg-gray-900">
       <div className="container-custom py-12">
@@ -10,21 +16,21 @@ export function Footer() {
             <h3 className="text-earth-900 dark:text-earth-100 mb-4 font-serif text-lg font-bold">
               Verscienta Health
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Bridging ancient herbal wisdom with modern science.
-            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{footerT('tagline')}</p>
           </div>
 
           {/* Explore */}
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Explore</h4>
+            <h4 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">
+              {footerT('quickLinks')}
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/herbs"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Herbs Database
+                  {t('nav.herbs')}
                 </Link>
               </li>
               <li>
@@ -32,7 +38,7 @@ export function Footer() {
                   href="/formulas"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Herbal Formulas
+                  {t('nav.formulas')}
                 </Link>
               </li>
               <li>
@@ -40,7 +46,7 @@ export function Footer() {
                   href="/conditions"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Health Conditions
+                  {t('nav.conditions')}
                 </Link>
               </li>
               <li>
@@ -48,7 +54,7 @@ export function Footer() {
                   href="/practitioners"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Find Practitioners
+                  {t('nav.practitioners')}
                 </Link>
               </li>
             </ul>
@@ -56,14 +62,16 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Resources</h4>
+            <h4 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">
+              {t('nav.about')}
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/symptom-checker"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  AI Symptom Checker
+                  {t('nav.symptomChecker')}
                 </Link>
               </li>
               <li>
@@ -71,7 +79,7 @@ export function Footer() {
                   href="/modalities"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Healing Modalities
+                  {t('nav.modalities')}
                 </Link>
               </li>
               <li>
@@ -79,7 +87,7 @@ export function Footer() {
                   href="/about"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  About Us
+                  {t('nav.about')}
                 </Link>
               </li>
               <li>
@@ -87,7 +95,7 @@ export function Footer() {
                   href="/contact"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Contact
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
@@ -95,14 +103,16 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Legal</h4>
+            <h4 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">
+              {footerT('legal')}
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/privacy"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Privacy Policy
+                  {footerT('privacy')}
                 </Link>
               </li>
               <li>
@@ -110,7 +120,7 @@ export function Footer() {
                   href="/terms"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Terms of Service
+                  {footerT('terms')}
                 </Link>
               </li>
               <li>
@@ -118,7 +128,7 @@ export function Footer() {
                   href="/disclaimer"
                   className="hover:text-earth-600 text-gray-600 transition-colors"
                 >
-                  Medical Disclaimer
+                  {footerT('disclaimer')}
                 </Link>
               </li>
             </ul>
@@ -126,13 +136,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-gray-200 pt-8 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            © {new Date().getFullYear()} Verscienta Health. All rights reserved.
-          </p>
-          <p className="mt-2 text-xs text-gray-500">
-            <strong>Medical Disclaimer:</strong> This information is for educational purposes only
-            and is not a substitute for professional medical advice, diagnosis, or treatment.
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{footerT('copyright')}</p>
         </div>
       </div>
     </footer>

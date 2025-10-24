@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cacheKeys, cacheTTL, withCache } from '@/lib/cache'
-import { getHerbBySlug } from '@/lib/payload-api'
+import { getHerbBySlug } from '@/lib/strapi-api'
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     // Use cache wrapper
     const herb = await withCache(cacheKeys.herb(slug), cacheTTL.herb, async () => {
-      // Fetch from Payload CMS
+      // Fetch from Strapi CMS
       const { docs } = await getHerbBySlug(slug)
       return docs[0]
     })

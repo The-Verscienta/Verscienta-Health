@@ -12,10 +12,21 @@ const config: StorybookConfig = {
   ],
   framework: {
     name: '@storybook/nextjs',
-    options: {},
+    options: {
+      nextConfigPath: '../next.config.ts',
+    },
   },
   docs: {
     autodocs: 'tag',
+  },
+  webpackFinal: async (config) => {
+    // Remove Sentry webpack plugin to avoid conflicts with Storybook
+    if (config.plugins) {
+      config.plugins = config.plugins.filter(
+        (plugin) => plugin?.constructor.name !== 'SentryWebpackPlugin'
+      )
+    }
+    return config
   },
 }
 

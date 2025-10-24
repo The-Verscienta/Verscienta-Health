@@ -129,7 +129,7 @@ verscienta-health/
 3. **Read the Code**
    - Open `apps/web/app/page.tsx` (homepage)
    - Check `apps/web/components/ui/button.tsx` (UI component)
-   - Review `apps/cms/src/collections/Herbs.ts` (data model)
+   - Review `apps/strapi-cms/src/collections/Herbs.ts` (data model)
 
 ---
 
@@ -175,9 +175,9 @@ verscienta-health/
 - **Search**: Algolia InstantSearch
 - **Maps**: Leaflet
 
-**Backend (Payload CMS):**
+**Backend (Strapi CMS):**
 
-- **Framework**: Payload CMS 3
+- **Framework**: Strapi CMS 5
 - **Database**: PostgreSQL 17
 - **ORM**: Drizzle
 - **Auth**: better-auth
@@ -527,7 +527,7 @@ git push origin docs/add-python-example
 - [Next.js Docs](https://nextjs.org/docs)
 - [React Docs](https://react.dev)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [Payload CMS Docs](https://payloadcms.com/docs)
+- [Strapi CMS Docs](https://docs.strapi.io)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [shadcn/ui](https://ui.shadcn.com)
 

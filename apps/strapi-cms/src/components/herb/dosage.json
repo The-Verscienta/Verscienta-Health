@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_herb_dosages",
+  "info": {
+    "displayName": "Recommended Dosage",
+    "icon": "capsules"
+  },
+  "options": {},
+  "attributes": {
+    "form": {
+      "type": "enumeration",
+      "enum": ["tincture", "tea", "decoction", "capsule", "tablet", "powder", "extract"],
+      "required": true
+    },
+    "amount": {
+      "type": "string",
+      "required": true
+    },
+    "frequency": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "string"
+    },
+    "population": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

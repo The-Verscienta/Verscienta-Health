@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_herb_safety_infos",
+  "info": {
+    "displayName": "Safety Information",
+    "icon": "shield"
+  },
+  "options": {},
+  "attributes": {
+    "contraindications": {
+      "type": "richtext"
+    },
+    "sideEffects": {
+      "type": "richtext"
+    },
+    "toxicityLevel": {
+      "type": "enumeration",
+      "enum": ["none", "low", "moderate", "high", "severe"]
+    },
+    "toxicityNotes": {
+      "type": "richtext"
+    },
+    "allergenicPotential": {
+      "type": "enumeration",
+      "enum": ["none", "low", "moderate", "high"]
+    }
+  }
+}

@@ -37,6 +37,19 @@ export function SessionTimeoutWarning({
 }: SessionTimeoutWarningProps) {
   const [countdown, setCountdown] = useState(minutesRemaining * 60)
 
+  const handleContinue = () => {
+    // Log session extension for HIPAA compliance
+    fetch('/api/auth/session-log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'SESSION_EXTENDED',
+      }),
+    }).catch((error) => console.error('Failed to log session extension:', error))
+
+    onContinue()
+  }
+
   useEffect(() => {
     if (!open) {
       setCountdown(minutesRemaining * 60)
@@ -60,7 +73,7 @@ export function SessionTimeoutWarning({
   const seconds = countdown % 60
 
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onContinue()}>
+    <Dialog open={open} onOpenChange={(open) => !open && handleContinue()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="mb-2 flex items-center gap-3">
@@ -97,7 +110,7 @@ export function SessionTimeoutWarning({
               Log Out
             </Button>
           )}
-          <Button onClick={onContinue} className="flex-1">
+          <Button onClick={handleContinue} className="flex-1">
             Continue Session
           </Button>
         </DialogFooter>

@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllSlugs } from '@/lib/payload-api'
+import { getAllSlugs } from '@/lib/strapi-api'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://verscienta.com'
 
@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1 : 0.8,
   }))
 
-  // Fetch dynamic routes from Payload CMS
+  // Fetch dynamic routes from Strapi CMS
   const [herbSlugs, formulaSlugs, conditionSlugs, practitionerSlugs, modalitySlugs] =
     await Promise.all([
       getAllSlugs('herbs'),

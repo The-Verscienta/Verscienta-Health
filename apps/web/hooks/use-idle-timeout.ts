@@ -63,6 +63,16 @@ export function useIdleTimeout({
   const handleTimeout = useCallback(() => {
     console.warn('[HIPAA Security] Session timed out due to inactivity')
 
+    // Log timeout event for HIPAA compliance
+    fetch('/api/auth/session-log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'SESSION_TIMEOUT',
+        metadata: { reason: 'inactivity' },
+      }),
+    }).catch((error) => console.error('Failed to log session timeout:', error))
+
     if (onTimeout) {
       onTimeout()
     } else {
@@ -73,6 +83,16 @@ export function useIdleTimeout({
 
   const handleWarning = useCallback(() => {
     console.warn('[HIPAA Security] Session will timeout soon due to inactivity')
+
+    // Log idle warning for HIPAA compliance
+    fetch('/api/auth/session-log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'IDLE_WARNING',
+        metadata: { minutesRemaining: warningMinutes },
+      }),
+    }).catch((error) => console.error('Failed to log idle warning:', error))
 
     if (onWarning) {
       onWarning()

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_herb_active_constituents",
+  "info": {
+    "displayName": "Active Constituent",
+    "icon": "flask"
+  },
+  "options": {},
+  "attributes": {
+    "compoundName": {
+      "type": "string",
+      "required": true
+    },
+    "compoundClass": {
+      "type": "string"
+    },
+    "percentage": {
+      "type": "decimal"
+    },
+    "effects": {
+      "type": "text"
+    }
+  }
+}

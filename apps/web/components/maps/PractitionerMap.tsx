@@ -2,7 +2,7 @@
 
 import L from 'leaflet'
 import { CheckCircle, MapPin, Star } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { useEffect, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'

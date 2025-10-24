@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "validation_reports",
+  "info": {
+    "singularName": "validation-report",
+    "pluralName": "validation-reports",
+    "displayName": "Validation Report",
+    "description": "Data validation reports from automated quality checks"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "herb-validation",
+        "trefle-name-mismatch",
+        "formula-validation",
+        "image-validation",
+        "scientific-name-validation",
+        "other"
+      ],
+      "required": true
+    },
+    "issues": {
+      "type": "component",
+      "repeatable": true,
+      "required": true,
+      "component": "validation.issue"
+    },
+    "errorCount": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "warningCount": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "totalChecked": {
+      "type": "integer",
+      "required": true
+    },
+    "timestamp": {
+      "type": "datetime",
+      "required": true
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

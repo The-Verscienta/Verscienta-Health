@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_herb_synonyms",
+  "info": {
+    "displayName": "Scientific Synonym",
+    "icon": "file"
+  },
+  "options": {},
+  "attributes": {
+    "synonym": {
+      "type": "string"
+    }
+  }
+}

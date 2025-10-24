@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_formula_use_cases",
+  "info": {
+    "displayName": "Use Case",
+    "icon": "check"
+  },
+  "options": {},
+  "attributes": {
+    "useCase": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "kind": "collectionType",
+  "collectionName": "modalities",
+  "info": {
+    "singularName": "modality",
+    "pluralName": "modalities",
+    "displayName": "Modality",
+    "description": "Treatment modalities and healing practices"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "featuredImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "shortDescription": {
+      "type": "text"
+    },
+    "history": {
+      "type": "richtext"
+    },
+    "principles": {
+      "type": "richtext"
+    },
+    "diagnosticMethods": {
+      "type": "richtext"
+    },
+    "treatmentModalities": {
+      "type": "component",
+      "repeatable": true,
+      "component": "modality.treatment-approach"
+    },
+    "excelsAt": {
+      "type": "component",
+      "repeatable": true,
+      "component": "modality.excels-at"
+    },
+    "benefits": {
+      "type": "component",
+      "repeatable": true,
+      "component": "modality.benefit"
+    },
+    "relatedConditions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::condition.condition"
+    },
+    "relatedHerbs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::herb.herb"
+    },
+    "trainingRequirements": {
+      "type": "richtext"
+    },
+    "certificationBodies": {
+      "type": "component",
+      "repeatable": true,
+      "component": "modality.certification-body"
+    },
+    "researchEvidence": {
+      "type": "richtext"
+    },
+    "safetyConsiderations": {
+      "type": "richtext"
+    },
+    "typicalSession": {
+      "type": "richtext"
+    },
+    "costRange": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_grok_recommendations",
+  "info": {
+    "displayName": "Recommendation",
+    "icon": "lightbulb"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": ["herb", "formula", "modality", "practitioner", "lifestyle"]
+    },
+    "entityId": {
+      "type": "string"
+    },
+    "reasoning": {
+      "type": "text"
+    },
+    "confidence": {
+      "type": "integer",
+      "min": 0,
+      "max": 100
+    }
+  }
+}

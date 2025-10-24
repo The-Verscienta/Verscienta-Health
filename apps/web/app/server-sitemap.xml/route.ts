@@ -104,7 +104,7 @@ export async function GET() {
 }
 
 /**
- * Fetch collection items from Payload CMS
+ * Fetch collection items from Strapi CMS
  */
 async function fetchCollection(
   collection: string,

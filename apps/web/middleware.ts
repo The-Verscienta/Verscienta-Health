@@ -1,11 +1,14 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { checkRateLimit, isRedisConfigured, type RateLimitConfig } from '@/lib/redis-rate-limiter'
+import createIntlMiddleware from 'next-intl/middleware'
+import { routing } from './i18n/routing'
 
 /**
- * Security Middleware
+ * Security & i18n Middleware
  *
  * Implements:
+ * - i18n locale detection and routing (next-intl)
  * - Rate limiting with Redis (prevent brute force, DoS)
  * - Security headers (CSP, HSTS, etc.)
  * - Request validation
@@ -16,6 +19,9 @@ import { checkRateLimit, isRedisConfigured, type RateLimitConfig } from '@/lib/r
  * - Falls back to in-memory if Redis not configured
  * - Set REDIS_URL and REDIS_TOKEN environment variables
  */
+
+// Create the intl middleware
+const handleI18nRouting = createIntlMiddleware(routing)
 
 // Rate limiting configuration
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
@@ -179,11 +185,20 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const origin = request.headers.get('origin')
 
+  // Step 1: Handle i18n routing (skip for API routes, static files, etc.)
+  const shouldSkipI18n =
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.includes('/sw.js') ||
+    pathname.match(/\.(ico|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot)$/)
+
+  const response = shouldSkipI18n ? NextResponse.next() : handleI18nRouting(request)
+
   // Handle CORS preflight requests
   if (request.method === 'OPTIONS') {
-    const response = new NextResponse(null, { status: 204 })
-    addCORSHeaders(response, origin)
-    return response
+    const preflightResponse = new NextResponse(null, { status: 204 })
+    addCORSHeaders(preflightResponse, origin)
+    return preflightResponse
   }
 
   // Get client identifier
@@ -246,8 +261,7 @@ export async function middleware(request: NextRequest) {
     )
   }
 
-  // Create response with security headers
-  const response = NextResponse.next()
+  // Add security headers to response
 
   // CORS headers (for mobile apps)
   addCORSHeaders(response, origin)

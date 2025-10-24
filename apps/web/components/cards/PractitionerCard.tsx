@@ -1,5 +1,5 @@
 import { CheckCircle, MapPin, Star } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { OptimizedAvatar } from '@/components/ui/optimized-image'

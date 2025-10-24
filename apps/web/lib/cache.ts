@@ -13,7 +13,21 @@ function getRedisConfig() {
         port: parseInt(url.port || '6379'),
         password: url.password || undefined,
         db: parseInt(url.pathname.slice(1) || '0'),
-        tls: url.protocol === 'rediss:' ? {} : undefined,
+        tls:
+          url.protocol === 'rediss:'
+            ? {
+                // Enable TLS with proper certificate validation
+                rejectUnauthorized: process.env.NODE_ENV === 'production',
+                // In production, verify certificates
+                // In development, allow self-signed for testing
+                servername: url.hostname, // SNI (Server Name Indication)
+
+                // SECURITY: Enforce TLS 1.2+ (required for PCI DSS 3.2+ and HIPAA)
+                // TLS 1.0 and 1.1 are deprecated and have known vulnerabilities
+                minVersion: (process.env.REDIS_TLS_MIN_VERSION as any) || 'TLSv1.2',
+                maxVersion: (process.env.REDIS_TLS_MAX_VERSION as any) || 'TLSv1.3',
+              }
+            : undefined,
       }
     } catch (error) {
       console.error('Failed to parse REDIS_URL:', error)
@@ -21,11 +35,25 @@ function getRedisConfig() {
   }
 
   // Fallback to individual env vars
+  const useTLS =
+    process.env.REDIS_TLS === 'true' || process.env.REDIS_URL?.startsWith('rediss://')
+
   return {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379'),
     password: process.env.REDIS_PASSWORD || undefined,
     db: parseInt(process.env.REDIS_DB || '0'),
+    tls: useTLS
+      ? {
+          rejectUnauthorized: process.env.NODE_ENV === 'production',
+          servername: process.env.REDIS_HOST || 'localhost',
+
+          // SECURITY: Enforce TLS 1.2+ (required for PCI DSS 3.2+ and HIPAA)
+          // TLS 1.0 and 1.1 are deprecated and have known vulnerabilities
+          minVersion: (process.env.REDIS_TLS_MIN_VERSION as any) || 'TLSv1.2',
+          maxVersion: (process.env.REDIS_TLS_MAX_VERSION as any) || 'TLSv1.3',
+        }
+      : undefined,
   }
 }
 
@@ -41,6 +69,27 @@ export const redis = new Redis({
   // Enable lazy connect during build or development
   // CI is set to 'true' during Nixpacks/Docker builds
   lazyConnect: process.env.NODE_ENV === 'development' || process.env.CI === 'true',
+
+  // SECURITY: Connection pooling and resource limits
+  enableReadyCheck: true,
+  enableOfflineQueue: false, // Fail fast if Redis is down
+  connectTimeout: 10000, // 10 seconds
+  commandTimeout: 5000, // 5 seconds per command
+  keepAlive: 30000, // 30 seconds keepalive
+
+  // Connection pool limits (prevent resource exhaustion)
+  maxRetriesPerRequest: 3,
+  maxLoadingRetryTime: 2000,
+
+  // Reconnection strategy
+  reconnectOnError(err) {
+    const targetError = 'READONLY'
+    if (err.message.includes(targetError)) {
+      // Only reconnect when the error contains "READONLY"
+      return true
+    }
+    return false
+  },
 })
 
 // Handle connection events

@@ -180,16 +180,35 @@ export async function testRedisConnection(): Promise<boolean> {
 
 /**
  * Clear all rate limit data (use with caution)
+ * SECURITY: This function should only be called by admins
+ * Uses SCAN instead of KEYS to avoid blocking Redis
  */
 export async function clearAllRateLimits(): Promise<void> {
   if (redis) {
     try {
-      // In production, you might want to scan and delete only ratelimit:* keys
-      const keys = await redis.keys('ratelimit:*')
-      if (keys.length > 0) {
-        await redis.del(...keys)
-      }
-      console.log(`[RATE LIMIT] Cleared ${keys.length} rate limit entries from Redis`)
+      console.warn('[RATE LIMIT] Clearing all rate limits - this is a privileged operation')
+
+      let cursor = '0'
+      let totalDeleted = 0
+      const batchSize = 100
+
+      do {
+        // Use SCAN instead of KEYS to avoid blocking Redis
+        const result = await redis.scan(cursor, {
+          match: 'ratelimit:*',
+          count: batchSize,
+        })
+
+        cursor = result[0]
+        const keys = result[1]
+
+        if (keys.length > 0) {
+          await redis.del(...keys)
+          totalDeleted += keys.length
+        }
+      } while (cursor !== '0')
+
+      console.log(`[RATE LIMIT] Cleared ${totalDeleted} rate limit entries from Redis`)
     } catch (error) {
       console.error('[RATE LIMIT] Error clearing Redis rate limits:', error)
     }

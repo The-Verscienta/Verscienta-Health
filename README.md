@@ -4,7 +4,7 @@
 
 ![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black)
-![Payload CMS](https://img.shields.io/badge/Payload-3.58.0-blue)
+![Strapi CMS](https://img.shields.io/badge/Strapi-5.7.0-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)
 ![License](https://img.shields.io/badge/license-Proprietary-red.svg)
 
@@ -28,7 +28,7 @@ Verscienta Health is a comprehensive holistic health platform featuring:
 verscienta-health/
 ├── apps/
 │   ├── web/          # Next.js 15.5.4 frontend
-│   └── cms/          # Payload CMS 3.58.0 backend
+│   └── strapi-cms/   # Strapi CMS 5.7.0 backend
 ├── packages/
 │   ├── api-types/    # Shared TypeScript type definitions for API
 │   ├── api-client/   # Platform-agnostic API client (web/mobile)
@@ -52,9 +52,8 @@ verscienta-health/
 
 **Backend:**
 
-- Payload CMS 3.58.0
+- Strapi CMS 5.7.0
 - PostgreSQL 17+
-- Drizzle ORM
 - Node.js 20+
 
 **Services:**
@@ -105,7 +104,7 @@ pnpm db:setup
 pnpm dev
 ```
 
-The frontend will be available at `http://localhost:3000` and the CMS admin at `http://localhost:3001/admin`.
+The frontend will be available at `http://localhost:3000` and the Strapi admin at `http://localhost:3001/admin`.
 
 ### Development Commands
 
@@ -113,12 +112,12 @@ The frontend will be available at `http://localhost:3000` and the CMS admin at `
 # Development
 pnpm dev              # Start all apps in development mode
 pnpm dev:web          # Start Next.js frontend only
-pnpm dev:cms          # Start Payload CMS only
+pnpm dev:cms          # Start Strapi CMS only
 
 # Building
 pnpm build            # Build all apps
 pnpm build:web        # Build Next.js frontend
-pnpm build:cms        # Build Payload CMS
+pnpm build:cms        # Build Strapi CMS
 
 # Testing
 pnpm test             # Run all tests
@@ -407,7 +406,7 @@ docker-compose up -d
 **Quick Steps:**
 
 1. Create PostgreSQL database in Coolify
-2. Deploy backend (Payload CMS) using `apps/cms/Dockerfile`
+2. Deploy backend (Strapi CMS) using `apps/strapi-cms/Dockerfile`
 3. Deploy frontend (Next.js) using `apps/web/Dockerfile`
 4. Configure domains and SSL
 5. Run database migrations
@@ -491,7 +490,7 @@ Copyright © 2025 Verscienta Health. All rights reserved.
 
 - Traditional Chinese Medicine practitioners worldwide
 - Western herbalists and ethnobotanists
-- Open source community (Next.js, Payload CMS, React, and many more)
+- Open source community (Next.js, Strapi CMS, React, and many more)
 - Indigenous knowledge keepers
 
 ## 📧 Contact

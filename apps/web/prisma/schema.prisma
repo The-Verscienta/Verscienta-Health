@@ -35,6 +35,13 @@ model User {
   accounts     Account[]
   sessions     Session[]
   deviceTokens DeviceToken[]
+
+  // Performance Indexes
+  @@index([role]) // For admin/role-based queries
+  @@index([emailVerified]) // For filtering verified users
+  @@index([createdAt]) // For sorting users by registration date
+  @@index([deletedAt]) // For HIPAA compliance queries
+  @@index([scheduledForDeletion]) // For automated deletion jobs
 }
 
 // Better-Auth Account Model (for OAuth and credentials)
@@ -56,6 +63,10 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, accountId])
+  // Performance Indexes
+  @@index([userId]) // For user account lookups (foreign key)
+  @@index([providerId]) // For filtering by OAuth provider
+  @@index([createdAt]) // For account history queries
 }
 
 // Better-Auth Session Model
@@ -70,6 +81,14 @@ model Session {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Performance Indexes
+  @@index([userId]) // For user session lookups (foreign key)
+  @@index([expiresAt]) // For cleanup jobs (expired session removal)
+  @@index([ipAddress]) // For security monitoring (detect suspicious IPs)
+  @@index([createdAt]) // For session history and analytics
+  @@index([userId, expiresAt]) // Composite: active sessions per user
+  @@index([userId, createdAt]) // Composite: user session timeline
 }
 
 // Better-Auth Verification Model (for email verification and magic links)
@@ -82,6 +101,10 @@ model Verification {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, value])
+  // Performance Indexes
+  @@index([expiresAt]) // For cleanup jobs (expired verification removal)
+  @@index([identifier]) // For looking up verifications by email/identifier
+  @@index([createdAt]) // For verification history and analytics
 }
 
 // Device Token Model (for push notifications on mobile apps)

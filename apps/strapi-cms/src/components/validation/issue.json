@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_validation_issues",
+  "info": {
+    "displayName": "Validation Issue",
+    "icon": "exclamation-triangle"
+  },
+  "options": {},
+  "attributes": {
+    "herbId": {
+      "type": "string"
+    },
+    "herbName": {
+      "type": "string"
+    },
+    "field": {
+      "type": "string"
+    },
+    "issue": {
+      "type": "text",
+      "required": true
+    },
+    "severity": {
+      "type": "enumeration",
+      "enum": ["error", "warning", "info"],
+      "default": "warning",
+      "required": true
+    },
+    "resolved": {
+      "type": "boolean",
+      "default": false
+    },
+    "resolvedBy": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "resolvedAt": {
+      "type": "datetime"
+    }
+  }
+}

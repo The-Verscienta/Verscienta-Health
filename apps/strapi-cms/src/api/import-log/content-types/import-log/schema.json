@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "import_logs",
+  "info": {
+    "singularName": "import-log",
+    "pluralName": "import-logs",
+    "displayName": "Import Log",
+    "description": "Logs from automated data import and sync jobs"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "trefle-sync",
+        "trefle-progressive-import",
+        "trefle-sync-error",
+        "perenual-progressive-import",
+        "perenual-sync-error",
+        "external-import",
+        "algolia-sync",
+        "database-backup",
+        "cache-cleanup",
+        "other"
+      ],
+      "required": true
+    },
+    "results": {
+      "type": "json",
+      "required": true
+    },
+    "timestamp": {
+      "type": "datetime",
+      "required": true
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

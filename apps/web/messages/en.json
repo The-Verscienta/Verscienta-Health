@@ -1,0 +1,436 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "clear": "Clear",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "readMore": "Read More",
+    "showMore": "Show More",
+    "showLess": "Show Less",
+    "noResults": "No results found",
+    "tryAgain": "Try again"
+  },
+  "nav": {
+    "home": "Home",
+    "herbs": "Herbs",
+    "formulas": "Formulas",
+    "conditions": "Conditions",
+    "practitioners": "Practitioners",
+    "modalities": "Modalities",
+    "symptomChecker": "Symptom Checker",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "footer": {
+    "tagline": "Bridging ancient wisdom with modern science",
+    "copyright": "© 2025 Verscienta Health. All rights reserved.",
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "disclaimer": "Medical Disclaimer",
+    "followUs": "Follow Us"
+  },
+  "home": {
+    "hero": {
+      "title": "Discover the Power of Herbal Medicine",
+      "subtitle": "Explore 15,000+ herbs with TCM and Western herbalism properties",
+      "cta": "Explore Herbs",
+      "ctaSecondary": "Find a Practitioner"
+    },
+    "features": {
+      "title": "Why Choose Verscienta Health",
+      "herb": {
+        "title": "Comprehensive Herb Database",
+        "description": "Access detailed information on 15,000+ herbs including TCM properties, active constituents, and safety data"
+      },
+      "ai": {
+        "title": "AI Symptom Checker",
+        "description": "Get personalized herb recommendations based on your symptoms using advanced AI analysis"
+      },
+      "practitioners": {
+        "title": "Verified Practitioners",
+        "description": "Connect with qualified holistic health practitioners in your area"
+      },
+      "formulas": {
+        "title": "Traditional Formulas",
+        "description": "Explore traditional Chinese and Western herbal formulas with precise ingredients"
+      }
+    },
+    "stats": {
+      "herbs": "Herbs",
+      "formulas": "Formulas",
+      "practitioners": "Practitioners",
+      "conditions": "Conditions Treated"
+    }
+  },
+  "herbs": {
+    "title": "Herbal Database",
+    "subtitle": "Explore our comprehensive collection of medicinal herbs",
+    "searchPlaceholder": "Search herbs by name, properties, or uses...",
+    "notFound": {
+      "title": "Herb Not Found",
+      "description": "The herb you're looking for doesn't exist or has been removed."
+    },
+    "metadata": {
+      "defaultDescription": "Learn about {name}, its properties, uses, and safety information."
+    },
+    "filters": {
+      "temperature": "TCM Temperature",
+      "taste": "TCM Taste",
+      "meridians": "Meridians",
+      "properties": "Western Properties",
+      "partsUsed": "Parts Used"
+    },
+    "temperature": {
+      "cold": "Cold",
+      "cool": "Cool",
+      "neutral": "Neutral",
+      "warm": "Warm",
+      "hot": "Hot"
+    },
+    "taste": {
+      "sweet": "Sweet",
+      "sour": "Sour",
+      "bitter": "Bitter",
+      "pungent": "Pungent",
+      "salty": "Salty",
+      "bland": "Bland",
+      "astringent": "Astringent"
+    },
+    "details": {
+      "overview": "Overview",
+      "tcm": "TCM Properties",
+      "compounds": "Active Compounds",
+      "usage": "Usage & Dosage",
+      "safety": "Safety Information",
+      "scientificName": "Scientific Name",
+      "family": "Family",
+      "commonNames": "Common Names",
+      "partsUsed": "Parts Used",
+      "actions": "TCM Actions",
+      "indications": "Indications",
+      "contraindications": "Contraindications",
+      "drugInteractions": "Drug Interactions",
+      "dosage": "Typical Dosage",
+      "preparation": "Preparation Methods"
+    }
+  },
+  "formulas": {
+    "title": "Herbal Formulas",
+    "subtitle": "Traditional and modern herbal formulas",
+    "searchPlaceholder": "Search formulas...",
+    "notFound": {
+      "title": "Formula Not Found",
+      "description": "The formula you're looking for doesn't exist or has been removed."
+    },
+    "metadata": {
+      "defaultDescription": "Learn about {name}, its ingredients, uses, and preparation."
+    },
+    "ingredients": "Ingredients",
+    "actions": "Actions",
+    "indications": "Indications",
+    "preparation": "Preparation",
+    "dosage": "Dosage",
+    "modifications": "Modifications"
+  },
+  "conditions": {
+    "title": "Health Conditions",
+    "subtitle": "Learn about conditions treatable with herbal medicine",
+    "searchPlaceholder": "Search conditions...",
+    "notFound": {
+      "title": "Condition Not Found",
+      "description": "The condition you're looking for doesn't exist or has been removed."
+    },
+    "metadata": {
+      "defaultDescription": "Learn about {name}, its symptoms, causes, and natural treatment approaches."
+    },
+    "symptoms": "Symptoms",
+    "westernView": "Western Medical View",
+    "tcmView": "TCM Perspective",
+    "treatment": "Treatment Approaches",
+    "recommendedHerbs": "Recommended Herbs",
+    "recommendedFormulas": "Recommended Formulas"
+  },
+  "practitioners": {
+    "title": "Find a Practitioner",
+    "subtitle": "Connect with verified holistic health practitioners",
+    "searchPlaceholder": "Search by name, specialty, or location...",
+    "notFound": {
+      "title": "Practitioner Not Found",
+      "description": "The practitioner you're looking for doesn't exist or has been removed."
+    },
+    "defaultTitle": "Holistic Health Practitioner",
+    "metadata": {
+      "defaultDescription": "{name} - {title} specializing in holistic health and natural medicine."
+    },
+    "filters": {
+      "modality": "Modality",
+      "specialty": "Specialty",
+      "language": "Language",
+      "insurance": "Insurance Accepted"
+    },
+    "listView": "List View",
+    "mapView": "Map View",
+    "details": {
+      "about": "About",
+      "services": "Services",
+      "education": "Education & Certifications",
+      "reviews": "Reviews",
+      "contact": "Contact Information",
+      "bookAppointment": "Book Appointment",
+      "yearsExperience": "Years of Experience",
+      "languages": "Languages Spoken",
+      "insuranceAccepted": "Insurance Accepted",
+      "pricing": "Pricing"
+    }
+  },
+  "modalities": {
+    "title": "Treatment Modalities",
+    "subtitle": "Explore different approaches to holistic health",
+    "searchPlaceholder": "Search modalities...",
+    "notFound": {
+      "title": "Modality Not Found",
+      "description": "The modality you're looking for doesn't exist or has been removed."
+    },
+    "metadata": {
+      "defaultDescription": "Learn about {name}, its techniques, benefits, and training requirements."
+    }
+  },
+  "symptomChecker": {
+    "title": "AI Symptom Checker",
+    "subtitle": "Get personalized herb recommendations based on your symptoms",
+    "disclaimer": "This is not a substitute for professional medical advice. Please consult a healthcare provider for diagnosis and treatment.",
+    "placeholder": "Describe your symptoms in detail...",
+    "analyze": "Analyze Symptoms",
+    "analyzing": "Analyzing your symptoms...",
+    "results": {
+      "title": "Analysis Results",
+      "possibleConditions": "Possible Conditions",
+      "recommendedHerbs": "Recommended Herbs",
+      "recommendedModalities": "Recommended Modalities",
+      "followUp": "Follow-up Questions",
+      "redFlags": "Warning Signs",
+      "seekMedicalAttention": "Please seek immediate medical attention if you experience any of these symptoms."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Login to your account",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "rememberMe": "Remember me",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "orContinueWith": "Or continue with"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join Verscienta Health",
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "agreeToTerms": "I agree to the {terms} and {privacy}",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "submit": "Create Account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "profile": {
+      "title": "Profile",
+      "personalInfo": "Personal Information",
+      "savedItems": "Saved Items",
+      "myReviews": "My Reviews",
+      "accountSettings": "Account Settings"
+    },
+    "settings": {
+      "title": "Settings",
+      "account": "Account",
+      "security": "Security",
+      "notifications": "Notifications",
+      "privacy": "Privacy",
+      "language": "Language",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "deleteAccount": "Delete Account",
+      "deleteAccountWarning": "This action cannot be undone"
+    }
+  },
+  "search": {
+    "title": "Search Results",
+    "searchFor": "Search for",
+    "results": "results",
+    "tabs": {
+      "all": "All",
+      "herbs": "Herbs",
+      "formulas": "Formulas",
+      "conditions": "Conditions",
+      "practitioners": "Practitioners"
+    }
+  },
+  "reviews": {
+    "title": "Reviews",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "comment": "Comment",
+    "submit": "Submit Review",
+    "helpful": "Helpful",
+    "notHelpful": "Not Helpful",
+    "verified": "Verified Purchase",
+    "noReviews": "No reviews yet"
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist.",
+      "goHome": "Go Home"
+    },
+    "500": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end.",
+      "refresh": "Refresh Page"
+    },
+    "generic": "An error occurred. Please try again."
+  },
+  "accessibility": {
+    "skipToContent": "Skip to content",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "openSearch": "Open search",
+    "closeSearch": "Close search",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "currentPage": "Current page",
+    "language": "Language"
+  },
+  "metadata": {
+    "siteName": "Verscienta Health",
+    "title": "Verscienta Health - Holistic Health Knowledge Platform",
+    "description": "Comprehensive holistic health platform bridging ancient herbal wisdom with modern science. Explore 15,000+ herbs, TCM formulas, AI symptom checker, and find verified practitioners.",
+    "keywords": [
+      "holistic health",
+      "herbal medicine",
+      "Traditional Chinese Medicine",
+      "TCM",
+      "Western herbalism",
+      "natural remedies",
+      "herbs",
+      "symptom checker",
+      "practitioners",
+      "alternative medicine",
+      "integrative health"
+    ]
+  },
+  "api": {
+    "contact": {
+      "success": "Message received successfully",
+      "errors": {
+        "allFieldsRequired": "All fields are required",
+        "invalidEmail": "Invalid email format",
+        "serverError": "Failed to send message. Please try again later."
+      }
+    }
+  },
+  "about": {
+    "title": "About Verscienta Health",
+    "subtitle": "Bridging ancient herbal wisdom with modern science to empower informed health decisions",
+    "mission": {
+      "title": "Our Mission",
+      "paragraph1": "Verscienta Health is dedicated to making herbal medicine knowledge accessible, evidence-based, and trustworthy. We believe that traditional healing wisdom, when combined with modern scientific research, can provide powerful tools for health and wellness.",
+      "paragraph2": "Our platform serves as a comprehensive resource for anyone interested in herbal medicine—from curious beginners to experienced practitioners. We carefully curate information from both ancient texts and contemporary research to provide you with the most complete picture possible."
+    },
+    "values": {
+      "title": "Our Core Values",
+      "evidenceBased": {
+        "title": "Evidence-Based",
+        "description": "We ground our information in both traditional wisdom and modern scientific research, providing citations and references for all claims."
+      },
+      "holistic": {
+        "title": "Holistic Approach",
+        "description": "We honor the interconnectedness of body, mind, and spirit, integrating wisdom from multiple healing traditions."
+      },
+      "educational": {
+        "title": "Educational Focus",
+        "description": "We empower users through education, helping you make informed decisions about your health and wellness journey."
+      },
+      "community": {
+        "title": "Community-Driven",
+        "description": "We foster a community of practitioners, researchers, and enthusiasts working together to advance herbal medicine knowledge."
+      }
+    },
+    "offerings": {
+      "title": "What We Offer",
+      "herbDatabase": {
+        "title": "Comprehensive Herb Database",
+        "description": "Detailed profiles of hundreds of medicinal herbs, including botanical information, traditional uses, active constituents, dosage guidelines, and safety information."
+      },
+      "formulas": {
+        "title": "Traditional Formulas",
+        "description": "Time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda, and Western herbalism, with ingredient breakdowns and usage guidelines."
+      },
+      "symptomChecker": {
+        "title": "AI-Powered Symptom Checker",
+        "description": "Get personalized herbal recommendations based on your symptoms, analyzed from both Western and Traditional Chinese Medicine perspectives."
+      },
+      "practitionerDirectory": {
+        "title": "Practitioner Directory",
+        "description": "Find qualified herbalists, acupuncturists, and holistic health practitioners in your area."
+      }
+    },
+    "cta": {
+      "title": "Get in Touch",
+      "description": "Have questions, suggestions, or want to contribute to our platform? We'd love to hear from you.",
+      "button": "Contact Us"
+    },
+    "metadata": {
+      "title": "About Us | Verscienta Health",
+      "description": "Learn about Verscienta Health - bridging ancient herbal wisdom with modern science to empower informed health decisions."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: {date}",
+    "metadata": {
+      "title": "Privacy Policy | Verscienta Health",
+      "description": "Learn how Verscienta Health collects, uses, and protects your personal information."
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: {date}",
+    "metadata": {
+      "title": "Terms of Service | Verscienta Health",
+      "description": "Read the Terms of Service for Verscienta Health, including usage guidelines and disclaimers."
+    }
+  },
+  "disclaimer": {
+    "title": "Medical Disclaimer",
+    "subtitle": "Important information about the use of Verscienta Health",
+    "lastUpdated": "Last updated: {date}",
+    "metadata": {
+      "title": "Medical Disclaimer | Verscienta Health",
+      "description": "Important medical disclaimer and safety information for using Verscienta Health."
+    }
+  }
+}

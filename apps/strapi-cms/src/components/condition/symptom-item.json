@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_condition_symptom_items",
+  "info": {
+    "displayName": "Symptom Item",
+    "icon": "thermometer"
+  },
+  "options": {},
+  "attributes": {
+    "symptom": {
+      "type": "string"
+    }
+  }
+}

@@ -12,6 +12,9 @@ This guide explains how to set up DragonflyDB for Verscienta Health's caching an
 - [Monitoring & Maintenance](#monitoring--maintenance)
 - [Troubleshooting](#troubleshooting)
 
+**📚 Additional Resources:**
+- [DRAGONFLYDB_TLS_SECURITY.md](./DRAGONFLYDB_TLS_SECURITY.md) - Comprehensive TLS/SSL security guide
+
 ---
 
 ## What is DragonflyDB?
@@ -357,6 +360,16 @@ dragonfly \
   --tls_cert_file=/path/to/cert.pem \
   --tls_key_file=/path/to/key.pem
 ```
+
+> **📚 TLS/SSL Configuration:**
+> For comprehensive TLS security setup, certificate management, and best practices, see:
+> **[DRAGONFLYDB_TLS_SECURITY.md](./DRAGONFLYDB_TLS_SECURITY.md)**
+>
+> This includes:
+> - Production-ready TLS configuration
+> - Certificate generation and renewal (Let's Encrypt)
+> - Client certificate authentication (mTLS)
+> - Security checklist and troubleshooting
 
 **Advanced flags:**
 

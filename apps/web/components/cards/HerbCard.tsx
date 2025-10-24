@@ -1,5 +1,5 @@
 import { Leaf, Star } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { OptimizedCardImage } from '@/components/ui/optimized-image'

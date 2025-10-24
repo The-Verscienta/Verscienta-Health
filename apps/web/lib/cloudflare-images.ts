@@ -1,10 +1,20 @@
 /**
  * Cloudflare Images Integration
  *
- * Provides utilities for working with Cloudflare Images CDN
- * - Image URL generation with variants
+ * Uses Cloudflare Images (dedicated service) with Flexible Variants enabled.
+ *
+ * Supports two transformation modes:
+ * 1. Named Variants - Pre-configured variants in Cloudflare dashboard
+ * 2. Flexible Variants - On-the-fly URL parameter transformations (requires enabling in dashboard)
+ *
+ * Features:
+ * - Image URL generation with transformations
  * - Responsive image helpers
  * - Upload functionality
+ * - Automatic WebP/AVIF format conversion
+ * - Global CDN delivery
+ *
+ * @see https://developers.cloudflare.com/images/manage-images/enable-flexible-variants/
  */
 
 export interface CloudflareImageVariant {
@@ -28,6 +38,17 @@ export interface CloudflareImageOptions {
   contrast?: number
   gamma?: number
   metadata?: 'keep' | 'copyright' | 'none'
+  gravity?: 'auto' | 'center' | 'top' | 'bottom' | 'left' | 'right'
+  background?: string // Hex color for padding (e.g., 'transparent', '#RRGGBB')
+  rotate?: number // Degrees: 0, 90, 180, 270
+  dpr?: number // Device pixel ratio: 1, 2, 3
+  trim?: {
+    // Auto-crop whitespace
+    top?: number
+    right?: number
+    bottom?: number
+    left?: number
+  }
 }
 
 /**
@@ -38,8 +59,11 @@ function getCloudflareConfig() {
     accountId: process.env.CLOUDFLARE_ACCOUNT_ID || process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID,
     deliveryUrl:
       process.env.CLOUDFLARE_IMAGES_DELIVERY_URL ||
-      process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_DELIVERY_URL,
+      process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_DELIVERY_URL ||
+      'https://imagedelivery.net', // Default Cloudflare Images delivery URL
     apiToken: process.env.CLOUDFLARE_IMAGES_API_TOKEN,
+    accountHash:
+      process.env.CLOUDFLARE_ACCOUNT_HASH || process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_HASH,
   }
 }
 
@@ -74,20 +98,46 @@ export function getCloudflareImageUrl(
     return `${deliveryUrl}/${accountId}/${imageId}/${options.variant}`
   }
 
-  // Build URL with custom transformations
+  // Build URL with custom transformations (Flexible Variants)
   const params: string[] = []
 
+  // Dimensions
   if (options.width) params.push(`width=${options.width}`)
   if (options.height) params.push(`height=${options.height}`)
+  if (options.dpr) params.push(`dpr=${options.dpr}`)
+
+  // Fit and positioning
   if (options.fit) params.push(`fit=${options.fit}`)
+  if (options.gravity) params.push(`gravity=${options.gravity}`)
+
+  // Quality and format
   if (options.quality) params.push(`quality=${options.quality}`)
   if (options.format) params.push(`format=${options.format}`)
+
+  // Effects
   if (options.blur) params.push(`blur=${options.blur}`)
   if (options.sharpen) params.push(`sharpen=${options.sharpen}`)
   if (options.brightness) params.push(`brightness=${options.brightness}`)
   if (options.contrast) params.push(`contrast=${options.contrast}`)
   if (options.gamma) params.push(`gamma=${options.gamma}`)
+
+  // Rotation and background
+  if (options.rotate) params.push(`rotate=${options.rotate}`)
+  if (options.background) params.push(`background=${options.background}`)
+
+  // Metadata
   if (options.metadata) params.push(`metadata=${options.metadata}`)
+
+  // Trim (whitespace cropping)
+  if (options.trim) {
+    const trimValues = [
+      options.trim.top || 0,
+      options.trim.right || 0,
+      options.trim.bottom || 0,
+      options.trim.left || 0,
+    ]
+    params.push(`trim=${trimValues.join(';')}`)
+  }
 
   const queryString = params.length > 0 ? `?${params.join('&')}` : ''
 

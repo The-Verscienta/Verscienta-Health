@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_practitioner_insurance_providers",
+  "info": {
+    "displayName": "Insurance Provider",
+    "icon": "hospital"
+  },
+  "options": {},
+  "attributes": {
+    "provider": {
+      "type": "string"
+    }
+  }
+}

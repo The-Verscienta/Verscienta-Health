@@ -1,0 +1,313 @@
+{
+  "common": {
+    "loading": "載入中...",
+    "error": "錯誤",
+    "success": "成功",
+    "save": "儲存",
+    "cancel": "取消",
+    "delete": "刪除",
+    "edit": "編輯",
+    "search": "搜尋",
+    "filter": "篩選",
+    "sort": "排序",
+    "clear": "清除",
+    "viewAll": "檢視全部",
+    "learnMore": "瞭解更多",
+    "readMore": "閱讀更多",
+    "showMore": "顯示更多",
+    "showLess": "顯示更少",
+    "noResults": "未找到結果",
+    "tryAgain": "重試"
+  },
+  "nav": {
+    "home": "首頁",
+    "herbs": "中草藥",
+    "formulas": "方劑",
+    "conditions": "病症",
+    "practitioners": "醫師",
+    "modalities": "療法",
+    "symptomChecker": "症狀檢查",
+    "about": "關於我們",
+    "contact": "聯絡我們",
+    "login": "登入",
+    "register": "註冊",
+    "profile": "個人資料",
+    "settings": "設定",
+    "logout": "登出"
+  },
+  "footer": {
+    "tagline": "融合古老智慧與現代科學",
+    "copyright": "© 2025 威知健康。版權所有。",
+    "quickLinks": "快速連結",
+    "legal": "法律",
+    "privacy": "隱私政策",
+    "terms": "服務條款",
+    "disclaimer": "醫療免責聲明",
+    "followUs": "追蹤我們"
+  },
+  "home": {
+    "hero": {
+      "title": "探索草藥醫學的力量",
+      "subtitle": "瀏覽超過15,000種具有中醫和西方草藥學特性的草藥",
+      "cta": "探索草藥",
+      "ctaSecondary": "尋找醫師"
+    },
+    "features": {
+      "title": "選擇威知健康的理由",
+      "herb": {
+        "title": "全面的草藥資料庫",
+        "description": "存取超過15,000種草藥的詳細資訊，包括中醫屬性、活性成分和安全資料"
+      },
+      "ai": {
+        "title": "AI症狀檢查器",
+        "description": "使用先進的AI分析，根據您的症狀獲得個人化的草藥推薦"
+      },
+      "practitioners": {
+        "title": "認證醫師",
+        "description": "與您所在地區合格的整體健康醫師建立聯繫"
+      },
+      "formulas": {
+        "title": "傳統方劑",
+        "description": "探索具有精確成分的傳統中西草藥方劑"
+      }
+    },
+    "stats": {
+      "herbs": "草藥",
+      "formulas": "方劑",
+      "practitioners": "醫師",
+      "conditions": "可治療病症"
+    }
+  },
+  "herbs": {
+    "title": "草藥資料庫",
+    "subtitle": "探索我們全面的藥用草藥集合",
+    "searchPlaceholder": "按名稱、屬性或用途搜尋草藥...",
+    "filters": {
+      "temperature": "中醫溫性",
+      "taste": "中醫味性",
+      "meridians": "歸經",
+      "properties": "西方屬性",
+      "partsUsed": "藥用部位"
+    },
+    "temperature": {
+      "cold": "寒",
+      "cool": "涼",
+      "neutral": "平",
+      "warm": "溫",
+      "hot": "熱"
+    },
+    "taste": {
+      "sweet": "甘",
+      "sour": "酸",
+      "bitter": "苦",
+      "pungent": "辛",
+      "salty": "鹹",
+      "bland": "淡",
+      "astringent": "澀"
+    },
+    "details": {
+      "overview": "概覽",
+      "tcm": "中醫屬性",
+      "compounds": "活性成分",
+      "usage": "用法與用量",
+      "safety": "安全資訊",
+      "scientificName": "學名",
+      "family": "科屬",
+      "commonNames": "常用名稱",
+      "partsUsed": "藥用部位",
+      "actions": "中醫功效",
+      "indications": "主治",
+      "contraindications": "禁忌",
+      "drugInteractions": "藥物交互作用",
+      "dosage": "常規劑量",
+      "preparation": "製備方法"
+    }
+  },
+  "formulas": {
+    "title": "草藥方劑",
+    "subtitle": "傳統與現代草藥方劑",
+    "searchPlaceholder": "搜尋方劑...",
+    "ingredients": "成分",
+    "actions": "功效",
+    "indications": "主治",
+    "preparation": "製備",
+    "dosage": "用量",
+    "modifications": "加減"
+  },
+  "conditions": {
+    "title": "健康病症",
+    "subtitle": "瞭解可透過草藥治療的病症",
+    "searchPlaceholder": "搜尋病症...",
+    "symptoms": "症狀",
+    "westernView": "西醫觀點",
+    "tcmView": "中醫觀點",
+    "treatment": "治療方法",
+    "recommendedHerbs": "推薦草藥",
+    "recommendedFormulas": "推薦方劑"
+  },
+  "practitioners": {
+    "title": "尋找醫師",
+    "subtitle": "與經過認證的整體健康醫師建立聯繫",
+    "searchPlaceholder": "按姓名、專長或位置搜尋...",
+    "filters": {
+      "modality": "療法",
+      "specialty": "專長",
+      "language": "語言",
+      "insurance": "接受的保險"
+    },
+    "listView": "清單檢視",
+    "mapView": "地圖檢視",
+    "details": {
+      "about": "關於",
+      "services": "服務",
+      "education": "教育與資格",
+      "reviews": "評價",
+      "contact": "聯絡方式",
+      "bookAppointment": "預約",
+      "yearsExperience": "執業年限",
+      "languages": "使用語言",
+      "insuranceAccepted": "接受的保險",
+      "pricing": "收費標準"
+    }
+  },
+  "symptomChecker": {
+    "title": "AI症狀檢查器",
+    "subtitle": "根據您的症狀獲得個人化的草藥推薦",
+    "disclaimer": "這不能取代專業醫療建議。請諮詢醫療保健提供者進行診斷和治療。",
+    "placeholder": "詳細描述您的症狀...",
+    "analyze": "分析症狀",
+    "analyzing": "正在分析您的症狀...",
+    "results": {
+      "title": "分析結果",
+      "possibleConditions": "可能的病症",
+      "recommendedHerbs": "推薦草藥",
+      "recommendedModalities": "推薦療法",
+      "followUp": "後續問題",
+      "redFlags": "警告訊號",
+      "seekMedicalAttention": "如果您出現這些症狀中的任何一種，請立即就醫。"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "歡迎回來",
+      "subtitle": "登入您的帳戶",
+      "email": "電子郵件",
+      "password": "密碼",
+      "forgotPassword": "忘記密碼？",
+      "rememberMe": "記住我",
+      "submit": "登入",
+      "noAccount": "還沒有帳戶？",
+      "signUp": "註冊",
+      "orContinueWith": "或使用以下方式繼續"
+    },
+    "register": {
+      "title": "建立帳戶",
+      "subtitle": "加入威知健康",
+      "name": "全名",
+      "email": "電子郵件",
+      "password": "密碼",
+      "confirmPassword": "確認密碼",
+      "agreeToTerms": "我同意{terms}和{privacy}",
+      "terms": "服務條款",
+      "privacy": "隱私政策",
+      "submit": "建立帳戶",
+      "haveAccount": "已有帳戶？",
+      "signIn": "登入"
+    },
+    "profile": {
+      "title": "個人資料",
+      "personalInfo": "個人資訊",
+      "savedItems": "已儲存項目",
+      "myReviews": "我的評價",
+      "accountSettings": "帳戶設定"
+    },
+    "settings": {
+      "title": "設定",
+      "account": "帳戶",
+      "security": "安全",
+      "notifications": "通知",
+      "privacy": "隱私",
+      "language": "語言",
+      "changePassword": "變更密碼",
+      "currentPassword": "目前密碼",
+      "newPassword": "新密碼",
+      "confirmNewPassword": "確認新密碼",
+      "deleteAccount": "刪除帳戶",
+      "deleteAccountWarning": "此操作無法撤銷"
+    }
+  },
+  "search": {
+    "title": "搜尋結果",
+    "searchFor": "搜尋",
+    "results": "結果",
+    "tabs": {
+      "all": "全部",
+      "herbs": "草藥",
+      "formulas": "方劑",
+      "conditions": "病症",
+      "practitioners": "醫師"
+    }
+  },
+  "reviews": {
+    "title": "評價",
+    "writeReview": "撰寫評價",
+    "rating": "評分",
+    "comment": "評論",
+    "submit": "提交評價",
+    "helpful": "有幫助",
+    "notHelpful": "無幫助",
+    "verified": "已驗證購買",
+    "noReviews": "暫無評價"
+  },
+  "errors": {
+    "404": {
+      "title": "頁面未找到",
+      "message": "您尋找的頁面不存在。",
+      "goHome": "返回首頁"
+    },
+    "500": {
+      "title": "伺服器錯誤",
+      "message": "我們這邊出了點問題。",
+      "refresh": "重新整理頁面"
+    },
+    "generic": "發生錯誤。請重試。"
+  },
+  "accessibility": {
+    "skipToContent": "跳到內容",
+    "menu": "選單",
+    "closeMenu": "關閉選單",
+    "openSearch": "開啟搜尋",
+    "closeSearch": "關閉搜尋",
+    "previousPage": "上一頁",
+    "nextPage": "下一頁",
+    "currentPage": "目前頁面",
+    "language": "語言"
+  },
+  "metadata": {
+    "siteName": "威知健康",
+    "title": "威知健康 - 整體健康知識平台",
+    "description": "綜合整體健康平台，融合古老草藥智慧與現代科學。探索15,000+種草藥、中醫方劑、AI症狀檢查器，並尋找認證醫師。",
+    "keywords": [
+      "整體健康",
+      "草藥醫學",
+      "中醫",
+      "中藥",
+      "西方草藥學",
+      "自然療法",
+      "草藥",
+      "症狀檢查",
+      "醫師",
+      "替代醫學",
+      "綜合健康"
+    ]
+  },
+  "disclaimer": {
+    "title": "醫療免責聲明",
+    "subtitle": "關於使用威知健康的重要資訊",
+    "lastUpdated": "最後更新：{date}",
+    "metadata": {
+      "title": "醫療免責聲明 | 威知健康",
+      "description": "使用威知健康的重要醫療免責聲明和安全資訊。"
+    }
+  }
+}

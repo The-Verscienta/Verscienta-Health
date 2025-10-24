@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_herb_native_regions",
+  "info": {
+    "displayName": "Native Region",
+    "icon": "globe"
+  },
+  "options": {},
+  "attributes": {
+    "region": {
+      "type": "string"
+    }
+  }
+}

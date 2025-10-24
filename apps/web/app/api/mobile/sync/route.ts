@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Fetch updated data from Payload CMS
+ * Fetch updated data from Strapi CMS
  */
 async function fetchUpdatedData<T>(
   collection: string,
@@ -97,8 +97,8 @@ async function fetchUpdatedData<T>(
 
     const data = await response.json()
 
-    // Transform Payload CMS response to match API types
-    const docs = (data.docs || []).map((doc: any) => transformPayloadDoc(doc))
+    // Transform Strapi CMS response to match API types
+    const docs = (data.docs || []).map((doc: any) => transformStrapiDoc(doc))
 
     return {
       docs,
@@ -111,9 +111,9 @@ async function fetchUpdatedData<T>(
 }
 
 /**
- * Transform Payload CMS document to API format
+ * Transform Strapi CMS document to API format
  */
-function transformPayloadDoc(doc: any): any {
+function transformStrapiDoc(doc: any): any {
   return {
     id: doc.id,
     slug: doc.slug,

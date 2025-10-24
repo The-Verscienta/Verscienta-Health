@@ -273,7 +273,7 @@ Automatic logging via Payload hooks:
 // apps/cms/src/collections/Herbs.ts
 import { auditLogAfterChange, auditLogAfterDelete } from '@/hooks/auditLog'
 
-const Herbs: CollectionConfig = {
+const Herbs = {
   slug: 'herbs',
   hooks: {
     afterChange: [auditLogAfterChange],
@@ -350,7 +350,7 @@ Comprehensive database indexing and full-text search implementation.
 
 ### Database Indexes
 
-Migration file: `apps/cms/src/db/migrations/add-indexes.sql`
+Migration file: `apps/strapi-cms/src/db/migrations/add-indexes.sql`
 
 #### Index Types
 
@@ -410,7 +410,7 @@ CREATE INDEX idx_herbs_active ON herbs(id, name)
 **Development:**
 
 ```bash
-psql $DATABASE_URL < apps/cms/src/db/migrations/add-indexes.sql
+psql $DATABASE_URL < apps/strapi-cms/src/db/migrations/add-indexes.sql
 ```
 
 **Production:**
@@ -513,15 +513,15 @@ Scheduled background jobs for maintenance and data management.
 
 ### Cron System
 
-Located in: `apps/cms/src/cron/`
+Located in: `apps/strapi-cms/src/cron/`
 
 **Initialization:**
 
 ```typescript
-// apps/cms/src/server.ts
+// apps/strapi-cms/src/server.ts
 import { initializeCronJobs } from './cron'
 
-await initializeCronJobs(payload)
+await initializeCronJobs(strapi)
 ```
 
 ### Available Jobs
@@ -531,7 +531,7 @@ await initializeCronJobs(payload)
 **Schedule:** Every 6 hours
 **File:** `jobs/syncAlgolia.ts`
 
-Synchronizes Payload CMS data with Algolia search indexes.
+Synchronizes Strapi CMS data with Algolia search indexes.
 
 **Features:**
 
@@ -609,7 +609,7 @@ ENABLE_PUBCHEM_IMPORT=true
 **Adding New Sources:**
 
 ```typescript
-// apps/cms/src/cron/jobs/importExternalData.ts
+// apps/strapi-cms/src/cron/jobs/importExternalData.ts
 const dataSources: ExternalDataSource[] = [
   {
     name: 'TCM Database',
@@ -674,7 +674,7 @@ BACKUP_RETENTION_COUNT=7
 **Manual Backup:**
 
 ```typescript
-await triggerJob(payload, 'Backup Database')
+await triggerJob(strapi, 'Backup Database')
 ```
 
 #### 6. Generate Sitemap
@@ -1413,5 +1413,5 @@ Expected performance improvements with advanced features:
 - [Upstash Documentation](https://docs.upstash.com/)
 - [PostgreSQL Full-Text Search](https://www.postgresql.org/docs/current/textsearch.html)
 - [better-auth Documentation](https://better-auth.com/)
-- [Payload CMS Hooks](https://payloadcms.com/docs/hooks/overview)
+- [Strapi CMS Hooks](https://docs.strapi.io/dev-docs/backend-customization/hooks)
 - [Node-cron Syntax](https://github.com/node-cron/node-cron#cron-syntax)

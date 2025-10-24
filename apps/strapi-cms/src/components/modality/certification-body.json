@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_modality_certification_bodies",
+  "info": {
+    "displayName": "Certification Body",
+    "icon": "certificate"
+  },
+  "options": {},
+  "attributes": {
+    "organization": {
+      "type": "string"
+    }
+  }
+}

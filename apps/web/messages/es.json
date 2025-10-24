@@ -1,0 +1,313 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "clear": "Limpiar",
+    "viewAll": "Ver Todo",
+    "learnMore": "Saber Más",
+    "readMore": "Leer Más",
+    "showMore": "Mostrar Más",
+    "showLess": "Mostrar Menos",
+    "noResults": "No se encontraron resultados",
+    "tryAgain": "Intentar de nuevo"
+  },
+  "nav": {
+    "home": "Inicio",
+    "herbs": "Hierbas",
+    "formulas": "Fórmulas",
+    "conditions": "Condiciones",
+    "practitioners": "Profesionales",
+    "modalities": "Modalidades",
+    "symptomChecker": "Verificador de Síntomas",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión"
+  },
+  "footer": {
+    "tagline": "Uniendo la sabiduría antigua con la ciencia moderna",
+    "copyright": "© 2025 Verscienta Health. Todos los derechos reservados.",
+    "quickLinks": "Enlaces Rápidos",
+    "legal": "Legal",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "disclaimer": "Aviso Médico",
+    "followUs": "Síguenos"
+  },
+  "home": {
+    "hero": {
+      "title": "Descubre el Poder de la Medicina Herbal",
+      "subtitle": "Explora más de 15,000 hierbas con propiedades de MTC y herbolaria occidental",
+      "cta": "Explorar Hierbas",
+      "ctaSecondary": "Encontrar un Profesional"
+    },
+    "features": {
+      "title": "Por Qué Elegir Verscienta Health",
+      "herb": {
+        "title": "Base de Datos Integral de Hierbas",
+        "description": "Accede a información detallada sobre más de 15,000 hierbas incluyendo propiedades de MTC, constituyentes activos y datos de seguridad"
+      },
+      "ai": {
+        "title": "Verificador de Síntomas con IA",
+        "description": "Obtén recomendaciones personalizadas de hierbas basadas en tus síntomas usando análisis avanzado de IA"
+      },
+      "practitioners": {
+        "title": "Profesionales Verificados",
+        "description": "Conecta con profesionales de salud holística calificados en tu área"
+      },
+      "formulas": {
+        "title": "Fórmulas Tradicionales",
+        "description": "Explora fórmulas herbales chinas y occidentales tradicionales con ingredientes precisos"
+      }
+    },
+    "stats": {
+      "herbs": "Hierbas",
+      "formulas": "Fórmulas",
+      "practitioners": "Profesionales",
+      "conditions": "Condiciones Tratadas"
+    }
+  },
+  "herbs": {
+    "title": "Base de Datos de Hierbas",
+    "subtitle": "Explora nuestra colección integral de hierbas medicinales",
+    "searchPlaceholder": "Buscar hierbas por nombre, propiedades o usos...",
+    "filters": {
+      "temperature": "Temperatura MTC",
+      "taste": "Sabor MTC",
+      "meridians": "Meridianos",
+      "properties": "Propiedades Occidentales",
+      "partsUsed": "Partes Utilizadas"
+    },
+    "temperature": {
+      "cold": "Frío",
+      "cool": "Fresco",
+      "neutral": "Neutral",
+      "warm": "Tibio",
+      "hot": "Caliente"
+    },
+    "taste": {
+      "sweet": "Dulce",
+      "sour": "Agrio",
+      "bitter": "Amargo",
+      "pungent": "Picante",
+      "salty": "Salado",
+      "bland": "Insípido",
+      "astringent": "Astringente"
+    },
+    "details": {
+      "overview": "Resumen",
+      "tcm": "Propiedades MTC",
+      "compounds": "Compuestos Activos",
+      "usage": "Uso y Dosificación",
+      "safety": "Información de Seguridad",
+      "scientificName": "Nombre Científico",
+      "family": "Familia",
+      "commonNames": "Nombres Comunes",
+      "partsUsed": "Partes Utilizadas",
+      "actions": "Acciones MTC",
+      "indications": "Indicaciones",
+      "contraindications": "Contraindicaciones",
+      "drugInteractions": "Interacciones Medicamentosas",
+      "dosage": "Dosificación Típica",
+      "preparation": "Métodos de Preparación"
+    }
+  },
+  "formulas": {
+    "title": "Fórmulas Herbales",
+    "subtitle": "Fórmulas herbales tradicionales y modernas",
+    "searchPlaceholder": "Buscar fórmulas...",
+    "ingredients": "Ingredientes",
+    "actions": "Acciones",
+    "indications": "Indicaciones",
+    "preparation": "Preparación",
+    "dosage": "Dosificación",
+    "modifications": "Modificaciones"
+  },
+  "conditions": {
+    "title": "Condiciones de Salud",
+    "subtitle": "Aprende sobre condiciones tratables con medicina herbal",
+    "searchPlaceholder": "Buscar condiciones...",
+    "symptoms": "Síntomas",
+    "westernView": "Vista Médica Occidental",
+    "tcmView": "Perspectiva MTC",
+    "treatment": "Enfoques de Tratamiento",
+    "recommendedHerbs": "Hierbas Recomendadas",
+    "recommendedFormulas": "Fórmulas Recomendadas"
+  },
+  "practitioners": {
+    "title": "Encontrar un Profesional",
+    "subtitle": "Conecta con profesionales de salud holística verificados",
+    "searchPlaceholder": "Buscar por nombre, especialidad o ubicación...",
+    "filters": {
+      "modality": "Modalidad",
+      "specialty": "Especialidad",
+      "language": "Idioma",
+      "insurance": "Seguro Aceptado"
+    },
+    "listView": "Vista de Lista",
+    "mapView": "Vista de Mapa",
+    "details": {
+      "about": "Acerca de",
+      "services": "Servicios",
+      "education": "Educación y Certificaciones",
+      "reviews": "Reseñas",
+      "contact": "Información de Contacto",
+      "bookAppointment": "Reservar Cita",
+      "yearsExperience": "Años de Experiencia",
+      "languages": "Idiomas Hablados",
+      "insuranceAccepted": "Seguro Aceptado",
+      "pricing": "Precios"
+    }
+  },
+  "symptomChecker": {
+    "title": "Verificador de Síntomas con IA",
+    "subtitle": "Obtén recomendaciones personalizadas de hierbas basadas en tus síntomas",
+    "disclaimer": "Esto no sustituye el consejo médico profesional. Consulta a un profesional de la salud para diagnóstico y tratamiento.",
+    "placeholder": "Describe tus síntomas en detalle...",
+    "analyze": "Analizar Síntomas",
+    "analyzing": "Analizando tus síntomas...",
+    "results": {
+      "title": "Resultados del Análisis",
+      "possibleConditions": "Condiciones Posibles",
+      "recommendedHerbs": "Hierbas Recomendadas",
+      "recommendedModalities": "Modalidades Recomendadas",
+      "followUp": "Preguntas de Seguimiento",
+      "redFlags": "Señales de Advertencia",
+      "seekMedicalAttention": "Por favor busca atención médica inmediata si experimentas alguno de estos síntomas."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de Nuevo",
+      "subtitle": "Inicia sesión en tu cuenta",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "rememberMe": "Recordarme",
+      "submit": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUp": "Regístrate",
+      "orContinueWith": "O continúa con"
+    },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Únete a Verscienta Health",
+      "name": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "agreeToTerms": "Acepto los {terms} y la {privacy}",
+      "terms": "Términos de Servicio",
+      "privacy": "Política de Privacidad",
+      "submit": "Crear Cuenta",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Inicia sesión"
+    },
+    "profile": {
+      "title": "Perfil",
+      "personalInfo": "Información Personal",
+      "savedItems": "Elementos Guardados",
+      "myReviews": "Mis Reseñas",
+      "accountSettings": "Configuración de Cuenta"
+    },
+    "settings": {
+      "title": "Configuración",
+      "account": "Cuenta",
+      "security": "Seguridad",
+      "notifications": "Notificaciones",
+      "privacy": "Privacidad",
+      "language": "Idioma",
+      "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña Actual",
+      "newPassword": "Nueva Contraseña",
+      "confirmNewPassword": "Confirmar Nueva Contraseña",
+      "deleteAccount": "Eliminar Cuenta",
+      "deleteAccountWarning": "Esta acción no se puede deshacer"
+    }
+  },
+  "search": {
+    "title": "Resultados de Búsqueda",
+    "searchFor": "Buscar",
+    "results": "resultados",
+    "tabs": {
+      "all": "Todo",
+      "herbs": "Hierbas",
+      "formulas": "Fórmulas",
+      "conditions": "Condiciones",
+      "practitioners": "Profesionales"
+    }
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "writeReview": "Escribir una Reseña",
+    "rating": "Calificación",
+    "comment": "Comentario",
+    "submit": "Enviar Reseña",
+    "helpful": "Útil",
+    "notHelpful": "No Útil",
+    "verified": "Compra Verificada",
+    "noReviews": "Aún no hay reseñas"
+  },
+  "errors": {
+    "404": {
+      "title": "Página No Encontrada",
+      "message": "La página que buscas no existe.",
+      "goHome": "Ir al Inicio"
+    },
+    "500": {
+      "title": "Error del Servidor",
+      "message": "Algo salió mal de nuestro lado.",
+      "refresh": "Actualizar Página"
+    },
+    "generic": "Ocurrió un error. Por favor intenta de nuevo."
+  },
+  "accessibility": {
+    "skipToContent": "Saltar al contenido",
+    "menu": "Menú",
+    "closeMenu": "Cerrar menú",
+    "openSearch": "Abrir búsqueda",
+    "closeSearch": "Cerrar búsqueda",
+    "previousPage": "Página anterior",
+    "nextPage": "Página siguiente",
+    "currentPage": "Página actual",
+    "language": "Idioma"
+  },
+  "metadata": {
+    "siteName": "Verscienta Health",
+    "title": "Verscienta Health - Plataforma de Salud Integral",
+    "description": "Plataforma integral de salud que fusiona la sabiduría herbal antigua con la ciencia moderna. Explora más de 15,000 hierbas, fórmulas TCM, verificador de síntomas con IA y encuentra profesionales certificados.",
+    "keywords": [
+      "salud integral",
+      "medicina herbaria",
+      "medicina tradicional china",
+      "hierbas medicinales",
+      "herboristería occidental",
+      "medicina natural",
+      "hierbas",
+      "verificador de síntomas",
+      "profesionales",
+      "medicina alternativa",
+      "salud integrativa"
+    ]
+  },
+  "disclaimer": {
+    "title": "Aviso Médico",
+    "subtitle": "Información importante sobre el uso de Verscienta Health",
+    "lastUpdated": "Última actualización: {date}",
+    "metadata": {
+      "title": "Aviso Médico | Verscienta Health",
+      "description": "Aviso médico importante e información de seguridad para usar Verscienta Health."
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_practitioner_specialties",
+  "info": {
+    "displayName": "Specialty",
+    "icon": "star"
+  },
+  "options": {},
+  "attributes": {
+    "specialty": {
+      "type": "string"
+    }
+  }
+}

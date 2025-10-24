@@ -1,0 +1,313 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "clear": "清除",
+    "viewAll": "查看全部",
+    "learnMore": "了解更多",
+    "readMore": "阅读更多",
+    "showMore": "显示更多",
+    "showLess": "显示更少",
+    "noResults": "未找到结果",
+    "tryAgain": "重试"
+  },
+  "nav": {
+    "home": "首页",
+    "herbs": "中草药",
+    "formulas": "方剂",
+    "conditions": "病症",
+    "practitioners": "医师",
+    "modalities": "疗法",
+    "symptomChecker": "症状检查",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "login": "登录",
+    "register": "注册",
+    "profile": "个人资料",
+    "settings": "设置",
+    "logout": "退出登录"
+  },
+  "footer": {
+    "tagline": "融合古老智慧与现代科学",
+    "copyright": "© 2025 威知健康。版权所有。",
+    "quickLinks": "快速链接",
+    "legal": "法律",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "disclaimer": "医疗免责声明",
+    "followUs": "关注我们"
+  },
+  "home": {
+    "hero": {
+      "title": "探索草药医学的力量",
+      "subtitle": "浏览超过15,000种具有中医和西方草药学特性的草药",
+      "cta": "探索草药",
+      "ctaSecondary": "寻找医师"
+    },
+    "features": {
+      "title": "选择威知健康的理由",
+      "herb": {
+        "title": "全面的草药数据库",
+        "description": "访问超过15,000种草药的详细信息，包括中医属性、活性成分和安全数据"
+      },
+      "ai": {
+        "title": "AI症状检查器",
+        "description": "使用先进的AI分析，根据您的症状获得个性化的草药推荐"
+      },
+      "practitioners": {
+        "title": "认证医师",
+        "description": "与您所在地区合格的整体健康医师建立联系"
+      },
+      "formulas": {
+        "title": "传统方剂",
+        "description": "探索具有精确成分的传统中西草药方剂"
+      }
+    },
+    "stats": {
+      "herbs": "草药",
+      "formulas": "方剂",
+      "practitioners": "医师",
+      "conditions": "可治疗病症"
+    }
+  },
+  "herbs": {
+    "title": "草药数据库",
+    "subtitle": "探索我们全面的药用草药集合",
+    "searchPlaceholder": "按名称、属性或用途搜索草药...",
+    "filters": {
+      "temperature": "中医温性",
+      "taste": "中医味性",
+      "meridians": "归经",
+      "properties": "西方属性",
+      "partsUsed": "药用部位"
+    },
+    "temperature": {
+      "cold": "寒",
+      "cool": "凉",
+      "neutral": "平",
+      "warm": "温",
+      "hot": "热"
+    },
+    "taste": {
+      "sweet": "甘",
+      "sour": "酸",
+      "bitter": "苦",
+      "pungent": "辛",
+      "salty": "咸",
+      "bland": "淡",
+      "astringent": "涩"
+    },
+    "details": {
+      "overview": "概览",
+      "tcm": "中医属性",
+      "compounds": "活性成分",
+      "usage": "用法与用量",
+      "safety": "安全信息",
+      "scientificName": "学名",
+      "family": "科属",
+      "commonNames": "常用名称",
+      "partsUsed": "药用部位",
+      "actions": "中医功效",
+      "indications": "主治",
+      "contraindications": "禁忌",
+      "drugInteractions": "药物相互作用",
+      "dosage": "常规剂量",
+      "preparation": "制备方法"
+    }
+  },
+  "formulas": {
+    "title": "草药方剂",
+    "subtitle": "传统与现代草药方剂",
+    "searchPlaceholder": "搜索方剂...",
+    "ingredients": "成分",
+    "actions": "功效",
+    "indications": "主治",
+    "preparation": "制备",
+    "dosage": "用量",
+    "modifications": "加减"
+  },
+  "conditions": {
+    "title": "健康病症",
+    "subtitle": "了解可通过草药治疗的病症",
+    "searchPlaceholder": "搜索病症...",
+    "symptoms": "症状",
+    "westernView": "西医观点",
+    "tcmView": "中医观点",
+    "treatment": "治疗方法",
+    "recommendedHerbs": "推荐草药",
+    "recommendedFormulas": "推荐方剂"
+  },
+  "practitioners": {
+    "title": "寻找医师",
+    "subtitle": "与经过认证的整体健康医师建立联系",
+    "searchPlaceholder": "按姓名、专长或位置搜索...",
+    "filters": {
+      "modality": "疗法",
+      "specialty": "专长",
+      "language": "语言",
+      "insurance": "接受的保险"
+    },
+    "listView": "列表视图",
+    "mapView": "地图视图",
+    "details": {
+      "about": "关于",
+      "services": "服务",
+      "education": "教育与资质",
+      "reviews": "评价",
+      "contact": "联系方式",
+      "bookAppointment": "预约",
+      "yearsExperience": "执业年限",
+      "languages": "使用语言",
+      "insuranceAccepted": "接受的保险",
+      "pricing": "收费标准"
+    }
+  },
+  "symptomChecker": {
+    "title": "AI症状检查器",
+    "subtitle": "根据您的症状获得个性化的草药推荐",
+    "disclaimer": "这不能替代专业医疗建议。请咨询医疗保健提供者进行诊断和治疗。",
+    "placeholder": "详细描述您的症状...",
+    "analyze": "分析症状",
+    "analyzing": "正在分析您的症状...",
+    "results": {
+      "title": "分析结果",
+      "possibleConditions": "可能的病症",
+      "recommendedHerbs": "推荐草药",
+      "recommendedModalities": "推荐疗法",
+      "followUp": "后续问题",
+      "redFlags": "警告信号",
+      "seekMedicalAttention": "如果您出现这些症状中的任何一种，请立即就医。"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "欢迎回来",
+      "subtitle": "登录您的账户",
+      "email": "电子邮件",
+      "password": "密码",
+      "forgotPassword": "忘记密码？",
+      "rememberMe": "记住我",
+      "submit": "登录",
+      "noAccount": "还没有账户？",
+      "signUp": "注册",
+      "orContinueWith": "或使用以下方式继续"
+    },
+    "register": {
+      "title": "创建账户",
+      "subtitle": "加入威知健康",
+      "name": "全名",
+      "email": "电子邮件",
+      "password": "密码",
+      "confirmPassword": "确认密码",
+      "agreeToTerms": "我同意{terms}和{privacy}",
+      "terms": "服务条款",
+      "privacy": "隐私政策",
+      "submit": "创建账户",
+      "haveAccount": "已有账户？",
+      "signIn": "登录"
+    },
+    "profile": {
+      "title": "个人资料",
+      "personalInfo": "个人信息",
+      "savedItems": "已保存项目",
+      "myReviews": "我的评价",
+      "accountSettings": "账户设置"
+    },
+    "settings": {
+      "title": "设置",
+      "account": "账户",
+      "security": "安全",
+      "notifications": "通知",
+      "privacy": "隐私",
+      "language": "语言",
+      "changePassword": "更改密码",
+      "currentPassword": "当前密码",
+      "newPassword": "新密码",
+      "confirmNewPassword": "确认新密码",
+      "deleteAccount": "删除账户",
+      "deleteAccountWarning": "此操作无法撤销"
+    }
+  },
+  "search": {
+    "title": "搜索结果",
+    "searchFor": "搜索",
+    "results": "结果",
+    "tabs": {
+      "all": "全部",
+      "herbs": "草药",
+      "formulas": "方剂",
+      "conditions": "病症",
+      "practitioners": "医师"
+    }
+  },
+  "reviews": {
+    "title": "评价",
+    "writeReview": "撰写评价",
+    "rating": "评分",
+    "comment": "评论",
+    "submit": "提交评价",
+    "helpful": "有帮助",
+    "notHelpful": "无帮助",
+    "verified": "已验证购买",
+    "noReviews": "暂无评价"
+  },
+  "errors": {
+    "404": {
+      "title": "页面未找到",
+      "message": "您查找的页面不存在。",
+      "goHome": "返回首页"
+    },
+    "500": {
+      "title": "服务器错误",
+      "message": "我们这边出了点问题。",
+      "refresh": "刷新页面"
+    },
+    "generic": "发生错误。请重试。"
+  },
+  "accessibility": {
+    "skipToContent": "跳到内容",
+    "menu": "菜单",
+    "closeMenu": "关闭菜单",
+    "openSearch": "打开搜索",
+    "closeSearch": "关闭搜索",
+    "previousPage": "上一页",
+    "nextPage": "下一页",
+    "currentPage": "当前页",
+    "language": "语言"
+  },
+  "metadata": {
+    "siteName": "威知健康",
+    "title": "威知健康 - 整体健康知识平台",
+    "description": "综合整体健康平台，融合古老草药智慧与现代科学。探索15,000+种草药、中医方剂、AI症状检查器，并寻找认证医师。",
+    "keywords": [
+      "整体健康",
+      "草药医学",
+      "中医",
+      "中药",
+      "西方草药学",
+      "自然疗法",
+      "草药",
+      "症状检查",
+      "医师",
+      "替代医学",
+      "综合健康"
+    ]
+  },
+  "disclaimer": {
+    "title": "医疗免责声明",
+    "subtitle": "关于使用威知健康的重要信息",
+    "lastUpdated": "最后更新：{date}",
+    "metadata": {
+      "title": "医疗免责声明 | 威知健康",
+      "description": "使用威知健康的重要医疗免责声明和安全信息。"
+    }
+  }
+}

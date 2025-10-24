@@ -36,6 +36,51 @@ export function isEmailConfigured(): boolean {
 }
 
 /**
+ * Generic email sending function
+ */
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  text,
+  from,
+}: {
+  to: string
+  subject: string
+  html?: string
+  text?: string
+  from?: string
+}): Promise<void> {
+  if (!isEmailConfigured()) {
+    console.warn(`Email service not configured. Would send to: ${to}, subject: ${subject}`)
+    return
+  }
+
+  try {
+    const resend = getResendClient()
+    const emailOptions: any = {
+      from: from || FROM_EMAIL,
+      to,
+      subject,
+    }
+
+    // Resend requires either html or text (or both)
+    if (html) {
+      emailOptions.html = html
+    }
+    if (text) {
+      emailOptions.text = text
+    }
+
+    await resend.emails.send(emailOptions)
+    console.log(`Email sent successfully to: ${to}`)
+  } catch (error) {
+    console.error(`Failed to send email to ${to}:`, error)
+    throw error
+  }
+}
+
+/**
  * Send magic link authentication email
  */
 export async function sendMagicLinkEmail({

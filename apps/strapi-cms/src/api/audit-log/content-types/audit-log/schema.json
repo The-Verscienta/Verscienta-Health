@@ -1,0 +1,101 @@
+{
+  "kind": "collectionType",
+  "collectionName": "audit_logs",
+  "info": {
+    "singularName": "audit-log",
+    "pluralName": "audit-logs",
+    "displayName": "Audit Log",
+    "description": "HIPAA-compliant immutable audit logs"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "userId": {
+      "type": "string"
+    },
+    "userEmail": {
+      "type": "email"
+    },
+    "userRole": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "action": {
+      "type": "enumeration",
+      "enum": [
+        "LOGIN",
+        "LOGOUT",
+        "LOGIN_FAILED",
+        "PASSWORD_CHANGE",
+        "MFA_ENABLED",
+        "MFA_DISABLED",
+        "PHI_VIEW",
+        "PHI_CREATE",
+        "PHI_UPDATE",
+        "PHI_DELETE",
+        "PHI_EXPORT",
+        "SYMPTOM_SUBMIT",
+        "SYMPTOM_RESULT_VIEW",
+        "PROFILE_VIEW",
+        "PROFILE_UPDATE",
+        "USER_CREATE",
+        "USER_UPDATE",
+        "USER_DELETE",
+        "ROLE_CHANGE",
+        "UNAUTHORIZED_ACCESS",
+        "PERMISSION_DENIED",
+        "SUSPICIOUS_ACTIVITY"
+      ],
+      "required": true
+    },
+    "resource": {
+      "type": "string"
+    },
+    "resourceId": {
+      "type": "string"
+    },
+    "resourceType": {
+      "type": "string"
+    },
+    "details": {
+      "type": "json"
+    },
+    "ipAddress": {
+      "type": "string"
+    },
+    "userAgent": {
+      "type": "text"
+    },
+    "location": {
+      "type": "string"
+    },
+    "method": {
+      "type": "enumeration",
+      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    },
+    "endpoint": {
+      "type": "string"
+    },
+    "statusCode": {
+      "type": "integer"
+    },
+    "severity": {
+      "type": "enumeration",
+      "enum": ["INFO", "WARNING", "ERROR", "CRITICAL"],
+      "default": "INFO",
+      "required": true
+    },
+    "success": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "errorMessage": {
+      "type": "text"
+    }
+  }
+}

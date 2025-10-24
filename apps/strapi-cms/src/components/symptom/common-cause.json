@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_symptom_common_causes",
+  "info": {
+    "displayName": "Common Cause",
+    "icon": "bulletList",
+    "description": "Common causes of symptoms"
+  },
+  "options": {},
+  "attributes": {
+    "cause": {
+      "type": "string",
+      "required": false
+    }
+  }
+}

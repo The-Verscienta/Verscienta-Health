@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_modality_treatment_approaches",
+  "info": {
+    "displayName": "Treatment Approach",
+    "icon": "heal"
+  },
+  "options": {},
+  "attributes": {
+    "approach": {
+      "type": "string"
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { createHash, randomBytes } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sessionLogger } from '@/lib/session-logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -67,6 +68,13 @@ export async function POST(request: NextRequest) {
     }
 
     const twoFactorData = await response.json()
+
+    // Log MFA challenge initiated
+    await sessionLogger.mfaChallenge({
+      sessionId: session.session.id || session.session.token || 'unknown',
+      userId: session.user.id,
+      userEmail: session.user.email,
+    })
 
     return NextResponse.json({
       success: true,

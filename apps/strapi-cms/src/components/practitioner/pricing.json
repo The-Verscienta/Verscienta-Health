@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_practitioner_pricings",
+  "info": {
+    "displayName": "Pricing",
+    "icon": "dollar-sign"
+  },
+  "options": {},
+  "attributes": {
+    "initialConsult": {
+      "type": "decimal"
+    },
+    "followUp": {
+      "type": "decimal"
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": ["USD", "EUR", "GBP", "CAD", "AUD"],
+      "default": "USD"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

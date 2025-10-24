@@ -1,11 +1,28 @@
 'use client'
 
 import { List, Map as MapIcon } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { PractitionerCard } from '@/components/cards/PractitionerCard'
-import { PractitionerMap } from '@/components/maps/PractitionerMap'
 import { Button } from '@/components/ui/button'
 import { Pagination } from '@/components/ui/pagination'
+
+// Lazy load the heavy map component with Leaflet libraries
+// This saves ~150KB+ on initial page load
+const PractitionerMap = dynamic(
+  () => import('@/components/maps/PractitionerMap').then((mod) => ({ default: mod.PractitionerMap })),
+  {
+    loading: () => (
+      <div className="flex h-[600px] items-center justify-center rounded-lg bg-gray-100">
+        <div className="text-center">
+          <div className="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-earth-600 border-t-transparent"></div>
+          <p className="text-gray-600">Loading map...</p>
+        </div>
+      </div>
+    ),
+    ssr: false, // Disable SSR for map component (Leaflet requires window)
+  }
+)
 
 type PractitionerLocation = Practitioner & {
   latitude: number

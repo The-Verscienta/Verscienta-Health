@@ -112,7 +112,7 @@ pnpm dev
 This starts:
 
 - **Frontend (Next.js):** http://localhost:3000
-- **Backend (Payload CMS):** http://localhost:3001/admin
+- **Backend (Strapi CMS):** http://localhost:3001/admin
 
 ### Or start individually:
 
@@ -121,12 +121,12 @@ This starts:
 pnpm dev:web
 
 # Backend only
-pnpm dev:cms
+pnpm dev:strapi-cms
 ```
 
 ## Step 7: Create Admin User
 
-On first run, Payload CMS will prompt you to create an admin user:
+On first run, Strapi CMS will prompt you to create an admin user:
 
 1. Visit http://localhost:3001/admin
 2. Fill in the admin user creation form:
@@ -206,7 +206,7 @@ On first run, Payload CMS will prompt you to create an admin user:
    - Search should work (if Algolia configured)
 
 2. **Backend:** Visit http://localhost:3001/admin
-   - Should see Payload Admin panel
+   - Should see Strapi Admin panel
    - Login with your admin credentials
    - Navigate through collections (Herbs, Formulas, etc.)
 
@@ -219,7 +219,7 @@ On first run, Payload CMS will prompt you to create an admin user:
 
 ### Creating Content
 
-1. Log in to Payload Admin: http://localhost:3001/admin
+1. Log in to Strapi Admin: http://localhost:3001/admin
 2. Navigate to a collection (e.g., Herbs)
 3. Click "Create New"
 4. Fill in the fields
@@ -275,15 +275,15 @@ pnpm type-check
 - Check connection string in `.env`
 - Verify user permissions
 
-### Payload Admin Not Loading
+### Strapi Admin Not Loading
 
 **Error:** `Invalid session`
 
 **Solution:**
 
 - Clear browser cookies for localhost:3001
-- Restart the CMS server: `pnpm dev:cms`
-- Check `PAYLOAD_SECRET` in `.env`
+- Restart the CMS server: `pnpm dev:strapi-cms`
+- Check `STRAPI_SECRET` in `.env`
 
 ### Next.js Build Errors
 
@@ -303,7 +303,7 @@ pnpm type-check
 
 - Verify Algolia credentials in `.env`
 - Check that indices were created
-- Manually trigger reindex: Visit Payload Admin > Herbs > Select All > Bulk Actions > Sync to Algolia
+- Manually trigger reindex: Visit Strapi Admin > Herbs > Select All > Bulk Actions > Sync to Algolia
 
 ### Grok AI Errors
 
@@ -326,13 +326,13 @@ Once your development environment is set up:
 
 2. **Explore the Codebase:**
    - Frontend: `apps/web/`
-   - Backend: `apps/cms/`
+   - Backend: `apps/strapi-cms/`
    - Shared packages: `packages/`
 
 3. **Start Developing:**
    - Add new features
    - Create custom components
-   - Extend Payload collections
+   - Extend Strapi collections
    - Integrate additional services
 
 ## Getting Help
