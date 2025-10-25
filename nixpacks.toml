@@ -21,3 +21,4 @@ cmd = "pnpm --filter $APP_NAME start"
 
 [variables]
 NODE_ENV = "production"
+NODE_OPTIONS = "--max-old-space-size=4096"
