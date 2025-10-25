@@ -1,12 +1,12 @@
 import { AlertTriangle, Book, Heart, Leaf, Star } from 'lucide-react'
-import { Link } from '@/i18n/routing'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Link } from '@/i18n/routing'
 import { getFormulaBySlug } from '@/lib/strapi-api'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
-import type { Metadata } from 'next'
 
 interface Formula {
   id: string
@@ -498,12 +498,10 @@ export async function generateMetadata({ params }: FormulaPageProps): Promise<Me
 
   return {
     title: `${formula.title} | ${metaT('siteName')}`,
-    description:
-      formula.description || t('metadata.defaultDescription', { name: formula.title }),
+    description: formula.description || t('metadata.defaultDescription', { name: formula.title }),
     openGraph: {
       title: `${formula.title} | ${metaT('siteName')}`,
-      description:
-        formula.description || t('metadata.defaultDescription', { name: formula.title }),
+      description: formula.description || t('metadata.defaultDescription', { name: formula.title }),
     },
   }
 }

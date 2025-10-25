@@ -4,9 +4,9 @@
  * Tests HIPAA-compliant idle timeout functionality
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useIdleTimeout } from '../use-idle-timeout'
 
 // Mock next/navigation
@@ -449,10 +449,7 @@ describe('useIdleTimeout', () => {
       expect(onTimeout).toHaveBeenCalled()
 
       await waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith(
-          'Failed to log session timeout:',
-          expect.any(Error)
-        )
+        expect(consoleSpy).toHaveBeenCalledWith('Failed to log session timeout:', expect.any(Error))
       })
 
       consoleSpy.mockRestore()

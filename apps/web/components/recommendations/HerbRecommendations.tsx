@@ -1,6 +1,6 @@
 'use client'
 
-import { AlertTriangle, Sparkles, Leaf, Info, CheckCircle2, XCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Info, Leaf, Sparkles, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -97,14 +97,14 @@ function MedicalDisclaimer() {
               This information is for educational purposes only and is not a substitute for
               professional medical advice, diagnosis, or treatment. Always seek the advice of your
               physician or other qualified health provider with any questions you may have regarding
-              a medical condition. Never disregard professional medical advice or delay in seeking it
-              because of information provided here.
+              a medical condition. Never disregard professional medical advice or delay in seeking
+              it because of information provided here.
             </p>
             <p className="text-sm text-yellow-800">
-              <strong>Important:</strong> Herbs can interact with medications and may not be suitable
-              for everyone. Consult a licensed healthcare practitioner before starting any herbal
-              treatment, especially if you are pregnant, nursing, taking medications, or have a
-              medical condition.
+              <strong>Important:</strong> Herbs can interact with medications and may not be
+              suitable for everyone. Consult a licensed healthcare practitioner before starting any
+              herbal treatment, especially if you are pregnant, nursing, taking medications, or have
+              a medical condition.
             </p>
           </div>
         </div>
@@ -198,10 +198,7 @@ function HerbCard({ herb }: { herb: HerbRecommendation }) {
           <Leaf className="text-earth-600 mt-0.5 h-5 w-5 flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <CardTitle className="text-lg">
-              <Link
-                href={`/herbs/${herb.slug}`}
-                className="hover:text-earth-600 transition-colors"
-              >
+              <Link href={`/herbs/${herb.slug}`} className="hover:text-earth-600 transition-colors">
                 {herb.name}
               </Link>
             </CardTitle>

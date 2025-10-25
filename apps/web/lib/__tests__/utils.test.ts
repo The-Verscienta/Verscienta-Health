@@ -4,8 +4,17 @@
  * Tests core utility functions used throughout the application
  */
 
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { cn, formatDate, truncate, generateId, debounce, sleep, isClient, getInitials } from '../utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  cn,
+  debounce,
+  formatDate,
+  generateId,
+  getInitials,
+  isClient,
+  sleep,
+  truncate,
+} from '../utils'
 
 describe('cn (className utility)', () => {
   it('merges class names', () => {
@@ -301,7 +310,7 @@ describe('sleep', () => {
   })
 
   it('works with async/await', async () => {
-    const start = Date.now()
+    const _start = Date.now()
     const sleepPromise = sleep(100)
 
     vi.advanceTimersByTime(100)

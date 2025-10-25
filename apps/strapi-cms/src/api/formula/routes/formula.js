@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * formula router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+const { createCoreRouter } = require('@strapi/strapi').factories
 
-module.exports = createCoreRouter('api::formula.formula');
+module.exports = createCoreRouter('api::formula.formula')

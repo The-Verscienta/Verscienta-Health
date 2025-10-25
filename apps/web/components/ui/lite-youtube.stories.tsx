@@ -172,11 +172,7 @@ export const MultipleVideos: Story = {
         title="YouTube Rewind 2018"
         posterQuality="maxresdefault"
       />
-      <LiteYouTubeEmbed
-        videoId="kJQP7kiw5Fk"
-        title="Luis Fonsi - Despacito"
-        noCookie={true}
-      />
+      <LiteYouTubeEmbed videoId="kJQP7kiw5Fk" title="Luis Fonsi - Despacito" noCookie={true} />
     </div>
   ),
 }

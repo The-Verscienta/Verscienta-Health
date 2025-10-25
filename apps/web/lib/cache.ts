@@ -35,8 +35,7 @@ function getRedisConfig() {
   }
 
   // Fallback to individual env vars
-  const useTLS =
-    process.env.REDIS_TLS === 'true' || process.env.REDIS_URL?.startsWith('rediss://')
+  const useTLS = process.env.REDIS_TLS === 'true' || process.env.REDIS_URL?.startsWith('rediss://')
 
   return {
     host: process.env.REDIS_HOST || 'localhost',

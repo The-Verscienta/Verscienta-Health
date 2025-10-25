@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node
+
 /**
  * Database Encryption Verification Script
  *
@@ -21,8 +22,8 @@
  *   DATABASE_PROVIDER (optional) - Cloud provider name
  */
 
-import { verifyEncryptionSetup, getEncryptionStatus } from '../lib/db-encryption'
 import { Pool } from 'pg'
+import { getEncryptionStatus, verifyEncryptionSetup } from '../lib/db-encryption'
 
 interface VerificationResult {
   category: string
@@ -87,27 +88,21 @@ async function checkSSLConnection(pool: Pool): Promise<void> {
 
       // Get SSL version
       const versionResult = await pool.query('SHOW ssl_version')
-      addResult('SSL Version', 'PASS', `SSL version: ${versionResult.rows[0].ssl_version || 'Unknown'}`)
-    } else {
       addResult(
-        'SSL/TLS Connection',
-        'FAIL',
-        'Database connection is NOT encrypted with SSL/TLS',
-        {
-          warning: 'HIPAA violation - connections must use SSL/TLS in production',
-          remedy: 'Add ?sslmode=require to DATABASE_URL',
-        }
+        'SSL Version',
+        'PASS',
+        `SSL version: ${versionResult.rows[0].ssl_version || 'Unknown'}`
       )
+    } else {
+      addResult('SSL/TLS Connection', 'FAIL', 'Database connection is NOT encrypted with SSL/TLS', {
+        warning: 'HIPAA violation - connections must use SSL/TLS in production',
+        remedy: 'Add ?sslmode=require to DATABASE_URL',
+      })
     }
   } catch (error) {
-    addResult(
-      'SSL/TLS Connection',
-      'WARN',
-      `Could not verify SSL status: ${error}`,
-      {
-        note: 'This may be expected in development environments',
-      }
-    )
+    addResult('SSL/TLS Connection', 'WARN', `Could not verify SSL status: ${error}`, {
+      note: 'This may be expected in development environments',
+    })
   }
 }
 
@@ -131,11 +126,7 @@ async function checkEncryptionFunctions(pool: Pool): Promise<void> {
     )
 
     if (decryptResult.rows[0].decrypted === testData) {
-      addResult(
-        'Encryption Functions',
-        'PASS',
-        'pgp_sym_encrypt/decrypt functions work correctly'
-      )
+      addResult('Encryption Functions', 'PASS', 'pgp_sym_encrypt/decrypt functions work correctly')
     } else {
       addResult('Encryption Functions', 'FAIL', 'Encryption/decryption test failed')
     }
@@ -183,14 +174,9 @@ async function checkDiskEncryption(): Promise<void> {
         'Confirm encryption is enabled in provider dashboard. This script assumes it is enabled.',
     })
   } else {
-    addResult(
-      'Disk Encryption',
-      'WARN',
-      `Unknown DATABASE_PROVIDER: ${provider}`,
-      {
-        note: 'Verify encryption manually in your database provider dashboard',
-      }
-    )
+    addResult('Disk Encryption', 'WARN', `Unknown DATABASE_PROVIDER: ${provider}`, {
+      note: 'Verify encryption manually in your database provider dashboard',
+    })
   }
 }
 
@@ -253,8 +239,7 @@ async function checkBackupEncryption(): Promise<void> {
       'WARN',
       'Cannot verify backup encryption - check provider settings manually',
       {
-        reminder:
-          'HIPAA requires that backups of ePHI are encrypted and securely stored',
+        reminder: 'HIPAA requires that backups of ePHI are encrypted and securely stored',
       }
     )
   }
@@ -336,9 +321,7 @@ async function main() {
   // Create database connection pool
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL.includes('sslmode')
-      ? { rejectUnauthorized: false }
-      : undefined,
+    ssl: process.env.DATABASE_URL.includes('sslmode') ? { rejectUnauthorized: false } : undefined,
   })
 
   try {

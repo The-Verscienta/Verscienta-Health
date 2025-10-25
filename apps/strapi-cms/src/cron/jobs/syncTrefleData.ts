@@ -16,7 +16,7 @@ const HERBS_PER_RUN = 30 // Process 30 herbs per run
 export async function syncSingleHerbWithTrefle(
   strapi: Core.Strapi,
   herbId: number
-): Promise<{ success: boolean; message: string; enrichedData?: any }> {
+): Promise<{ success: boolean; message: string; enrichedData?: unknown }> {
   try {
     const client = getTrefleClient()
     if (!client) {
@@ -24,7 +24,7 @@ export async function syncSingleHerbWithTrefle(
     }
 
     // Get herb data
-    const herb = await strapi.entityService.findOne('api::herb.herb', herbId) as any
+    const herb = (await strapi.entityService.findOne('api::herb.herb', herbId)) as any
 
     if (!herb || !herb.scientificName) {
       return { success: false, message: 'Herb not found or missing scientific name' }

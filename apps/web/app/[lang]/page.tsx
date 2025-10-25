@@ -1,14 +1,10 @@
 import { BookOpenIcon, BrainIcon, HeartIcon, MapPinIcon } from 'lucide-react'
-import { Link } from '@/i18n/routing'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Button } from '@/components/ui/button'
+import { Link } from '@/i18n/routing'
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ lang: string }>
-}) {
+export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params
 
   // Enable static rendering optimization

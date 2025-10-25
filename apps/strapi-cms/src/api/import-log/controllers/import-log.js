@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * import-log controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+const { createCoreController } = require('@strapi/strapi').factories
 
-module.exports = createCoreController('api::import-log.import-log');
+module.exports = createCoreController('api::import-log.import-log')

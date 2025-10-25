@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * modality controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+const { createCoreController } = require('@strapi/strapi').factories
 
-module.exports = createCoreController('api::modality.modality');
+module.exports = createCoreController('api::modality.modality')

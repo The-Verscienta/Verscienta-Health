@@ -1,11 +1,11 @@
+import type { Metadata } from 'next'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
 import { Providers } from '@/components/providers/Providers'
 import { Toaster } from '@/components/ui/sonner'
-import { NextIntlClientProvider } from 'next-intl'
-import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import { locales } from '@/i18n/request'
-import type { Metadata } from 'next'
 
 // Enable dynamic params and disable static optimization for pages with client components
 export const dynamicParams = true
@@ -53,7 +53,8 @@ export async function generateMetadata({
     },
     openGraph: {
       type: 'website',
-      locale: lang === 'en' ? 'en_US' : lang === 'es' ? 'es_ES' : lang === 'zh-CN' ? 'zh_CN' : 'zh_TW',
+      locale:
+        lang === 'en' ? 'en_US' : lang === 'es' ? 'es_ES' : lang === 'zh-CN' ? 'zh_CN' : 'zh_TW',
       url: appUrl,
       siteName: t('siteName'),
       title: t('title'),

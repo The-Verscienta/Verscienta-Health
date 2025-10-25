@@ -17,8 +17,8 @@
  */
 
 import type { Core } from '@strapi/strapi'
-import syncTrefleData from './jobs/syncTrefleData'
 import importTrefleData from './jobs/importTrefleData'
+import syncTrefleData from './jobs/syncTrefleData'
 
 export default {
   /**

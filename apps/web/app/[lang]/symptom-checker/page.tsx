@@ -2,9 +2,9 @@
 
 export const dynamic = 'force-dynamic'
 
-import { AlertTriangle, Plus, Sparkles, X, Shield } from 'lucide-react'
+import { AlertTriangle, Plus, Shield, Sparkles, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { SessionTimeoutWarning } from '@/components/security/SessionTimeoutWarning'
 import { Badge } from '@/components/ui/badge'
@@ -183,16 +183,10 @@ export default function SymptomCheckerPage() {
                   </ul>
                 </div>
                 <div className="flex gap-3">
-                  <Button
-                    onClick={() => router.push('/settings')}
-                    className="flex-1"
-                  >
+                  <Button onClick={() => router.push('/settings')} className="flex-1">
                     Enable MFA in Settings
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => router.back()}
-                  >
+                  <Button variant="outline" onClick={() => router.back()}>
                     Go Back
                   </Button>
                 </div>

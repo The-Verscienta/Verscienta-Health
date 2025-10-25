@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import {
-  HerbRecommendations,
-  HerbRecommendationsSkeleton,
-  type HerbRecommendationsProps,
-  type TCMPattern,
   type HerbRecommendation,
+  HerbRecommendations,
+  type HerbRecommendationsProps,
+  HerbRecommendationsSkeleton,
+  type TCMPattern,
 } from './HerbRecommendations'
 
 /**
@@ -43,7 +43,7 @@ const samplePatterns: TCMPattern[] = [
     description: 'A lack of vital energy affecting multiple organ systems',
     confidence: 85,
     symptoms: ['fatigue', 'shortness of breath', 'weak voice', 'pale complexion', 'poor appetite'],
-    rootCause: 'Chronic stress, overwork, and inadequate rest depleting the body\'s Qi reserves',
+    rootCause: "Chronic stress, overwork, and inadequate rest depleting the body's Qi reserves",
   },
   {
     name: 'Blood Stasis',
@@ -217,7 +217,7 @@ export const HighConfidence: Story = {
         description: 'Insufficient warming energy affecting metabolism',
         confidence: 88,
         symptoms: ['cold sensitivity', 'low back pain', 'frequent urination', 'low libido'],
-        rootCause: 'Aging and chronic stress depleting the body\'s foundational energy',
+        rootCause: "Aging and chronic stress depleting the body's foundational energy",
       },
     ],
     herbs: sampleHerbs,

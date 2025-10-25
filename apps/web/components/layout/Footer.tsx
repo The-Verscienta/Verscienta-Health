@@ -1,7 +1,7 @@
 'use client'
 
-import { Link } from '@/i18n/routing'
 import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing'
 
 export function Footer() {
   const t = useTranslations()
@@ -99,10 +99,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/faq"
-                  className="hover:text-earth-600 text-gray-600 transition-colors"
-                >
+                <Link href="/faq" className="hover:text-earth-600 text-gray-600 transition-colors">
                   {t('nav.faq')}
                 </Link>
               </li>

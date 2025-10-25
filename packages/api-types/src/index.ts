@@ -202,7 +202,7 @@ export interface PaginatedResponse<T> {
 export interface SearchRequest extends PaginationParams {
   q: string
   type?: 'herbs' | 'formulas' | 'conditions' | 'practitioners' | 'all'
-  filters?: Record<string, any>
+  filters?: Record<string, unknown>
 }
 
 export interface SearchResult {
@@ -255,10 +255,10 @@ export interface ApiError {
   error: string
   message: string
   statusCode: number
-  details?: Record<string, any>
+  details?: Record<string, unknown>
 }
 
-export interface ApiSuccess<T = any> {
+export interface ApiSuccess<T = unknown> {
   data: T
   message?: string
 }

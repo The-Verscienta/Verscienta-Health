@@ -8,7 +8,7 @@
  * - Suspicious activity detection
  */
 
-import { createAuditLog, AuditAction, AuditSeverity } from './audit-log'
+import { AuditAction, AuditSeverity, createAuditLog } from './audit-log'
 
 export enum SessionEvent {
   // Session lifecycle
@@ -71,9 +71,7 @@ export interface SessionLogEntry {
 /**
  * Log session activity
  */
-export async function logSessionActivity(
-  entry: Omit<SessionLogEntry, 'timestamp'>
-): Promise<void> {
+export async function logSessionActivity(entry: Omit<SessionLogEntry, 'timestamp'>): Promise<void> {
   const severity = getSeverityForEvent(entry.event)
 
   await createAuditLog({
@@ -255,11 +253,7 @@ export const sessionLogger = {
   /**
    * Log session refresh (extends expiration)
    */
-  sessionRefresh: async (params: {
-    sessionId: string
-    userId: string
-    newExpiresAt?: Date
-  }) => {
+  sessionRefresh: async (params: { sessionId: string; userId: string; newExpiresAt?: Date }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,
@@ -291,11 +285,7 @@ export const sessionLogger = {
   /**
    * Log manual logout
    */
-  logout: async (params: {
-    sessionId: string
-    userId: string
-    manual?: boolean
-  }) => {
+  logout: async (params: { sessionId: string; userId: string; manual?: boolean }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,
@@ -306,11 +296,7 @@ export const sessionLogger = {
   /**
    * Log MFA challenge
    */
-  mfaChallenge: async (params: {
-    sessionId: string
-    userId: string
-    userEmail: string
-  }) => {
+  mfaChallenge: async (params: { sessionId: string; userId: string; userEmail: string }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,
@@ -322,28 +308,18 @@ export const sessionLogger = {
   /**
    * Log successful MFA verification
    */
-  mfaSuccess: async (params: {
-    sessionId: string
-    userId: string
-    backupCodeUsed?: boolean
-  }) => {
+  mfaSuccess: async (params: { sessionId: string; userId: string; backupCodeUsed?: boolean }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,
-      event: params.backupCodeUsed
-        ? SessionEvent.MFA_BACKUP_CODE_USED
-        : SessionEvent.MFA_SUCCESS,
+      event: params.backupCodeUsed ? SessionEvent.MFA_BACKUP_CODE_USED : SessionEvent.MFA_SUCCESS,
     })
   },
 
   /**
    * Log failed MFA verification
    */
-  mfaFailure: async (params: {
-    sessionId: string
-    userId: string
-    attemptCount?: number
-  }) => {
+  mfaFailure: async (params: { sessionId: string; userId: string; attemptCount?: number }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,
@@ -357,10 +333,7 @@ export const sessionLogger = {
   /**
    * Log OAuth flow initiation
    */
-  oauthInitiated: async (params: {
-    sessionId: string
-    provider: 'google' | 'github'
-  }) => {
+  oauthInitiated: async (params: { sessionId: string; provider: 'google' | 'github' }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       event: SessionEvent.OAUTH_INITIATED,
@@ -393,10 +366,7 @@ export const sessionLogger = {
   /**
    * Log magic link request
    */
-  magicLinkRequested: async (params: {
-    sessionId: string
-    userEmail: string
-  }) => {
+  magicLinkRequested: async (params: { sessionId: string; userEmail: string }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userEmail: params.userEmail,
@@ -407,11 +377,7 @@ export const sessionLogger = {
   /**
    * Log magic link clicked
    */
-  magicLinkClicked: async (params: {
-    sessionId: string
-    userId: string
-    userEmail: string
-  }) => {
+  magicLinkClicked: async (params: { sessionId: string; userId: string; userEmail: string }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,
@@ -423,11 +389,7 @@ export const sessionLogger = {
   /**
    * Log idle warning shown to user
    */
-  idleWarning: async (params: {
-    sessionId: string
-    userId: string
-    minutesRemaining: number
-  }) => {
+  idleWarning: async (params: { sessionId: string; userId: string; minutesRemaining: number }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,
@@ -441,10 +403,7 @@ export const sessionLogger = {
   /**
    * Log session extension (user clicked "continue")
    */
-  sessionExtended: async (params: {
-    sessionId: string
-    userId: string
-  }) => {
+  sessionExtended: async (params: { sessionId: string; userId: string }) => {
     await logSessionActivity({
       sessionId: params.sessionId,
       userId: params.userId,

@@ -7,7 +7,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { SearchFilters, type FilterGroup } from '../SearchFilters'
+import { type FilterGroup, SearchFilters } from '../SearchFilters'
 
 describe('SearchFilters', () => {
   const mockFilterGroups: FilterGroup[] = [
@@ -103,10 +103,7 @@ describe('SearchFilters', () => {
   describe('Filter Toggle Button', () => {
     it('shows filter count badge when filters are active', () => {
       render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ category: ['adaptogen', 'tonic'] }}
-        />
+        <SearchFilters {...defaultProps} activeFilters={{ category: ['adaptogen', 'tonic'] }} />
       )
 
       expect(screen.getByText('2')).toBeInTheDocument()
@@ -143,7 +140,9 @@ describe('SearchFilters', () => {
       const user = userEvent.setup()
       const onFilterChange = vi.fn()
 
-      const { container } = render(<SearchFilters {...defaultProps} onFilterChange={onFilterChange} />)
+      const { container } = render(
+        <SearchFilters {...defaultProps} onFilterChange={onFilterChange} />
+      )
 
       // Find checkbox by value attribute or by text content
       const adaptogenLabel = screen.getByText('Adaptogen').closest('label')
@@ -167,7 +166,7 @@ describe('SearchFilters', () => {
 
       // Find the checkbox label (not the pill)
       const checkboxes = container.querySelectorAll('input[type="checkbox"]')
-      const adaptogenCheckbox = Array.from(checkboxes).find(cb => {
+      const adaptogenCheckbox = Array.from(checkboxes).find((cb) => {
         const label = cb.closest('label')
         return label?.textContent?.includes('Adaptogen') && label?.textContent?.includes('(5)')
       })
@@ -183,15 +182,12 @@ describe('SearchFilters', () => {
 
     it('checks boxes for active filters', () => {
       const { container } = render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ category: ['adaptogen'] }}
-        />
+        <SearchFilters {...defaultProps} activeFilters={{ category: ['adaptogen'] }} />
       )
 
       // Find the checkbox within the Adaptogen label
       const checkboxes = container.querySelectorAll('input[type="checkbox"]')
-      const adaptogenCheckbox = Array.from(checkboxes).find(cb => {
+      const adaptogenCheckbox = Array.from(checkboxes).find((cb) => {
         const label = cb.closest('label')
         return label?.textContent?.includes('Adaptogen')
       }) as HTMLInputElement
@@ -223,15 +219,12 @@ describe('SearchFilters', () => {
 
     it('deselects when clicking active option', () => {
       const { container } = render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ tradition: ['tcm'] }}
-        />
+        <SearchFilters {...defaultProps} activeFilters={{ tradition: ['tcm'] }} />
       )
 
       // Verify TCM is checked
       const radios = container.querySelectorAll('input[type="radio"]')
-      const tcmRadio = Array.from(radios).find(radio => {
+      const tcmRadio = Array.from(radios).find((radio) => {
         const label = radio.closest('label')
         return label?.textContent?.includes('TCM') && label?.textContent?.includes('(12)')
       }) as HTMLInputElement
@@ -258,7 +251,7 @@ describe('SearchFilters', () => {
 
       // Find the Ayurveda radio label
       const radios = container.querySelectorAll('input[type="radio"]')
-      const ayurvedaRadio = Array.from(radios).find(radio => {
+      const ayurvedaRadio = Array.from(radios).find((radio) => {
         const label = radio.closest('label')
         return label?.textContent?.includes('Ayurveda') && label?.textContent?.includes('(7)')
       })
@@ -274,15 +267,12 @@ describe('SearchFilters', () => {
 
     it('checks radio for active filter', () => {
       const { container } = render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ tradition: ['tcm'] }}
-        />
+        <SearchFilters {...defaultProps} activeFilters={{ tradition: ['tcm'] }} />
       )
 
       // Find the radio within the TCM label
       const radios = container.querySelectorAll('input[type="radio"]')
-      const tcmRadio = Array.from(radios).find(radio => {
+      const tcmRadio = Array.from(radios).find((radio) => {
         const label = radio.closest('label')
         return label?.textContent?.includes('TCM')
       }) as HTMLInputElement
@@ -340,12 +330,7 @@ describe('SearchFilters', () => {
 
   describe('Clear All Button', () => {
     it('renders Clear All when filters are active', () => {
-      render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ category: ['adaptogen'] }}
-        />
-      )
+      render(<SearchFilters {...defaultProps} activeFilters={{ category: ['adaptogen'] }} />)
 
       expect(screen.getByText('Clear All')).toBeInTheDocument()
     })
@@ -487,10 +472,7 @@ describe('SearchFilters', () => {
 
     it('shows selected count in collapsed group', () => {
       render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ category: ['adaptogen', 'tonic'] }}
-        />
+        <SearchFilters {...defaultProps} activeFilters={{ category: ['adaptogen', 'tonic'] }} />
       )
 
       expect(screen.getByText('2 selected')).toBeInTheDocument()
@@ -520,19 +502,13 @@ describe('SearchFilters', () => {
 
     it('updates count when filters change', () => {
       const { rerender } = render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ category: ['adaptogen'] }}
-        />
+        <SearchFilters {...defaultProps} activeFilters={{ category: ['adaptogen'] }} />
       )
 
       expect(screen.getByText('1')).toBeInTheDocument()
 
       rerender(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ category: ['adaptogen', 'tonic'] }}
-        />
+        <SearchFilters {...defaultProps} activeFilters={{ category: ['adaptogen', 'tonic'] }} />
       )
 
       expect(screen.getByText('2')).toBeInTheDocument()
@@ -541,12 +517,7 @@ describe('SearchFilters', () => {
 
   describe('Edge Cases', () => {
     it('handles empty filter groups', () => {
-      render(
-        <SearchFilters
-          {...defaultProps}
-          filterGroups={[]}
-        />
-      )
+      render(<SearchFilters {...defaultProps} filterGroups={[]} />)
 
       expect(screen.getByText('Filters')).toBeInTheDocument()
       expect(screen.queryByText('Category')).not.toBeInTheDocument()
@@ -630,12 +601,7 @@ describe('SearchFilters', () => {
     })
 
     it('has accessible button labels', () => {
-      render(
-        <SearchFilters
-          {...defaultProps}
-          activeFilters={{ category: ['adaptogen'] }}
-        />
-      )
+      render(<SearchFilters {...defaultProps} activeFilters={{ category: ['adaptogen'] }} />)
 
       expect(screen.getByRole('button', { name: /Filters/i })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /Clear All/i })).toBeInTheDocument()

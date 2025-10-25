@@ -310,11 +310,7 @@ describe('HerbCard', () => {
   describe('Accessibility', () => {
     it('has proper link structure for screen readers', () => {
       render(
-        <HerbCard
-          {...defaultProps}
-          scientificName="Panax ginseng"
-          description="A powerful herb"
-        />
+        <HerbCard {...defaultProps} scientificName="Panax ginseng" description="A powerful herb" />
       )
 
       const link = screen.getByRole('link')

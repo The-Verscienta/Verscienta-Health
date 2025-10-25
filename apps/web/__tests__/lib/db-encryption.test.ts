@@ -4,14 +4,14 @@
  * Tests for HIPAA §164.312(a)(2)(iv) - Encryption and Decryption
  */
 
-import { describe, it, expect, beforeAll } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 import {
-  encryptPHI,
   createEncryptedInsertSQL,
   createEncryptedSelectSQL,
+  encryptPHI,
+  getEncryptionStatus,
   hashUserId,
   verifyEncryptionSetup,
-  getEncryptionStatus,
 } from '@/lib/db-encryption'
 
 describe('Database Encryption Utilities', () => {
@@ -195,7 +195,7 @@ describe('Database Encryption Utilities', () => {
       // The SQL should have encrypt_phi wrapping the escaped value
       expect(sql).toMatch(/encrypt_phi\('.*''; DROP TABLE.*', '/)
       // Verify the value is inside encrypt_phi function call
-      expect(sql).toContain("encrypt_phi(")
+      expect(sql).toContain('encrypt_phi(')
     })
 
     it('handles multiple malicious patterns', () => {

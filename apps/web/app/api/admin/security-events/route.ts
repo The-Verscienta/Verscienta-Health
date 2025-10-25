@@ -46,7 +46,9 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get('limit')
 
     const options = {
-      since: sinceDays ? new Date(Date.now() - Number.parseInt(sinceDays) * 24 * 60 * 60 * 1000) : undefined,
+      since: sinceDays
+        ? new Date(Date.now() - Number.parseInt(sinceDays) * 24 * 60 * 60 * 1000)
+        : undefined,
       severity: severity || undefined,
       limit: limit ? Number.parseInt(limit) : 100,
     }

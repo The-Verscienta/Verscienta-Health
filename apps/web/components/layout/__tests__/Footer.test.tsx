@@ -154,8 +154,7 @@ describe('Footer', () => {
 
       const symptomCheckerLink = Array.from(container.querySelectorAll('a')).find(
         (link) =>
-          link.getAttribute('href') === '/symptom-checker' &&
-          link.textContent === 'Symptom Checker'
+          link.getAttribute('href') === '/symptom-checker' && link.textContent === 'Symptom Checker'
       )
       expect(symptomCheckerLink).toBeInTheDocument()
     })
@@ -199,8 +198,7 @@ describe('Footer', () => {
       const { container } = render(<Footer />)
 
       const privacyLink = Array.from(container.querySelectorAll('a')).find(
-        (link) =>
-          link.getAttribute('href') === '/privacy' && link.textContent === 'Privacy Policy'
+        (link) => link.getAttribute('href') === '/privacy' && link.textContent === 'Privacy Policy'
       )
       expect(privacyLink).toBeInTheDocument()
     })

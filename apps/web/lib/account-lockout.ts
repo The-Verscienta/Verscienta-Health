@@ -14,8 +14,8 @@
  */
 
 import { cache } from 'react'
-import { sendEmail } from './email'
 import { redis } from './cache'
+import { sendEmail } from './email'
 
 /**
  * Account Lockout Configuration

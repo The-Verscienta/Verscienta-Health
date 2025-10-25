@@ -4,8 +4,8 @@
  * Tests authentication flows, session management, and security features
  */
 
-import { describe, expect, it, vi, beforeEach } from 'vitest'
 import bcrypt from 'bcryptjs'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('Authentication Security', () => {
   beforeEach(() => {
@@ -288,8 +288,9 @@ describe('Authentication Security', () => {
   describe('CSRF Protection', () => {
     it('generates unique CSRF tokens', () => {
       const generateCSRFToken = () => {
-        return Math.random().toString(36).substring(2, 15) +
-               Math.random().toString(36).substring(2, 15)
+        return (
+          Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        )
       }
 
       const token1 = generateCSRFToken()
@@ -363,8 +364,8 @@ describe('Authentication Security', () => {
       const commonPasswords = ['password', '123456', 'qwerty', 'admin', 'letmein']
 
       const isCommonPassword = (password: string): boolean => {
-        return commonPasswords.some(
-          (common) => password.toLowerCase().includes(common.toLowerCase())
+        return commonPasswords.some((common) =>
+          password.toLowerCase().includes(common.toLowerCase())
         )
       }
 
@@ -489,7 +490,13 @@ describe('Authentication Security', () => {
         }
       }
 
-      const accessLog = logPHIAccess('doctor1', 'patient-record', 'patient123', 'VIEW', '192.168.1.1')
+      const accessLog = logPHIAccess(
+        'doctor1',
+        'patient-record',
+        'patient123',
+        'VIEW',
+        '192.168.1.1'
+      )
 
       expect(accessLog.userId).toBe('doctor1')
       expect(accessLog.resourceType).toBe('patient-record')

@@ -69,7 +69,10 @@ const preview: Preview = {
       const locale = context.globals.locale || 'en'
 
       return (
-        <NextIntlClientProvider locale={locale} messages={messages[locale as keyof typeof messages]}>
+        <NextIntlClientProvider
+          locale={locale}
+          messages={messages[locale as keyof typeof messages]}
+        >
           <Story />
         </NextIntlClientProvider>
       )

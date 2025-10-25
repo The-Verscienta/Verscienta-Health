@@ -134,14 +134,7 @@ function moderateContent(file: { name: string; mime: string }): {
   }
 
   // Blocked filename patterns
-  const blockedPatterns = [
-    /\.exe$/i,
-    /\.sh$/i,
-    /\.bat$/i,
-    /\.cmd$/i,
-    /\.dll$/i,
-    /\.scr$/i,
-  ]
+  const blockedPatterns = [/\.exe$/i, /\.sh$/i, /\.bat$/i, /\.cmd$/i, /\.dll$/i, /\.scr$/i]
 
   for (const pattern of blockedPatterns) {
     if (pattern.test(file.name)) {
@@ -181,7 +174,9 @@ export default {
     const accountId = config.accountId || process.env.CLOUDFLARE_ACCOUNT_ID
     const apiToken = config.apiToken || process.env.CLOUDFLARE_IMAGES_API_TOKEN
     const deliveryUrl =
-      config.deliveryUrl || process.env.CLOUDFLARE_IMAGES_DELIVERY_URL || 'https://imagedelivery.net'
+      config.deliveryUrl ||
+      process.env.CLOUDFLARE_IMAGES_DELIVERY_URL ||
+      'https://imagedelivery.net'
 
     // Security configuration
     const rateLimit = config.rateLimit || {
@@ -238,17 +233,15 @@ export default {
 
           // Security: Size validation for buffers
           if (file.buffer && file.buffer.length > maxFileSize) {
-            throw new Error(
-              `File size exceeds limit: ${file.buffer.length} > ${maxFileSize} bytes`
-            )
+            throw new Error(`File size exceeds limit: ${file.buffer.length} > ${maxFileSize} bytes`)
           }
 
           const formData = new FormData()
-          let uploadBuffer: Buffer
+          let _uploadBuffer: Buffer
 
           // Add file
           if (file.buffer) {
-            uploadBuffer = file.buffer
+            _uploadBuffer = file.buffer
             const blob = new Blob([file.buffer], { type: file.mime })
             formData.append('file', blob, file.name)
           } else if (file.stream) {
@@ -257,7 +250,7 @@ export default {
             if (!validationResult.valid || !validationResult.buffer) {
               throw new Error('File size validation failed or file exceeds size limit')
             }
-            uploadBuffer = validationResult.buffer
+            _uploadBuffer = validationResult.buffer
             const blob = new Blob([validationResult.buffer], { type: file.mime })
             formData.append('file', blob, file.name)
           } else {
@@ -299,9 +292,8 @@ export default {
               `Cloudflare Images upload failed: ${data.errors?.[0]?.message || 'Unknown error'}`
             )
           }
-
           // Update file object with Cloudflare Images data
-          ;(file as any).url = `${deliveryUrl}/${accountId}/${data.result.id}/public`
+          ;(file as Record<string, unknown>).url = `${deliveryUrl}/${accountId}/${data.result.id}/public`
           file.hash = data.result.id // Store Cloudflare Images ID as hash
           ;(file as any).provider_metadata = {
             cloudflare_id: data.result.id,

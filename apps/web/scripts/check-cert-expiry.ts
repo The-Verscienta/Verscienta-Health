@@ -38,10 +38,10 @@ import { monitorCertificate } from '../lib/cert-monitor'
  * Main function
  */
 async function main() {
-  console.log('=' .repeat(80))
+  console.log('='.repeat(80))
   console.log('Certificate Expiration Check')
   console.log(new Date().toISOString())
-  console.log('=' .repeat(80))
+  console.log('='.repeat(80))
   console.log()
 
   try {

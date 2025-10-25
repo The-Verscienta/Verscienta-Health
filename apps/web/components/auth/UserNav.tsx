@@ -1,7 +1,6 @@
 'use client'
 
 import { LogOut, Settings, User } from 'lucide-react'
-import { Link } from '@/i18n/routing'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Link } from '@/i18n/routing'
 import { signOut, useSession } from '@/lib/auth-client'
 
 export function UserNav() {

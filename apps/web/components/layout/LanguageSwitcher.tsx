@@ -1,15 +1,15 @@
 'use client'
 
-import { usePathname, useRouter } from '@/i18n/routing'
+import { GlobeIcon } from 'lucide-react'
 import { useLocale } from 'next-intl'
-import { locales, type Locale } from '@/i18n/request'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { GlobeIcon } from 'lucide-react'
+import { type Locale, locales } from '@/i18n/request'
+import { usePathname, useRouter } from '@/i18n/routing'
 
 const localeNames: Record<Locale, string> = {
   en: 'English',

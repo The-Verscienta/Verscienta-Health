@@ -4,7 +4,7 @@
  * Tests API client integration with Strapi CMS
  */
 
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('Strapi API Integration', () => {
   let originalFetch: typeof global.fetch
@@ -135,7 +135,7 @@ describe('Strapi API Integration', () => {
         try {
           const response = await fetch('http://localhost:3001/api/herbs')
           return response.json()
-        } catch (error) {
+        } catch (_error) {
           throw new Error('Network request failed')
         }
       }
@@ -165,9 +165,7 @@ describe('Strapi API Integration', () => {
       })
 
       const getHerbBySlug = async (slug: string) => {
-        const response = await fetch(
-          `http://localhost:3001/api/herbs?filters[slug][$eq]=${slug}`
-        )
+        const response = await fetch(`http://localhost:3001/api/herbs?filters[slug][$eq]=${slug}`)
         if (!response.ok) throw new Error('Failed to fetch')
         const data = await response.json()
         return data.data[0]
@@ -191,9 +189,7 @@ describe('Strapi API Integration', () => {
       })
 
       const getHerbBySlug = async (slug: string) => {
-        const response = await fetch(
-          `http://localhost:3001/api/herbs?filters[slug][$eq]=${slug}`
-        )
+        const response = await fetch(`http://localhost:3001/api/herbs?filters[slug][$eq]=${slug}`)
         const data = await response.json()
         return data.data[0] || null
       }

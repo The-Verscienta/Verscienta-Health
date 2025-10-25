@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { checkRateLimit, isRedisConfigured, type RateLimitConfig } from '@/lib/redis-rate-limiter'
 import createIntlMiddleware from 'next-intl/middleware'
+import { checkRateLimit, isRedisConfigured, type RateLimitConfig } from '@/lib/redis-rate-limiter'
 import { routing } from './i18n/routing'
 
 /**

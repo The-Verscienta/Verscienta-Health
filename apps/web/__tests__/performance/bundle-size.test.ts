@@ -55,12 +55,7 @@ describe('Bundle Size Monitoring', () => {
       ]
 
       // In real implementation, check webpack stats for dynamic imports
-      const dynamicImports = [
-        'leaflet',
-        'react-leaflet',
-        'algoliasearch',
-        'swagger-ui-react',
-      ]
+      const dynamicImports = ['leaflet', 'react-leaflet', 'algoliasearch', 'swagger-ui-react']
 
       codeSplitDependencies.forEach((dep) => {
         expect(dynamicImports).toContain(dep)

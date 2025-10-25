@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { sendContactFormEmail } from '@/lib/email'
 import { getTranslations } from 'next-intl/server'
+import { sendContactFormEmail } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {

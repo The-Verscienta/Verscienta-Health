@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export async function generateMetadata({
   params,
@@ -17,11 +17,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function TermsPage({
-  params,
-}: {
-  params: Promise<{ lang: string }>
-}) {
+export default async function TermsPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params
   setRequestLocale(lang)
   const t = await getTranslations({ locale: lang, namespace: 'terms' })

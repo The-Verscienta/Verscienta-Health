@@ -10,7 +10,8 @@ import { Pagination } from '@/components/ui/pagination'
 // Lazy load the heavy map component with Leaflet libraries
 // This saves ~150KB+ on initial page load
 const PractitionerMap = dynamic(
-  () => import('@/components/maps/PractitionerMap').then((mod) => ({ default: mod.PractitionerMap })),
+  () =>
+    import('@/components/maps/PractitionerMap').then((mod) => ({ default: mod.PractitionerMap })),
   {
     loading: () => (
       <div className="flex h-[600px] items-center justify-center rounded-lg bg-gray-100">

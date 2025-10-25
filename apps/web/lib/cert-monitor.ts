@@ -146,10 +146,7 @@ export async function checkCertificateExpiration(
   }
 
   // Skip in development unless explicitly enabled
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    process.env.CERT_MONITOR_ENABLED !== 'true'
-  ) {
+  if (process.env.NODE_ENV !== 'production' && process.env.CERT_MONITOR_ENABLED !== 'true') {
     return {
       isValid: true,
       isExpiring: false,
@@ -425,10 +422,7 @@ async function sendSlackAlert(result: CertExpiryResult): Promise<void> {
 /**
  * Send certificate expiration alert via custom webhook
  */
-async function sendWebhookAlert(
-  result: CertExpiryResult,
-  webhookUrl: string
-): Promise<void> {
+async function sendWebhookAlert(result: CertExpiryResult, webhookUrl: string): Promise<void> {
   const { host, port } = getRedisHostPort()
 
   const payload = {

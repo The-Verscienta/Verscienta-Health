@@ -12,8 +12,8 @@
  * - Automatic cleanup of old logs (90 days retention)
  */
 
-import { prisma } from './prisma'
 import type { NextRequest } from 'next/server'
+import { prisma } from './prisma'
 
 export interface ApiRequestLogData {
   method: string
@@ -434,7 +434,9 @@ export async function detectSuspiciousActivity(params: {
 
     // Check for rapid-fire requests (potential scraping/DDoS)
     if (totalRequests > 100) {
-      reasons.push(`Unusually high request volume: ${totalRequests} requests in ${timeWindowMinutes} minutes`)
+      reasons.push(
+        `Unusually high request volume: ${totalRequests} requests in ${timeWindowMinutes} minutes`
+      )
     }
   }
 

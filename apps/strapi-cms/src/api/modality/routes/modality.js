@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * modality router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+const { createCoreRouter } = require('@strapi/strapi').factories
 
-module.exports = createCoreRouter('api::modality.modality');
+module.exports = createCoreRouter('api::modality.modality')

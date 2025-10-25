@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * condition service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+const { createCoreService } = require('@strapi/strapi').factories
 
-module.exports = createCoreService('api::condition.condition');
+module.exports = createCoreService('api::condition.condition')

@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * practitioner service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+const { createCoreService } = require('@strapi/strapi').factories
 
-module.exports = createCoreService('api::practitioner.practitioner');
+module.exports = createCoreService('api::practitioner.practitioner')

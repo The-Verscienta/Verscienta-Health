@@ -170,10 +170,7 @@ export function LiteYouTubeEmbed({
   ...props
 }: LiteYouTubeProps & { aspectRatio?: string }) {
   return (
-    <div
-      className="relative w-full overflow-hidden rounded-lg shadow-md"
-      style={{ aspectRatio }}
-    >
+    <div className="relative w-full overflow-hidden rounded-lg shadow-md" style={{ aspectRatio }}>
       <LiteYouTube {...props} className="absolute inset-0 h-full w-full" />
     </div>
   )

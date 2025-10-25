@@ -95,9 +95,7 @@ export function FAQSection({
   return (
     <div className={cn('space-y-6', className)}>
       <div className="text-center">
-        {title && (
-          <h2 className="text-earth-900 mb-2 font-serif text-3xl font-bold">{title}</h2>
-        )}
+        {title && <h2 className="text-earth-900 mb-2 font-serif text-3xl font-bold">{title}</h2>}
         {subtitle && <p className="text-lg text-gray-600">{subtitle}</p>}
       </div>
       <FAQ items={items} defaultValue={defaultValue} />

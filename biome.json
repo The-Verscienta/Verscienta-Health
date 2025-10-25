@@ -86,8 +86,11 @@
       "**",
       "!node_modules/**",
       "!.next/**",
-      "!dist/**",
-      "!build/**",
+      "!**/dist/**",
+      "!**/build/**",
+      "!**/storybook-static/**",
+      "!**/payload-types.ts",
+      "!**/types/generated/**",
       "!coverage/**",
       "!.turbo/**"
     ]
@@ -107,6 +110,19 @@
   },
   "html": { "formatter": { "selfCloseVoidElements": "always" } },
   "overrides": [
+    {
+      "includes": ["**/*.d.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          },
+          "style": {
+            "noNamespace": "off"
+          }
+        }
+      }
+    },
     {
       "includes": ["**/*.{ts,tsx}"],
       "javascript": {

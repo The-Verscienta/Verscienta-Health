@@ -52,7 +52,7 @@ describe('Pagination', () => {
     it('shows first page', () => {
       render(<Pagination {...defaultProps} currentPage={5} />)
       const links = screen.getAllByRole('link')
-      const firstPageLink = links.find(link => link.textContent === '1')
+      const firstPageLink = links.find((link) => link.textContent === '1')
       expect(firstPageLink).toBeInTheDocument()
     })
 
@@ -127,10 +127,10 @@ describe('Pagination', () => {
       render(<Pagination {...defaultProps} currentPage={2} baseUrl="/herbs" />)
 
       const links = screen.getAllByRole('link')
-      const page1Link = links.find(link => link.textContent === '1')
+      const page1Link = links.find((link) => link.textContent === '1')
       expect(page1Link).toHaveAttribute('href', '/herbs?page=1')
 
-      const page3Link = links.find(link => link.textContent === '3')
+      const page3Link = links.find((link) => link.textContent === '3')
       expect(page3Link).toHaveAttribute('href', '/herbs?page=3')
     })
 
@@ -240,9 +240,9 @@ describe('Pagination', () => {
 
       // Should show first, last, current, and surrounding pages
       const links = screen.getAllByRole('link')
-      const page1 = links.find(link => link.textContent === '1')
-      const page50 = links.find(link => link.textContent === '50')
-      const page100 = links.find(link => link.textContent === '100')
+      const page1 = links.find((link) => link.textContent === '1')
+      const page50 = links.find((link) => link.textContent === '50')
+      const page100 = links.find((link) => link.textContent === '100')
 
       expect(page1).toBeInTheDocument()
       expect(page50).toBeInTheDocument()

@@ -8,7 +8,15 @@
   "attributes": {
     "methodType": {
       "type": "enumeration",
-      "enum": ["decoction", "infusion", "tincture", "powder", "poultice", "extract", "oil_infusion"],
+      "enum": [
+        "decoction",
+        "infusion",
+        "tincture",
+        "powder",
+        "poultice",
+        "extract",
+        "oil_infusion"
+      ],
       "required": true
     },
     "instructions": {

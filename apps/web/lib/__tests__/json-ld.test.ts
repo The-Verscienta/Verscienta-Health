@@ -4,26 +4,26 @@
  * Tests structured data generation for SEO and rich snippets
  */
 
-import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  type ConditionData,
   createJsonLd,
-  getAbsoluteUrl,
-  getImageUrl,
-  generateOrganizationSchema,
-  generateWebsiteSchema,
+  type FormulaData,
+  generateArticleSchema,
   generateBreadcrumbSchema,
-  generateHerbSchema,
-  generateFormulaSchema,
-  generatePractitionerSchema,
   generateConditionSchema,
   generateFAQSchema,
-  generateArticleSchema,
-  generateReviewSchema,
+  generateFormulaSchema,
+  generateHerbSchema,
   generateLocalBusinessSchema,
+  generateOrganizationSchema,
+  generatePractitionerSchema,
+  generateReviewSchema,
+  generateWebsiteSchema,
+  getAbsoluteUrl,
+  getImageUrl,
   type HerbData,
-  type FormulaData,
   type PractitionerData,
-  type ConditionData,
 } from '../json-ld'
 
 describe('createJsonLd', () => {
@@ -171,7 +171,7 @@ describe('getImageUrl', () => {
 
   it('falls back to absolute URL for short strings', () => {
     process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID = 'test-account-id'
-    const shortId = 'abc'  // Less than 10 characters
+    const shortId = 'abc' // Less than 10 characters
 
     const result = getImageUrl(shortId)
 
@@ -972,8 +972,18 @@ describe('generateLocalBusinessSchema', () => {
     const schema = generateLocalBusinessSchema(business)
 
     expect(schema.openingHoursSpecification).toEqual([
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Monday', opens: '09:00', closes: '17:00' },
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Tuesday', opens: '09:00', closes: '17:00' },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Monday',
+        opens: '09:00',
+        closes: '17:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Tuesday',
+        opens: '09:00',
+        closes: '17:00',
+      },
     ])
   })
 })

@@ -75,10 +75,7 @@ describe('PractitionerCard', () => {
 
     it('uses name as alt text when alt is not provided', () => {
       render(
-        <PractitionerCard
-          {...defaultProps}
-          photo={{ url: 'https://example.com/photo.jpg' }}
-        />
+        <PractitionerCard {...defaultProps} photo={{ url: 'https://example.com/photo.jpg' }} />
       )
 
       const img = screen.getByAltText('Dr. Jane Smith')
@@ -176,12 +173,7 @@ describe('PractitionerCard', () => {
 
   describe('Modalities Display', () => {
     it('renders modalities when provided', () => {
-      render(
-        <PractitionerCard
-          {...defaultProps}
-          modalities={['Acupuncture', 'Herbal Medicine']}
-        />
-      )
+      render(<PractitionerCard {...defaultProps} modalities={['Acupuncture', 'Herbal Medicine']} />)
 
       expect(screen.getByText('Acupuncture')).toBeInTheDocument()
       expect(screen.getByText('Herbal Medicine')).toBeInTheDocument()
@@ -242,10 +234,7 @@ describe('PractitionerCard', () => {
   describe('Location Display', () => {
     it('renders city and state when both provided', () => {
       render(
-        <PractitionerCard
-          {...defaultProps}
-          address={{ city: 'San Francisco', state: 'CA' }}
-        />
+        <PractitionerCard {...defaultProps} address={{ city: 'San Francisco', state: 'CA' }} />
       )
 
       expect(screen.getByText('San Francisco, CA')).toBeInTheDocument()

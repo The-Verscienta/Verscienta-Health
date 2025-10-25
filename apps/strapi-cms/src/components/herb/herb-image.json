@@ -14,7 +14,17 @@
     },
     "imageType": {
       "type": "enumeration",
-      "enum": ["whole_plant", "flower", "leaf", "root", "bark", "seed", "dried", "habitat", "preparation"]
+      "enum": [
+        "whole_plant",
+        "flower",
+        "leaf",
+        "root",
+        "bark",
+        "seed",
+        "dried",
+        "habitat",
+        "preparation"
+      ]
     }
   }
 }

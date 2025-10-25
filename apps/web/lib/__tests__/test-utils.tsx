@@ -5,7 +5,7 @@
  * See: https://next-intl.dev/docs/environments/testing
  */
 
-import { render, RenderOptions } from '@testing-library/react'
+import { RenderOptions, render } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { ReactElement, ReactNode } from 'react'
 

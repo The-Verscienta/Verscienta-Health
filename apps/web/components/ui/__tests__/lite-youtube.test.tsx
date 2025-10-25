@@ -137,9 +137,7 @@ describe('LiteYouTube', () => {
     })
 
     it('uses playlist thumbnail when playlist ID provided', () => {
-      const { container } = render(
-        <LiteYouTube videoId="videoseries" playlistId="PLtest123" />
-      )
+      const { container } = render(<LiteYouTube videoId="videoseries" playlistId="PLtest123" />)
 
       const element = container.querySelector('lite-youtube')
       expect(element).toHaveStyle({
@@ -148,9 +146,7 @@ describe('LiteYouTube', () => {
     })
 
     it('includes playlist in fallback link', () => {
-      const { container } = render(
-        <LiteYouTube videoId="test" playlistId="PLtest123" />
-      )
+      const { container } = render(<LiteYouTube videoId="test" playlistId="PLtest123" />)
 
       const link = container.querySelector('a.lty-playbtn')
       expect(link).toHaveAttribute('href', 'https://www.youtube.com/watch?v=test&list=PLtest123')
@@ -159,9 +155,7 @@ describe('LiteYouTube', () => {
 
   describe('Custom Parameters', () => {
     it('sets params attribute when provided', () => {
-      const { container } = render(
-        <LiteYouTube {...defaultProps} params="start=10&end=60" />
-      )
+      const { container } = render(<LiteYouTube {...defaultProps} params="start=10&end=60" />)
 
       const element = container.querySelector('lite-youtube')
       expect(element).toHaveAttribute('params', 'start=10&end=60')
@@ -325,7 +319,9 @@ describe('LiteYouTubeEmbed', () => {
     it('renders wrapper div', () => {
       const { container } = render(<LiteYouTubeEmbed {...defaultProps} />)
 
-      const wrapper = container.querySelector('.relative.w-full.overflow-hidden.rounded-lg.shadow-md')
+      const wrapper = container.querySelector(
+        '.relative.w-full.overflow-hidden.rounded-lg.shadow-md'
+      )
       expect(wrapper).toBeInTheDocument()
     })
 
@@ -390,9 +386,7 @@ describe('LiteYouTubeEmbed', () => {
     })
 
     it('forwards playlist ID', () => {
-      const { container } = render(
-        <LiteYouTubeEmbed videoId="videoseries" playlistId="PLtest" />
-      )
+      const { container } = render(<LiteYouTubeEmbed videoId="videoseries" playlistId="PLtest" />)
 
       const liteYoutube = container.querySelector('lite-youtube')
       expect(liteYoutube).toHaveAttribute('playlistid', 'PLtest')

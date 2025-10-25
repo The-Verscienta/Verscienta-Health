@@ -1,7 +1,7 @@
 import { BookOpen, Heart, Leaf, Users } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Link } from '@/i18n/routing'
 
 export async function generateMetadata({
@@ -19,11 +19,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function AboutPage({
-  params,
-}: {
-  params: Promise<{ lang: string }>
-}) {
+export default async function AboutPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params
   setRequestLocale(lang)
   const t = await getTranslations({ locale: lang, namespace: 'about' })
@@ -39,9 +35,7 @@ export default async function AboutPage({
       <div className="mx-auto mb-16 max-w-4xl">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center font-serif text-2xl">
-              {t('mission.title')}
-            </CardTitle>
+            <CardTitle className="text-center font-serif text-2xl">{t('mission.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-lg text-gray-700">
             <p>{t('mission.paragraph1')}</p>
@@ -71,9 +65,7 @@ export default async function AboutPage({
               <Heart className="text-earth-600 mb-2 h-8 w-8" />
               <CardTitle className="text-lg">{t('values.holistic.title')}</CardTitle>
             </CardHeader>
-            <CardContent className="text-gray-600">
-              {t('values.holistic.description')}
-            </CardContent>
+            <CardContent className="text-gray-600">{t('values.holistic.description')}</CardContent>
           </Card>
 
           <Card>
@@ -91,9 +83,7 @@ export default async function AboutPage({
               <Users className="text-earth-600 mb-2 h-8 w-8" />
               <CardTitle className="text-lg">{t('values.community.title')}</CardTitle>
             </CardHeader>
-            <CardContent className="text-gray-600">
-              {t('values.community.description')}
-            </CardContent>
+            <CardContent className="text-gray-600">{t('values.community.description')}</CardContent>
           </Card>
         </div>
       </div>

@@ -27,11 +27,12 @@ export default {
       })
 
       // Parse schedule for human-readable display
-      const scheduleDesc = schedule === '0 3 * * 3'
-        ? 'Weekly (Wed 3AM)'
-        : schedule === '* * * * *'
-        ? 'Every minute'
-        : schedule
+      const scheduleDesc =
+        schedule === '0 3 * * 3'
+          ? 'Weekly (Wed 3AM)'
+          : schedule === '* * * * *'
+            ? 'Every minute'
+            : schedule
 
       console.log(`   ✓ Scheduled: ${scheduleDesc}`)
     })

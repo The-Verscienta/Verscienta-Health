@@ -139,12 +139,7 @@ describe('FormulaCard', () => {
 
     it('renders all badges when all metadata is provided', () => {
       render(
-        <FormulaCard
-          {...defaultProps}
-          tradition="TCM"
-          category="Tonifying"
-          ingredientCount={8}
-        />
+        <FormulaCard {...defaultProps} tradition="TCM" category="Tonifying" ingredientCount={8} />
       )
 
       expect(screen.getByText('TCM')).toBeInTheDocument()
@@ -292,9 +287,7 @@ describe('FormulaCard', () => {
     })
 
     it('handles special characters in description', () => {
-      render(
-        <FormulaCard {...defaultProps} description="Treats cough and inflammation" />
-      )
+      render(<FormulaCard {...defaultProps} description="Treats cough and inflammation" />)
 
       expect(screen.getByText('Treats cough and inflammation')).toBeInTheDocument()
     })

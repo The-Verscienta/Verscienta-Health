@@ -1,11 +1,11 @@
-import { Link } from '@/i18n/routing'
+import { setRequestLocale } from 'next-intl/server'
 import { Suspense } from 'react'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loading } from '@/components/ui/loading'
-import { setRequestLocale } from 'next-intl/server'
 import { Pagination } from '@/components/ui/pagination'
+import { Link } from '@/i18n/routing'
 import { getModalities } from '@/lib/strapi-api'
 
 interface ModalitiesPageProps {

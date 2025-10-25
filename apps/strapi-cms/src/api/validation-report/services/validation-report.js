@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * validation-report service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+const { createCoreService } = require('@strapi/strapi').factories
 
-module.exports = createCoreService('api::validation-report.validation-report');
+module.exports = createCoreService('api::validation-report.validation-report')

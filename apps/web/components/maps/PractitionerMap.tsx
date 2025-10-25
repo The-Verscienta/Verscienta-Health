@@ -2,11 +2,11 @@
 
 import L from 'leaflet'
 import { CheckCircle, MapPin, Star } from 'lucide-react'
-import { Link } from '@/i18n/routing'
 import { useEffect, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { Badge } from '@/components/ui/badge'
+import { Link } from '@/i18n/routing'
 
 // Fix for default marker icons in Next.js
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

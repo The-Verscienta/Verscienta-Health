@@ -362,7 +362,7 @@ describe('Tabs', () => {
     })
 
     it('associates tab with tabpanel', async () => {
-      const user = userEvent.setup()
+      const _user = userEvent.setup()
       render(defaultTabs)
 
       const tab1 = screen.getByRole('tab', { name: 'Tab 1' })

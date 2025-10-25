@@ -1,10 +1,10 @@
+import { setRequestLocale } from 'next-intl/server'
 import { Suspense } from 'react'
 import { FormulaCard } from '@/components/cards/FormulaCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
 import { getFormulas } from '@/lib/strapi-api'
-import { setRequestLocale } from 'next-intl/server'
 
 interface FormulasPageProps {
   params: Promise<{ lang: string }>

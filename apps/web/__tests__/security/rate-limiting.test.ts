@@ -4,7 +4,7 @@
  * Tests rate limiting functionality for API endpoints
  */
 
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('Rate Limiting', () => {
   beforeEach(() => {
@@ -314,7 +314,11 @@ describe('Rate Limiting', () => {
         })
       }
 
-      const checkWithLogging = (userId: string, endpoint: string, attempts: Map<string, number>) => {
+      const checkWithLogging = (
+        userId: string,
+        endpoint: string,
+        attempts: Map<string, number>
+      ) => {
         const MAX = 10
         const current = attempts.get(userId) || 0
 
@@ -363,9 +367,7 @@ describe('Rate Limiting', () => {
       }
 
       // Simulate 20 concurrent requests
-      const results = await Promise.all(
-        Array.from({ length: 20 }, () => checkRateLimit('user1'))
-      )
+      const results = await Promise.all(Array.from({ length: 20 }, () => checkRateLimit('user1')))
 
       const allowed = results.filter(Boolean).length
       const blocked = results.filter((r) => !r).length

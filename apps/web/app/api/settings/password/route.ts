@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs'
 import { NextResponse } from 'next/server'
+import { AuditAction, AuditSeverity, createAuditLog } from '@/lib/audit-log'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import { createAuditLog, AuditAction, AuditSeverity } from '@/lib/audit-log'
 import { sendEmail } from '@/lib/email'
-import { checkPasswordHistory, addPasswordToHistory } from '@/lib/password-history'
+import { addPasswordToHistory, checkPasswordHistory } from '@/lib/password-history'
+import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 

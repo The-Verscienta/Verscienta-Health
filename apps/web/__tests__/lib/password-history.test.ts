@@ -4,14 +4,14 @@
  * Comprehensive test suite for password history tracking and reuse prevention
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import bcrypt from 'bcryptjs'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  checkPasswordHistory,
   addPasswordToHistory,
-  getPasswordHistory,
+  checkPasswordHistory,
   cleanupOldPasswordHistory,
   deleteUserPasswordHistory,
+  getPasswordHistory,
   getPasswordHistoryStats,
   PASSWORD_HISTORY_LIMIT,
 } from '@/lib/password-history'

@@ -1,9 +1,9 @@
 'use client'
 
 import { SearchIcon } from 'lucide-react'
-import { Link } from '@/i18n/routing'
 import { useTranslations } from 'next-intl'
 import { UserNav } from '@/components/auth/UserNav'
+import { Link } from '@/i18n/routing'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 export function Header() {

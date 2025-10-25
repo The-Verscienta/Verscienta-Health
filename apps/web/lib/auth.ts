@@ -1,12 +1,12 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { magicLink, twoFactor } from 'better-auth/plugins'
 import { createAuthMiddleware } from 'better-auth/api'
+import { magicLink, twoFactor } from 'better-auth/plugins'
+import { accountLockout } from './account-lockout'
 import { sendMagicLinkEmail } from './email'
 import { prisma } from './prisma'
-import { sessionLogger } from './session-logger'
-import { accountLockout } from './account-lockout'
 import { securityMonitor } from './security-monitor'
+import { sessionLogger } from './session-logger'
 
 /**
  * Better Auth Configuration
@@ -252,10 +252,7 @@ export const auth = betterAuth({
         // Handle sign-outs
         if (ctx.path === '/sign-out' && ctx.method === 'POST' && session && user) {
           try {
-            await securityMonitor.removeSession(
-              session.id || session.token || 'unknown',
-              user.id
-            )
+            await securityMonitor.removeSession(session.id || session.token || 'unknown', user.id)
 
             await sessionLogger.logout({
               sessionId: session.id || session.token || 'unknown',

@@ -1,13 +1,13 @@
 import { Award, Book, Heart, Target, Users } from 'lucide-react'
-import { Link } from '@/i18n/routing'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { PractitionerCard } from '@/components/cards/PractitionerCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Link } from '@/i18n/routing'
 import { getModalityBySlug } from '@/lib/strapi-api'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
-import type { Metadata } from 'next'
 
 interface Modality {
   id: string
@@ -468,8 +468,7 @@ export async function generateMetadata({ params }: ModalityPageProps): Promise<M
 
   return {
     title: `${modality.title} | ${metaT('siteName')}`,
-    description:
-      modality.description || t('metadata.defaultDescription', { name: modality.title }),
+    description: modality.description || t('metadata.defaultDescription', { name: modality.title }),
     openGraph: {
       title: `${modality.title} | ${metaT('siteName')}`,
       description:

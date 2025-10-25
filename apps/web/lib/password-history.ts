@@ -22,8 +22,8 @@
  *   await addPasswordToHistory(userId, hashedPassword)
  */
 
-import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { prisma } from '@/lib/prisma'
 
 /**
  * Number of recent passwords to store and check against
@@ -98,10 +98,7 @@ export async function checkPasswordHistory(
  * await addPasswordToHistory(userId, hashedPassword)
  * ```
  */
-export async function addPasswordToHistory(
-  userId: string,
-  passwordHash: string
-): Promise<void> {
+export async function addPasswordToHistory(userId: string, passwordHash: string): Promise<void> {
   try {
     // Add new password to history
     await prisma.passwordHistory.create({
@@ -217,7 +214,7 @@ export async function cleanupOldPasswordHistory(
 
       // Keep the last N passwords regardless of age
       const toKeep = allHistory.slice(0, PASSWORD_HISTORY_LIMIT)
-      const toKeepIds = new Set(toKeep.map((h) => h.id))
+      const _toKeepIds = new Set(toKeep.map((h) => h.id))
 
       // From the remaining (older) entries, delete those beyond retention period
       const oldEntries = allHistory
@@ -268,7 +265,9 @@ export async function deleteUserPasswordHistory(userId: string): Promise<number>
       where: { userId },
     })
 
-    console.log(`[Password History] Deleted ${result.count} password history entries for user ${userId}`)
+    console.log(
+      `[Password History] Deleted ${result.count} password history entries for user ${userId}`
+    )
 
     return result.count
   } catch (error) {

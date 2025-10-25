@@ -1,10 +1,10 @@
+import { setRequestLocale } from 'next-intl/server'
 import { Suspense } from 'react'
 import { HerbCard } from '@/components/cards/HerbCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
 import { getHerbs } from '@/lib/strapi-api'
-import { setRequestLocale } from 'next-intl/server'
 
 interface HerbsPageProps {
   params: Promise<{ lang: string }>

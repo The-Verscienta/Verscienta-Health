@@ -1,10 +1,10 @@
+import { setRequestLocale } from 'next-intl/server'
 import { Suspense } from 'react'
 import { ConditionCard } from '@/components/cards/ConditionCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
 import { getConditions } from '@/lib/strapi-api'
-import { setRequestLocale } from 'next-intl/server'
 
 interface ConditionsPageProps {
   params: Promise<{ lang: string }>

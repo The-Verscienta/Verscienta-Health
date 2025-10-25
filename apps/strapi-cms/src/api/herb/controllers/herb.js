@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * herb controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+const { createCoreController } = require('@strapi/strapi').factories
 
-module.exports = createCoreController('api::herb.herb');
+module.exports = createCoreController('api::herb.herb')

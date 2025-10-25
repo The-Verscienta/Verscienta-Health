@@ -24,9 +24,7 @@ export function VideoEmbed({ video, title, className = '' }: VideoEmbedProps) {
       case 'vimeo':
         return `https://player.vimeo.com/video/${video.providerUid}`
       case 'facebook':
-        return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
-          video.url
-        )}`
+        return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.url)}`
       default:
         return ''
     }
@@ -80,9 +78,7 @@ export function VideoTutorial({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {title}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
           {difficulty && (
             <span
               className={`rounded-full px-3 py-1 text-xs font-medium ${difficultyColors[difficulty]}`}
@@ -93,16 +89,10 @@ export function VideoTutorial({
         </div>
 
         {duration && (
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Duration: {duration}
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Duration: {duration}</p>
         )}
 
-        {description && (
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            {description}
-          </p>
-        )}
+        {description && <p className="text-sm text-gray-700 dark:text-gray-300">{description}</p>}
       </div>
     </div>
   )

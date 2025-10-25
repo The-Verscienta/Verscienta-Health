@@ -1,8 +1,8 @@
-import { FAQSection } from '@/components/ui/faq'
-import { JsonLd } from '@/components/seo/JsonLd'
-import { generateFAQSchema } from '@/lib/json-ld'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { FAQSection } from '@/components/ui/faq'
+import { generateFAQSchema } from '@/lib/json-ld'
 
 export async function generateMetadata({
   params,

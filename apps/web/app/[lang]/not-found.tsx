@@ -1,13 +1,9 @@
 import { Leaf } from 'lucide-react'
-import { Link } from '@/i18n/routing'
-import { Button } from '@/components/ui/button'
 import { setRequestLocale } from 'next-intl/server'
+import { Button } from '@/components/ui/button'
+import { Link } from '@/i18n/routing'
 
-export default async function NotFound({
-  params,
-}: {
-  params: Promise<{ lang: string }>
-}) {
+export default async function NotFound({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params
   setRequestLocale(lang)
   return (

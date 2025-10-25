@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * condition router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+const { createCoreRouter } = require('@strapi/strapi').factories
 
-module.exports = createCoreRouter('api::condition.condition');
+module.exports = createCoreRouter('api::condition.condition')

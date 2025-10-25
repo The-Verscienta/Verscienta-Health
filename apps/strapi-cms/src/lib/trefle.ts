@@ -277,10 +277,7 @@ export class TrefleClient {
    * @param commonName - Common name to help with matching (optional)
    * @returns Best matching plant or null
    */
-  async findBestMatch(
-    scientificName: string,
-    commonName?: string
-  ): Promise<TreflePlant | null> {
+  async findBestMatch(scientificName: string, commonName?: string): Promise<TreflePlant | null> {
     try {
       const searchResult = await this.searchByScientificName(scientificName)
 
@@ -290,8 +287,7 @@ export class TrefleClient {
 
       // Exact match on scientific name
       const exactMatch = searchResult.data.find(
-        (plant) =>
-          plant.scientific_name.toLowerCase() === scientificName.toLowerCase()
+        (plant) => plant.scientific_name.toLowerCase() === scientificName.toLowerCase()
       )
 
       if (exactMatch) {
@@ -301,8 +297,7 @@ export class TrefleClient {
       // Match on common name if provided
       if (commonName) {
         const commonNameMatch = searchResult.data.find(
-          (plant) =>
-            plant.common_name?.toLowerCase() === commonName.toLowerCase()
+          (plant) => plant.common_name?.toLowerCase() === commonName.toLowerCase()
         )
 
         if (commonNameMatch) {
@@ -387,8 +382,7 @@ export class TrefleClient {
 
       // Check for exact match
       const exactMatch = searchResult.data.find(
-        (plant) =>
-          plant.scientific_name.toLowerCase() === scientificName.toLowerCase()
+        (plant) => plant.scientific_name.toLowerCase() === scientificName.toLowerCase()
       )
 
       if (exactMatch) {

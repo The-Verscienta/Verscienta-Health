@@ -7,7 +7,12 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../dropdown-menu'
 
 describe('DropdownMenu', () => {
   const defaultDropdown = (
@@ -261,7 +266,7 @@ describe('DropdownMenu', () => {
       // Try to click, but it should be prevented by pointer-events CSS
       try {
         await user.click(disabledItem)
-      } catch (e) {
+      } catch (_e) {
         // Expected to fail due to pointer-events: none
       }
 
@@ -583,11 +588,7 @@ describe('DropdownMenu', () => {
   describe('Portal Rendering', () => {
     it('renders content in a portal', async () => {
       const user = userEvent.setup()
-      const { container } = render(
-        <div data-testid="container">
-          {defaultDropdown}
-        </div>
-      )
+      const { container } = render(<div data-testid="container">{defaultDropdown}</div>)
 
       await user.click(screen.getByRole('button', { name: 'Open Menu' }))
 

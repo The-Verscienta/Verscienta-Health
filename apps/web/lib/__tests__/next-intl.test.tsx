@@ -5,14 +5,9 @@
  * See: https://next-intl.dev/docs/environments/testing
  */
 
-import { describe, expect, it } from 'vitest'
 import { useTranslations } from 'next-intl'
-import {
-  renderWithIntl,
-  renderWithSpanish,
-  renderWithMockIntl,
-  screen,
-} from './test-utils'
+import { describe, expect, it } from 'vitest'
+import { renderWithIntl, renderWithMockIntl, renderWithSpanish, screen } from './test-utils'
 
 // Example component using next-intl
 function GreetingComponent() {

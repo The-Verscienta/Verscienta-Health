@@ -14,13 +14,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import {
+  detectSuspiciousActivity,
   getApiStatistics,
   getRecentErrors,
   getUserActivity,
-  detectSuspiciousActivity,
 } from '@/lib/api-request-logger'
+import { auth } from '@/lib/auth'
 
 /**
  * GET /api/admin/api-logs
@@ -126,10 +126,7 @@ export async function GET(request: NextRequest) {
       }
 
       default:
-        return NextResponse.json(
-          { error: `Unknown action: ${action}` },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 })
     }
   } catch (error) {
     console.error('[Admin API Logs] Error:', error)

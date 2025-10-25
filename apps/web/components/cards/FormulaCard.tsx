@@ -1,7 +1,7 @@
 import { Star } from 'lucide-react'
-import { Link } from '@/i18n/routing'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Link } from '@/i18n/routing'
 
 interface FormulaCardProps {
   formulaId: string

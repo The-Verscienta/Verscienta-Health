@@ -12,8 +12,8 @@
  * - Automated threat responses
  */
 
-import { sessionLogger } from './session-logger'
 import { sendEmail } from './email'
+import { sessionLogger } from './session-logger'
 
 /**
  * Security monitoring configuration

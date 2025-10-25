@@ -212,13 +212,7 @@ describe('ConditionCard', () => {
     })
 
     it('renders only provided badges', () => {
-      render(
-        <ConditionCard
-          {...defaultProps}
-          category="Digestive"
-          relatedHerbsCount={2}
-        />
-      )
+      render(<ConditionCard {...defaultProps} category="Digestive" relatedHerbsCount={2} />)
 
       expect(screen.getByText('Digestive')).toBeInTheDocument()
       expect(screen.getByText('2 herbs')).toBeInTheDocument()
@@ -294,7 +288,9 @@ describe('ConditionCard', () => {
 
     it('handles very long descriptions', () => {
       const longDescription = 'Very long description. '.repeat(50)
-      const { container } = render(<ConditionCard {...defaultProps} description={longDescription} />)
+      const { container } = render(
+        <ConditionCard {...defaultProps} description={longDescription} />
+      )
 
       // Description is clamped, so check for partial content
       expect(screen.getByText(/Very long description/)).toBeInTheDocument()
@@ -305,13 +301,7 @@ describe('ConditionCard', () => {
     })
 
     it('handles large related counts', () => {
-      render(
-        <ConditionCard
-          {...defaultProps}
-          relatedHerbsCount={999}
-          relatedFormulasCount={888}
-        />
-      )
+      render(<ConditionCard {...defaultProps} relatedHerbsCount={999} relatedFormulasCount={888} />)
 
       expect(screen.getByText('999 herbs')).toBeInTheDocument()
       expect(screen.getByText('888 formulas')).toBeInTheDocument()
@@ -324,9 +314,7 @@ describe('ConditionCard', () => {
     })
 
     it('handles special characters in description', () => {
-      render(
-        <ConditionCard {...defaultProps} description="Causes <pain> & [inflammation]" />
-      )
+      render(<ConditionCard {...defaultProps} description="Causes <pain> & [inflammation]" />)
 
       expect(screen.getByText('Causes <pain> & [inflammation]')).toBeInTheDocument()
     })

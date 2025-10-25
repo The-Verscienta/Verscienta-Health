@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { AuditAction, AuditSeverity, createAuditLog } from '@/lib/audit-log'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import { createAuditLog, AuditAction, AuditSeverity } from '@/lib/audit-log'
 import { sendEmail } from '@/lib/email'
+import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 

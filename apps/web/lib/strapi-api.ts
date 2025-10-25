@@ -63,7 +63,10 @@ function transformStrapiResponse<T>(strapiResponse: StrapiResponse<T>): Paginate
 /**
  * Generic fetch function for Strapi API
  */
-async function fetchFromStrapi<T>(endpoint: string, options: FetchOptions = {}): Promise<PaginatedResponse<T>> {
+async function fetchFromStrapi<T>(
+  endpoint: string,
+  options: FetchOptions = {}
+): Promise<PaginatedResponse<T>> {
   const url = `${CMS_URL}/api/${endpoint}`
 
   try {

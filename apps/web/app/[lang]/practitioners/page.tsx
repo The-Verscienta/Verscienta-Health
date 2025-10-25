@@ -1,10 +1,10 @@
+import { setRequestLocale } from 'next-intl/server'
 import { Suspense } from 'react'
 import { PractitionerViewToggle } from '@/components/practitioners/PractitionerViewToggle'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { getPractitioners } from '@/lib/strapi-api'
 
-import { setRequestLocale } from 'next-intl/server'
 interface Practitioner {
   id: string
   practitionerId: string

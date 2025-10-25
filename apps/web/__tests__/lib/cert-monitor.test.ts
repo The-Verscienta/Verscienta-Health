@@ -13,12 +13,8 @@
  * - Production vs development behavior
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import {
-  isTLSEnabled,
-  getRedisHostPort,
-  checkCertificateExpiration,
-} from '../../lib/cert-monitor'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { checkCertificateExpiration, getRedisHostPort, isTLSEnabled } from '../../lib/cert-monitor'
 
 // Mock environment variables
 const originalEnv = process.env
@@ -355,8 +351,7 @@ Issuer: ${alertData.issuer}
       process.env.CERT_MONITOR_ENABLED = 'true'
 
       const isEnabled =
-        process.env.NODE_ENV === 'production' &&
-        process.env.CERT_MONITOR_ENABLED !== 'false'
+        process.env.NODE_ENV === 'production' && process.env.CERT_MONITOR_ENABLED !== 'false'
 
       expect(isEnabled).toBe(true)
     })

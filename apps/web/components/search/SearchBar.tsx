@@ -1,11 +1,11 @@
 'use client'
 
 import { SearchIcon } from 'lucide-react'
-import { useRouter } from '@/i18n/routing'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useRouter } from '@/i18n/routing'
 
 interface SearchBarProps {
   placeholder?: string
@@ -13,11 +13,7 @@ interface SearchBarProps {
   autoFocus?: boolean
 }
 
-export function SearchBar({
-  placeholder,
-  defaultValue = '',
-  autoFocus = false,
-}: SearchBarProps) {
+export function SearchBar({ placeholder, defaultValue = '', autoFocus = false }: SearchBarProps) {
   const [query, setQuery] = useState(defaultValue)
   const router = useRouter()
   const t = useTranslations()

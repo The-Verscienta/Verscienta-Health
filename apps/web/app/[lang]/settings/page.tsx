@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Loading } from '@/components/ui/loading'
-import { signOut, useSession, twoFactor } from '@/lib/auth-client'
+import { signOut, twoFactor, useSession } from '@/lib/auth-client'
 
 export default function SettingsPage() {
   const { data: session, isPending } = useSession()
@@ -277,7 +277,8 @@ export default function SettingsPage() {
                 Multi-Factor Authentication (MFA)
               </CardTitle>
               <CardDescription>
-                Add an extra layer of security to your account {isMfaEnabled && '(Currently Enabled)'}
+                Add an extra layer of security to your account{' '}
+                {isMfaEnabled && '(Currently Enabled)'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -296,9 +297,7 @@ export default function SettingsPage() {
                 // MFA Setup In Progress - Show QR Code and Verification
                 <div className="space-y-4">
                   <div className="rounded-lg bg-gray-50 p-4">
-                    <p className="text-sm font-semibold text-gray-900 mb-2">
-                      Step 1: Scan QR Code
-                    </p>
+                    <p className="text-sm font-semibold text-gray-900 mb-2">Step 1: Scan QR Code</p>
                     <p className="text-sm text-gray-600 mb-4">
                       Open your authenticator app and scan this QR code:
                     </p>

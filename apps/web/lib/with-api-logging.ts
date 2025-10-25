@@ -15,7 +15,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { logApiRequest, extractRequestInfo, logRateLimitViolation } from './api-request-logger'
+import { extractRequestInfo, logApiRequest, logRateLimitViolation } from './api-request-logger'
 import { auth } from './auth'
 
 type ApiHandler = (request: NextRequest, context?: unknown) => Promise<NextResponse>
@@ -67,10 +67,7 @@ interface LoggingOptions {
  * )
  * ```
  */
-export function withApiLogging(
-  handler: ApiHandler,
-  options: LoggingOptions = {}
-): ApiHandler {
+export function withApiLogging(handler: ApiHandler, options: LoggingOptions = {}): ApiHandler {
   const {
     enabled = true,
     customPath,
@@ -85,7 +82,7 @@ export function withApiLogging(
 
     const startTime = Date.now()
     let response: NextResponse
-    let error: Error | null = null
+    let _error: Error | null = null
 
     try {
       // Get authentication info
@@ -145,15 +142,16 @@ export function withApiLogging(
 
         return response
       } catch (err) {
-        error = err as Error
+        _error = err as Error
 
         // Calculate response time
         const responseTime = Date.now() - startTime
 
         // Create error response
-        const statusCode = err instanceof Error && 'statusCode' in err
-          ? (err as { statusCode?: number }).statusCode || 500
-          : 500
+        const statusCode =
+          err instanceof Error && 'statusCode' in err
+            ? (err as { statusCode?: number }).statusCode || 500
+            : 500
 
         const errorMessage = err instanceof Error ? err.message : 'Internal server error'
         const errorStack = err instanceof Error ? err.stack : undefined
@@ -241,11 +239,7 @@ export async function logRateLimitFromMiddleware(
  * ```
  */
 export function WithApiLogging(options?: LoggingOptions) {
-  return function (
-    target: unknown,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value
 
     descriptor.value = withApiLogging(originalMethod, options)

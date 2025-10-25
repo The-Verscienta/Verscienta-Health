@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
 import {
+  type HerbRecommendation,
   HerbRecommendations,
   HerbRecommendationsSkeleton,
   type TCMPattern,
-  type HerbRecommendation,
 } from '../HerbRecommendations'
 
 // Sample test data
@@ -60,27 +60,19 @@ const mockHerbs: HerbRecommendation[] = [
   },
 ]
 
-const mockLifestyle = [
-  'Get 7-9 hours of sleep',
-  'Practice Tai Chi',
-  'Eat warm foods',
-]
+const mockLifestyle = ['Get 7-9 hours of sleep', 'Practice Tai Chi', 'Eat warm foods']
 
 describe('HerbRecommendations', () => {
   describe('Rendering', () => {
     it('renders medical disclaimer banner', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />)
 
       expect(screen.getByText('Medical Disclaimer')).toBeInTheDocument()
       expect(screen.getByText(/educational purposes only/i)).toBeInTheDocument()
     })
 
     it('renders TCM patterns section with all patterns', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />)
 
       expect(screen.getByText('TCM Pattern Analysis')).toBeInTheDocument()
       expect(screen.getByText('Qi Deficiency')).toBeInTheDocument()
@@ -88,9 +80,7 @@ describe('HerbRecommendations', () => {
     })
 
     it('renders herb recommendations section with all herbs', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />)
 
       expect(screen.getByText('Recommended Herbs')).toBeInTheDocument()
       expect(screen.getByText('Ginseng')).toBeInTheDocument()
@@ -113,9 +103,7 @@ describe('HerbRecommendations', () => {
     })
 
     it('does not render lifestyle section when empty', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />)
 
       expect(screen.queryByText('Lifestyle Recommendations')).not.toBeInTheDocument()
     })
@@ -123,36 +111,28 @@ describe('HerbRecommendations', () => {
 
   describe('TCM Pattern Display', () => {
     it('shows confidence percentage for each pattern', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={[]} />)
 
       expect(screen.getByText('85% match')).toBeInTheDocument()
       expect(screen.getByText('70% match')).toBeInTheDocument()
     })
 
     it('displays pattern description', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={[]} />)
 
       expect(screen.getByText('A lack of vital energy')).toBeInTheDocument()
       expect(screen.getByText('Poor circulation of blood')).toBeInTheDocument()
     })
 
     it('shows root cause when provided', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={[]} />)
 
       expect(screen.getByText(/Chronic stress and overwork/i)).toBeInTheDocument()
       expect(screen.getByText(/Sedentary lifestyle/i)).toBeInTheDocument()
     })
 
     it('displays associated symptoms', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={[]} />)
 
       expect(screen.getByText('fatigue')).toBeInTheDocument()
       expect(screen.getByText('weakness')).toBeInTheDocument()
@@ -167,9 +147,7 @@ describe('HerbRecommendations', () => {
         symptoms: Array.from({ length: 10 }, (_, i) => `symptom${i + 1}`),
       }
 
-      render(
-        <HerbRecommendations patterns={[patternWithManySymptoms]} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={[patternWithManySymptoms]} herbs={[]} />)
 
       expect(screen.getByText('+4 more')).toBeInTheDocument()
     })
@@ -177,36 +155,28 @@ describe('HerbRecommendations', () => {
 
   describe('Herb Card Display', () => {
     it('shows herb name and scientific name', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={mockHerbs} />)
 
       expect(screen.getByText('Ginseng')).toBeInTheDocument()
       expect(screen.getByText('Panax ginseng')).toBeInTheDocument()
     })
 
     it('displays TCM action and explanation', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={mockHerbs} />)
 
       expect(screen.getByText('Tonifies Qi')).toBeInTheDocument()
       expect(screen.getByText('Powerful energy tonic')).toBeInTheDocument()
     })
 
     it('shows dosage when provided', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={mockHerbs} />)
 
       expect(screen.getByText('3-9g daily')).toBeInTheDocument()
       expect(screen.getByText('9-30g daily')).toBeInTheDocument()
     })
 
     it('displays safety rating with appropriate icon and text', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={mockHerbs} />)
 
       expect(screen.getByText('Use with caution')).toBeInTheDocument()
       expect(screen.getByText('Generally safe')).toBeInTheDocument()
@@ -214,9 +184,7 @@ describe('HerbRecommendations', () => {
     })
 
     it('shows contraindications when present', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={mockHerbs} />)
 
       // Multiple herbs can have the same contraindication, so use getAllByText
       const pregnancyWarnings = screen.getAllByText(/Pregnancy/i)
@@ -227,9 +195,7 @@ describe('HerbRecommendations', () => {
     })
 
     it('renders view details link for each herb', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={mockHerbs} />)
 
       const links = screen.getAllByText('View Full Details')
       expect(links).toHaveLength(3)
@@ -239,13 +205,7 @@ describe('HerbRecommendations', () => {
 
   describe('Loading State', () => {
     it('renders skeleton when isLoading is true', () => {
-      render(
-        <HerbRecommendations
-          patterns={mockPatterns}
-          herbs={mockHerbs}
-          isLoading={true}
-        />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} isLoading={true} />)
 
       // Skeleton should be visible
       const skeletons = document.querySelectorAll('.animate-pulse')
@@ -264,9 +224,7 @@ describe('HerbRecommendations', () => {
 
   describe('Empty State', () => {
     it('shows empty message when no patterns or herbs', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={[]} />)
 
       expect(screen.getByText('No recommendations available yet.')).toBeInTheDocument()
     })
@@ -274,13 +232,7 @@ describe('HerbRecommendations', () => {
     it('renders refresh button when onRefresh provided', () => {
       const onRefresh = vi.fn()
 
-      render(
-        <HerbRecommendations
-          patterns={[]}
-          herbs={[]}
-          onRefresh={onRefresh}
-        />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={[]} onRefresh={onRefresh} />)
 
       expect(screen.getByText('Generate Recommendations')).toBeInTheDocument()
     })
@@ -289,13 +241,7 @@ describe('HerbRecommendations', () => {
       const user = userEvent.setup()
       const onRefresh = vi.fn()
 
-      render(
-        <HerbRecommendations
-          patterns={[]}
-          herbs={[]}
-          onRefresh={onRefresh}
-        />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={[]} onRefresh={onRefresh} />)
 
       await user.click(screen.getByText('Generate Recommendations'))
       expect(onRefresh).toHaveBeenCalledTimes(1)
@@ -308,11 +254,7 @@ describe('HerbRecommendations', () => {
       const onRefresh = vi.fn()
 
       render(
-        <HerbRecommendations
-          patterns={mockPatterns}
-          herbs={mockHerbs}
-          onRefresh={onRefresh}
-        />
+        <HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} onRefresh={onRefresh} />
       )
 
       await user.click(screen.getByText('Get New Recommendations'))
@@ -320,9 +262,7 @@ describe('HerbRecommendations', () => {
     })
 
     it('herb name links to correct herb detail page', () => {
-      render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs.slice(0, 1)} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={mockHerbs.slice(0, 1)} />)
 
       const herbLink = screen.getByText('Ginseng').closest('a')
       expect(herbLink).toHaveAttribute('href', '/herbs/ginseng')
@@ -341,13 +281,13 @@ describe('HerbRecommendations', () => {
 
       expect(screen.getByRole('heading', { name: /TCM Pattern Analysis/i })).toBeInTheDocument()
       expect(screen.getByRole('heading', { name: /Recommended Herbs/i })).toBeInTheDocument()
-      expect(screen.getByRole('heading', { name: /Lifestyle Recommendations/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: /Lifestyle Recommendations/i })
+      ).toBeInTheDocument()
     })
 
     it('disclaimer has proper semantic structure', () => {
-      render(
-        <HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />
-      )
+      render(<HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} />)
 
       const disclaimer = screen.getByText('Medical Disclaimer')
       expect(disclaimer.tagName).toBe('P')
@@ -357,11 +297,7 @@ describe('HerbRecommendations', () => {
       const onRefresh = vi.fn()
 
       render(
-        <HerbRecommendations
-          patterns={mockPatterns}
-          herbs={mockHerbs}
-          onRefresh={onRefresh}
-        />
+        <HerbRecommendations patterns={mockPatterns} herbs={mockHerbs} onRefresh={onRefresh} />
       )
 
       const refreshButton = screen.getByText('Get New Recommendations')
@@ -372,18 +308,14 @@ describe('HerbRecommendations', () => {
 
   describe('Responsive Design', () => {
     it('renders grid layout for patterns', () => {
-      const { container } = render(
-        <HerbRecommendations patterns={mockPatterns} herbs={[]} />
-      )
+      const { container } = render(<HerbRecommendations patterns={mockPatterns} herbs={[]} />)
 
       const grid = container.querySelector('.grid')
       expect(grid).toHaveClass('md:grid-cols-2')
     })
 
     it('renders grid layout for herbs with 3 columns on large screens', () => {
-      const { container } = render(
-        <HerbRecommendations patterns={[]} herbs={mockHerbs} />
-      )
+      const { container } = render(<HerbRecommendations patterns={[]} herbs={mockHerbs} />)
 
       const grid = container.querySelectorAll('.grid')[0]
       expect(grid).toHaveClass('lg:grid-cols-3')
@@ -399,9 +331,7 @@ describe('HerbRecommendations', () => {
         symptoms: ['symptom1'],
       }
 
-      render(
-        <HerbRecommendations patterns={[patternNoRootCause]} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={[patternNoRootCause]} herbs={[]} />)
 
       expect(screen.queryByText(/Root Cause/i)).not.toBeInTheDocument()
     })
@@ -416,9 +346,7 @@ describe('HerbRecommendations', () => {
         safetyRating: 'safe',
       }
 
-      render(
-        <HerbRecommendations patterns={[]} herbs={[herbNoScientific]} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={[herbNoScientific]} />)
 
       expect(screen.getByText('Test Herb')).toBeInTheDocument()
     })
@@ -433,9 +361,7 @@ describe('HerbRecommendations', () => {
         safetyRating: 'safe',
       }
 
-      render(
-        <HerbRecommendations patterns={[]} herbs={[safeHerb]} />
-      )
+      render(<HerbRecommendations patterns={[]} herbs={[safeHerb]} />)
 
       expect(screen.queryByText(/Contraindications/i)).not.toBeInTheDocument()
     })
@@ -448,9 +374,7 @@ describe('HerbRecommendations', () => {
         symptoms: [],
       }
 
-      render(
-        <HerbRecommendations patterns={[patternNoSymptoms]} herbs={[]} />
-      )
+      render(<HerbRecommendations patterns={[patternNoSymptoms]} herbs={[]} />)
 
       expect(screen.queryByText(/Associated Symptoms/i)).not.toBeInTheDocument()
     })
