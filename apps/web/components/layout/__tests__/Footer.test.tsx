@@ -29,7 +29,7 @@ vi.mock('next-intl', () => ({
         privacy: 'Privacy Policy',
         terms: 'Terms of Service',
         disclaimer: 'Disclaimer',
-        copyright: '© 2025 Verscienta Health. All rights reserved.',
+        copyright: 'Â© 2025 Verscienta Health. All rights reserved.',
       },
     }
 
@@ -228,13 +228,13 @@ describe('Footer', () => {
     it('renders copyright notice', () => {
       render(<Footer />)
 
-      expect(screen.getByText('© 2025 Verscienta Health. All rights reserved.')).toBeInTheDocument()
+      expect(screen.getByText('Â© 2025 Verscienta Health. All rights reserved.')).toBeInTheDocument()
     })
 
     it('copyright notice has correct styling', () => {
       render(<Footer />)
 
-      const copyright = screen.getByText('© 2025 Verscienta Health. All rights reserved.')
+      const copyright = screen.getByText('Â© 2025 Verscienta Health. All rights reserved.')
       expect(copyright).toHaveClass('text-sm')
       expect(copyright).toHaveClass('text-gray-600')
     })
@@ -334,8 +334,8 @@ describe('Footer', () => {
       const { container } = render(<Footer />)
 
       const links = container.querySelectorAll('a')
-      // Should have: 4 quick links + 4 resources + 3 legal = 11 links
-      expect(links.length).toBe(11)
+      // Should have: 4 quick links + 5 resources (including About & Contact) + 3 legal = 12 links
+      expect(links.length).toBe(12)
     })
 
     it('section headings use appropriate heading tags', () => {
@@ -412,7 +412,7 @@ describe('Footer', () => {
     it('has copyright section at bottom', () => {
       render(<Footer />)
 
-      expect(screen.getByText('© 2025 Verscienta Health. All rights reserved.')).toBeInTheDocument()
+      expect(screen.getByText('Â© 2025 Verscienta Health. All rights reserved.')).toBeInTheDocument()
     })
   })
 })
