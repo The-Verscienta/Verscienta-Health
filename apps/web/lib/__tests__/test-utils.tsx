@@ -31,20 +31,22 @@ export function renderWithIntl(
   ui: ReactElement,
   options?: {
     locale?: string
-    messages?: Messages
+    messages?: any
     renderOptions?: Omit<RenderOptions, 'wrapper'>
   }
 ) {
   const { locale = 'en', messages = enMessages, renderOptions = {} } = options || {}
 
+  // @ts-ignore - Type compatibility issue between React 19 and React 18 types
   function Wrapper({ children }: { children: ReactNode }) {
     return (
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      <NextIntlClientProvider locale={locale} messages={messages as any}>
         {children}
       </NextIntlClientProvider>
     )
   }
 
+  // @ts-ignore - Type compatibility issue between React 19 and React 18 types
   return render(ui, { wrapper: Wrapper, ...renderOptions })
 }
 
@@ -102,6 +104,31 @@ export const mockMessages = {
     delete: 'Delete',
     edit: 'Edit',
     search: 'Search',
+    loading: 'Loading',
+    error: 'Error',
+    success: 'Success',
+    filter: 'Filter',
+    sort: 'Sort',
+    clear: 'Clear',
+    viewAll: 'View All',
+    learnMore: 'Learn More',
+    submit: 'Submit',
+    tryAgain: 'Try Again',
+  },
+  modalities: {
+    title: 'Modalities',
+  },
+  api: {
+    title: 'API',
+  },
+  about: {
+    title: 'About',
+  },
+  privacy: {
+    title: 'Privacy',
+  },
+  terms: {
+    title: 'Terms',
   },
   nav: {
     home: 'Home',
@@ -114,6 +141,7 @@ export const mockMessages = {
     siteName: 'Verscienta Health',
     title: 'Verscienta Health - Test',
   },
+  faq: {},
 } as const
 
 /**

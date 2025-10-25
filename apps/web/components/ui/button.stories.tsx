@@ -22,7 +22,7 @@ const meta = {
       control: 'boolean',
     },
   },
-} satisfies Meta<typeof Button>
+}
 
 export default meta
 type Story = StoryObj<typeof meta>

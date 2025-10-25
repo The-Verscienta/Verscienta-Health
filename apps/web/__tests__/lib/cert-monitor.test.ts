@@ -17,18 +17,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { checkCertificateExpiration, getRedisHostPort, isTLSEnabled } from '../../lib/cert-monitor'
 
 // Mock environment variables
-const originalEnv = process.env
+const _originalEnv = process.env
 
 describe('Certificate Expiration Monitoring', () => {
   beforeEach(() => {
-    // Reset environment before each test
-    process.env = { ...originalEnv }
+    vi.resetModules()
+    vi.unstubAllEnvs()
   })
 
   afterEach(() => {
-    // Restore original environment
-    process.env = originalEnv
-    vi.clearAllMocks()
+    vi.unstubAllEnvs()
+    vi.resetModules()
   })
 
   describe('Environment Variable Configuration', () => {
@@ -210,7 +209,7 @@ describe('Certificate Expiration Monitoring', () => {
 
     it('should enable TLS for production rediss:// URLs', () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.verscienta.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       expect(isTLSEnabled()).toBe(true)
     })
@@ -366,7 +365,7 @@ Issuer: ${alertData.issuer}
     })
 
     it('should work in development mode', () => {
-      process.env.NODE_ENV = 'development'
+      vi.stubEnv('NODE_ENV', 'development')
 
       const isDevelopment = process.env.NODE_ENV === 'development'
 

@@ -6,7 +6,7 @@
 
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { type FilterGroup, SearchFilters } from '../SearchFilters'
 
 describe('SearchFilters', () => {

@@ -33,11 +33,11 @@ describe('createJsonLd', () => {
       name: 'Test Org',
     }
 
-    const result = createJsonLd(data)
+    const result = createJsonLd(data as any)
 
-    expect(result['@context']).toBe('https://schema.org')
-    expect(result['@type']).toBe('Organization')
-    expect(result.name).toBe('Test Org')
+    expect((result as any)['@context']).toBe('https://schema.org')
+    expect((result as any)['@type']).toBe('Organization')
+    expect((result as any).name).toBe('Test Org')
   })
 
   it('preserves existing properties', () => {
@@ -48,11 +48,11 @@ describe('createJsonLd', () => {
       jobTitle: 'Developer',
     }
 
-    const result = createJsonLd(data)
+    const result = createJsonLd(data as any)
 
-    expect(result.name).toBe('John Doe')
-    expect(result.email).toBe('john@example.com')
-    expect(result.jobTitle).toBe('Developer')
+    expect((result as any).name).toBe('John Doe')
+    expect((result as any).email).toBe('john@example.com')
+    expect((result as any).jobTitle).toBe('Developer')
   })
 
   it('handles nested objects', () => {
@@ -65,9 +65,9 @@ describe('createJsonLd', () => {
       },
     }
 
-    const result = createJsonLd(data)
+    const result = createJsonLd(data as any)
 
-    expect(result.address).toEqual({
+    expect((result as any).address).toEqual({
       '@type': 'PostalAddress',
       streetAddress: '123 Main St',
     })

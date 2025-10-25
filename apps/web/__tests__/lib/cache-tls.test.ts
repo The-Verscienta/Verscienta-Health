@@ -5,24 +5,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('DragonflyDB TLS Configuration', () => {
-  const originalEnv = process.env
-
   beforeEach(() => {
-    // Reset environment before each test
-    process.env = { ...originalEnv }
     // Clear module cache to reload with new env vars
     vi.resetModules()
+    vi.unstubAllEnvs()
   })
 
   afterEach(() => {
-    process.env = originalEnv
+    vi.unstubAllEnvs()
     vi.resetModules()
   })
 
   describe('TLS Version Enforcement', () => {
     it('should enforce TLS 1.2+ by default when using REDIS_URL with rediss://', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       // Dynamically import to get fresh module with new env vars
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
@@ -37,7 +34,7 @@ describe('DragonflyDB TLS Configuration', () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
       process.env.REDIS_TLS_MIN_VERSION = 'TLSv1.3'
       process.env.REDIS_TLS_MAX_VERSION = 'TLSv1.3'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -51,7 +48,7 @@ describe('DragonflyDB TLS Configuration', () => {
       process.env.REDIS_PORT = '6379'
       process.env.REDIS_PASSWORD = 'password'
       process.env.REDIS_TLS = 'true'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -63,7 +60,7 @@ describe('DragonflyDB TLS Configuration', () => {
 
     it('should not add TLS version enforcement when TLS is disabled', async () => {
       process.env.REDIS_URL = 'redis://:password@localhost:6379/0' // Note: redis:// not rediss://
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -75,7 +72,11 @@ describe('DragonflyDB TLS Configuration', () => {
   describe('Certificate Validation', () => {
     it('should enable certificate validation in production', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'production',
+        writable: true,
+        configurable: true,
+      })
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -85,7 +86,7 @@ describe('DragonflyDB TLS Configuration', () => {
 
     it('should disable certificate validation in development (for self-signed certs)', async () => {
       process.env.REDIS_URL = 'rediss://:password@localhost:6379/0'
-      process.env.NODE_ENV = 'development'
+      vi.stubEnv('NODE_ENV', 'development')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -95,7 +96,11 @@ describe('DragonflyDB TLS Configuration', () => {
 
     it('should set servername for SNI support', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'production',
+        writable: true,
+        configurable: true,
+      })
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()

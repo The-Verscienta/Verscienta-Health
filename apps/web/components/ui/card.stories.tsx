@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 const meta = {
   title: 'UI/Card',
+  // @ts-expect-error - Type compatibility issue between React 19 and Storybook React 18 types
   component: Card,
   parameters: {
     layout: 'centered',
