@@ -17,7 +17,7 @@
  */
 
 import type { Core } from '@strapi/strapi'
-import importTrefleData from './jobs/importTrefleData'
+// import importTrefleData from './jobs/importTrefleData'
 import syncTrefleData from './jobs/syncTrefleData'
 
 export default {
@@ -40,12 +40,13 @@ export default {
    * Conditions: TREFLE_API_KEY and ENABLE_TREFLE_IMPORT=true must be set
    *
    * WARNING: Only enable if you want to import 1M+ plants
+   * NOTE: Temporarily disabled - importTrefleData.ts needs to be created
    */
-  '* * * * *': async ({ strapi }: { strapi: Core.Strapi }) => {
-    if (process.env.TREFLE_API_KEY && process.env.ENABLE_TREFLE_IMPORT === 'true') {
-      await importTrefleData({ strapi })
-    }
-  },
+  // '* * * * *': async ({ strapi }: { strapi: Core.Strapi }) => {
+  //   if (process.env.TREFLE_API_KEY && process.env.ENABLE_TREFLE_IMPORT === 'true') {
+  //     await importTrefleData({ strapi })
+  //   }
+  // },
 
   // Additional cron jobs can be added here
   // Example:
