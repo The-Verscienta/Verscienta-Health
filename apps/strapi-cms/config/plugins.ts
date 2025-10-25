@@ -49,22 +49,39 @@ export default ({ env }) => ({
         {
           name: 'api::herb.herb',
           index: 'herbs',
-          populate: ['featuredImage', 'tcmProperties', 'actions', 'channels'],
+          populate: {
+            featuredImage: true,
+            tcmProperties: true,
+            actions: true,
+            channels: true,
+          },
         },
         {
           name: 'api::formula.formula',
           index: 'formulas',
-          populate: ['ingredients', 'actions', 'conditions'],
+          populate: {
+            ingredients: true,
+            actions: true,
+            conditions: true,
+          },
         },
         {
           name: 'api::condition.condition',
           index: 'conditions',
-          populate: ['symptoms', 'relatedHerbs', 'relatedFormulas'],
+          populate: {
+            symptoms: true,
+            relatedHerbs: true,
+            relatedFormulas: true,
+          },
         },
         {
           name: 'api::practitioner.practitioner',
           index: 'practitioners',
-          populate: ['photo', 'modalities', 'certifications'],
+          populate: {
+            photo: true,
+            modalities: true,
+            certifications: true,
+          },
         },
       ],
     },

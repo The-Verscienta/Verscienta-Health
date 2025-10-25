@@ -135,18 +135,7 @@ export default function SettingsPage() {
   const handleSetupMfa = async () => {
     setIsSettingUpMfa(true)
     try {
-      // Use better-auth's twoFactor plugin to generate QR code
-      const result = await twoFactor.generateTotp()
-
-      if (!result.data) {
-        throw new Error('Failed to generate MFA setup data')
-      }
-
-      // Set QR code and secret for display
-      setMfaQrCode(result.data.qrCode)
-      setMfaSecret(result.data.secret)
-
-      // Get backup codes from our API
+      // Call API to generate TOTP secret, QR code, and backup codes
       const response = await fetch('/api/auth/mfa/setup', {
         method: 'POST',
       })
@@ -156,6 +145,10 @@ export default function SettingsPage() {
       if (!response.ok) {
         throw new Error(data.error || 'Failed to setup MFA')
       }
+
+      // Set QR code and secret for display
+      setMfaQrCode(data.qrCode)
+      setMfaSecret(data.secret)
 
       setMfaBackupCodes(data.backupCodes || [])
       toast.success('MFA setup initiated. Scan the QR code with your authenticator app.')
