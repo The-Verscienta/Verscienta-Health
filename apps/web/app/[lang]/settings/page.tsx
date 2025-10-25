@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { Bell, Eye, Lock, LogOut, Settings, Trash2 } from 'lucide-react'
+import { Bell, Eye, Lock, LogOut, Settings, Shield, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Loading } from '@/components/ui/loading'
-import { signOut, useSession } from '@/lib/auth-client'
+import { signOut, useSession, twoFactor } from '@/lib/auth-client'
 
 export default function SettingsPage() {
   const { data: session, isPending } = useSession()
@@ -29,11 +29,28 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
 
+  // MFA state
+  const [mfaQrCode, setMfaQrCode] = useState<string | null>(null)
+  const [mfaSecret, setMfaSecret] = useState<string | null>(null)
+  const [mfaBackupCodes, setMfaBackupCodes] = useState<string[]>([])
+  const [mfaVerificationCode, setMfaVerificationCode] = useState('')
+  const [isMfaEnabled, setIsMfaEnabled] = useState(false)
+  const [isSettingUpMfa, setIsSettingUpMfa] = useState(false)
+
   useEffect(() => {
     if (!isPending && !session) {
       router.push('/login')
     }
   }, [session, isPending, router])
+
+  // Check MFA status on mount
+  useEffect(() => {
+    if (session?.user) {
+      // Check if user has MFA enabled
+      // @ts-expect-error - mfaEnabled is added as additionalField in better-auth config
+      setIsMfaEnabled(session.user.mfaEnabled || false)
+    }
+  }, [session])
 
   if (isPending) {
     return <Loading />
@@ -114,6 +131,84 @@ export default function SettingsPage() {
     }
   }
 
+  // HIPAA: MFA Setup Handler
+  const handleSetupMfa = async () => {
+    setIsSettingUpMfa(true)
+    try {
+      // Use better-auth's twoFactor plugin to generate QR code
+      const result = await twoFactor.generateTotp()
+
+      if (!result.data) {
+        throw new Error('Failed to generate MFA setup data')
+      }
+
+      // Set QR code and secret for display
+      setMfaQrCode(result.data.qrCode)
+      setMfaSecret(result.data.secret)
+
+      // Get backup codes from our API
+      const response = await fetch('/api/auth/mfa/setup', {
+        method: 'POST',
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to setup MFA')
+      }
+
+      setMfaBackupCodes(data.backupCodes || [])
+      toast.success('MFA setup initiated. Scan the QR code with your authenticator app.')
+    } catch (error) {
+      console.error('MFA setup error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to setup MFA')
+    } finally {
+      setIsSettingUpMfa(false)
+    }
+  }
+
+  // HIPAA: MFA Verification Handler
+  const handleVerifyMfa = async () => {
+    if (!mfaVerificationCode) {
+      toast.error('Please enter the verification code')
+      return
+    }
+
+    try {
+      // Verify the TOTP code using better-auth
+      const result = await twoFactor.verifyTotp({ code: mfaVerificationCode })
+
+      if (!result.data?.verified) {
+        throw new Error('Invalid verification code')
+      }
+
+      // Enable MFA for the user
+      await twoFactor.enable({ password: '' }) // Password not required if already verified
+
+      setIsMfaEnabled(true)
+      setMfaQrCode(null)
+      setMfaSecret(null)
+      setMfaVerificationCode('')
+      toast.success('MFA enabled successfully! Your account is now more secure.')
+    } catch (error) {
+      console.error('MFA verification error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to verify MFA code')
+    }
+  }
+
+  // HIPAA: MFA Disable Handler
+  const handleDisableMfa = async () => {
+    try {
+      await twoFactor.disable({ password: '' })
+
+      setIsMfaEnabled(false)
+      toast.success('MFA disabled successfully')
+    } catch (error) {
+      console.error('MFA disable error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to disable MFA')
+    }
+  }
+
   return (
     <div className="container-custom py-12">
       <div className="mx-auto max-w-3xl">
@@ -177,6 +272,101 @@ export default function SettingsPage() {
 
                 <Button type="submit">Update Password</Button>
               </form>
+            </CardContent>
+          </Card>
+
+          {/* Multi-Factor Authentication (HIPAA Security) */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Shield className="text-earth-600 mr-2 h-5 w-5" />
+                Multi-Factor Authentication (MFA)
+              </CardTitle>
+              <CardDescription>
+                Add an extra layer of security to your account {isMfaEnabled && '(Currently Enabled)'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {!isMfaEnabled && !mfaQrCode ? (
+                // MFA Not Set Up - Show Enable Button
+                <div>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Protect your account with time-based one-time passwords (TOTP) using an
+                    authenticator app like Google Authenticator or Authy.
+                  </p>
+                  <Button onClick={handleSetupMfa} disabled={isSettingUpMfa}>
+                    {isSettingUpMfa ? 'Setting up...' : 'Enable MFA'}
+                  </Button>
+                </div>
+              ) : !isMfaEnabled && mfaQrCode ? (
+                // MFA Setup In Progress - Show QR Code and Verification
+                <div className="space-y-4">
+                  <div className="rounded-lg bg-gray-50 p-4">
+                    <p className="text-sm font-semibold text-gray-900 mb-2">
+                      Step 1: Scan QR Code
+                    </p>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Open your authenticator app and scan this QR code:
+                    </p>
+                    {mfaQrCode && (
+                      <div className="flex justify-center">
+                        <img src={mfaQrCode} alt="MFA QR Code" className="h-48 w-48" />
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-2">
+                      Manual entry code: <code className="text-xs">{mfaSecret}</code>
+                    </p>
+                  </div>
+
+                  <div className="rounded-lg bg-gray-50 p-4">
+                    <p className="text-sm font-semibold text-gray-900 mb-2">
+                      Step 2: Enter Verification Code
+                    </p>
+                    <div className="space-y-2">
+                      <Input
+                        type="text"
+                        placeholder="000000"
+                        value={mfaVerificationCode}
+                        onChange={(e) => setMfaVerificationCode(e.target.value)}
+                        maxLength={6}
+                      />
+                      <Button onClick={handleVerifyMfa}>Verify and Enable</Button>
+                    </div>
+                  </div>
+
+                  {mfaBackupCodes.length > 0 && (
+                    <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-4">
+                      <p className="text-sm font-semibold text-yellow-900 mb-2">
+                        ⚠️ Backup Codes (Save These!)
+                      </p>
+                      <p className="text-xs text-yellow-800 mb-2">
+                        Store these codes in a safe place. You can use them to access your account
+                        if you lose your authenticator device.
+                      </p>
+                      <div className="grid grid-cols-2 gap-1 font-mono text-xs text-yellow-900">
+                        {mfaBackupCodes.map((code, i) => (
+                          <div key={i} className="rounded bg-white px-2 py-1">
+                            {code}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // MFA Enabled - Show Status and Disable Option
+                <div>
+                  <div className="rounded-lg bg-green-50 border border-green-200 p-4 mb-4">
+                    <p className="text-sm font-semibold text-green-900">✓ MFA is enabled</p>
+                    <p className="text-xs text-green-700 mt-1">
+                      Your account is protected with two-factor authentication.
+                    </p>
+                  </div>
+                  <Button variant="outline" onClick={handleDisableMfa}>
+                    Disable MFA
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 

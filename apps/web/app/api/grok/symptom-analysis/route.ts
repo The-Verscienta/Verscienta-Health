@@ -93,6 +93,21 @@ export async function POST(request: NextRequest) {
     const userEmail = session?.user?.email
     const sessionId = session?.session?.id
 
+    // HIPAA: Check MFA status for compliance logging
+    const mfaEnabled = (session?.user as any)?.mfaEnabled || false
+
+    // Log MFA compliance check
+    if (!mfaEnabled && userId) {
+      console.warn('[HIPAA] PHI access without MFA:', {
+        userId,
+        userEmail,
+        sessionId: sessionId || 'none',
+        endpoint: '/api/grok/symptom-analysis',
+        timestamp: new Date().toISOString(),
+        warning: 'User accessed PHI without MFA enabled',
+      })
+    }
+
     // HIPAA: Create one-way hash of symptoms for audit trail
     // This allows linking related submissions without storing actual symptoms
     const symptomsHash = createHash('sha256')
@@ -123,6 +138,8 @@ export async function POST(request: NextRequest) {
       additionalInfo: additionalInfo ? 'provided' : 'not_provided',
       ipAddress,
       userAgent,
+      mfaEnabled, // HIPAA: MFA compliance status
+      mfaCompliant: mfaEnabled, // Flag for compliance reporting
       phiFlag: true, // Mark as PHI access
       retentionYears: 7, // HIPAA requirement
     })

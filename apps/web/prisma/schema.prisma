@@ -35,6 +35,7 @@ model User {
   accounts     Account[]
   sessions     Session[]
   deviceTokens DeviceToken[]
+  passwordHistory PasswordHistory[]
 
   // Performance Indexes
   @@index([role]) // For admin/role-based queries
@@ -122,4 +123,71 @@ model DeviceToken {
 
   @@index([userId])
   @@index([platform])
+}
+
+// API Request Log Model (HIPAA Compliance & Security Monitoring)
+// Comprehensive logging of all API requests for audit trail, analytics, and security
+model ApiRequestLog {
+  id            String   @id @default(cuid())
+
+  // Request Information
+  method        String   // GET, POST, PUT, DELETE, PATCH
+  path          String   // /api/herbs/ginseng
+  query         String?  // Serialized query parameters
+  statusCode    Int      // HTTP response status (200, 404, 500, etc.)
+
+  // Performance Metrics
+  responseTime  Int      // Response time in milliseconds
+
+  // User & Authentication
+  userId        String?  // Authenticated user ID (null for public requests)
+  sessionId     String?  // Session ID for tracking user sessions
+
+  // Network & Security
+  ipAddress     String?  // Client IP address
+  userAgent     String?  // Browser/client user agent
+  referer       String?  // HTTP referer header
+
+  // Rate Limiting & Security
+  rateLimitHit      Boolean  @default(false) // Whether rate limit was triggered
+  rateLimitKey      String?  // Rate limit key (user ID or IP)
+  rateLimitRemaining Int?     // Remaining requests in window
+
+  // Error Tracking
+  errorMessage  String?  // Error message if request failed
+  errorStack    String?  // Stack trace for debugging (sanitized)
+
+  // Timestamps
+  createdAt     DateTime @default(now())
+
+  // Performance Indexes for common queries
+  @@index([userId])           // Query logs by user
+  @@index([path])             // Query logs by endpoint
+  @@index([method])           // Query logs by HTTP method
+  @@index([statusCode])       // Query failed requests (4xx, 5xx)
+  @@index([createdAt])        // Query logs by date (for cleanup)
+  @@index([rateLimitHit])     // Query rate limit violations
+  @@index([ipAddress])        // Query logs by IP (security monitoring)
+  @@index([userId, createdAt]) // Composite: user activity timeline
+  @@index([path, method])     // Composite: endpoint-specific analytics
+  @@index([statusCode, createdAt]) // Composite: error trend analysis
+}
+
+// Password History Model (HIPAA Compliance - Password Reuse Prevention)
+// Stores hashed passwords to prevent users from reusing recent passwords
+model PasswordHistory {
+  id           String   @id @default(cuid())
+  userId       String
+  passwordHash String   // bcrypt hash of the password
+
+  // Timestamps
+  createdAt    DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Performance Indexes
+  @@index([userId])               // For user password history lookups
+  @@index([createdAt])            // For cleanup jobs (old password removal)
+  @@index([userId, createdAt])    // Composite: user password history ordered by date
 }

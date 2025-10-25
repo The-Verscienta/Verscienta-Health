@@ -2,9 +2,9 @@
 
 export const dynamic = 'force-dynamic'
 
-import { AlertTriangle, Plus, Sparkles, X } from 'lucide-react'
+import { AlertTriangle, Plus, Sparkles, X, Shield } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { SessionTimeoutWarning } from '@/components/security/SessionTimeoutWarning'
 import { Badge } from '@/components/ui/badge'
@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Loading } from '@/components/ui/loading'
 import { useIdleTimeout } from '@/hooks/use-idle-timeout'
+import { useSession } from '@/lib/auth-client'
 
 /**
  * HIPAA-Compliant Symptom Checker
@@ -25,6 +26,7 @@ import { useIdleTimeout } from '@/hooks/use-idle-timeout'
  */
 export default function SymptomCheckerPage() {
   const router = useRouter()
+  const { data: session, isPending } = useSession()
   const [symptoms, setSymptoms] = useState<string[]>([])
   const [currentSymptom, setCurrentSymptom] = useState('')
   const [duration, setDuration] = useState('')
@@ -33,6 +35,7 @@ export default function SymptomCheckerPage() {
   const [analysis, setAnalysis] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [showTimeoutWarning, setShowTimeoutWarning] = useState(false)
+  const [showMfaRequired, setShowMfaRequired] = useState(false)
 
   // HIPAA Compliance: 15-minute idle timeout for PHI-sensitive pages
   const { resetTimer } = useIdleTimeout({
@@ -51,6 +54,27 @@ export default function SymptomCheckerPage() {
     },
     enabled: true,
   })
+
+  // HIPAA Compliance: MFA enforcement for PHI access
+  useEffect(() => {
+    if (!isPending && session?.user) {
+      // @ts-expect-error - mfaEnabled is added as additionalField in better-auth config
+      const mfaEnabled = session.user.mfaEnabled || false
+
+      // Show MFA required warning if not enabled
+      if (!mfaEnabled) {
+        setShowMfaRequired(true)
+
+        // Log MFA enforcement check
+        console.log('[HIPAA] MFA enforcement check:', {
+          userId: session.user.id,
+          mfaEnabled: false,
+          page: 'symptom-checker',
+          timestamp: new Date().toISOString(),
+        })
+      }
+    }
+  }, [session, isPending])
 
   const handleContinueSession = () => {
     setShowTimeoutWarning(false)
@@ -131,7 +155,54 @@ export default function SymptomCheckerPage() {
         onLogout={handleLogout}
       />
 
-      <div className="container-custom py-12">
+      {/* HIPAA Compliance: MFA Required Warning */}
+      {showMfaRequired && (
+        <div className="container-custom py-12">
+          <div className="mx-auto max-w-2xl">
+            <Card className="border-yellow-300 bg-yellow-50">
+              <CardHeader>
+                <CardTitle className="flex items-center text-yellow-900">
+                  <Shield className="mr-3 h-6 w-6" />
+                  Multi-Factor Authentication Required
+                </CardTitle>
+                <CardDescription className="text-yellow-800">
+                  For HIPAA compliance, MFA is required to access the symptom checker
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="rounded-lg bg-white p-4">
+                  <p className="text-sm text-gray-700 mb-4">
+                    The symptom checker handles Protected Health Information (PHI) and requires
+                    enhanced security. Please enable Multi-Factor Authentication to continue.
+                  </p>
+                  <ul className="text-sm text-gray-600 space-y-2 mb-4 list-disc list-inside">
+                    <li>Protects your sensitive health data</li>
+                    <li>HIPAA compliance requirement</li>
+                    <li>Takes less than 2 minutes to set up</li>
+                    <li>Works with Google Authenticator, Authy, and other TOTP apps</li>
+                  </ul>
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => router.push('/settings')}
+                    className="flex-1"
+                  >
+                    Enable MFA in Settings
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => router.back()}
+                  >
+                    Go Back
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      <div className={showMfaRequired ? 'hidden' : 'container-custom py-12'}>
         {/* Header */}
         <div className="mb-8 max-w-3xl">
           <div className="mb-4 flex items-center gap-3">

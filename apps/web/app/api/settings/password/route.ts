@@ -2,8 +2,9 @@ import bcrypt from 'bcryptjs'
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { auditLog } from '@/lib/audit-log'
+import { createAuditLog, AuditAction, AuditSeverity } from '@/lib/audit-log'
 import { sendEmail } from '@/lib/email'
+import { checkPasswordHistory, addPasswordToHistory } from '@/lib/password-history'
 
 export const dynamic = 'force-dynamic'
 
@@ -90,6 +91,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 })
     }
 
+    // HIPAA Compliance: Check password history to prevent reuse
+    const isPasswordReused = await checkPasswordHistory(session.user.id, newPassword)
+
+    if (isPasswordReused) {
+      return NextResponse.json(
+        {
+          error:
+            'Password was recently used. Please choose a different password that you have not used in the last 5 password changes.',
+        },
+        { status: 400 }
+      )
+    }
+
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
@@ -98,6 +112,9 @@ export async function POST(request: Request) {
       where: { id: account.id },
       data: { password: hashedPassword },
     })
+
+    // HIPAA Compliance: Add password to history
+    await addPasswordToHistory(session.user.id, hashedPassword)
 
     // SECURITY: Invalidate all sessions except the current one
     // This forces re-authentication on all other devices
@@ -119,13 +136,13 @@ export async function POST(request: Request) {
     })
 
     // HIPAA: Audit log password change
-    await auditLog.createAuditLog({
-      action: 'PASSWORD_CHANGE' as any,
+    await createAuditLog({
+      action: AuditAction.PASSWORD_CHANGE,
       userId: session.user.id,
       userEmail: session.user.email,
       sessionId: currentSessionId,
       success: true,
-      severity: 'INFO' as any,
+      severity: AuditSeverity.INFO,
       details: {
         invalidatedSessions: invalidatedSessions.count,
       },
