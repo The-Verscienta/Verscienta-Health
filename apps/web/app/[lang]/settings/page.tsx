@@ -171,8 +171,9 @@ export default function SettingsPage() {
       // Verify the TOTP code using better-auth
       const result = await twoFactor.verifyTotp({ code: mfaVerificationCode })
 
-      if (!result.data?.verified) {
-        throw new Error('Invalid verification code')
+      // Check if verification was successful (data contains token and user)
+      if (!result.data || result.error) {
+        throw new Error(result.error?.message || 'Invalid verification code')
       }
 
       // Enable MFA for the user

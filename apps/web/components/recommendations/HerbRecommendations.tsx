@@ -147,12 +147,12 @@ function TCMPatternCard({ pattern }: { pattern: TCMPattern }) {
             <p className="text-sm font-semibold text-gray-900 mb-2">Associated Symptoms:</p>
             <div className="flex flex-wrap gap-1">
               {pattern.symptoms.slice(0, 6).map((symptom, i) => (
-                <Badge key={i} variant="secondary" className="text-xs">
+                <Badge key={i} variant="outline" className="text-xs">
                   {symptom}
                 </Badge>
               ))}
               {pattern.symptoms.length > 6 && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="outline" className="text-xs">
                   +{pattern.symptoms.length - 6} more
                 </Badge>
               )}

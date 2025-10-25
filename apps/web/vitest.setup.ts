@@ -41,4 +41,4 @@ vi.mock('next/image', () => ({
 process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000'
 process.env.NEXT_PUBLIC_CMS_URL = 'http://localhost:3001'
 process.env.DATABASE_ENCRYPTION_KEY = 'V8zbYCu61bHttiQj86buhv0T1Jk1pXfeJ6uD6trk4oA='
-process.env.NODE_ENV = 'test'
+// NODE_ENV is automatically set to 'test' by vitest

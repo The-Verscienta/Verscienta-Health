@@ -261,7 +261,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is admin
-    // @ts-expect-error - role is added as additionalField in better-auth config
     const userRole = session.user.role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 })
@@ -363,7 +362,6 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user is admin
-    // @ts-expect-error - role is added as additionalField in better-auth config
     const userRole = session.user.role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 })

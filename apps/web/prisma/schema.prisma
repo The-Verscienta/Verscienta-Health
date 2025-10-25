@@ -36,6 +36,7 @@ model User {
   sessions     Session[]
   deviceTokens DeviceToken[]
   passwordHistory PasswordHistory[]
+  auditLogs    AuditLog[]
 
   // Performance Indexes
   @@index([role]) // For admin/role-based queries
@@ -190,4 +191,53 @@ model PasswordHistory {
   @@index([userId])               // For user password history lookups
   @@index([createdAt])            // For cleanup jobs (old password removal)
   @@index([userId, createdAt])    // Composite: user password history ordered by date
+}
+
+// Audit Log Model (HIPAA Compliance - Security Rule §164.312(b))
+// Tracks all access to Protected Health Information (PHI)
+model AuditLog {
+  id           String   @id @default(cuid())
+
+  // Who
+  userId       String?
+  userEmail    String?
+  userRole     String?
+  sessionId    String?
+
+  // What
+  action       String   // AuditAction enum values
+  resource     String?
+  resourceId   String?
+  resourceType String?
+  details      Json?    // Additional context data
+
+  // When
+  createdAt    DateTime @default(now())
+
+  // Where
+  ipAddress    String?
+  userAgent    String?
+  location     String?
+
+  // How
+  method       String?
+  endpoint     String?
+  statusCode   Int?
+
+  // Context
+  severity     String   // AuditSeverity enum values
+  success      Boolean  @default(true)
+  errorMessage String?
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Performance Indexes
+  @@index([userId])               // Query by user
+  @@index([action])               // Query by action type
+  @@index([createdAt])            // Query by time range
+  @@index([severity])             // Query by severity
+  @@index([userId, createdAt])    // User activity timeline
+  @@index([action, createdAt])    // Action trends over time
+  @@index([ipAddress])            // Security monitoring
 }

@@ -291,7 +291,7 @@ function generateReport(): void {
     if (result.details) {
       console.log(`   Details:`)
       for (const [key, value] of Object.entries(result.details)) {
-        if (typeof value === 'object') {
+        if (typeof value === 'object' && value !== null) {
           console.log(`     ${key}:`)
           for (const [k, v] of Object.entries(value)) {
             console.log(`       - ${k}: ${v}`)

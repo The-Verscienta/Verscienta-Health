@@ -131,6 +131,7 @@ export function withApiLogging(
         // Log the request asynchronously (don't block response)
         logApiRequest({
           ...requestInfo,
+          method: requestInfo.method || 'UNKNOWN',
           path: customPath || requestInfo.path || '',
           statusCode,
           responseTime,
@@ -160,6 +161,7 @@ export function withApiLogging(
         // Log the error
         await logApiRequest({
           ...requestInfo,
+          method: requestInfo.method || 'UNKNOWN',
           path: customPath || requestInfo.path || '',
           statusCode,
           responseTime,

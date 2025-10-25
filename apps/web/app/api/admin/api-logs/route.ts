@@ -47,7 +47,6 @@ export async function GET(request: NextRequest) {
     }
 
     // Check admin role
-    // @ts-expect-error - role is an additional field
     const userRole = session.user.role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
@@ -165,7 +164,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Check admin role
-    // @ts-expect-error - role is an additional field
     const userRole = session.user.role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
