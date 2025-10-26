@@ -1,4 +1,4 @@
-import { Redis } from '@upstash/redis'
+import Redis from 'ioredis'
 
 /**
  * Redis-based Rate Limiter
@@ -13,13 +13,14 @@ import { Redis } from '@upstash/redis'
  * - Automatic expiration via Redis TTL
  */
 
-// Initialize Redis client (Upstash for serverless compatibility)
+// Initialize Redis client
 let redis: Redis | null = null
 
-if (process.env.REDIS_URL && process.env.REDIS_TOKEN) {
-  redis = new Redis({
-    url: process.env.REDIS_URL,
-    token: process.env.REDIS_TOKEN,
+if (process.env.REDIS_URL) {
+  redis = new Redis(process.env.REDIS_URL, {
+    maxRetriesPerRequest: 3,
+    enableReadyCheck: false,
+    lazyConnect: true,
   })
 }
 
@@ -82,7 +83,7 @@ async function checkRateLimitRedis(
     pipeline.zremrangebyscore(key, 0, windowStart)
 
     // Add current request with timestamp as score
-    pipeline.zadd(key, { score: now, member: `${now}-${Math.random()}` })
+    pipeline.zadd(key, now, `${now}-${Math.random()}`)
 
     // Count requests in current window
     pipeline.zcard(key)
@@ -92,8 +93,8 @@ async function checkRateLimitRedis(
 
     const results = await pipeline.exec()
 
-    // Extract count from pipeline results
-    const count = (results[2] as number) || 0
+    // Extract count from pipeline results (ioredis returns [error, result] tuples)
+    const count = (results && results[2] && results[2][1]) || 0
 
     return {
       allowed: count <= config.requests,
@@ -194,10 +195,7 @@ export async function clearAllRateLimits(): Promise<void> {
 
       do {
         // Use SCAN instead of KEYS to avoid blocking Redis
-        const result = await redis.scan(cursor, {
-          match: 'ratelimit:*',
-          count: batchSize,
-        })
+        const result = await redis.scan(cursor, 'MATCH', 'ratelimit:*', 'COUNT', batchSize)
 
         cursor = result[0]
         const keys = result[1]
