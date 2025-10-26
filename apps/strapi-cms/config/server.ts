@@ -4,8 +4,10 @@ export default ({ env }) => ({
   app: {
     keys: env.array('APP_KEYS'),
   },
-  // Proxy configuration for Coolify/Traefik
-  // Set to true to trust X-Forwarded-* headers from reverse proxy
-  proxy: true,
-  url: env('URL', 'http://localhost:1337'),
+  // Proxy configuration for Coolify/Traefik (Strapi v5 format)
+  // Enables Koa's built-in method for trusted reverse proxies
+  proxy: {
+    koa: true,
+  },
+  url: env('PUBLIC_URL', 'http://localhost:1337'),
 })
