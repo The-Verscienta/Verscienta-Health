@@ -5,6 +5,7 @@ export default ({ env }) => ({
     keys: env.array('APP_KEYS'),
   },
   // Proxy configuration for Coolify/Traefik
-  proxy: env.bool('IS_PROXIED', true),
-  url: env('STRAPI_ADMIN_BACKEND_URL', 'http://localhost:1337'),
+  // Set to true to trust X-Forwarded-* headers from reverse proxy
+  proxy: true,
+  url: env('URL', 'http://localhost:1337'),
 })

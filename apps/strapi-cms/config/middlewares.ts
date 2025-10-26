@@ -24,6 +24,8 @@ export default [
     config: {
       rolling: true,
       renew: true,
+      // Trust proxy to enable secure cookies behind HTTPS reverse proxy
+      proxy: true,
     },
   },
   'strapi::favicon',
