@@ -15,7 +15,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 
   // Enable standalone output for Docker deployment
-  output: 'standalone',
+  // NOTE: Standalone mode is for production Docker deployments only
+  // For local development, comment out this line and use 'npm run dev' or 'npm start'
+  // For Docker production, use: node .next/standalone/server.js
+  output: process.env.NODE_ENV === 'production' && process.env.DOCKER === 'true' ? 'standalone' : undefined,
 
   // Disable source maps in production for smaller bundles and faster builds
   productionBrowserSourceMaps: false,

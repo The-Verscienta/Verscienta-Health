@@ -1,6 +1,6 @@
 # Master TODO List - Verscienta Health
 
-**Created:** 2025-01-15 | **Last Updated:** 2025-10-26 | **Total Items:** 249 | **Status:** Active | **Overall:** 20% Complete (50/249 items)  
+**Created:** 2025-01-15 | **Last Updated:** 2025-10-26 | **Total Items:** 250 | **Status:** Active | **Overall:** 20% Complete (50/250 items)  
 **Reorganized by Implementation Phases** based on `VERSCIENTA_HEALTH_COMPREHENSIVE_PLAN.md`. This aligns the master todo list with the 6-phase timeline while preserving all existing items, mapping them to appropriate phases, and maintaining completion status.  
 **New Phase 7:** Mobile App Development & Release (added 2025-10-24) - Cross-platform native apps for iOS, Android, and Windows Store, leveraging shared API client and PWA foundations.  
 **Note:** Total increased by 55 items from gap analyses (18 + 12 + 15 + 10) and 55 new mobile app tasks. Progress adjusted accordingly.
@@ -264,9 +264,9 @@
 - [ ] Conduct penetration testing for launch (#180)  
 - [ ] Create marketing landing page (#181)  
 
-### Phase 6: 2025+ Comprehensiveness (Ongoing) - Trends, community, AI evolution  
+### Phase 6: 2025+ Comprehensiveness (Ongoing) - Trends, community, AI evolution
 
-🔴 **Phase 6 Status:** 0% Complete (Completed: 0, Pending: 52)  
+🔴 **Phase 6 Status:** 0% Complete (Completed: 0, Pending: 53)  
 
 **Machine Learning & AI Features (24 items - Grok API integration)**  
 **Phase 1: Foundation (2-3 weeks, 6 items)**  
@@ -430,13 +430,14 @@
 - [ ] Update README.md to reflect actual implementation status  
 - [ ] Update PROJECT_STATUS.md to show accurate completion percentages  
 
-**DevOps & Security Enhancements (5 items)**  
+**DevOps & Security Enhancements (6 items)**
 
-- [ ] Implement Cloudflare Turnstile CAPTCHA on forms  
-- [ ] Create Docker containerization for production deployment  
-- [ ] Set up CI/CD pipeline (.github/workflows/)  
-- [ ] Create environment variable documentation file (.env.example.complete)  
-- [ ] Remove or implement documented mobile app features  
+- [ ] Implement Cloudflare Turnstile CAPTCHA on forms
+- [ ] Create Docker containerization for production deployment
+- [ ] Set up CI/CD pipeline (.github/workflows/)
+- [ ] Create environment variable documentation file (.env.example.complete)
+- [ ] Remove or implement documented mobile app features
+- [ ] Migrate middleware.ts to proxy.ts convention (Next.js 16 deprecation) - Low priority, monitor Next.js docs for stable migration patterns  
 
 **Analytics & Iteration (2 items)**  
 
@@ -710,10 +711,10 @@
 - Phase 3: Polish & Launch Prep - Quality and deployment prep (Weeks 9-12) - 66% Complete (46/70 items, comprehensive testing complete, API rate limiting complete with 32 tests, TLS security and certificate monitoring implemented, layout component tests complete, lib utilities coverage at 80%+)  
 - Phase 4: Content Population - Data migration and seeding (Weeks 13-16) - 0% Complete (0/6 items)  
 - Phase 5: Launch - Testing and go-live (Week 17) - 0% Complete (0/8 items)  
-- Phase 6: 2025+ Comprehensiveness - Future enhancements (Ongoing) - 0% Complete (0/52 items, ML/AI features added)  
+- Phase 6: 2025+ Comprehensiveness - Future enhancements (Ongoing) - 0% Complete (0/53 items, ML/AI features added, Next.js 16 middleware migration added)  
 - Phase 7: Mobile App Development & Release - Native apps (Weeks 18-24) - 0% Complete (0/55 items, new phase)  
 
-**Items Mapped to Phases (All 249 items accounted for - includes 31 testing/security/optimization tasks + 3 TLS security enhancements + 24 ML/AI tasks + 55 mobile tasks added 2025-10-24)**  
+**Items Mapped to Phases (All 250 items accounted for - includes 31 testing/security/optimization tasks + 3 TLS security enhancements + 24 ML/AI tasks + 55 mobile tasks + 1 Next.js 16 migration task added 2025-10-26)**  
 
 **Decision Log**  
 **Items Requiring Decisions**  
@@ -941,5 +942,8 @@ Next Review: 2025-11-21
   - Sliding window algorithm with automatic cleanup
   - Security alert integration for suspicious activity (>1000 requests)
 - 📈 Phase 3 completion: 64% → 66% (46/70 items)
-- 📈 Overall completion: 20% (49/249 → 50/249 items)
+- 📈 Overall completion: 20% (49/249 → 50/250 items)
 - 📈 Total test count: 320 tests → 352 tests (+32 rate limiting tests)
+- 🔧 Fixed Edge Runtime "charCodeAt" error by adding `export const runtime = 'nodejs'` to middleware.ts
+- 📋 Added Next.js 16 middleware.ts → proxy.ts migration task to Phase 6 (low priority)
+- 📈 Total items: 249 → 250 (+1 Next.js 16 migration task)
