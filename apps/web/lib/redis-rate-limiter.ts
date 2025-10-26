@@ -94,7 +94,7 @@ async function checkRateLimitRedis(
     const results = await pipeline.exec()
 
     // Extract count from pipeline results (ioredis returns [error, result] tuples)
-    const count = (results && results[2] && results[2][1]) || 0
+    const count = ((results?.[2]?.[1] as number) ?? 0) as number
 
     return {
       allowed: count <= config.requests,
