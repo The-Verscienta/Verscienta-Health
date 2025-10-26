@@ -5,6 +5,16 @@ import { checkRateLimit, isRedisConfigured, type RateLimitConfig } from '@/lib/r
 import { routing } from './i18n/routing'
 
 /**
+ * Runtime Configuration
+ *
+ * IMPORTANT: This middleware uses Node.js runtime (not Edge Runtime) because:
+ * - ioredis library requires Node.js APIs (not available in Edge Runtime)
+ * - Rate limiting with Redis/DragonflyDB requires ioredis
+ * - Edge Runtime would cause "Cannot read properties of undefined (reading 'charCodeAt')" error
+ */
+export const runtime = 'nodejs'
+
+/**
  * Security & i18n Middleware
  *
  * Implements:
@@ -23,17 +33,58 @@ import { routing } from './i18n/routing'
 // Create the intl middleware
 const handleI18nRouting = createIntlMiddleware(routing)
 
-// Rate limiting configuration
+// Rate limiting configuration for all API endpoints
+// Comprehensive security-focused rate limits to prevent abuse
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
-  // Authentication endpoints (prevent brute force)
+  // === Authentication & Security Endpoints (Strictest) ===
+  // Prevent brute force attacks
   '/api/auth/login': { requests: 5, window: 15 * 60 * 1000 }, // 5 req / 15 min
   '/api/auth/register': { requests: 3, window: 60 * 60 * 1000 }, // 3 req / 1 hour
+  '/api/auth/mfa/setup': { requests: 3, window: 60 * 60 * 1000 }, // 3 req / 1 hour
+  '/api/settings/password': { requests: 3, window: 60 * 60 * 1000 }, // 3 req / 1 hour
+  '/api/settings/delete-account': { requests: 1, window: 24 * 60 * 60 * 1000 }, // 1 req / 24 hours
 
-  // API endpoints
-  '/api/grok': { requests: 10, window: 60 * 1000 }, // 10 req / 1 min
-  '/api': { requests: 100, window: 60 * 1000 }, // 100 req / 1 min (general)
+  // === AI/ML Endpoints (Expensive Operations) ===
+  // Prevent API quota exhaustion and abuse
+  '/api/grok/symptom-analysis': { requests: 10, window: 60 * 60 * 1000 }, // 10 req / 1 hour
+  '/api/grok': { requests: 15, window: 60 * 60 * 1000 }, // 15 req / 1 hour (general Grok)
 
-  // Default for all other requests
+  // === Public Content API (Moderate) ===
+  // Allow reasonable access but prevent scraping
+  '/api/herbs': { requests: 60, window: 60 * 1000 }, // 60 req / 1 min
+  '/api/formulas': { requests: 60, window: 60 * 1000 }, // 60 req / 1 min
+  '/api/conditions': { requests: 60, window: 60 * 1000 }, // 60 req / 1 min
+  '/api/practitioners': { requests: 60, window: 60 * 1000 }, // 60 req / 1 min
+  '/api/images': { requests: 100, window: 60 * 1000 }, // 100 req / 1 min
+
+  // === User-Generated Content ===
+  // Prevent spam and abuse
+  '/api/contact': { requests: 3, window: 60 * 60 * 1000 }, // 3 req / 1 hour
+  '/api/profile': { requests: 20, window: 60 * 1000 }, // 20 req / 1 min
+
+  // === Mobile API Endpoints ===
+  // Balance mobile app needs with abuse prevention
+  '/api/mobile/register-device': { requests: 5, window: 60 * 60 * 1000 }, // 5 req / 1 hour
+  '/api/mobile/unregister-device': { requests: 10, window: 60 * 60 * 1000 }, // 10 req / 1 hour
+  '/api/mobile/sync': { requests: 30, window: 60 * 1000 }, // 30 req / 1 min
+  '/api/mobile/config': { requests: 60, window: 60 * 1000 }, // 60 req / 1 min
+
+  // === Admin API Endpoints (Protected but rate-limited) ===
+  // Even authenticated admins should have reasonable limits
+  '/api/admin/account-lockout': { requests: 50, window: 60 * 1000 }, // 50 req / 1 min
+  '/api/admin/security-breach': { requests: 10, window: 60 * 1000 }, // 10 req / 1 min
+  '/api/admin/security-events': { requests: 100, window: 60 * 1000 }, // 100 req / 1 min
+  '/api/admin/api-logs': { requests: 100, window: 60 * 1000 }, // 100 req / 1 min
+
+  // === Health & Monitoring (Generous) ===
+  // Allow frequent health checks but prevent abuse
+  '/api/health': { requests: 120, window: 60 * 1000 }, // 120 req / 1 min
+  '/api/health/cert': { requests: 60, window: 60 * 1000 }, // 60 req / 1 min
+
+  // === General API Endpoints ===
+  '/api': { requests: 100, window: 60 * 1000 }, // 100 req / 1 min (catch-all for /api/*)
+
+  // === Default for All Other Requests ===
   default: { requests: 300, window: 60 * 1000 }, // 300 req / 1 min
 }
 

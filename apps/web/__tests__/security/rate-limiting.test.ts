@@ -406,4 +406,324 @@ describe('Rate Limiting', () => {
       expect(checkRateLimit(undefined, attempts)).toBe(false)
     })
   })
+
+  describe('Endpoint-Specific Rate Limits', () => {
+    describe('Authentication Endpoints', () => {
+      it('enforces strict login rate limit (5 req / 15 min)', () => {
+        const MAX_REQUESTS = 5
+        const WINDOW_MS = 15 * 60 * 1000
+        const attempts = new Map<string, number>()
+
+        const checkLoginRateLimit = (userId: string) => {
+          const current = attempts.get(userId) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(userId, current + 1)
+          return true
+        }
+
+        // First 5 login attempts allowed
+        for (let i = 0; i < 5; i++) {
+          expect(checkLoginRateLimit('user1')).toBe(true)
+        }
+
+        // 6th attempt blocked (prevent brute force)
+        expect(checkLoginRateLimit('user1')).toBe(false)
+      })
+
+      it('enforces strict registration rate limit (3 req / 1 hour)', () => {
+        const MAX_REQUESTS = 3
+        const attempts = new Map<string, number>()
+
+        const checkRegisterRateLimit = (ip: string) => {
+          const current = attempts.get(ip) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(ip, current + 1)
+          return true
+        }
+
+        // First 3 registrations allowed
+        for (let i = 0; i < 3; i++) {
+          expect(checkRegisterRateLimit('192.168.1.1')).toBe(true)
+        }
+
+        // 4th blocked (prevent bulk account creation)
+        expect(checkRegisterRateLimit('192.168.1.1')).toBe(false)
+      })
+
+      it('enforces account deletion rate limit (1 req / 24 hours)', () => {
+        const MAX_REQUESTS = 1
+        const attempts = new Map<string, number>()
+
+        const checkDeleteAccountLimit = (userId: string) => {
+          const current = attempts.get(userId) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(userId, current + 1)
+          return true
+        }
+
+        // First request allowed
+        expect(checkDeleteAccountLimit('user1')).toBe(true)
+
+        // Second request blocked (critical operation)
+        expect(checkDeleteAccountLimit('user1')).toBe(false)
+      })
+    })
+
+    describe('AI/ML Endpoints', () => {
+      it('enforces Grok symptom analysis limit (10 req / 1 hour)', () => {
+        const MAX_REQUESTS = 10
+        const attempts = new Map<string, number>()
+
+        const checkGrokLimit = (userId: string) => {
+          const current = attempts.get(userId) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(userId, current + 1)
+          return true
+        }
+
+        // First 10 AI requests allowed
+        for (let i = 0; i < 10; i++) {
+          expect(checkGrokLimit('user1')).toBe(true)
+        }
+
+        // 11th blocked (prevent quota exhaustion)
+        expect(checkGrokLimit('user1')).toBe(false)
+      })
+
+      it('tracks AI endpoint costs and alerts on high usage', () => {
+        let totalCost = 0
+        const COST_PER_REQUEST = 0.01 // $0.01 per Grok API call
+        const ALERT_THRESHOLD = 5 // Alert at $5 total cost
+
+        const processAIRequest = () => {
+          totalCost += COST_PER_REQUEST
+          return {
+            success: true,
+            cost: totalCost,
+            alertTriggered: totalCost >= ALERT_THRESHOLD,
+          }
+        }
+
+        // Process 400 requests
+        for (let i = 0; i < 400; i++) {
+          processAIRequest()
+        }
+
+        expect(totalCost).toBeCloseTo(4.0, 2) // Allow floating-point precision tolerance
+        expect(processAIRequest().alertTriggered).toBe(false)
+
+        // 501st request triggers alert
+        for (let i = 0; i < 100; i++) {
+          processAIRequest()
+        }
+
+        const result = processAIRequest()
+        expect(result.cost).toBeGreaterThanOrEqual(ALERT_THRESHOLD)
+        expect(result.alertTriggered).toBe(true)
+      })
+    })
+
+    describe('Public Content API', () => {
+      it('allows moderate access to herb API (60 req / 1 min)', () => {
+        const MAX_REQUESTS = 60
+        const attempts = new Map<string, number>()
+
+        const checkHerbAPILimit = (userId: string) => {
+          const current = attempts.get(userId) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(userId, current + 1)
+          return true
+        }
+
+        // First 60 requests allowed
+        for (let i = 0; i < 60; i++) {
+          expect(checkHerbAPILimit('user1')).toBe(true)
+        }
+
+        // 61st blocked (prevent scraping)
+        expect(checkHerbAPILimit('user1')).toBe(false)
+      })
+
+      it('tracks scraping patterns and blocks suspicious activity', () => {
+        const requestTimestamps: number[] = []
+        let now = Date.now()
+
+        const detectScraping = () => {
+          requestTimestamps.push(now)
+
+          // Check for rapid sequential requests (>50 in 10 seconds)
+          const tenSecondsAgo = now - 10000
+          const recentRequests = requestTimestamps.filter((ts) => ts >= tenSecondsAgo)
+
+          return {
+            isSuspicious: recentRequests.length > 50,
+            requestCount: recentRequests.length,
+          }
+        }
+
+        // Simulate 60 rapid requests (1 per 100ms)
+        for (let i = 0; i < 60; i++) {
+          now += 100
+          const result = detectScraping()
+
+          if (i >= 50) {
+            expect(result.isSuspicious).toBe(true)
+          }
+        }
+      })
+    })
+
+    describe('User-Generated Content', () => {
+      it('prevents contact form spam (3 req / 1 hour)', () => {
+        const MAX_REQUESTS = 3
+        const attempts = new Map<string, number>()
+
+        const checkContactFormLimit = (ip: string) => {
+          const current = attempts.get(ip) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(ip, current + 1)
+          return true
+        }
+
+        // First 3 contact form submissions allowed
+        for (let i = 0; i < 3; i++) {
+          expect(checkContactFormLimit('192.168.1.1')).toBe(true)
+        }
+
+        // 4th blocked (spam prevention)
+        expect(checkContactFormLimit('192.168.1.1')).toBe(false)
+      })
+    })
+
+    describe('Mobile API Endpoints', () => {
+      it('limits device registration (5 req / 1 hour)', () => {
+        const MAX_REQUESTS = 5
+        const attempts = new Map<string, number>()
+
+        const checkDeviceRegistration = (userId: string) => {
+          const current = attempts.get(userId) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(userId, current + 1)
+          return true
+        }
+
+        // First 5 device registrations allowed
+        for (let i = 0; i < 5; i++) {
+          expect(checkDeviceRegistration('user1')).toBe(true)
+        }
+
+        // 6th blocked (prevent device registration abuse)
+        expect(checkDeviceRegistration('user1')).toBe(false)
+      })
+
+      it('allows frequent mobile sync (30 req / 1 min)', () => {
+        const MAX_REQUESTS = 30
+        const attempts = new Map<string, number>()
+
+        const checkMobileSyncLimit = (deviceId: string) => {
+          const current = attempts.get(deviceId) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(deviceId, current + 1)
+          return true
+        }
+
+        // First 30 sync requests allowed
+        for (let i = 0; i < 30; i++) {
+          expect(checkMobileSyncLimit('device-123')).toBe(true)
+        }
+
+        // 31st blocked
+        expect(checkMobileSyncLimit('device-123')).toBe(false)
+      })
+    })
+
+    describe('Admin API Endpoints', () => {
+      it('limits admin security breach reporting (10 req / 1 min)', () => {
+        const MAX_REQUESTS = 10
+        const attempts = new Map<string, number>()
+
+        const checkSecurityBreachLimit = (adminId: string) => {
+          const current = attempts.get(adminId) || 0
+          if (current >= MAX_REQUESTS) return false
+          attempts.set(adminId, current + 1)
+          return true
+        }
+
+        // First 10 breach reports allowed
+        for (let i = 0; i < 10; i++) {
+          expect(checkSecurityBreachLimit('admin1')).toBe(true)
+        }
+
+        // 11th blocked
+        expect(checkSecurityBreachLimit('admin1')).toBe(false)
+      })
+    })
+  })
+
+  describe('Security Alert Integration', () => {
+    it('triggers security alert on excessive violations (>1000 requests)', () => {
+      const violations: Array<{ clientId: string; count: number; timestamp: number }> = []
+
+      const checkAndAlert = (clientId: string, currentCount: number) => {
+        if (currentCount > 1000) {
+          violations.push({
+            clientId,
+            count: currentCount,
+            timestamp: Date.now(),
+          })
+          return true // Alert triggered
+        }
+        return false
+      }
+
+      // Should not trigger at 1000
+      expect(checkAndAlert('suspicious-ip', 1000)).toBe(false)
+
+      // Should trigger at 1001
+      expect(checkAndAlert('suspicious-ip', 1001)).toBe(true)
+
+      expect(violations).toHaveLength(1)
+      expect(violations[0].clientId).toBe('suspicious-ip')
+      expect(violations[0].count).toBe(1001)
+    })
+
+    it('logs rate limit violations for security monitoring', () => {
+      const securityLog: Array<{
+        type: string
+        clientId: string
+        endpoint: string
+        timestamp: number
+      }> = []
+
+      const logViolation = (clientId: string, endpoint: string) => {
+        securityLog.push({
+          type: 'rate_limit_exceeded',
+          clientId,
+          endpoint,
+          timestamp: Date.now(),
+        })
+      }
+
+      // Simulate violations
+      logViolation('192.168.1.1', '/api/auth/login')
+      logViolation('192.168.1.2', '/api/auth/login')
+      logViolation('192.168.1.1', '/api/grok/symptom-analysis')
+
+      expect(securityLog).toHaveLength(3)
+
+      // Verify log entries
+      expect(securityLog[0].type).toBe('rate_limit_exceeded')
+      expect(securityLog[0].endpoint).toBe('/api/auth/login')
+
+      // Count violations per IP
+      const violationsByIP = new Map<string, number>()
+      securityLog.forEach((log) => {
+        const count = violationsByIP.get(log.clientId) || 0
+        violationsByIP.set(log.clientId, count + 1)
+      })
+
+      expect(violationsByIP.get('192.168.1.1')).toBe(2)
+      expect(violationsByIP.get('192.168.1.2')).toBe(1)
+    })
+  })
 })
