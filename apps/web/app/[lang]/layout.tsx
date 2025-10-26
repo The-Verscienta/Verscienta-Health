@@ -31,6 +31,7 @@ export async function generateMetadata({
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://verscienta.com'
 
   return {
+    metadataBase: new URL(appUrl),
     title: {
       default: t('title'),
       template: `%s | ${t('siteName')}`,
