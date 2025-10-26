@@ -12,7 +12,7 @@ cmds = [
 cmds = [
   "pnpm --filter @verscienta/api-types build || true",
   "pnpm --filter @verscienta/api-client build || true",
-  "if [ \"$APP_BUILD\" = \"web\" ]; then npx prisma generate --schema=apps/web/prisma/schema.prisma && pnpm --filter web build; fi",
+  "if [ \"$APP_BUILD\" = \"web\" ]; then pnpm exec prisma generate --schema=apps/web/prisma/schema.prisma && pnpm --filter web build; fi",
   "if [ \"$APP_BUILD\" = \"cms\" ]; then pnpm --filter cms build; fi"
 ]
 
