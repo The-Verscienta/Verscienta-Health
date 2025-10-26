@@ -10,11 +10,11 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "pnpm build"
+  "pnpm --filter cms build"
 ]
 
 [start]
-cmd = "pnpm start"
+cmd = "pnpm --filter cms start"
 
 [variables]
 NODE_ENV = "production"
