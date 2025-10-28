@@ -36,8 +36,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Get current locale from next-intl
-  const locale = await getLocale()
+  // Get current locale from next-intl (fallback to 'en' for routes outside [lang] like /api-docs)
+  let locale = 'en'
+  try {
+    locale = await getLocale()
+  } catch (error) {
+    // No locale context (e.g., for /api-docs route outside [lang] directory)
+    // Use default locale 'en'
+  }
 
   return (
     <html
