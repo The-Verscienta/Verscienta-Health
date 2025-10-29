@@ -5,17 +5,15 @@ import { checkRateLimit, isRedisConfigured, type RateLimitConfig } from '@/lib/r
 import { routing } from './i18n/routing'
 
 /**
- * Runtime Configuration
+ * Security & i18n Proxy
  *
- * IMPORTANT: This middleware uses Node.js runtime (not Edge Runtime) because:
+ * Next.js 16 Note: Proxy always runs on Node.js runtime (not Edge Runtime)
+ * This is required because:
  * - ioredis library requires Node.js APIs (not available in Edge Runtime)
  * - Rate limiting with Redis/DragonflyDB requires ioredis
  * - Edge Runtime would cause "Cannot read properties of undefined (reading 'charCodeAt')" error
- */
-export const runtime = 'nodejs'
-
-/**
- * Security & i18n Middleware
+ *
+ * Security & i18n Proxy
  *
  * Implements:
  * - i18n locale detection and routing (next-intl)
@@ -250,9 +248,9 @@ function addCORSHeaders(response: NextResponse, origin: string | null): void {
 }
 
 /**
- * Main middleware function
+ * Main proxy function (Next.js 16 uses "proxy" instead of "middleware")
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const origin = request.headers.get('origin')
 
@@ -264,6 +262,12 @@ export async function middleware(request: NextRequest) {
     pathname.match(/\.(ico|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot)$/)
 
   const response = shouldSkipI18n ? NextResponse.next() : handleI18nRouting(request)
+
+  // If i18n middleware returned a redirect, return it immediately
+  // Don't process rate limiting or add headers to redirects
+  if (response.status === 307 || response.status === 308) {
+    return response
+  }
 
   // Handle CORS preflight requests
   if (request.method === 'OPTIONS') {

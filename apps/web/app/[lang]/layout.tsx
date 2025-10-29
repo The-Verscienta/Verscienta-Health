@@ -7,9 +7,10 @@ import { Providers } from '@/components/providers/Providers'
 import { Toaster } from '@/components/ui/sonner'
 import { locales } from '@/i18n/request'
 
-// Enable dynamic params and disable static optimization for pages with client components
+// Enable dynamic params to allow new locales without rebuild
 export const dynamicParams = true
-export const dynamic = 'force-dynamic'
+// Note: Removed 'force-dynamic' to allow proper static generation in production
+// Pages will be statically generated at build time for better performance
 
 export async function generateStaticParams() {
   return locales.map((locale) => ({ lang: locale }))

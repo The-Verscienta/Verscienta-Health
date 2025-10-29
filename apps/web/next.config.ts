@@ -60,7 +60,7 @@ const nextConfig: NextConfig = {
   },
 
   // i18n configuration moved to App Router with [lang] dynamic segments
-  // See: app/[lang]/ and middleware.ts
+  // See: app/[lang]/ and proxy.ts
 
   // Headers for security
   async headers() {
