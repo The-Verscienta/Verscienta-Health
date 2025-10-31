@@ -5,7 +5,7 @@
  * Used by Herbs, Formulas, Conditions, and Practitioners collections.
  */
 
-import algoliasearch from 'algoliasearch'
+import { algoliasearch } from 'algoliasearch'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
 /**
