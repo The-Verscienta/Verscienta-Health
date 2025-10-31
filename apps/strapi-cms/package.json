@@ -1,8 +1,8 @@
 {
-  "name": "cms",
+  "name": "strapi-cms",
   "version": "1.0.0",
   "private": true,
-  "description": "Verscienta Health CMS - Strapi",
+  "description": "Verscienta Health CMS - Strapi (DEPRECATED)",
   "scripts": {
     "build": "strapi build",
     "console": "strapi console",

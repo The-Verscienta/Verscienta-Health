@@ -1,5 +1,5 @@
 {
-  "name": "@verscienta/payload-cms",
+  "name": "cms",
   "version": "1.0.0",
   "description": "Verscienta Health Payload CMS",
   "private": true,
