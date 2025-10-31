@@ -1,7 +1,5 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
 import { Mail } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
