@@ -25,6 +25,10 @@ import { ValidationReports } from './collections/ValidationReports'
 // Globals
 import { TrefleImportState } from './globals/TrefleImportState'
 
+// Jobs
+import { syncTrefleDataJob } from './jobs/syncTrefleData'
+import { importTrefleDataJob } from './jobs/importTrefleData'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -57,6 +61,22 @@ export default buildConfig({
   globals: [
     TrefleImportState,
   ],
+
+  jobs: {
+    tasks: [
+      {
+        slug: 'sync-trefle-data',
+        handler: syncTrefleDataJob,
+        schedule: '0 3 * * 3', // Every Wednesday at 3 AM
+      },
+      {
+        slug: 'import-trefle-data',
+        handler: importTrefleDataJob,
+        schedule: '*/1 * * * *', // Every minute (when ENABLE_TREFLE_IMPORT=true)
+        queue: 'low-priority',
+      },
+    ],
+  },
 
   editor: lexicalEditor({}),
 

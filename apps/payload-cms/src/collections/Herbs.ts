@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { algoliaAfterChangeHook, algoliaAfterDeleteHook } from '../hooks/algolia-sync'
 
 export const Herbs: CollectionConfig = {
   slug: 'herbs',
@@ -727,5 +728,7 @@ export const Herbs: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [algoliaAfterChangeHook],
+    afterDelete: [algoliaAfterDeleteHook],
   },
 }

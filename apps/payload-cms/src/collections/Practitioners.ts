@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { algoliaAfterChangeHook, algoliaAfterDeleteHook } from '../hooks/algolia-sync'
 
 export const Practitioners: CollectionConfig = {
   slug: 'practitioners',
@@ -299,5 +300,7 @@ export const Practitioners: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [algoliaAfterChangeHook],
+    afterDelete: [algoliaAfterDeleteHook],
   },
 }

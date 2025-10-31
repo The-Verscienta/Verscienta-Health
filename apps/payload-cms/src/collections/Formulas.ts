@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { algoliaAfterChangeHook, algoliaAfterDeleteHook } from '../hooks/algolia-sync'
 
 export const Formulas: CollectionConfig = {
   slug: 'formulas',
@@ -274,5 +275,7 @@ export const Formulas: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [algoliaAfterChangeHook],
+    afterDelete: [algoliaAfterDeleteHook],
   },
 }

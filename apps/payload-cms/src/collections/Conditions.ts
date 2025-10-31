@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { algoliaAfterChangeHook, algoliaAfterDeleteHook } from '../hooks/algolia-sync'
 
 export const Conditions: CollectionConfig = {
   slug: 'conditions',
@@ -156,4 +157,8 @@ export const Conditions: CollectionConfig = {
     },
   ],
   timestamps: true,
+  hooks: {
+    afterChange: [algoliaAfterChangeHook],
+    afterDelete: [algoliaAfterDeleteHook],
+  },
 }
