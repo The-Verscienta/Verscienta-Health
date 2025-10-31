@@ -134,13 +134,14 @@ export const algoliaAfterChangeHook: CollectionAfterChangeHook = async ({
     const collectionName = collection.slug
     const indexName = `${collectionName}_${process.env.NODE_ENV || 'development'}`
 
-    const index = client.initIndex(indexName)
-
     // Only index published documents (or all if no _status field)
     if (doc._status && doc._status !== 'published') {
       console.log(`⏩ Skipping Algolia index for draft ${collectionName}:${doc.id}`)
       // Delete from Algolia if it exists (was published, now draft)
-      await index.deleteObject(doc.id).catch(() => {
+      await client.deleteObject({
+        indexName,
+        objectID: doc.id,
+      }).catch(() => {
         // Ignore errors if object doesn't exist
       })
       return doc
@@ -149,9 +150,10 @@ export const algoliaAfterChangeHook: CollectionAfterChangeHook = async ({
     // Transform document for Algolia
     const algoliaDoc = transformDocumentForAlgolia(doc, collectionName)
 
-    // Index to Algolia
-    await index.saveObject(algoliaDoc, {
-      autoGenerateObjectIDIfNotExist: false,
+    // Index to Algolia (v5 API)
+    await client.saveObject({
+      indexName,
+      body: algoliaDoc,
     })
 
     console.log(`✅ Indexed to Algolia: ${collectionName}:${doc.id}`)
@@ -178,10 +180,11 @@ export const algoliaAfterDeleteHook: CollectionAfterDeleteHook = async ({
     const collectionName = collection.slug
     const indexName = `${collectionName}_${process.env.NODE_ENV || 'development'}`
 
-    const index = client.initIndex(indexName)
-
-    // Delete from Algolia
-    await index.deleteObject(doc.id)
+    // Delete from Algolia (v5 API)
+    await client.deleteObject({
+      indexName,
+      objectID: doc.id,
+    })
 
     console.log(`✅ Deleted from Algolia: ${collectionName}:${doc.id}`)
   } catch (error) {
@@ -209,7 +212,6 @@ export async function bulkIndexToAlgolia(
     }
 
     const indexName = `${collectionSlug}_${process.env.NODE_ENV || 'development'}`
-    const index = client.initIndex(indexName)
 
     let page = 1
     let hasNextPage = true
@@ -238,10 +240,11 @@ export async function bulkIndexToAlgolia(
         transformDocumentForAlgolia(doc, collectionSlug)
       )
 
-      // Batch index
+      // Batch index (v5 API)
       try {
-        await index.saveObjects(algoliaObjects, {
-          autoGenerateObjectIDIfNotExist: false,
+        await client.saveObjects({
+          indexName,
+          objects: algoliaObjects,
         })
         totalIndexed += algoliaObjects.length
         console.log(`   ✅ Indexed batch ${page} (${algoliaObjects.length} documents)`)
@@ -284,9 +287,12 @@ export async function configureAlgoliaIndex(
     }
 
     const indexName = `${collectionSlug}_${process.env.NODE_ENV || 'development'}`
-    const index = client.initIndex(indexName)
 
-    await index.setSettings(settings)
+    // Configure index settings (v5 API)
+    await client.setSettings({
+      indexName,
+      indexSettings: settings,
+    })
 
     console.log(`✅ Configured Algolia index: ${indexName}`)
   } catch (error) {
