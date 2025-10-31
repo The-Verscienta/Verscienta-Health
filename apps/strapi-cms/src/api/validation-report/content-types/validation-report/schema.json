@@ -13,40 +13,50 @@
   "pluginOptions": {},
   "attributes": {
     "type": {
-      "type": "enumeration",
-      "enum": [
-        "herb-validation",
-        "trefle-name-mismatch",
-        "formula-validation",
-        "image-validation",
-        "scientific-name-validation",
-        "other"
-      ],
+      "type": "string",
       "required": true
+    },
+    "collectionType": {
+      "type": "string"
+    },
+    "documentId": {
+      "type": "string"
+    },
+    "field": {
+      "type": "string"
+    },
+    "currentValue": {
+      "type": "string"
+    },
+    "suggestedValue": {
+      "type": "string"
+    },
+    "severity": {
+      "type": "enumeration",
+      "enum": ["error", "warning", "info"],
+      "default": "warning"
+    },
+    "message": {
+      "type": "text"
     },
     "issues": {
       "type": "component",
       "repeatable": true,
-      "required": true,
       "component": "validation.issue"
     },
     "errorCount": {
       "type": "integer",
-      "default": 0,
-      "required": true
+      "default": 0
     },
     "warningCount": {
       "type": "integer",
-      "default": 0,
-      "required": true
+      "default": 0
     },
     "totalChecked": {
-      "type": "integer",
-      "required": true
+      "type": "integer"
     },
     "timestamp": {
-      "type": "datetime",
-      "required": true
+      "type": "datetime"
     },
     "notes": {
       "type": "text"

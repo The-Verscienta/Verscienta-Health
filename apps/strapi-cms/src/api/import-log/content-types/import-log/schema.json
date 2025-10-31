@@ -28,13 +28,44 @@
       ],
       "required": true
     },
+    "source": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["completed", "failed", "in_progress"]
+    },
+    "recordsProcessed": {
+      "type": "integer",
+      "default": 0
+    },
+    "recordsCreated": {
+      "type": "integer",
+      "default": 0
+    },
+    "recordsUpdated": {
+      "type": "integer",
+      "default": 0
+    },
+    "recordsFailed": {
+      "type": "integer",
+      "default": 0
+    },
+    "duration": {
+      "type": "integer",
+      "default": 0
+    },
+    "summary": {
+      "type": "json"
+    },
+    "errors": {
+      "type": "json"
+    },
     "results": {
-      "type": "json",
-      "required": true
+      "type": "json"
     },
     "timestamp": {
-      "type": "datetime",
-      "required": true
+      "type": "datetime"
     },
     "notes": {
       "type": "text"
