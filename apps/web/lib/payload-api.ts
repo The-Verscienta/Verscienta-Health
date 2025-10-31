@@ -333,7 +333,7 @@ export async function getConditionBySlug(
 
 export interface Practitioner {
   id: string
-  fullName: string
+  practitionerName: string
   slug: string
   email?: string
   phone?: string
