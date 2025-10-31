@@ -1,7 +1,5 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ConditionCard } from '@/components/cards/ConditionCard'

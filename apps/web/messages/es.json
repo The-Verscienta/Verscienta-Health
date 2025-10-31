@@ -128,6 +128,15 @@
     "title": "Fórmulas Herbales",
     "subtitle": "Fórmulas herbales tradicionales y modernas",
     "searchPlaceholder": "Buscar fórmulas...",
+    "notFound": {
+      "title": "Fórmula No Encontrada",
+      "description": "La fórmula que buscas no existe o ha sido eliminada."
+    },
+    "metadata": {
+      "title": "Fórmulas Herbales | Verscienta Health",
+      "description": "Descubre fórmulas herbales probadas con el tiempo de la Medicina Tradicional China, Ayurveda y herboristería occidental.",
+      "defaultDescription": "Aprende sobre {name}, sus ingredientes, usos y preparación."
+    },
     "ingredients": "Ingredientes",
     "actions": "Acciones",
     "indications": "Indicaciones",
@@ -309,6 +318,78 @@
     "metadata": {
       "title": "Aviso Médico | Verscienta Health",
       "description": "Aviso médico importante e información de seguridad para usar Verscienta Health."
+    }
+  },
+  "privacy": {
+    "title": "Política de Privacidad",
+    "lastUpdated": "Última actualización: {date}",
+    "metadata": {
+      "title": "Política de Privacidad | Verscienta Health",
+      "description": "Aprende cómo Verscienta Health recopila, usa y protege tu información personal."
+    }
+  },
+  "terms": {
+    "title": "Términos de Servicio",
+    "lastUpdated": "Última actualización: {date}",
+    "metadata": {
+      "title": "Términos de Servicio | Verscienta Health",
+      "description": "Lee los Términos de Servicio de Verscienta Health, incluyendo pautas de uso y descargos de responsabilidad."
+    }
+  },
+  "about": {
+    "title": "Acerca de Verscienta Health",
+    "subtitle": "Uniendo la sabiduría herbal antigua con la ciencia moderna para empoderar decisiones de salud informadas",
+    "mission": {
+      "title": "Nuestra Misión",
+      "paragraph1": "Verscienta Health se dedica a hacer que el conocimiento de la medicina herbal sea accesible, basado en evidencia y confiable. Creemos que la sabiduría curativa tradicional, cuando se combina con la investigación científica moderna, puede proporcionar herramientas poderosas para la salud y el bienestar.",
+      "paragraph2": "Nuestra plataforma sirve como un recurso integral para cualquier persona interesada en la medicina herbal—desde principiantes curiosos hasta practicantes experimentados. Seleccionamos cuidadosamente información de textos antiguos e investigación contemporánea para proporcionarte la imagen más completa posible."
+    },
+    "values": {
+      "title": "Nuestros Valores Fundamentales",
+      "evidenceBased": {
+        "title": "Basado en Evidencia",
+        "description": "Fundamentamos nuestra información tanto en la sabiduría tradicional como en la investigación científica moderna, proporcionando citas y referencias para todas las afirmaciones."
+      },
+      "holistic": {
+        "title": "Enfoque Holístico",
+        "description": "Honramos la interconexión del cuerpo, la mente y el espíritu, integrando sabiduría de múltiples tradiciones curativas."
+      },
+      "educational": {
+        "title": "Enfoque Educativo",
+        "description": "Empoderamos a los usuarios a través de la educación, ayudándote a tomar decisiones informadas sobre tu salud y viaje de bienestar."
+      },
+      "community": {
+        "title": "Impulsado por la Comunidad",
+        "description": "Fomentamos una comunidad de practicantes, investigadores y entusiastas trabajando juntos para avanzar el conocimiento de la medicina herbal."
+      }
+    },
+    "offerings": {
+      "title": "Lo Que Ofrecemos",
+      "herbDatabase": {
+        "title": "Base de Datos Integral de Hierbas",
+        "description": "Perfiles detallados de cientos de hierbas medicinales, incluyendo información botánica, usos tradicionales, constituyentes activos, pautas de dosificación e información de seguridad."
+      },
+      "formulas": {
+        "title": "Fórmulas Tradicionales",
+        "description": "Fórmulas herbales probadas en el tiempo de la Medicina Tradicional China, Ayurveda y herbolaria occidental, con desgloses de ingredientes y pautas de uso."
+      },
+      "symptomChecker": {
+        "title": "Verificador de Síntomas con IA",
+        "description": "Obtén recomendaciones herbales personalizadas basadas en tus síntomas, analizadas desde perspectivas tanto occidentales como de Medicina Tradicional China."
+      },
+      "practitionerDirectory": {
+        "title": "Directorio de Profesionales",
+        "description": "Encuentra herbolarios calificados, acupunturistas y profesionales de salud holística en tu área."
+      }
+    },
+    "cta": {
+      "title": "Ponte en Contacto",
+      "description": "¿Tienes preguntas, sugerencias o quieres contribuir a nuestra plataforma? Nos encantaría saber de ti.",
+      "button": "Contáctanos"
+    },
+    "metadata": {
+      "title": "Acerca de Nosotros | Verscienta Health",
+      "description": "Aprende sobre Verscienta Health - uniendo la sabiduría herbal antigua con la ciencia moderna para empoderar decisiones de salud informadas."
     }
   },
   "faq": {

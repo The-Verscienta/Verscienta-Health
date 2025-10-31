@@ -128,6 +128,15 @@
     "title": "草藥方劑",
     "subtitle": "傳統與現代草藥方劑",
     "searchPlaceholder": "搜尋方劑...",
+    "notFound": {
+      "title": "未找到方劑",
+      "description": "您正在尋找的方劑不存在或已被刪除。"
+    },
+    "metadata": {
+      "title": "草藥方劑 | 威知健康",
+      "description": "探索來自中醫、阿育吠陀和西方草藥學的經過時間考驗的草藥方劑。",
+      "defaultDescription": "瞭解{name}及其成分、用途和製備方法。"
+    },
     "ingredients": "成分",
     "actions": "功效",
     "indications": "主治",
@@ -309,6 +318,78 @@
     "metadata": {
       "title": "醫療免責聲明 | 威知健康",
       "description": "使用威知健康的重要醫療免責聲明和安全資訊。"
+    }
+  },
+  "privacy": {
+    "title": "隱私政策",
+    "lastUpdated": "最後更新：{date}",
+    "metadata": {
+      "title": "隱私政策 | 威知健康",
+      "description": "了解威知健康如何收集、使用和保護您的個人資訊。"
+    }
+  },
+  "terms": {
+    "title": "服務條款",
+    "lastUpdated": "最後更新：{date}",
+    "metadata": {
+      "title": "服務條款 | 威知健康",
+      "description": "閱讀威知健康的服務條款，包括使用指南和免責聲明。"
+    }
+  },
+  "about": {
+    "title": "關於威知健康",
+    "subtitle": "融合古老草藥智慧與現代科學，助力明智的健康決策",
+    "mission": {
+      "title": "我們的使命",
+      "paragraph1": "威知健康致力於使草藥醫學知識變得易於取得、基於證據且值得信賴。我們相信，傳統治療智慧與現代科學研究相結合，可以為健康和養生提供強大的工具。",
+      "paragraph2": "我們的平台為所有對草藥醫學感興趣的人提供全面的資源——從好奇的初學者到經驗豐富的醫師。我們精心整理來自古籍和當代研究的資訊，為您提供最完整的圖景。"
+    },
+    "values": {
+      "title": "我們的核心價值觀",
+      "evidenceBased": {
+        "title": "基於證據",
+        "description": "我們將資訊建立在傳統智慧和現代科學研究的基礎上，為所有聲明提供引文和參考。"
+      },
+      "holistic": {
+        "title": "整體方法",
+        "description": "我們尊重身心靈的相互聯繫，整合來自多種治療傳統的智慧。"
+      },
+      "educational": {
+        "title": "教育重點",
+        "description": "我們透過教育賦能使用者，幫助您就健康和養生之旅做出明智的決定。"
+      },
+      "community": {
+        "title": "社群驅動",
+        "description": "我們培育一個由醫師、研究人員和愛好者組成的社群，共同推進草藥醫學知識。"
+      }
+    },
+    "offerings": {
+      "title": "我們提供什麼",
+      "herbDatabase": {
+        "title": "全面的草藥資料庫",
+        "description": "數百種藥用草藥的詳細檔案，包括植物學資訊、傳統用途、活性成分、劑量指南和安全資訊。"
+      },
+      "formulas": {
+        "title": "傳統方劑",
+        "description": "來自中醫、阿育吠陀和西方草藥學的經過時間考驗的草藥方劑，附有成分分解和使用指南。"
+      },
+      "symptomChecker": {
+        "title": "AI症狀檢查器",
+        "description": "根據您的症狀獲得個人化的草藥推薦，從西醫和中醫角度進行分析。"
+      },
+      "practitionerDirectory": {
+        "title": "醫師目錄",
+        "description": "在您所在地區尋找合格的草藥師、針灸師和整體健康醫師。"
+      }
+    },
+    "cta": {
+      "title": "保持聯繫",
+      "description": "有問題、建議或想為我們的平台做貢獻？我們很樂意聽到您的聲音。",
+      "button": "聯絡我們"
+    },
+    "metadata": {
+      "title": "關於我們 | 威知健康",
+      "description": "了解威知健康 - 融合古老草藥智慧與現代科學，助力明智的健康決策。"
     }
   },
   "faq": {

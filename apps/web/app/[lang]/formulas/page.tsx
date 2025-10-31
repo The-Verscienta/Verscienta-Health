@@ -1,4 +1,5 @@
-import { setRequestLocale } from 'next-intl/server'
+import type { Metadata } from 'next'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Suspense } from 'react'
 import { FormulaCard } from '@/components/cards/FormulaCard'
 import { SearchBar } from '@/components/search/SearchBar'
@@ -28,6 +29,21 @@ interface Formula {
   ingredients?: unknown[]
   averageRating?: number
   reviewCount?: number
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>
+}): Promise<Metadata> {
+  const { lang } = await params
+  setRequestLocale(lang)
+  const t = await getTranslations({ locale: lang, namespace: 'formulas.metadata' })
+
+  return {
+    title: t('title'),
+    description: t('description'),
+  }
 }
 
 export default async function FormulasPage({ params, searchParams }: FormulasPageProps) {
@@ -106,10 +122,4 @@ export default async function FormulasPage({ params, searchParams }: FormulasPag
       </Suspense>
     </div>
   )
-}
-
-export const metadata = {
-  title: 'Herbal Formulas | Verscienta Health',
-  description:
-    'Discover time-tested herbal formulas from Traditional Chinese Medicine, Ayurveda, and Western herbalism.',
 }
