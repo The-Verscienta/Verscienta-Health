@@ -87,8 +87,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || process.env.DATABASE_URI,
     },
-    // Uncomment for development with SQLite:
-    // migrationDir: path.resolve(dirname, 'migrations'),
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
 
   sharp,
