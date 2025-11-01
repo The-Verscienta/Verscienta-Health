@@ -27,11 +27,11 @@ export interface TreflePlant {
   vegetable?: boolean
   edible?: boolean
   specifications?: {
-    growth_habit?: string
-    toxicity?: string
-    ligneous_type?: string
-    growth_form?: string
-    growth_rate?: string
+    growth_habit?: string | null
+    toxicity?: string | null
+    ligneous_type?: string | null
+    growth_form?: string | null
+    growth_rate?: string | null
     average_height?: { cm?: number | null }
     maximum_height?: { cm?: number | null }
   }
