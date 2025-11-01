@@ -5,7 +5,7 @@
  * Runs weekly to update herbs with scientific information.
  */
 
-import type { PayloadHandler } from 'payload'
+import type { TaskHandler } from 'payload'
 import { getTrefleClient } from '../lib/trefle'
 
 const HERBS_PER_RUN = 30 // Process 30 herbs per run
@@ -139,7 +139,7 @@ async function syncSingleHerbWithTrefle(
 /**
  * Sync Trefle Botanical Data Job Handler
  */
-export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
+export const syncTrefleDataJob: TaskHandler<'sync-trefle-data'> = async ({ req }) => {
   const startTime = Date.now()
 
   try {
@@ -148,14 +148,14 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
     const client = getTrefleClient()
     if (!client) {
       console.log('⚠️ Trefle client not configured. Skipping sync.')
-      return Response.json({ success: false, message: 'Trefle client not configured' }, { status: 200 })
+      return { output: { success: false, message: 'Trefle client not configured' } }
     }
 
     // Find herbs that need syncing
     // Priority: Never synced OR last synced > 30 days ago
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
 
-    const { docs: herbs } = await payload.find({
+    const { docs: herbs } = await req.payload.find({
       collection: 'herbs',
       where: {
         or: [
@@ -177,7 +177,7 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
 
     if (herbs.length === 0) {
       console.log('✅ No herbs need syncing')
-      return Response.json({ success: true, message: 'No herbs need syncing' }, { status: 200 })
+      return { output: { success: true, message: 'No herbs need syncing' } }
     }
 
     console.log(`📋 Found ${herbs.length} herbs to sync`)
@@ -187,7 +187,7 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
     let errorCount = 0
 
     for (const herb of herbs) {
-      const result = await syncSingleHerbWithTrefle(payload, herb.id)
+      const result = await syncSingleHerbWithTrefle(req.payload, herb.id)
 
       if (result.success) {
         if (result.message.startsWith('Skipped')) {
@@ -214,7 +214,7 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
     `)
 
     // Log import summary
-    await payload.create({
+    await req.payload.create({
       collection: 'import-logs',
       data: {
         type: 'trefle-sync',
@@ -234,21 +234,21 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
       },
     })
 
-    return Response.json({
-      success: true,
-      message: 'Trefle sync complete',
-      data: {
+    return {
+      output: {
+        success: true,
+        message: 'Trefle sync complete',
         enriched: successCount,
         skipped: skipCount,
         errors: errorCount,
         duration,
       },
-    }, { status: 200 })
+    }
   } catch (error) {
     console.error('❌ Trefle sync failed:', error)
 
     // Log error
-    await payload.create({
+    await req.payload.create({
       collection: 'import-logs',
       data: {
         type: 'trefle-sync-error',
@@ -263,10 +263,12 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
       },
     })
 
-    return Response.json({
-      success: false,
-      message: 'Trefle sync failed',
-      error: (error as Error).message,
-    }, { status: 500 })
+    return {
+      output: {
+        success: false,
+        message: 'Trefle sync failed',
+        error: (error as Error).message,
+      },
+    }
   }
 }

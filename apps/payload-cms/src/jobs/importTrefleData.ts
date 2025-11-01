@@ -8,7 +8,7 @@
  * Only enable if you want to import the entire botanical database.
  */
 
-import type { PayloadHandler } from 'payload'
+import type { TaskHandler } from 'payload'
 import { getTrefleClient } from '../lib/trefle'
 
 const PAGES_PER_RUN = 5 // Fetch 5 pages per minute
@@ -101,7 +101,7 @@ async function updateImportProgress(
 /**
  * Import Trefle Plant Database Job Handler
  */
-export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
+export const importTrefleDataJob: TaskHandler<'import-trefle-data'> = async ({ req }) => {
   const startTime = Date.now()
 
   try {
@@ -110,27 +110,27 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
     const client = getTrefleClient()
     if (!client) {
       console.log('⚠️ Trefle client not configured. Skipping import.')
-      return Response.json({ success: false, message: 'Trefle client not configured' }, { status: 200 })
+      return { output: { success: false, message: 'Trefle client not configured' } }
     }
 
     // Check if import is enabled
     if (process.env.ENABLE_TREFLE_IMPORT !== 'true') {
       console.log('⚠️ Trefle import is disabled. Set ENABLE_TREFLE_IMPORT=true to enable.')
-      return Response.json({ success: false, message: 'Trefle import is disabled' }, { status: 200 })
+      return { output: { success: false, message: 'Trefle import is disabled' } }
     }
 
     // Get current progress
-    const progress = await getTrefleImportProgress(payload)
+    const progress = await getTrefleImportProgress(req.payload)
 
     if (progress.importStatus === 'completed') {
       console.log('✅ Trefle import already complete')
-      return Response.json({ success: true, message: 'Import already complete' }, { status: 200 })
+      return { output: { success: true, message: 'Import already complete' } }
     }
 
     console.log(`📄 Resuming from page ${progress.currentPage}`)
 
     // Update status to in_progress
-    await updateImportProgress(payload, { importStatus: 'in_progress' })
+    await updateImportProgress(req.payload, { importStatus: 'in_progress' })
 
     let plantsProcessed = 0
     let plantsSkipped = 0
@@ -146,7 +146,7 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
 
       if (!response.data || response.data.length === 0) {
         console.log('✅ Reached end of Trefle database')
-        await updateImportProgress(payload, { importStatus: 'completed' })
+        await updateImportProgress(req.payload, { importStatus: 'completed' })
         break
       }
 
@@ -164,7 +164,7 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
           }
 
           // Check if already imported (by trefleId)
-          const { docs: existing } = await payload.find({
+          const { docs: existing } = await req.payload.find({
             collection: 'herbs',
             where: {
               'botanicalInfo.trefleId': {
@@ -183,7 +183,7 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
           const slug =
             plant.slug || plant.scientific_name.toLowerCase().replace(/\s+/g, '-')
 
-          await payload.create({
+          await req.payload.create({
             collection: 'herbs',
             data: {
               title: plant.common_name || plant.scientific_name,
@@ -225,7 +225,7 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
     const newPage = progress.currentPage + PAGES_PER_RUN
     const newTotalHerbs = progress.recordsImported + plantsCreated
 
-    await updateImportProgress(payload, {
+    await updateImportProgress(req.payload, {
       currentPage: newPage,
       recordsImported: newTotalHerbs,
     })
@@ -244,7 +244,7 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
     `)
 
     // Log import summary
-    await payload.create({
+    await req.payload.create({
       collection: 'import-logs',
       data: {
         type: 'trefle-progressive-import',
@@ -267,10 +267,10 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
       },
     })
 
-    return Response.json({
-      success: true,
-      message: 'Trefle import batch complete',
-      data: {
+    return {
+      output: {
+        success: true,
+        message: 'Trefle import batch complete',
         pagesProcessed: PAGES_PER_RUN,
         plantsProcessed,
         plantsCreated,
@@ -279,18 +279,18 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
         nextPage: newPage,
         duration,
       },
-    }, { status: 200 })
+    }
   } catch (error) {
     console.error('❌ Trefle import failed:', error)
 
     // Update status to error
-    await updateImportProgress(payload, {
+    await updateImportProgress(req.payload, {
       importStatus: 'error',
       errorMessage: (error as Error).message,
     })
 
     // Log error
-    await payload.create({
+    await req.payload.create({
       collection: 'import-logs',
       data: {
         type: 'trefle-progressive-import',
@@ -305,11 +305,13 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
       },
     })
 
-    return Response.json({
-      success: false,
-      message: 'Trefle import failed',
-      error: (error as Error).message,
-    }, { status: 500 })
+    return {
+      output: {
+        success: false,
+        message: 'Trefle import failed',
+        error: (error as Error).message,
+      },
+    }
   }
 }
 
