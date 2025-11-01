@@ -37,8 +37,6 @@ export default buildConfig({
     user: 'users',
     meta: {
       titleSuffix: '- Verscienta Health',
-      favicon: '/favicon.ico',
-      ogImage: '/og-image.jpg',
     },
   },
 
