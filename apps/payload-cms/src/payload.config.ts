@@ -80,7 +80,7 @@ export default buildConfig({
 
   editor: lexicalEditor({}),
 
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: process.env.PAYLOAD_SECRET || process.env.JWT_SECRET || process.env.ENCRYPTION_KEY || '',
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
