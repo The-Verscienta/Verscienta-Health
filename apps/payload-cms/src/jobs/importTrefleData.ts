@@ -110,13 +110,13 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
     const client = getTrefleClient()
     if (!client) {
       console.log('⚠️ Trefle client not configured. Skipping import.')
-      return
+      return Response.json({ success: false, message: 'Trefle client not configured' }, { status: 200 })
     }
 
     // Check if import is enabled
     if (process.env.ENABLE_TREFLE_IMPORT !== 'true') {
       console.log('⚠️ Trefle import is disabled. Set ENABLE_TREFLE_IMPORT=true to enable.')
-      return
+      return Response.json({ success: false, message: 'Trefle import is disabled' }, { status: 200 })
     }
 
     // Get current progress
@@ -124,7 +124,7 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
 
     if (progress.importStatus === 'completed') {
       console.log('✅ Trefle import already complete')
-      return
+      return Response.json({ success: true, message: 'Import already complete' }, { status: 200 })
     }
 
     console.log(`📄 Resuming from page ${progress.currentPage}`)
@@ -267,6 +267,20 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
         timestamp: new Date().toISOString(),
       },
     })
+
+    return Response.json({
+      success: true,
+      message: 'Trefle import batch complete',
+      data: {
+        pagesProcessed: PAGES_PER_RUN,
+        plantsProcessed,
+        plantsCreated,
+        plantsSkipped,
+        totalHerbsInDB: newTotalHerbs,
+        nextPage: newPage,
+        duration,
+      },
+    }, { status: 200 })
   } catch (error) {
     console.error('❌ Trefle import failed:', error)
 
@@ -291,6 +305,12 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
         timestamp: new Date().toISOString(),
       },
     })
+
+    return Response.json({
+      success: false,
+      message: 'Trefle import failed',
+      error: (error as Error).message,
+    }, { status: 500 })
   }
 }
 

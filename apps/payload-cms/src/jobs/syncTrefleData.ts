@@ -148,7 +148,7 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
     const client = getTrefleClient()
     if (!client) {
       console.log('⚠️ Trefle client not configured. Skipping sync.')
-      return
+      return Response.json({ success: false, message: 'Trefle client not configured' }, { status: 200 })
     }
 
     // Find herbs that need syncing
@@ -177,7 +177,7 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
 
     if (herbs.length === 0) {
       console.log('✅ No herbs need syncing')
-      return
+      return Response.json({ success: true, message: 'No herbs need syncing' }, { status: 200 })
     }
 
     console.log(`📋 Found ${herbs.length} herbs to sync`)
@@ -233,6 +233,17 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
         timestamp: new Date().toISOString(),
       },
     })
+
+    return Response.json({
+      success: true,
+      message: 'Trefle sync complete',
+      data: {
+        enriched: successCount,
+        skipped: skipCount,
+        errors: errorCount,
+        duration,
+      },
+    }, { status: 200 })
   } catch (error) {
     console.error('❌ Trefle sync failed:', error)
 
@@ -251,5 +262,11 @@ export const syncTrefleDataJob: PayloadHandler = async ({ payload }) => {
         timestamp: new Date().toISOString(),
       },
     })
+
+    return Response.json({
+      success: false,
+      message: 'Trefle sync failed',
+      error: (error as Error).message,
+    }, { status: 500 })
   }
 }
