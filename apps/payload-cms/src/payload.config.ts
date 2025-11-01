@@ -65,12 +65,12 @@ export default buildConfig({
       {
         slug: 'sync-trefle-data',
         handler: syncTrefleDataJob,
-        schedule: '0 3 * * 3', // Every Wednesday at 3 AM
+        schedule: [{ cron: '0 3 * * 3' }], // Every Wednesday at 3 AM
       },
       {
         slug: 'import-trefle-data',
         handler: importTrefleDataJob,
-        schedule: '*/1 * * * *', // Every minute (when ENABLE_TREFLE_IMPORT=true)
+        schedule: [{ cron: '*/1 * * * *' }], // Every minute (when ENABLE_TREFLE_IMPORT=true)
         queue: 'low-priority',
       },
     ],
