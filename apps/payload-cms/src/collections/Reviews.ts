@@ -118,7 +118,7 @@ export const Reviews: CollectionConfig = {
             practitioners: 'practitioner',
             modalities: 'modality',
           }
-          data.reviewedEntityType = entityTypeMap[data.reviewedEntity.relationTo]
+          data.reviewedEntityType = entityTypeMap[data.reviewedEntity.relationTo as keyof typeof entityTypeMap]
         }
         return data
       },
