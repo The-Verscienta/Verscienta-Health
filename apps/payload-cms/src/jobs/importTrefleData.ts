@@ -192,7 +192,6 @@ export const importTrefleDataJob: PayloadHandler = async ({ payload }) => {
                 scientificName: plant.scientific_name,
                 family: plant.family,
                 genus: plant.genus,
-                species: plant.species,
                 trefleId: plant.id,
                 trefleSlug: plant.slug,
               },
