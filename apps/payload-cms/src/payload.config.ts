@@ -131,10 +131,6 @@ export default buildConfig({
     process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000',
   ].filter(Boolean),
 
-  // Default limits for queries
-  defaultMaxLimit: 100,
-  defaultLimit: 25,
-
   // Server URL
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
 
