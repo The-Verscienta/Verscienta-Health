@@ -306,7 +306,7 @@ export class TrefleClient {
       }
 
       // Return first result as best guess
-      return searchResult.data[0]
+      return searchResult.data[0] ?? null
     } catch (error) {
       console.error(`Failed to find best match for "${scientificName}":`, error)
       return null
@@ -401,7 +401,7 @@ export class TrefleClient {
         isValid: false,
         exactMatch: false,
         suggestions,
-        bestMatch: searchResult.data[0],
+        bestMatch: searchResult.data[0] ?? null,
       }
     } catch (error) {
       console.error(`Failed to validate scientific name "${scientificName}":`, error)
