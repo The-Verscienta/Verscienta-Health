@@ -88,6 +88,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || process.env.DATABASE_URI,
     },
     migrationDir: path.resolve(dirname, 'migrations'),
+    push: false, // Disable auto-push in production - use migrations only
   }),
 
   sharp,
