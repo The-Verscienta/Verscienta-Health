@@ -12,6 +12,7 @@ import type { HerbData } from '@/lib/json-ld'
 import { generateBreadcrumbSchema, generateHerbSchema } from '@/lib/json-ld'
 import { getHerbBySlug } from '@/lib/strapi-api'
 
+export const dynamic = 'force-dynamic'
 interface Herb {
   id: string
   title: string

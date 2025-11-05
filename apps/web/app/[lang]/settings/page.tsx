@@ -45,8 +45,7 @@ export default function SettingsPage() {
   useEffect(() => {
     if (session?.user) {
       // Check if user has MFA enabled
-      // @ts-expect-error - mfaEnabled is added as additionalField in better-auth config
-      setIsMfaEnabled(session.user.mfaEnabled || false)
+      setIsMfaEnabled((session.user as any).mfaEnabled || false)
     }
   }, [session])
 

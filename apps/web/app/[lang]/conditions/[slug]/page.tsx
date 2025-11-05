@@ -13,6 +13,7 @@ import type { ConditionData } from '@/lib/json-ld'
 import { generateBreadcrumbSchema, generateConditionSchema } from '@/lib/json-ld'
 import { getConditionBySlug } from '@/lib/strapi-api'
 
+export const dynamic = 'force-dynamic'
 interface Symptom {
   id: string
   title: string

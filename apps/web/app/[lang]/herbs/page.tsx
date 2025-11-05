@@ -4,7 +4,9 @@ import { HerbCard } from '@/components/cards/HerbCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
-import { getHerbs } from '@/lib/strapi-api'
+import { getHerbs, type Herb } from '@/lib/payload-api'
+
+export const dynamic = 'force-dynamic'
 
 interface HerbsPageProps {
   params: Promise<{ lang: string }>
@@ -12,20 +14,6 @@ interface HerbsPageProps {
     page?: string
     q?: string
   }>
-}
-
-interface Herb {
-  id: string
-  herbId: string
-  title: string
-  slug: string
-  scientificName?: string
-  description: string
-  featuredImage?: { url: string; alt?: string }
-  tcmProperties?: { taste?: string[]; temperature?: string; category?: string }
-  westernProperties?: string[]
-  averageRating?: number
-  reviewCount?: number
 }
 
 export default async function HerbsPage({ params, searchParams }: HerbsPageProps) {
@@ -37,8 +25,7 @@ export default async function HerbsPage({ params, searchParams }: HerbsPageProps
   const { page: pageParam, q: query } = await searchParams
   const page = Number(pageParam) || 1
 
-  const { docs, totalPages, totalDocs } = await getHerbs(page, 12, query)
-  const herbs = docs as Herb[]
+  const { docs: herbs, totalPages, totalDocs } = await getHerbs(page, 12, query)
 
   return (
     <div className="container-custom py-12">
@@ -80,16 +67,31 @@ export default async function HerbsPage({ params, searchParams }: HerbsPageProps
               {herbs.map((herb) => (
                 <HerbCard
                   key={herb.id}
-                  herbId={herb.herbId}
+                  herbId={herb.herbId || ''}
                   title={herb.title}
-                  slug={herb.slug}
-                  scientificName={herb.scientificName}
-                  description={herb.description}
-                  featuredImage={herb.featuredImage}
-                  tcmProperties={herb.tcmProperties}
-                  westernProperties={herb.westernProperties}
-                  averageRating={herb.averageRating}
-                  reviewCount={herb.reviewCount}
+                  slug={herb.slug || ''}
+                  scientificName={herb.botanicalInfo?.scientificName}
+                  description={typeof herb.description === 'object' ? undefined : herb.description}
+                  featuredImage={
+                    typeof herb.featuredImage === 'object' && herb.featuredImage
+                      ? {
+                          url: herb.featuredImage.url || '',
+                          alt: herb.featuredImage.alt || undefined,
+                        }
+                      : undefined
+                  }
+                  tcmProperties={
+                    herb.tcmProperties
+                      ? {
+                          taste: herb.tcmProperties.tcmTaste ?? undefined,
+                          temperature: herb.tcmProperties.tcmTemperature ?? undefined,
+                          category: herb.tcmProperties.tcmCategory ?? undefined,
+                        }
+                      : undefined
+                  }
+                  westernProperties={herb.westernProperties || undefined}
+                  averageRating={herb.averageRating || undefined}
+                  reviewCount={herb.reviewCount || undefined}
                 />
               ))}
             </div>

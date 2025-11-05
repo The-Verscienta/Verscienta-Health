@@ -4,7 +4,9 @@ import { ConditionCard } from '@/components/cards/ConditionCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
-import { getConditions } from '@/lib/strapi-api'
+import { getConditions, type Condition } from '@/lib/payload-api'
+
+export const dynamic = 'force-dynamic'
 
 interface ConditionsPageProps {
   params: Promise<{ lang: string }>
@@ -15,18 +17,6 @@ interface ConditionsPageProps {
   }>
 }
 
-interface Condition {
-  id: string
-  conditionId: string
-  title: string
-  slug: string
-  description: string
-  category: string
-  severity: string
-  relatedHerbs?: unknown[]
-  relatedFormulas?: unknown[]
-}
-
 export default async function ConditionsPage({ params, searchParams }: ConditionsPageProps) {
   const { lang } = await params
   setRequestLocale(lang)
@@ -35,8 +25,7 @@ export default async function ConditionsPage({ params, searchParams }: Condition
   const page = Number(pageParam) || 1
   // Note: category filtering can be added to the API client if needed
 
-  const { docs, totalPages, totalDocs } = await getConditions(page, 12, query)
-  const conditions = docs as Condition[]
+  const { docs: conditions, totalPages, totalDocs } = await getConditions(page, 12, query)
 
   return (
     <div className="container-custom py-12">
@@ -76,14 +65,14 @@ export default async function ConditionsPage({ params, searchParams }: Condition
               {conditions.map((condition) => (
                 <ConditionCard
                   key={condition.id}
-                  conditionId={condition.conditionId}
+                  conditionId={String(condition.id)}
                   title={condition.title}
-                  slug={condition.slug}
-                  description={condition.description}
-                  category={condition.category}
-                  severity={condition.severity}
-                  relatedHerbsCount={condition.relatedHerbs?.length}
-                  relatedFormulasCount={condition.relatedFormulas?.length}
+                  slug={condition.slug || ''}
+                  description={typeof condition.description === 'object' ? undefined : condition.description}
+                  category={condition.category || ''}
+                  severity={condition.severity || ''}
+                  relatedHerbsCount={condition.relatedHerbs?.length || 0}
+                  relatedFormulasCount={condition.relatedFormulas?.length || 0}
                 />
               ))}
             </div>

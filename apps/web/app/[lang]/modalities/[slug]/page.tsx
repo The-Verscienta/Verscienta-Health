@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
 import { getModalityBySlug } from '@/lib/strapi-api'
 
+export const dynamic = 'force-dynamic'
 interface Modality {
   id: string
   title: string

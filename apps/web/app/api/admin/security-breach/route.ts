@@ -3,6 +3,7 @@ import { AuditAction, AuditSeverity, createAuditLog } from '@/lib/audit-log'
 import { auth } from '@/lib/auth'
 import { sendEmail } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
+import { BreachType, BreachSeverity, RemediationStatus } from './types'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,32 +16,6 @@ export const dynamic = 'force-dynamic'
  * - Breach logging and tracking
  * - Remediation status management
  */
-
-export enum BreachType {
-  UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS',
-  DATA_EXFILTRATION = 'DATA_EXFILTRATION',
-  BRUTE_FORCE_ATTACK = 'BRUTE_FORCE_ATTACK',
-  UNUSUAL_LOGIN_PATTERN = 'UNUSUAL_LOGIN_PATTERN',
-  MASS_DATA_ACCESS = 'MASS_DATA_ACCESS',
-  ACCOUNT_COMPROMISE = 'ACCOUNT_COMPROMISE',
-  PHI_EXPOSURE = 'PHI_EXPOSURE',
-  SYSTEM_INTRUSION = 'SYSTEM_INTRUSION',
-}
-
-export enum BreachSeverity {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL',
-}
-
-export enum RemediationStatus {
-  DETECTED = 'DETECTED',
-  INVESTIGATING = 'INVESTIGATING',
-  CONTAINED = 'CONTAINED',
-  MITIGATED = 'MITIGATED',
-  RESOLVED = 'RESOLVED',
-}
 
 interface BreachReportRequest {
   type: BreachType
@@ -261,7 +236,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is admin
-    const userRole = session.user.role
+    const userRole = (session.user as any).role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 })
     }
@@ -362,7 +337,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user is admin
-    const userRole = session.user.role
+    const userRole = (session.user as any).role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 })
     }

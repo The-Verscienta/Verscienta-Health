@@ -7,6 +7,7 @@ import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
 import { getFormulas } from '@/lib/strapi-api'
 
+export const dynamic = 'force-dynamic'
 interface FormulasPageProps {
   params: Promise<{ lang: string }>
   searchParams: Promise<{

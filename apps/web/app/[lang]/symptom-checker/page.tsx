@@ -56,8 +56,7 @@ export default function SymptomCheckerPage() {
   // HIPAA Compliance: MFA enforcement for PHI access
   useEffect(() => {
     if (!isPending && session?.user) {
-      // @ts-expect-error - mfaEnabled is added as additionalField in better-auth config
-      const mfaEnabled = session.user.mfaEnabled || false
+      const mfaEnabled = (session.user as any).mfaEnabled || false
 
       // Show MFA required warning if not enabled
       if (!mfaEnabled) {

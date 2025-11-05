@@ -7,6 +7,7 @@ import { sendMagicLinkEmail } from './email'
 import { prisma } from './prisma'
 import { securityMonitor } from './security-monitor'
 import { sessionLogger } from './session-logger'
+import { syncBetterAuthUserToPayload } from './payload-auth-sync'
 
 /**
  * Better Auth Configuration
@@ -188,6 +189,16 @@ export const auth = betterAuth({
                 ? new Date(session.expiresAt)
                 : new Date(Date.now() + 60 * 60 * 24 * 1000),
             })
+
+            // Sync user to Payload CMS
+            await syncBetterAuthUserToPayload({
+              id: user.id,
+              email: user.email,
+              firstName: (user as any).firstName,
+              lastName: (user as any).lastName,
+              role: (user as any).role,
+              emailVerified: user.emailVerified,
+            })
           } catch (error) {
             console.error('[Session] Logging error (sign-in):', error)
           }
@@ -231,6 +242,16 @@ export const auth = betterAuth({
               userEmail: user.email,
               provider,
             })
+
+            // Sync user to Payload CMS
+            await syncBetterAuthUserToPayload({
+              id: user.id,
+              email: user.email,
+              firstName: (user as any).firstName,
+              lastName: (user as any).lastName,
+              role: (user as any).role,
+              emailVerified: user.emailVerified,
+            })
           } catch (error) {
             console.error('[Session] Logging error (OAuth):', error)
           }
@@ -243,6 +264,16 @@ export const auth = betterAuth({
               sessionId: session.id || session.token || 'unknown',
               userId: user.id,
               userEmail: user.email,
+            })
+
+            // Sync user to Payload CMS
+            await syncBetterAuthUserToPayload({
+              id: user.id,
+              email: user.email,
+              firstName: (user as any).firstName,
+              lastName: (user as any).lastName,
+              role: (user as any).role,
+              emailVerified: user.emailVerified,
             })
           } catch (error) {
             console.error('[Session] Logging error (magic link):', error)

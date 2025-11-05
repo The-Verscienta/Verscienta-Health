@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check admin role
-    const userRole = session.user.role
+    const userRole = (session.user as any).role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
     }
@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check admin role
-    const userRole = session.user.role
+    const userRole = (session.user as any).role
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
     }

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
 import { getFormulaBySlug } from '@/lib/strapi-api'
 
+export const dynamic = 'force-dynamic'
 interface Formula {
   id: string
   title: string

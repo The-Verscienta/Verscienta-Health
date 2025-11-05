@@ -8,6 +8,7 @@ import { Pagination } from '@/components/ui/pagination'
 import { Link } from '@/i18n/routing'
 import { getModalities } from '@/lib/strapi-api'
 
+export const dynamic = 'force-dynamic'
 interface ModalitiesPageProps {
   params: Promise<{ lang: string }>
   searchParams: Promise<{

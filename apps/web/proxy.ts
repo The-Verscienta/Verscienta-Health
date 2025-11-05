@@ -254,9 +254,10 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const origin = request.headers.get('origin')
 
-  // Step 1: Handle i18n routing (skip for API routes, static files, etc.)
+  // Step 1: Handle i18n routing (skip for API routes, Payload admin, static files, etc.)
   const shouldSkipI18n =
     pathname.startsWith('/api/') ||
+    pathname.startsWith('/admin') || // Payload CMS admin panel
     pathname.startsWith('/_next/') ||
     pathname.includes('/sw.js') ||
     pathname.match(/\.(ico|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot)$/)
@@ -371,11 +372,13 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except:
+     * - /admin (Payload CMS admin)
+     * - /api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization)
      * - favicon.ico (favicon file)
      * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
+    '/((?!admin|api/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
   ],
 }

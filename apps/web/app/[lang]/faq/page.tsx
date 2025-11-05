@@ -4,6 +4,8 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { FAQSection } from '@/components/ui/faq'
 import { generateFAQSchema } from '@/lib/json-ld'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata({
   params,
 }: {

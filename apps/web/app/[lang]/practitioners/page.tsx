@@ -5,6 +5,7 @@ import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { getPractitioners } from '@/lib/strapi-api'
 
+export const dynamic = 'force-dynamic'
 interface Practitioner {
   id: string
   practitionerId: string
