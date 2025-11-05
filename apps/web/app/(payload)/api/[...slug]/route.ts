@@ -1,18 +1,30 @@
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
-/* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
+/* MANUALLY PATCHED FOR NEXT.JS 15.4+ COMPATIBILITY */
+/* See: https://github.com/payloadcms/payload/issues (async params support) */
 import type { NextRequest } from 'next/server'
 
 import config from '@payload-config'
 import { REST_DELETE, REST_GET, REST_PATCH, REST_POST } from '@payloadcms/next/routes'
 
-export const GET = (req: NextRequest, options: { params: Promise<{ slug: string[] }> }) =>
-  REST_GET(req, options, config)
+// Wrap to handle async params in Next.js 15.4+
+async function handleGET(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  const resolvedParams = await params
+  return REST_GET(req, { params: resolvedParams }, config)
+}
 
-export const POST = (req: NextRequest, options: { params: Promise<{ slug: string[] }> }) =>
-  REST_POST(req, options, config)
+async function handlePOST(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  const resolvedParams = await params
+  return REST_POST(req, { params: resolvedParams }, config)
+}
 
-export const DELETE = (req: NextRequest, options: { params: Promise<{ slug: string[] }> }) =>
-  REST_DELETE(req, options, config)
+async function handleDELETE(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  const resolvedParams = await params
+  return REST_DELETE(req, { params: resolvedParams }, config)
+}
 
-export const PATCH = (req: NextRequest, options: { params: Promise<{ slug: string[] }> }) =>
-  REST_PATCH(req, options, config)
+async function handlePATCH(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  const resolvedParams = await params
+  return REST_PATCH(req, { params: resolvedParams }, config)
+}
+
+export { handleGET as GET, handlePOST as POST, handleDELETE as DELETE, handlePATCH as PATCH }

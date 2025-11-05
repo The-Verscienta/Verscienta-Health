@@ -1,10 +1,22 @@
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
-/* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
+/* TEMPORARILY DISABLED - GRAPHQL_GET/POST exports not available in @payloadcms/next 3.62.1 */
+/* GraphQL API is optional - using REST API instead */
+/* TODO: Re-enable when Payload updates exports for Next.js 15.4+ */
+
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 
-import config from '@payload-config'
-import { GRAPHQL_GET, GRAPHQL_POST } from '@payloadcms/next/routes'
+// Placeholder routes - GraphQL API temporarily disabled
+export const GET = async (req: NextRequest) => {
+  return NextResponse.json(
+    { error: 'GraphQL API temporarily disabled. Use REST API at /api/* instead.' },
+    { status: 503 }
+  )
+}
 
-export const GET = (req: NextRequest) => GRAPHQL_GET(req, config)
-
-export const POST = (req: NextRequest) => GRAPHQL_POST(req, config)
+export const POST = async (req: NextRequest) => {
+  return NextResponse.json(
+    { error: 'GraphQL API temporarily disabled. Use REST API at /api/* instead.' },
+    { status: 503 }
+  )
+}
