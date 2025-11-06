@@ -1,0 +1,604 @@
+/**
+ * Strapi to PayloadCMS Data Migration Script
+ *
+ * Migrates all content from Strapi CMS to PayloadCMS 3.0
+ *
+ * Usage:
+ *   pnpm tsx scripts/migrate-strapi-to-payload.ts
+ *
+ * Options:
+ *   --dry-run          Preview migration without making changes
+ *   --collection=name  Migrate only specific collection
+ *   --batch-size=100   Number of records per batch (default: 100)
+ */
+
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import Stripe from 'stripe'
+
+// Configuration
+const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337'
+const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || ''
+const BATCH_SIZE = parseInt(process.env.BATCH_SIZE || '100')
+const DRY_RUN = process.argv.includes('--dry-run')
+const SPECIFIC_COLLECTION = process.argv.find(arg => arg.startsWith('--collection='))?.split('=')[1]
+
+/**
+ * Collection mapping: Strapi collection name → Payload collection slug
+ */
+const COLLECTION_MAP = {
+  'herb': 'herbs',
+  'formula': 'formulas',
+  'condition': 'conditions',
+  'symptom': 'symptoms',
+  'modality': 'modalities',
+  'practitioner': 'practitioners',
+  'review': 'reviews',
+  'user': 'users',
+  'upload': 'media',
+} as const
+
+type StrapiCollection = keyof typeof COLLECTION_MAP
+type PayloadCollection = typeof COLLECTION_MAP[StrapiCollection]
+
+/**
+ * Migration statistics
+ */
+interface MigrationStats {
+  collection: string
+  total: number
+  migrated: number
+  skipped: number
+  failed: number
+  errors: Array<{ id: string | number; error: string }>
+}
+
+/**
+ * Fetch all records from Strapi collection with pagination
+ */
+async function fetchStrapiCollection(
+  collectionName: string,
+  page = 1,
+  pageSize = BATCH_SIZE
+): Promise<any[]> {
+  try {
+    const url = `${STRAPI_URL}/api/${collectionName}?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=*`
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${collectionName}: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return data.data || []
+  } catch (error) {
+    console.error(`❌ Error fetching Strapi collection ${collectionName}:`, error)
+    return []
+  }
+}
+
+/**
+ * Transform Strapi herb to Payload herb
+ */
+function transformHerb(strapiHerb: any): any {
+  const attributes = strapiHerb.attributes
+
+  return {
+    title: attributes.name || attributes.title,
+    slug: attributes.slug || attributes.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    description: attributes.description,
+
+    // Botanical Information
+    botanicalInfo: {
+      scientificName: attributes.scientificName || attributes.scientific_name,
+      family: attributes.family,
+      genus: attributes.genus,
+      species: attributes.species,
+      plantType: attributes.plantType || attributes.plant_type,
+      partsUsed: attributes.partsUsed || attributes.parts_used,
+      trefleId: attributes.trefleId || attributes.trefle_id,
+      trefleSlug: attributes.trefleSlug || attributes.trefle_slug,
+      lastSyncedAt: attributes.lastSyncedAt || attributes.last_synced_at,
+    },
+
+    // Common Names
+    commonNames: attributes.commonNames?.map((cn: any) => ({
+      name: typeof cn === 'string' ? cn : cn.name,
+      language: typeof cn === 'string' ? 'en' : (cn.language || 'en'),
+    })) || [],
+
+    // TCM Properties
+    tcmProperties: {
+      tcmTaste: attributes.tcmTaste || attributes.tcm_taste,
+      tcmTemperature: attributes.tcmTemperature || attributes.tcm_temperature,
+      tcmMeridians: attributes.tcmMeridians || attributes.tcm_meridians,
+      tcmFunctions: attributes.tcmFunctions || attributes.tcm_functions,
+      tcmCategory: attributes.tcmCategory || attributes.tcm_category,
+      tcmTraditionalUses: attributes.tcmTraditionalUses || attributes.tcm_traditional_uses,
+    },
+
+    // Therapeutic Information
+    therapeuticUses: attributes.therapeuticUses || attributes.therapeutic_uses,
+    activeCompounds: attributes.activeCompounds || attributes.active_compounds,
+    preparationMethods: attributes.preparationMethods || attributes.preparation_methods,
+    dosageGuidelines: attributes.dosageGuidelines || attributes.dosage_guidelines,
+
+    // Safety Information
+    safetyInfo: {
+      contraindications: attributes.contraindications,
+      warnings: attributes.warnings,
+      sideEffects: attributes.sideEffects || attributes.side_effects,
+      drugInteractions: attributes.drugInteractions || attributes.drug_interactions,
+      pregnancySafety: attributes.pregnancySafety || attributes.pregnancy_safety,
+      breastfeedingSafety: attributes.breastfeedingSafety || attributes.breastfeeding_safety,
+      childrenSafety: attributes.childrenSafety || attributes.children_safety,
+    },
+
+    // Media
+    featuredImage: transformMediaRelation(attributes.featuredImage || attributes.featured_image),
+    photoGallery: transformMediaRelation(attributes.photoGallery || attributes.photo_gallery, true),
+
+    // Conservation
+    conservationStatus: attributes.conservationStatus || attributes.conservation_status,
+    sustainabilityNotes: attributes.sustainabilityNotes || attributes.sustainability_notes,
+
+    // Research
+    researchReferences: attributes.researchReferences || attributes.research_references,
+    clinicalStudies: attributes.clinicalStudies || attributes.clinical_studies,
+
+    // Ratings & Reviews
+    averageRating: attributes.averageRating || attributes.average_rating || 0,
+    reviewCount: attributes.reviewCount || attributes.review_count || 0,
+
+    // Peer Review
+    peerReviewStatus: attributes.peerReviewStatus || attributes.peer_review_status || 'draft',
+    reviewedBy: attributes.reviewedBy || attributes.reviewed_by,
+    reviewedAt: attributes.reviewedAt || attributes.reviewed_at,
+    reviewNotes: attributes.reviewNotes || attributes.review_notes,
+
+    // Search
+    searchTags: attributes.searchTags || attributes.search_tags || [],
+
+    // Status
+    _status: attributes.publishedAt ? 'published' : 'draft',
+
+    // Timestamps
+    createdAt: attributes.createdAt,
+    updatedAt: attributes.updatedAt,
+  }
+}
+
+/**
+ * Transform Strapi practitioner to Payload practitioner
+ */
+function transformPractitioner(strapiPractitioner: any): any {
+  const attributes = strapiPractitioner.attributes
+
+  return {
+    // user: Will be handled separately - link to Better Auth user
+    businessName: attributes.businessName || attributes.business_name,
+    practitionerName: attributes.practitionerName || attributes.practitioner_name,
+    title: attributes.title,
+    bio: attributes.bio,
+
+    // Contact
+    email: attributes.email,
+    phone: attributes.phone,
+    website: attributes.website,
+
+    // Specialties
+    specialties: attributes.specialties?.map((s: any) => ({
+      specialty: typeof s === 'string' ? s : s.specialty,
+    })) || [],
+
+    // Languages
+    languages: attributes.languages?.map((l: any) => ({
+      language: typeof l === 'string' ? l : l.language,
+    })) || [],
+
+    // Certifications
+    certifications: attributes.certifications?.map((c: any) => ({
+      name: c.name,
+      issuingOrganization: c.issuingOrganization || c.issuing_organization,
+      dateObtained: c.dateObtained || c.date_obtained,
+      expirationDate: c.expirationDate || c.expiration_date,
+      certificateNumber: c.certificateNumber || c.certificate_number,
+    })) || [],
+
+    // Addresses
+    addresses: attributes.addresses?.map((a: any) => ({
+      label: a.label,
+      addressLine1: a.addressLine1 || a.address_line_1,
+      addressLine2: a.addressLine2 || a.address_line_2,
+      city: a.city,
+      state: a.state,
+      zipCode: a.zipCode || a.zip_code,
+      country: a.country || 'US',
+      isPrimary: a.isPrimary || a.is_primary || false,
+      latitude: a.latitude,
+      longitude: a.longitude,
+    })) || [],
+
+    // Auto-populated from first address
+    city: attributes.addresses?.[0]?.city,
+    state: attributes.addresses?.[0]?.state,
+
+    // Verification
+    verificationStatus: attributes.verificationStatus || attributes.verification_status || 'unverified',
+    verifiedAt: attributes.verifiedAt || attributes.verified_at,
+    verificationNotes: attributes.verificationNotes || attributes.verification_notes,
+
+    // Media
+    profilePhoto: transformMediaRelation(attributes.profilePhoto || attributes.profile_photo),
+
+    // Ratings
+    averageRating: attributes.averageRating || attributes.average_rating || 0,
+    reviewCount: attributes.reviewCount || attributes.review_count || 0,
+
+    // Status
+    _status: attributes.publishedAt ? 'published' : 'draft',
+
+    // Timestamps
+    createdAt: attributes.createdAt,
+    updatedAt: attributes.updatedAt,
+  }
+}
+
+/**
+ * Transform Strapi formula to Payload formula
+ */
+function transformFormula(strapiFormula: any): any {
+  const attributes = strapiFormula.attributes
+
+  return {
+    title: attributes.name || attributes.title,
+    slug: attributes.slug || attributes.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    description: attributes.description,
+    shortDescription: attributes.shortDescription || attributes.short_description,
+
+    // Classification
+    tradition: attributes.tradition,
+    category: attributes.category,
+
+    // Ingredients
+    ingredients: attributes.ingredients?.map((i: any) => ({
+      herb: i.herb, // Will need to map to Payload herb ID
+      dosage: i.dosage,
+      dosageUnit: i.dosageUnit || i.dosage_unit,
+      role: i.role,
+      preparationNotes: i.preparationNotes || i.preparation_notes,
+    })) || [],
+
+    // Preparation
+    preparationMethod: attributes.preparationMethod || attributes.preparation_method,
+    preparationInstructions: attributes.preparationInstructions || attributes.preparation_instructions,
+
+    // Usage
+    dosageInstructions: attributes.dosageInstructions || attributes.dosage_instructions,
+    administrationRoute: attributes.administrationRoute || attributes.administration_route,
+    duration: attributes.duration,
+    frequency: attributes.frequency,
+
+    // Therapeutic
+    indications: attributes.indications,
+    contraindications: attributes.contraindications,
+    sideEffects: attributes.sideEffects || attributes.side_effects,
+
+    // Source
+    source: attributes.source,
+    historicalUse: attributes.historicalUse || attributes.historical_use,
+    modernAdaptations: attributes.modernAdaptations || attributes.modern_adaptations,
+
+    // Research
+    researchReferences: attributes.researchReferences || attributes.research_references,
+
+    // Status
+    _status: attributes.publishedAt ? 'published' : 'draft',
+
+    // Timestamps
+    createdAt: attributes.createdAt,
+    updatedAt: attributes.updatedAt,
+  }
+}
+
+/**
+ * Transform Strapi condition to Payload condition
+ */
+function transformCondition(strapiCondition: any): any {
+  const attributes = strapiCondition.attributes
+
+  return {
+    title: attributes.name || attributes.title,
+    slug: attributes.slug || attributes.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    description: attributes.description,
+
+    // Classification
+    category: attributes.category,
+    severity: attributes.severity,
+
+    // Medical Information
+    icd10Codes: attributes.icd10Codes || attributes.icd_10_codes,
+    westernDiagnosis: attributes.westernDiagnosis || attributes.western_diagnosis,
+
+    // TCM Information
+    tcmPattern: attributes.tcmPattern || attributes.tcm_pattern,
+    tcmCauses: attributes.tcmCauses || attributes.tcm_causes,
+    tcmTreatmentPrinciples: attributes.tcmTreatmentPrinciples || attributes.tcm_treatment_principles,
+
+    // Symptoms
+    symptoms: attributes.symptoms?.map((s: any) => ({
+      symptom: s.symptom || s,
+      severity: s.severity,
+      frequency: s.frequency,
+    })) || [],
+
+    // Related herbs and formulas (will need ID mapping)
+    relatedHerbs: transformRelation(attributes.relatedHerbs || attributes.related_herbs),
+    relatedFormulas: transformRelation(attributes.relatedFormulas || attributes.related_formulas),
+
+    // Guidance
+    lifestyleRecommendations: attributes.lifestyleRecommendations || attributes.lifestyle_recommendations,
+    dietaryAdvice: attributes.dietaryAdvice || attributes.dietary_advice,
+    whenToSeekHelp: attributes.whenToSeekHelp || attributes.when_to_seek_help,
+
+    // Status
+    _status: attributes.publishedAt ? 'published' : 'draft',
+
+    // Timestamps
+    createdAt: attributes.createdAt,
+    updatedAt: attributes.updatedAt,
+  }
+}
+
+/**
+ * Transform Strapi review to Payload review
+ */
+function transformReview(strapiReview: any): any {
+  const attributes = strapiReview.attributes
+
+  return {
+    title: attributes.title,
+    content: attributes.content,
+    rating: attributes.rating,
+
+    // User (will need Better Auth user mapping)
+    user: attributes.user?.data?.id, // Will map to Payload user
+
+    // Reviewed Entity (polymorphic)
+    reviewedEntity: attributes.reviewedEntity?.data?.id,
+    reviewedEntityType: attributes.reviewedEntityType || attributes.reviewed_entity_type,
+
+    // Experience
+    experienceDuration: attributes.experienceDuration || attributes.experience_duration,
+    wouldRecommend: attributes.wouldRecommend || attributes.would_recommend,
+
+    // Verification
+    verificationStatus: attributes.verificationStatus || attributes.verification_status || 'pending',
+    verifiedPurchase: attributes.verifiedPurchase || attributes.verified_purchase || false,
+
+    // Moderation
+    moderationStatus: attributes.moderationStatus || attributes.moderation_status || 'pending',
+    moderatedBy: attributes.moderatedBy || attributes.moderated_by,
+    moderatedAt: attributes.moderatedAt || attributes.moderated_at,
+    moderationNotes: attributes.moderationNotes || attributes.moderation_notes,
+
+    // Helpful votes
+    helpfulCount: attributes.helpfulCount || attributes.helpful_count || 0,
+    notHelpfulCount: attributes.notHelpfulCount || attributes.not_helpful_count || 0,
+
+    // Timestamps
+    createdAt: attributes.createdAt,
+    updatedAt: attributes.updatedAt,
+  }
+}
+
+/**
+ * Transform Strapi media relation
+ */
+function transformMediaRelation(mediaData: any, isArray = false): any {
+  if (!mediaData) return isArray ? [] : null
+
+  if (isArray) {
+    const data = mediaData.data
+    if (!Array.isArray(data)) return []
+    return data.map((m: any) => m.id)
+  }
+
+  return mediaData.data?.id || null
+}
+
+/**
+ * Transform Strapi relation
+ */
+function transformRelation(relationData: any): any {
+  if (!relationData?.data) return []
+
+  const data = Array.isArray(relationData.data) ? relationData.data : [relationData.data]
+  return data.map((item: any) => item.id)
+}
+
+/**
+ * Migrate a single collection
+ */
+async function migrateCollection(
+  payload: any,
+  strapiCollectionName: StrapiCollection,
+  payloadCollectionSlug: PayloadCollection
+): Promise<MigrationStats> {
+  const stats: MigrationStats = {
+    collection: payloadCollectionSlug,
+    total: 0,
+    migrated: 0,
+    skipped: 0,
+    failed: 0,
+    errors: [],
+  }
+
+  console.log(`\n📦 Migrating ${strapiCollectionName} → ${payloadCollectionSlug}...`)
+
+  let page = 1
+  let hasMore = true
+
+  while (hasMore) {
+    const strapiRecords = await fetchStrapiCollection(strapiCollectionName, page, BATCH_SIZE)
+
+    if (strapiRecords.length === 0) {
+      hasMore = false
+      break
+    }
+
+    stats.total += strapiRecords.length
+
+    for (const strapiRecord of strapiRecords) {
+      try {
+        // Transform based on collection type
+        let payloadData: any
+
+        switch (strapiCollectionName) {
+          case 'herb':
+            payloadData = transformHerb(strapiRecord)
+            break
+          case 'practitioner':
+            payloadData = transformPractitioner(strapiRecord)
+            break
+          case 'formula':
+            payloadData = transformFormula(strapiRecord)
+            break
+          case 'condition':
+            payloadData = transformCondition(strapiRecord)
+            break
+          case 'review':
+            payloadData = transformReview(strapiRecord)
+            break
+          default:
+            console.warn(`⚠️  No transformer for ${strapiCollectionName}, using raw data`)
+            payloadData = strapiRecord.attributes
+        }
+
+        if (DRY_RUN) {
+          console.log(`   [DRY RUN] Would migrate: ${payloadData.title || payloadData.name || strapiRecord.id}`)
+          stats.migrated++
+        } else {
+          // Create in Payload
+          await payload.create({
+            collection: payloadCollectionSlug,
+            data: payloadData,
+          })
+
+          stats.migrated++
+          console.log(`   ✅ Migrated: ${payloadData.title || payloadData.name || strapiRecord.id}`)
+        }
+      } catch (error: any) {
+        stats.failed++
+        stats.errors.push({
+          id: strapiRecord.id,
+          error: error.message,
+        })
+        console.error(`   ❌ Failed to migrate record ${strapiRecord.id}:`, error.message)
+      }
+    }
+
+    page++
+
+    // Check if there are more pages
+    if (strapiRecords.length < BATCH_SIZE) {
+      hasMore = false
+    }
+  }
+
+  return stats
+}
+
+/**
+ * Main migration function
+ */
+async function main() {
+  console.log('🚀 Starting Strapi → PayloadCMS Migration')
+  console.log(`   Mode: ${DRY_RUN ? 'DRY RUN' : 'LIVE'}`)
+  console.log(`   Strapi URL: ${STRAPI_URL}`)
+  console.log(`   Batch Size: ${BATCH_SIZE}`)
+
+  if (SPECIFIC_COLLECTION) {
+    console.log(`   Collection: ${SPECIFIC_COLLECTION}`)
+  }
+
+  // Initialize Payload
+  const payload = await getPayload({ config })
+  console.log('✅ Payload initialized')
+
+  // Collections to migrate (in order due to relationships)
+  const collectionsToMigrate: Array<[StrapiCollection, PayloadCollection]> = SPECIFIC_COLLECTION
+    ? [[SPECIFIC_COLLECTION as StrapiCollection, COLLECTION_MAP[SPECIFIC_COLLECTION as StrapiCollection]]]
+    : [
+        ['upload', 'media'],
+        ['user', 'users'],
+        ['herb', 'herbs'],
+        ['practitioner', 'practitioners'],
+        ['formula', 'formulas'],
+        ['condition', 'conditions'],
+        ['symptom', 'symptoms'],
+        ['modality', 'modalities'],
+        ['review', 'reviews'],
+      ]
+
+  const allStats: MigrationStats[] = []
+
+  // Migrate each collection
+  for (const [strapiName, payloadSlug] of collectionsToMigrate) {
+    const stats = await migrateCollection(payload, strapiName, payloadSlug)
+    allStats.push(stats)
+  }
+
+  // Print summary
+  console.log('\n' + '='.repeat(60))
+  console.log('📊 Migration Summary')
+  console.log('='.repeat(60))
+
+  let totalRecords = 0
+  let totalMigrated = 0
+  let totalFailed = 0
+
+  for (const stats of allStats) {
+    totalRecords += stats.total
+    totalMigrated += stats.migrated
+    totalFailed += stats.failed
+
+    console.log(`\n${stats.collection}:`)
+    console.log(`   Total: ${stats.total}`)
+    console.log(`   ✅ Migrated: ${stats.migrated}`)
+    console.log(`   ❌ Failed: ${stats.failed}`)
+
+    if (stats.errors.length > 0) {
+      console.log(`   Errors:`)
+      stats.errors.slice(0, 5).forEach(err => {
+        console.log(`      - Record ${err.id}: ${err.error}`)
+      })
+      if (stats.errors.length > 5) {
+        console.log(`      ... and ${stats.errors.length - 5} more errors`)
+      }
+    }
+  }
+
+  console.log('\n' + '='.repeat(60))
+  console.log(`📈 Overall: ${totalMigrated}/${totalRecords} records migrated`)
+  console.log(`   Success Rate: ${((totalMigrated / totalRecords) * 100).toFixed(1)}%`)
+  console.log('='.repeat(60))
+
+  if (DRY_RUN) {
+    console.log('\n⚠️  This was a DRY RUN. No data was actually migrated.')
+    console.log('   Remove --dry-run flag to perform actual migration.')
+  }
+
+  process.exit(totalFailed > 0 ? 1 : 0)
+}
+
+// Run migration
+main().catch(error => {
+  console.error('💥 Migration failed:', error)
+  process.exit(1)
+})

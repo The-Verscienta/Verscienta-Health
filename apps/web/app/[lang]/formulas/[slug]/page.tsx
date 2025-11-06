@@ -2,10 +2,12 @@ import { AlertTriangle, Book, Heart, Leaf, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { JsonLd } from '@/components/seo/JsonLd'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
+import { generateFormulaSchema, type FormulaData } from '@/lib/json-ld'
 import { getFormulaBySlug } from '@/lib/strapi-api'
 
 export const dynamic = 'force-dynamic'
@@ -91,8 +93,31 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
     other: 'default',
   } as const
 
+  // Prepare JSON-LD structured data
+  const formulaData: FormulaData = {
+    name: formula.title,
+    description: formula.description,
+    id: formula.slug,
+    ingredients: formula.ingredients?.map((ing) => ({
+      name: ing.herb?.title || ing.name || 'Unknown Herb',
+      amount: ing.quantity && ing.unit ? `${ing.quantity} ${ing.unit}` : undefined,
+    })),
+    uses: formula.indications,
+    dosage: formula.dosage,
+    rating:
+      formula.averageRating && formula.reviewCount
+        ? {
+            value: formula.averageRating,
+            count: formula.reviewCount,
+          }
+        : undefined,
+  }
+
   return (
     <div className="container-custom py-12">
+      {/* JSON-LD Schema for SEO */}
+      <JsonLd data={generateFormulaSchema(formulaData)} />
+
       {/* Hero Section */}
       <div className="mb-12">
         <div className="mb-4 flex items-start justify-between">

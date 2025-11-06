@@ -3,10 +3,12 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { PractitionerCard } from '@/components/cards/PractitionerCard'
+import { JsonLd } from '@/components/seo/JsonLd'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
+import { createJsonLd, getAbsoluteUrl } from '@/lib/json-ld'
 import { getModalityBySlug } from '@/lib/strapi-api'
 
 export const dynamic = 'force-dynamic'
@@ -82,8 +84,33 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
     notFound()
   }
 
+  // Prepare JSON-LD structured data for the modality
+  const modalitySchema = createJsonLd({
+    '@type': 'MedicalWebPage',
+    '@id': getAbsoluteUrl(`/modalities/${modality.slug}`),
+    name: modality.title,
+    description: modality.description || modality.overview,
+    url: getAbsoluteUrl(`/modalities/${modality.slug}`),
+    about: {
+      '@type': 'MedicalTherapy',
+      name: modality.title,
+      description: modality.description,
+      ...(modality.benefits && modality.benefits.length > 0
+        ? { benefits: modality.benefits.join(', ') }
+        : {}),
+      ...(modality.contraindications && modality.contraindications.length > 0
+        ? { contraindication: modality.contraindications }
+        : {}),
+    },
+    specialty: 'Alternative Medicine',
+    ...(modality.scientificEvidence ? { reviewedBy: modality.scientificEvidence } : {}),
+  })
+
   return (
     <div className="container-custom py-12">
+      {/* JSON-LD Schema for SEO */}
+      <JsonLd data={modalitySchema} />
+
       {/* Hero Section */}
       <div className="mb-12">
         <div className="mb-4 flex items-start justify-between">
