@@ -1,0 +1,562 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as FormulaCardStories from './FormulaCard.stories'
+
+<Meta of={FormulaCardStories} />
+
+# FormulaCard
+
+A specialized card component for displaying herbal formula information with TCM tradition, category, ratings, and ingredient counts.
+
+<Primary />
+
+## Overview
+
+The FormulaCard component is designed to showcase herbal formulas throughout the Verscienta Health platform. It supports displaying both English and Chinese names with proper typography, TCM categorization, and user ratings in a consistent format.
+
+## Usage
+
+```tsx
+import { FormulaCard } from '@/components/cards/FormulaCard'
+
+export default function FormulasPage() {
+  return (
+    <FormulaCard
+      formulaId="F001"
+      title="Si Junzi Tang"
+      slug="si-junzi-tang"
+      chineseName="四君子湯"
+      pinyin="Sì Jūnzǐ Tāng"
+      description="The Four Gentlemen Decoction tonifies Qi..."
+      category="Qi Tonifying"
+      tradition="Classical TCM"
+      ingredientCount={4}
+      averageRating={4.8}
+      reviewCount={156}
+    />
+  )
+}
+```
+
+## Variants
+
+### Default Formula
+
+Complete formula card with all properties.
+
+<Canvas of={FormulaCardStories.Default} />
+
+### Minimal Data
+
+Formula with only essential fields (without Chinese name or pinyin).
+
+<Canvas of={FormulaCardStories.MinimalData} />
+
+### Complete
+
+Formula with all optional fields populated.
+
+<Canvas of={FormulaCardStories.Complete} />
+
+## Content Variations
+
+### Many Ingredients
+
+Complex formula with many ingredients (shows proper pluralization).
+
+<Canvas of={FormulaCardStories.ManyIngredients} />
+
+### Single Ingredient
+
+Emergency formula with only one ingredient.
+
+<Canvas of={FormulaCardStories.SingleIngredient} />
+
+### Modern Formula
+
+Contemporary TCM adaptation.
+
+<Canvas of={FormulaCardStories.ModernFormula} />
+
+## Rating States
+
+### No Rating
+
+New or unreviewed formula (rating hidden when reviewCount is 0).
+
+<Canvas of={FormulaCardStories.NoRating} />
+
+## Formula Categories
+
+### Blood Tonifying
+
+<Canvas of={FormulaCardStories.BloodTonifying} />
+
+### Clearing Heat
+
+<Canvas of={FormulaCardStories.ClearingHeat} />
+
+## Layouts
+
+### Grid Display
+
+Typical grid layout used in formula listings.
+
+<Canvas of={FormulaCardStories.GridExample} />
+
+### Loading State
+
+Skeleton loading state while fetching data.
+
+<Canvas of={FormulaCardStories.LoadingState} />
+
+## Props
+
+<Controls />
+
+### FormulaCardProps
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `formulaId` | `string` | Yes | Unique identifier (displayed as badge) |
+| `title` | `string` | Yes | English formula name |
+| `slug` | `string` | Yes | URL-friendly identifier for routing |
+| `chineseName` | `string` | No | Traditional Chinese characters |
+| `pinyin` | `string` | No | Romanized pronunciation |
+| `description` | `string` | No | Brief description (truncated to 3 lines) |
+| `category` | `string` | No | TCM category (e.g., "Qi Tonifying") |
+| `tradition` | `string` | No | Tradition type (e.g., "Classical TCM", "Modern TCM") |
+| `ingredientCount` | `number` | No | Number of herbs in formula |
+| `averageRating` | `number` | No | Average rating (0-5) |
+| `reviewCount` | `number` | No | Number of reviews |
+
+## Accessibility
+
+- **Semantic HTML**: Uses `<Link>` for entire card (keyboard accessible)
+- **Focus Indicators**: Clear focus ring on keyboard navigation
+- **Screen Readers**: All content properly labeled and announced
+- **Hover Effects**: Visual feedback with shadow and text color change
+- **Touch Targets**: Entire card is clickable (large target area)
+
+### Best Practices
+
+- Always provide meaningful `title` and `slug`
+- Include `chineseName` and `pinyin` for classical TCM formulas
+- Keep descriptions concise (3 lines max)
+- Show ratings only when `reviewCount > 0`
+- Use proper tradition labels ("Classical TCM", "Modern TCM", etc.)
+
+## Design Guidelines
+
+### When to Use
+
+- **Formula Listings**: Main formulas directory page
+- **Search Results**: Formula search results
+- **Related Formulas**: Showing similar/complementary formulas
+- **Category Pages**: Formulas filtered by category
+- **Practitioner Recommendations**: Suggested formulas
+
+### Do's
+
+✅ Use traditional Chinese characters for classical formulas
+✅ Include pinyin for pronunciation guidance
+✅ Keep descriptions to 1-2 sentences
+✅ Show ingredient count for context
+✅ Include ratings when available
+✅ Use appropriate tradition badges
+✅ Enable hover effects for interactivity
+✅ Maintain consistent card heights in grids
+
+### Don'ts
+
+❌ Don't show 0-star ratings (hide instead)
+❌ Don't use generic descriptions
+❌ Don't omit Chinese names for classical formulas
+❌ Don't make cards too wide (max 400px recommended)
+❌ Don't use without a link (cards should navigate)
+❌ Don't mix different card types in same grid
+❌ Don't truncate pinyin or Chinese names
+
+## Examples
+
+### Basic Implementation
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  {formulas.map((formula) => (
+    <FormulaCard
+      key={formula.id}
+      formulaId={formula.id}
+      title={formula.title}
+      slug={formula.slug}
+      chineseName={formula.chineseName}
+      pinyin={formula.pinyin}
+      description={formula.description}
+      category={formula.category}
+      tradition={formula.tradition}
+      ingredientCount={formula.ingredientCount}
+      averageRating={formula.averageRating}
+      reviewCount={formula.reviewCount}
+    />
+  ))}
+</div>
+```
+
+### With Payload CMS Data
+
+```tsx
+import { getFormulas } from '@/lib/payload-api'
+
+export default async function FormulasPage() {
+  const { docs: formulas } = await getFormulas({ limit: 12 })
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {formulas.map((formula) => (
+        <FormulaCard
+          key={formula.id}
+          formulaId={formula.formulaId}
+          title={formula.title}
+          slug={formula.slug}
+          chineseName={formula.chineseName}
+          pinyin={formula.pinyin}
+          description={formula.description}
+          category={formula.category?.name}
+          tradition={formula.tradition}
+          ingredientCount={formula.ingredients?.length || 0}
+          averageRating={formula.averageRating}
+          reviewCount={formula.reviewCount}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+### With Search/Filter
+
+```tsx
+'use client'
+
+const [filteredFormulas, setFilteredFormulas] = useState(formulas)
+const [selectedCategory, setSelectedCategory] = useState<string>()
+
+const handleFilter = (category: string) => {
+  setSelectedCategory(category)
+  const filtered = formulas.filter((f) => f.category === category)
+  setFilteredFormulas(filtered)
+}
+
+<div>
+  <CategoryFilter onSelect={handleFilter} />
+  <div className="grid grid-cols-3 gap-6">
+    {filteredFormulas.map((formula) => (
+      <FormulaCard key={formula.id} {...formula} />
+    ))}
+  </div>
+</div>
+```
+
+### Loading State Pattern
+
+```tsx
+{isLoading ? (
+  <div className="grid grid-cols-3 gap-6">
+    {[...Array(6)].map((_, i) => (
+      <FormulaCardSkeleton key={i} />
+    ))}
+  </div>
+) : (
+  <div className="grid grid-cols-3 gap-6">
+    {formulas.map((formula) => (
+      <FormulaCard key={formula.id} {...formula} />
+    ))}
+  </div>
+)}
+```
+
+### With Intersection Observer (Infinite Scroll)
+
+```tsx
+import { useInView } from 'react-intersection-observer'
+
+const { ref, inView } = useInView()
+
+useEffect(() => {
+  if (inView) {
+    loadMoreFormulas()
+  }
+}, [inView])
+
+<div className="grid grid-cols-3 gap-6">
+  {formulas.map((formula, index) => (
+    <div key={formula.id} ref={index === formulas.length - 1 ? ref : null}>
+      <FormulaCard {...formula} />
+    </div>
+  ))}
+</div>
+```
+
+## Advanced Patterns
+
+### With Favorite Button
+
+```tsx
+<div className="relative">
+  <FormulaCard {...formula} />
+  <button
+    className="absolute top-2 right-2 p-2 bg-white rounded-full shadow"
+    onClick={(e) => {
+      e.preventDefault() // Prevent navigation
+      toggleFavorite(formula.id)
+    }}
+  >
+    <Heart className={isFavorite ? 'fill-red-500' : ''} />
+  </button>
+</div>
+```
+
+### With Context Menu
+
+```tsx
+import { DropdownMenu } from '@/components/ui/dropdown-menu'
+
+<div className="relative">
+  <FormulaCard {...formula} />
+  <div className="absolute top-2 right-2">
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <MoreVertical />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>Add to Favorites</DropdownMenuItem>
+        <DropdownMenuItem>Add to Protocol</DropdownMenuItem>
+        <DropdownMenuItem>Share</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </div>
+</div>
+```
+
+### Responsive Grid
+
+```tsx
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+  {formulas.map((formula) => (
+    <FormulaCard key={formula.id} {...formula} />
+  ))}
+</div>
+```
+
+### Filter by Tradition
+
+```tsx
+'use client'
+
+const [tradition, setTradition] = useState<string>()
+
+const filtered = formulas.filter((f) =>
+  !tradition || f.tradition === tradition
+)
+
+<div>
+  <Tabs defaultValue="all" onValueChange={setTradition}>
+    <TabsList>
+      <TabsTrigger value="all">All</TabsTrigger>
+      <TabsTrigger value="Classical TCM">Classical</TabsTrigger>
+      <TabsTrigger value="Modern TCM">Modern</TabsTrigger>
+    </TabsList>
+  </Tabs>
+  <div className="grid grid-cols-3 gap-6 mt-6">
+    {filtered.map((formula) => (
+      <FormulaCard key={formula.id} {...formula} />
+    ))}
+  </div>
+</div>
+```
+
+### Sort by Rating or Ingredients
+
+```tsx
+const [sortBy, setSortBy] = useState<'rating' | 'ingredients'>('rating')
+
+const sorted = [...formulas].sort((a, b) => {
+  if (sortBy === 'rating') {
+    return (b.averageRating || 0) - (a.averageRating || 0)
+  }
+  return (a.ingredientCount || 0) - (b.ingredientCount || 0)
+})
+
+<div>
+  <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+    <option value="rating">Highest Rated</option>
+    <option value="ingredients">Fewest Ingredients</option>
+  </select>
+  <div className="grid grid-cols-3 gap-6">
+    {sorted.map((formula) => (
+      <FormulaCard key={formula.id} {...formula} />
+    ))}
+  </div>
+</div>
+```
+
+## Styling
+
+### Card Dimensions
+
+- **Width**: Flexible (100% of grid cell)
+- **Height**: Auto (content-driven)
+- **Recommended Max Width**: 400px
+
+### Typography
+
+- **Title**: Serif font, text-lg, earth-900
+- **Chinese Name**: Serif SC font, tcm-600, text-sm
+- **Pinyin**: Italic, gray-600 (CardDescription)
+- **Description**: Sans-serif, text-sm, gray-600, line-clamp-3
+
+### Color Scheme
+
+- **Background**: White
+- **Border**: Gray-200 (default), shadow-lg (hover)
+- **Title**: earth-900 (default), earth-700 (hover)
+- **Chinese**: tcm-600
+- **Pinyin**: gray-600
+- **Rating Star**: gold-600 (fill and stroke)
+- **Badges**:
+  - Tradition: tcm variant
+  - Category: sage variant
+  - Ingredient Count: outline variant
+
+### Hover Effects
+
+- **Shadow**: Elevates to `shadow-lg`
+- **Title**: Changes to earth-700
+- **Transition**: Smooth 200ms ease
+
+## Performance
+
+- **Line Clamping**: CSS truncation (no JS) for descriptions (line-clamp-3)
+- **Conditional Rendering**: Only shows rating when reviewCount > 0
+- **Link Optimization**: Uses Next.js Link for prefetching
+- **Badge Efficiency**: Conditional rendering reduces DOM nodes
+
+## Related Components
+
+- **HerbCard**: Similar card for individual herbs
+- **ConditionCard**: Card for health conditions
+- **PractitionerCard**: Card for practitioners
+- **Card**: Base card component
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import { FormulaCard } from './FormulaCard'
+
+test('renders formula title and Chinese name', () => {
+  render(
+    <FormulaCard
+      formulaId="F001"
+      title="Si Junzi Tang"
+      slug="si-junzi-tang"
+      chineseName="四君子湯"
+      pinyin="Sì Jūnzǐ Tāng"
+    />
+  )
+
+  expect(screen.getByText('Si Junzi Tang')).toBeInTheDocument()
+  expect(screen.getByText('四君子湯')).toBeInTheDocument()
+  expect(screen.getByText('Sì Jūnzǐ Tāng')).toBeInTheDocument()
+})
+
+test('shows rating when available', () => {
+  render(
+    <FormulaCard
+      formulaId="F001"
+      title="Test Formula"
+      slug="test"
+      averageRating={4.7}
+      reviewCount={342}
+    />
+  )
+
+  expect(screen.getByText('4.7')).toBeInTheDocument()
+  expect(screen.getByText('(342)')).toBeInTheDocument()
+})
+
+test('hides rating when reviewCount is 0', () => {
+  render(
+    <FormulaCard
+      formulaId="F001"
+      title="Test Formula"
+      slug="test"
+      averageRating={0}
+      reviewCount={0}
+    />
+  )
+
+  expect(screen.queryByText('0.0')).not.toBeInTheDocument()
+})
+
+test('shows correct ingredient count with singular/plural', () => {
+  const { rerender } = render(
+    <FormulaCard
+      formulaId="F001"
+      title="Single"
+      slug="single"
+      ingredientCount={1}
+    />
+  )
+
+  expect(screen.getByText('1 ingredient')).toBeInTheDocument()
+
+  rerender(
+    <FormulaCard
+      formulaId="F002"
+      title="Multiple"
+      slug="multiple"
+      ingredientCount={4}
+    />
+  )
+
+  expect(screen.getByText('4 ingredients')).toBeInTheDocument()
+})
+
+test('links to correct formula detail page', () => {
+  render(
+    <FormulaCard
+      formulaId="F001"
+      title="Si Junzi Tang"
+      slug="si-junzi-tang"
+    />
+  )
+
+  const link = screen.getByRole('link')
+  expect(link).toHaveAttribute('href', '/formulas/si-junzi-tang')
+})
+
+test('displays all badges when provided', () => {
+  render(
+    <FormulaCard
+      formulaId="F001"
+      title="Test"
+      slug="test"
+      tradition="Classical TCM"
+      category="Qi Tonifying"
+      ingredientCount={4}
+    />
+  )
+
+  expect(screen.getByText('Classical TCM')).toBeInTheDocument()
+  expect(screen.getByText('Qi Tonifying')).toBeInTheDocument()
+  expect(screen.getByText('4 ingredients')).toBeInTheDocument()
+})
+```

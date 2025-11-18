@@ -1,0 +1,511 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as AccordionStories from './accordion.stories'
+
+<Meta of={AccordionStories} />
+
+# Accordion
+
+A vertically stacked set of interactive headings that reveal sections of content.
+
+<Primary />
+
+## Overview
+
+The Accordion component provides a space-efficient way to present multiple sections of related content. Built on Radix UI's Accordion primitive, it supports single or multiple panel expansion, smooth animations, and full keyboard navigation.
+
+## Usage
+
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+
+export default function Example() {
+  return (
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Is it accessible?</AccordionTrigger>
+        <AccordionContent>
+          Yes. It adheres to the WAI-ARIA design pattern.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  )
+}
+```
+
+## Modes
+
+### Single Open
+
+Only one panel can be open at a time (default behavior).
+
+<Canvas of={AccordionStories.SingleOpen} />
+
+### Multiple Open
+
+Multiple panels can be open simultaneously.
+
+<Canvas of={AccordionStories.MultipleOpen} />
+
+### Default Expanded
+
+Start with a specific panel open.
+
+<Canvas of={AccordionStories.DefaultExpanded} />
+
+## Content Types
+
+### Herb Details FAQ
+
+FAQ-style accordion for herb information.
+
+<Canvas of={AccordionStories.HerbDetailsFAQ} />
+
+### With Rich Content
+
+Accordion panels with images, badges, and formatted content.
+
+<Canvas of={AccordionStories.WithRichContent} />
+
+### Formula Details
+
+Structured content for herbal formulas.
+
+<Canvas of={AccordionStories.FormulaDetails} />
+
+## Variants
+
+### Compact
+
+Smaller padding for dense layouts.
+
+<Canvas of={AccordionStories.Compact} />
+
+### With Disabled Item
+
+Disable specific accordion items.
+
+<Canvas of={AccordionStories.WithDisabledItem} />
+
+## Component Structure
+
+```tsx
+<Accordion type="single" collapsible>     {/* Root container */}
+  <AccordionItem value="item-1">        {/* Individual accordion item */}
+    <AccordionTrigger>                   {/* Clickable header */}
+      Title
+    </AccordionTrigger>
+    <AccordionContent>                   {/* Expandable content */}
+      Content goes here
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+## Props
+
+<Controls />
+
+### Accordion (Root)
+
+- `type`: 'single' | 'multiple' (required)
+  - `'single'`: Only one item can be open at a time
+  - `'multiple'`: Multiple items can be open
+- `collapsible`: Allow closing all items (only for type="single")
+- `defaultValue`: Initial open item(s) - string for single, array for multiple
+- `value`: Controlled open item(s)
+- `onValueChange`: Callback when open items change
+
+### AccordionItem
+
+- `value`: Unique identifier (required)
+- `disabled`: Disable this item
+
+### AccordionTrigger
+
+- Standard button props
+- Click handler is managed internally
+
+### AccordionContent
+
+- Standard div props
+- Animation is automatic
+
+## Accessibility
+
+- **Keyboard Navigation**:
+  - `Tab` to focus next trigger
+  - `Shift+Tab` to focus previous trigger
+  - `Space` or `Enter` to toggle panel
+  - `Arrow Down` to move focus to next trigger
+  - `Arrow Up` to move focus to previous trigger
+  - `Home` to focus first trigger
+  - `End` to focus last trigger
+- **ARIA**: Proper `role="region"`, `aria-expanded`, `aria-controls`, `aria-labelledby`
+- **Focus Management**: Clear focus indicators
+- **Screen Readers**: Announces state changes and content
+- **Animations**: Respects `prefers-reduced-motion`
+
+### Best Practices
+
+- Use clear, descriptive trigger text
+- Keep content concise and scannable
+- Limit to 5-10 items for scannability
+- Don't nest accordions within accordions
+- Provide sufficient touch targets (44x44px)
+- Consider defaultValue for important content
+- Use appropriate type (single vs multiple)
+
+## Design Guidelines
+
+### When to Use
+
+- **FAQs**: Frequently asked questions
+- **Product Details**: Specifications, ingredients, reviews
+- **Settings**: Categorized settings panels
+- **Navigation**: Secondary navigation menus
+- **Documentation**: API references, guides
+- **Forms**: Multi-section forms
+
+### Do's
+
+✅ Use for related content that can be collapsed
+✅ Keep trigger labels concise (1-10 words)
+✅ Maintain logical content order
+✅ Consider default expanded state for priority content
+✅ Group related items together
+✅ Use icons to enhance scannability
+✅ Provide visual feedback on interaction
+
+### Don'ts
+
+❌ Don't use for sequential processes (use stepper)
+❌ Don't hide critical information
+❌ Don't nest accordions
+❌ Don't make triggers too small for touch
+❌ Don't use for 1-2 items (show directly instead)
+❌ Don't remove the chevron indicator
+❌ Don't make content too long (consider pagination)
+
+## Examples
+
+### Controlled Accordion
+
+```tsx
+const [openItem, setOpenItem] = useState<string | undefined>('item-1')
+
+<Accordion
+  type="single"
+  value={openItem}
+  onValueChange={setOpenItem}
+  collapsible
+>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Item 1</AccordionTrigger>
+    <AccordionContent>Content 1</AccordionContent>
+  </AccordionItem>
+  {/* More items */}
+</Accordion>
+```
+
+### Multiple Items Controlled
+
+```tsx
+const [openItems, setOpenItems] = useState<string[]>(['item-1'])
+
+<Accordion type="multiple" value={openItems} onValueChange={setOpenItems}>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Item 1</AccordionTrigger>
+    <AccordionContent>Content 1</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="item-2">
+    <AccordionTrigger>Item 2</AccordionTrigger>
+    <AccordionContent>Content 2</AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+### With Custom Icons
+
+```tsx
+import { Plus, Minus } from 'lucide-react'
+
+<AccordionTrigger className="group">
+  <span>Custom Icon Example</span>
+  <Plus className="h-4 w-4 transition-transform group-data-[state=open]:rotate-45" />
+</AccordionTrigger>
+```
+
+### FAQ Pattern
+
+```tsx
+const faqs = [
+  {
+    question: 'What is TCM?',
+    answer: 'Traditional Chinese Medicine is...',
+  },
+  // More FAQs
+]
+
+<Accordion type="single" collapsible>
+  {faqs.map((faq, index) => (
+    <AccordionItem key={index} value={`faq-${index}`}>
+      <AccordionTrigger>{faq.question}</AccordionTrigger>
+      <AccordionContent>{faq.answer}</AccordionContent>
+    </AccordionItem>
+  ))}
+</Accordion>
+```
+
+### With Rich Content
+
+```tsx
+<AccordionContent>
+  <div className="space-y-4">
+    <img src="/herb.jpg" alt="Herb" className="w-full rounded" />
+    <p>Description of the herb...</p>
+    <div className="flex gap-2">
+      <Badge>Adaptogen</Badge>
+      <Badge>Energy</Badge>
+    </div>
+  </div>
+</AccordionContent>
+```
+
+### Programmatic Control
+
+```tsx
+const expandAll = () => {
+  if (type === 'multiple') {
+    setOpenItems(allItemValues)
+  }
+}
+
+const collapseAll = () => {
+  if (type === 'multiple') {
+    setOpenItems([])
+  }
+}
+
+<div>
+  <div className="flex gap-2 mb-4">
+    <Button onClick={expandAll}>Expand All</Button>
+    <Button onClick={collapseAll}>Collapse All</Button>
+  </div>
+  <Accordion type="multiple" value={openItems} onValueChange={setOpenItems}>
+    {/* Items */}
+  </Accordion>
+</div>
+```
+
+## Advanced Patterns
+
+### Settings Panel
+
+```tsx
+<Accordion type="single" collapsible className="w-full">
+  <AccordionItem value="general">
+    <AccordionTrigger>General Settings</AccordionTrigger>
+    <AccordionContent>
+      <div className="space-y-4">
+        <div>
+          <label>Language</label>
+          <Select>...</Select>
+        </div>
+        <div>
+          <label>Timezone</label>
+          <Select>...</Select>
+        </div>
+      </div>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="privacy">
+    <AccordionTrigger>Privacy Settings</AccordionTrigger>
+    <AccordionContent>
+      {/* Privacy settings */}
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+### Product Details
+
+```tsx
+<Accordion type="multiple" className="w-full">
+  <AccordionItem value="ingredients">
+    <AccordionTrigger>Ingredients</AccordionTrigger>
+    <AccordionContent>
+      <ul className="list-disc list-inside">
+        {ingredients.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="dosage">
+    <AccordionTrigger>Dosage & Instructions</AccordionTrigger>
+    <AccordionContent>
+      {dosageInstructions}
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="cautions">
+    <AccordionTrigger>Cautions</AccordionTrigger>
+    <AccordionContent>
+      <div className="text-orange-600">
+        {cautions}
+      </div>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+### Search Filter Accordion
+
+```tsx
+<Accordion type="multiple" defaultValue={['category', 'price']}>
+  <AccordionItem value="category">
+    <AccordionTrigger>Category</AccordionTrigger>
+    <AccordionContent>
+      <div className="space-y-2">
+        {categories.map((cat) => (
+          <label key={cat} className="flex items-center gap-2">
+            <input type="checkbox" />
+            <span>{cat}</span>
+          </label>
+        ))}
+      </div>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="price">
+    <AccordionTrigger>Price Range</AccordionTrigger>
+    <AccordionContent>
+      <input type="range" min="0" max="100" />
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+## Styling
+
+### Custom Border
+
+```tsx
+<AccordionItem className="border-b-2 border-earth-200">
+  {/* Content */}
+</AccordionItem>
+```
+
+### No Border
+
+```tsx
+<AccordionItem className="border-none">
+  {/* Content */}
+</AccordionItem>
+```
+
+### Background on Hover
+
+```tsx
+<AccordionTrigger className="hover:bg-gray-50">
+  {/* Content */}
+</AccordionTrigger>
+```
+
+## Animation
+
+The accordion uses CSS animations defined in Tailwind config:
+
+```js
+// tailwind.config.js
+keyframes: {
+  'accordion-down': {
+    from: { height: 0 },
+    to: { height: 'var(--radix-accordion-content-height)' },
+  },
+  'accordion-up': {
+    from: { height: 'var(--radix-accordion-content-height)' },
+    to: { height: 0 },
+  },
+}
+```
+
+## Related Components
+
+- **Tabs**: For switching between views
+- **Disclosure**: For single expandable sections
+- **Collapsible**: For simpler collapse functionality
+- **Dialog**: For modal overlays
+
+## Technical Details
+
+### Component Architecture
+
+- **Radix UI Primitive**: Built on `@radix-ui/react-accordion`
+- **Smooth Animations**: CSS-based height animations
+- **Focus Management**: Automatic roving tabindex
+- **Keyboard Navigation**: Full arrow key support
+- **State Management**: Controlled and uncontrolled modes
+
+### Performance
+
+- **Content Mounting**: Content is always in DOM but hidden
+- **Animation**: GPU-accelerated CSS transitions
+- **No JavaScript Animation**: Pure CSS for better performance
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion'
+
+test('expands on trigger click', async () => {
+  const user = userEvent.setup()
+  render(
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Question</AccordionTrigger>
+        <AccordionContent>Answer</AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  )
+
+  await user.click(screen.getByText('Question'))
+  expect(screen.getByText('Answer')).toBeVisible()
+})
+
+test('only one item open in single mode', async () => {
+  const user = userEvent.setup()
+  render(
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Question 1</AccordionTrigger>
+        <AccordionContent>Answer 1</AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="item-2">
+        <AccordionTrigger>Question 2</AccordionTrigger>
+        <AccordionContent>Answer 2</AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  )
+
+  await user.click(screen.getByText('Question 1'))
+  expect(screen.getByText('Answer 1')).toBeVisible()
+
+  await user.click(screen.getByText('Question 2'))
+  expect(screen.getByText('Answer 2')).toBeVisible()
+  expect(screen.queryByText('Answer 1')).not.toBeVisible()
+})
+```

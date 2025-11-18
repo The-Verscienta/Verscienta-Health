@@ -45,7 +45,7 @@ async function createAdminUser() {
     console.log('   Default credentials will be used:\n')
 
     const adminEmail = 'admin@verscienta.com'
-    const adminPassword = 'admin123456'  // Change this after first login!
+    const adminPassword = 'admin123456' // Change this after first login!
 
     console.log(`   Email: ${adminEmail}`)
     console.log(`   Password: ${adminPassword}`)

@@ -4,7 +4,7 @@ import { ConditionCard } from '@/components/cards/ConditionCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
-import { getConditions, type Condition } from '@/lib/payload-api'
+import { type Condition, getConditions } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,7 +68,9 @@ export default async function ConditionsPage({ params, searchParams }: Condition
                   conditionId={String(condition.id)}
                   title={condition.title}
                   slug={condition.slug || ''}
-                  description={typeof condition.description === 'object' ? undefined : condition.description}
+                  description={
+                    typeof condition.description === 'object' ? undefined : condition.description
+                  }
                   category={condition.category || ''}
                   severity={condition.severity || ''}
                   relatedHerbsCount={condition.relatedHerbs?.length || 0}

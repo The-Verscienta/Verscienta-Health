@@ -1,0 +1,660 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as SearchFiltersStories from './SearchFilters.stories'
+
+<Meta of={SearchFiltersStories} />
+
+# SearchFilters
+
+An advanced filtering interface with expandable filter groups, active filter pills, and optional sorting controls.
+
+<Primary />
+
+## Overview
+
+The SearchFilters component provides a comprehensive filtering system for search results pages. It supports single-select and multi-select filter groups, collapsible sections, active filter management, and integrated sorting options.
+
+## Usage
+
+```tsx
+import { SearchFilters, type FilterGroup } from '@/components/search/SearchFilters'
+
+const filterGroups: FilterGroup[] = [
+  {
+    id: 'category',
+    label: 'TCM Category',
+    options: [
+      { label: 'Qi Tonics', value: 'qi-tonics', count: 45 },
+      { label: 'Blood Tonics', value: 'blood-tonics', count: 32 },
+    ],
+    multiSelect: false,
+  },
+]
+
+export default function SearchPage() {
+  const [activeFilters, setActiveFilters] = useState({})
+
+  return (
+    <SearchFilters
+      filterGroups={filterGroups}
+      activeFilters={activeFilters}
+      onFilterChange={(filterId, values) => {
+        setActiveFilters({ ...activeFilters, [filterId]: values })
+      }}
+      onClearAll={() => setActiveFilters({})}
+    />
+  )
+}
+```
+
+## Variants
+
+### Default
+
+Interactive filters with all groups and sorting options.
+
+<Canvas of={SearchFiltersStories.Default} />
+
+### With Active Filters
+
+Shows active filter pills and selected count.
+
+<Canvas of={SearchFiltersStories.WithActiveFilters} />
+
+### Without Sort Options
+
+Filters only, no sorting dropdown.
+
+<Canvas of={SearchFiltersStories.WithoutSort} />
+
+### Single Group
+
+Minimal filtering with one group.
+
+<Canvas of={SearchFiltersStories.SingleGroup} />
+
+## Content-Specific Filters
+
+### Condition Filters
+
+Filters for health conditions (severity, category).
+
+<Canvas of={SearchFiltersStories.ConditionFilters} />
+
+### Practitioner Filters
+
+Filters for practitioners (modality, verification, location).
+
+<Canvas of={SearchFiltersStories.PractitionerFilters} />
+
+### Formula Filters
+
+Filters for herbal formulas (tradition, category, ingredient count).
+
+<Canvas of={SearchFiltersStories.FormulaFilters} />
+
+### Without Counts
+
+Filter options without result counts.
+
+<Canvas of={SearchFiltersStories.WithoutCounts} />
+
+## Layouts
+
+### Mobile View
+
+Responsive design for mobile devices.
+
+<Canvas of={SearchFiltersStories.MobileView} />
+
+### In Sidebar
+
+Typical sidebar layout with content area.
+
+<Canvas of={SearchFiltersStories.InSidebar} />
+
+## Props
+
+<Controls />
+
+### SearchFiltersProps
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `filterGroups` | `FilterGroup[]` | Yes | Array of filter groups to display |
+| `activeFilters` | `Record<string, string[]>` | Yes | Currently active filters (groupId → values) |
+| `onFilterChange` | `(filterId: string, values: string[]) => void` | Yes | Callback when filter selection changes |
+| `onClearAll` | `() => void` | Yes | Callback to clear all active filters |
+| `sortOptions` | `{ label: string; value: string }[]` | No | Sort options for dropdown |
+| `activeSort` | `string` | No | Currently selected sort value |
+| `onSortChange` | `(value: string) => void` | No | Callback when sort changes |
+
+### FilterGroup
+
+```typescript
+interface FilterGroup {
+  id: string              // Unique identifier
+  label: string           // Display label for the group
+  options: FilterOption[] // Available filter options
+  multiSelect?: boolean   // Allow multiple selections (default: false)
+}
+```
+
+### FilterOption
+
+```typescript
+interface FilterOption {
+  label: string    // Display label
+  value: string    // Value to filter by
+  count?: number   // Number of results (optional)
+}
+```
+
+## Behavior
+
+- **Expandable Groups**: Click header to expand/collapse (all expanded by default)
+- **Show/Hide Toggle**: Top button toggles entire filter panel
+- **Active Filter Count**: Badge shows total number of active filters
+- **Active Filter Pills**: Removable badges for each active filter
+- **Clear All**: Button appears when filters are active
+- **Single Select**: Radio buttons (only one selection per group)
+- **Multi-Select**: Checkboxes (multiple selections per group)
+- **Result Counts**: Optional counts displayed next to each option
+- **Sorting**: Optional dropdown for sort order
+
+## Accessibility
+
+- **Keyboard Navigation**: Fully accessible via keyboard
+- **Form Controls**: Proper checkbox/radio button semantics
+- **Labels**: All inputs have associated labels
+- **Focus Indicators**: Clear focus rings on all interactive elements
+- **Screen Readers**: Proper ARIA labels and descriptions
+- **Button Semantics**: Proper button elements for actions
+- **Expandable Sections**: Proper expansion state communication
+
+### Best Practices
+
+- Provide clear, concise filter labels
+- Use multi-select for non-exclusive options
+- Use single-select for mutually exclusive options
+- Show result counts when available
+- Keep filter groups organized and logical
+- Limit number of visible options (consider scrolling for long lists)
+- Provide "Clear All" for easy reset
+
+## Design Guidelines
+
+### When to Use
+
+- **Search Results Pages**: Filter search results
+- **Category Pages**: Filter products/items by attributes
+- **Listing Pages**: Refine list views
+- **E-commerce**: Product filtering
+- **Directory Pages**: Filter practitioners, herbs, etc.
+
+### Do's
+
+✅ Group related filters logically
+✅ Show result counts for transparency
+✅ Use multi-select for attributes (e.g., colors, sizes)
+✅ Use single-select for exclusive options (e.g., sort order)
+✅ Provide active filter pills for easy removal
+✅ Show "Clear All" when filters are active
+✅ Make filter groups collapsible
+✅ Use appropriate input types (checkbox vs radio)
+
+### Don'ts
+
+❌ Don't hide the "Clear All" button
+❌ Don't use multi-select for mutually exclusive options
+❌ Don't show empty filter groups (0 results)
+❌ Don't make users scroll excessively within groups
+❌ Don't auto-apply filters without user action
+❌ Don't use generic labels ("Filter 1", "Filter 2")
+❌ Don't show filters without counts (when applicable)
+
+## Examples
+
+### Basic Implementation
+
+```tsx
+'use client'
+
+import { SearchFilters, type FilterGroup } from '@/components/search/SearchFilters'
+import { useState } from 'react'
+
+const filterGroups: FilterGroup[] = [
+  {
+    id: 'category',
+    label: 'Category',
+    options: [
+      { label: 'Qi Tonics', value: 'qi-tonics', count: 45 },
+      { label: 'Blood Tonics', value: 'blood-tonics', count: 32 },
+    ],
+    multiSelect: false,
+  },
+]
+
+export default function FilteredResults() {
+  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({})
+
+  return (
+    <SearchFilters
+      filterGroups={filterGroups}
+      activeFilters={activeFilters}
+      onFilterChange={(filterId, values) => {
+        setActiveFilters({ ...activeFilters, [filterId]: values })
+      }}
+      onClearAll={() => setActiveFilters({})}
+    />
+  )
+}
+```
+
+### With URL Params Integration
+
+```tsx
+'use client'
+
+import { SearchFilters } from '@/components/search/SearchFilters'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+
+export default function SearchPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({})
+
+  // Load filters from URL on mount
+  useEffect(() => {
+    const filters: Record<string, string[]> = {}
+    searchParams.forEach((value, key) => {
+      if (key.startsWith('filter_')) {
+        const filterId = key.replace('filter_', '')
+        filters[filterId] = value.split(',')
+      }
+    })
+    setActiveFilters(filters)
+  }, [searchParams])
+
+  const handleFilterChange = (filterId: string, values: string[]) => {
+    const newFilters = { ...activeFilters, [filterId]: values }
+    setActiveFilters(newFilters)
+
+    // Update URL
+    const params = new URLSearchParams(searchParams)
+    if (values.length > 0) {
+      params.set(`filter_${filterId}`, values.join(','))
+    } else {
+      params.delete(`filter_${filterId}`)
+    }
+    router.push(`/search?${params.toString()}`)
+  }
+
+  const handleClearAll = () => {
+    setActiveFilters({})
+    const params = new URLSearchParams(searchParams)
+    Array.from(params.keys()).forEach((key) => {
+      if (key.startsWith('filter_')) {
+        params.delete(key)
+      }
+    })
+    router.push(`/search?${params.toString()}`)
+  }
+
+  return (
+    <SearchFilters
+      filterGroups={filterGroups}
+      activeFilters={activeFilters}
+      onFilterChange={handleFilterChange}
+      onClearAll={handleClearAll}
+    />
+  )
+}
+```
+
+### With Payload CMS Data
+
+```tsx
+import { getHerbs } from '@/lib/payload-api'
+import { SearchFilters } from '@/components/search/SearchFilters'
+
+export default async function HerbsPage() {
+  // Fetch all herbs to build filter options with counts
+  const { docs: allHerbs } = await getHerbs({ limit: 1000 })
+
+  // Build filter groups from data
+  const categoryCounts = allHerbs.reduce((acc, herb) => {
+    const cat = herb.tcmCategory?.name
+    if (cat) acc[cat] = (acc[cat] || 0) + 1
+    return acc
+  }, {})
+
+  const filterGroups = [
+    {
+      id: 'category',
+      label: 'TCM Category',
+      options: Object.entries(categoryCounts).map(([label, count]) => ({
+        label,
+        value: label.toLowerCase().replace(/\s+/g, '-'),
+        count,
+      })),
+      multiSelect: false,
+    },
+  ]
+
+  return (
+    <div className="flex gap-6">
+      <div className="w-64">
+        <SearchFilters
+          filterGroups={filterGroups}
+          activeFilters={{}}
+          onFilterChange={() => {}}
+          onClearAll={() => {}}
+        />
+      </div>
+      <div className="flex-1">
+        <HerbsList herbs={allHerbs} />
+      </div>
+    </div>
+  )
+}
+```
+
+### Responsive Mobile Drawer
+
+```tsx
+'use client'
+
+import { SearchFilters } from '@/components/search/SearchFilters'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { SlidersHorizontal } from 'lucide-react'
+import { useState } from 'react'
+
+export default function MobileFilters() {
+  const [open, setOpen] = useState(false)
+  const [activeFilters, setActiveFilters] = useState({})
+
+  return (
+    <>
+      {/* Mobile filter button */}
+      <div className="md:hidden">
+        <Button onClick={() => setOpen(true)} variant="outline">
+          <SlidersHorizontal className="mr-2 h-4 w-4" />
+          Filters
+        </Button>
+      </div>
+
+      {/* Mobile drawer */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Filters</DialogTitle>
+          </DialogHeader>
+          <SearchFilters
+            filterGroups={filterGroups}
+            activeFilters={activeFilters}
+            onFilterChange={(filterId, values) => {
+              setActiveFilters({ ...activeFilters, [filterId]: values })
+            }}
+            onClearAll={() => setActiveFilters({})}
+          />
+          <Button onClick={() => setOpen(false)}>Apply Filters</Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Desktop sidebar */}
+      <div className="hidden md:block">
+        <SearchFilters
+          filterGroups={filterGroups}
+          activeFilters={activeFilters}
+          onFilterChange={(filterId, values) => {
+            setActiveFilters({ ...activeFilters, [filterId]: values })
+          }}
+          onClearAll={() => setActiveFilters({})}
+        />
+      </div>
+    </>
+  )
+}
+```
+
+### With LocalStorage Persistence
+
+```tsx
+'use client'
+
+import { SearchFilters } from '@/components/search/SearchFilters'
+import { useState, useEffect } from 'react'
+
+export default function PersistentFilters() {
+  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({})
+
+  // Load from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('searchFilters')
+    if (stored) {
+      try {
+        setActiveFilters(JSON.parse(stored))
+      } catch (e) {
+        console.error('Failed to parse stored filters', e)
+      }
+    }
+  }, [])
+
+  const handleFilterChange = (filterId: string, values: string[]) => {
+    const newFilters = { ...activeFilters, [filterId]: values }
+    setActiveFilters(newFilters)
+    localStorage.setItem('searchFilters', JSON.stringify(newFilters))
+  }
+
+  const handleClearAll = () => {
+    setActiveFilters({})
+    localStorage.removeItem('searchFilters')
+  }
+
+  return (
+    <SearchFilters
+      filterGroups={filterGroups}
+      activeFilters={activeFilters}
+      onFilterChange={handleFilterChange}
+      onClearAll={handleClearAll}
+    />
+  )
+}
+```
+
+### Dynamic Filter Options
+
+```tsx
+'use client'
+
+import { SearchFilters } from '@/components/search/SearchFilters'
+import { useState, useEffect } from 'react'
+
+export default function DynamicFilters() {
+  const [filterGroups, setFilterGroups] = useState([])
+  const [activeFilters, setActiveFilters] = useState({})
+
+  useEffect(() => {
+    // Fetch available filters from API
+    async function loadFilters() {
+      const response = await fetch('/api/filters')
+      const data = await response.json()
+      setFilterGroups(data)
+    }
+    loadFilters()
+  }, [])
+
+  return (
+    <SearchFilters
+      filterGroups={filterGroups}
+      activeFilters={activeFilters}
+      onFilterChange={(filterId, values) => {
+        setActiveFilters({ ...activeFilters, [filterId]: values })
+      }}
+      onClearAll={() => setActiveFilters({})}
+    />
+  )
+}
+```
+
+## Styling
+
+### Dimensions
+
+- **Recommended Width**: 250-300px (sidebar)
+- **Min Width**: 200px
+- **Mobile**: Full width
+
+### Color Scheme
+
+- **Active Filter Badge**: default variant
+- **Filter Pills**: outline variant
+- **Cards**: white background, gray-200 border
+- **Hover**: gray-50 background
+- **Active Input**: earth-600 accent
+
+### Spacing
+
+- **Group Spacing**: space-y-3 (12px)
+- **Option Spacing**: space-y-2 (8px)
+- **Card Padding**: p-3 (12px)
+
+## Performance
+
+- **Controlled State**: Uses React state for filter management
+- **Expandable Groups**: Reduces initial DOM nodes
+- **Conditional Rendering**: Only renders expanded group content
+- **Active Filter Count**: Efficiently calculated with reduce
+- **Event Delegation**: Minimal event listeners
+
+## Related Components
+
+- **SearchBar**: Search input component
+- **Card**: Container for filter groups
+- **Badge**: Active filter pills
+- **Button**: Toggle and clear actions
+- **Input**: Checkbox and radio inputs
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen, fireEvent } from '@testing-library/react'
+import { SearchFilters, type FilterGroup } from './SearchFilters'
+
+const mockFilterGroups: FilterGroup[] = [
+  {
+    id: 'category',
+    label: 'Category',
+    options: [
+      { label: 'Option 1', value: 'opt1', count: 10 },
+      { label: 'Option 2', value: 'opt2', count: 5 },
+    ],
+    multiSelect: false,
+  },
+]
+
+test('renders filter groups', () => {
+  render(
+    <SearchFilters
+      filterGroups={mockFilterGroups}
+      activeFilters={{}}
+      onFilterChange={() => {}}
+      onClearAll={() => {}}
+    />
+  )
+
+  expect(screen.getByText('Category')).toBeInTheDocument()
+  expect(screen.getByText('Option 1')).toBeInTheDocument()
+  expect(screen.getByText('(10)')).toBeInTheDocument()
+})
+
+test('calls onFilterChange when option selected', () => {
+  const handleChange = jest.fn()
+
+  render(
+    <SearchFilters
+      filterGroups={mockFilterGroups}
+      activeFilters={{}}
+      onFilterChange={handleChange}
+      onClearAll={() => {}}
+    />
+  )
+
+  const option1 = screen.getByLabelText('Option 1')
+  fireEvent.click(option1)
+
+  expect(handleChange).toHaveBeenCalledWith('category', ['opt1'])
+})
+
+test('shows active filter count badge', () => {
+  render(
+    <SearchFilters
+      filterGroups={mockFilterGroups}
+      activeFilters={{ category: ['opt1'] }}
+      onFilterChange={() => {}}
+      onClearAll={() => {}}
+    />
+  )
+
+  expect(screen.getByText('1')).toBeInTheDocument()
+})
+
+test('shows Clear All button when filters are active', () => {
+  render(
+    <SearchFilters
+      filterGroups={mockFilterGroups}
+      activeFilters={{ category: ['opt1'] }}
+      onFilterChange={() => {}}
+      onClearAll={() => {}}
+    />
+  )
+
+  expect(screen.getByText('Clear All')).toBeInTheDocument()
+})
+
+test('calls onClearAll when Clear All clicked', () => {
+  const handleClearAll = jest.fn()
+
+  render(
+    <SearchFilters
+      filterGroups={mockFilterGroups}
+      activeFilters={{ category: ['opt1'] }}
+      onFilterChange={() => {}}
+      onClearAll={handleClearAll}
+    />
+  )
+
+  fireEvent.click(screen.getByText('Clear All'))
+  expect(handleClearAll).toHaveBeenCalled()
+})
+
+test('toggles filter group expansion', () => {
+  render(
+    <SearchFilters
+      filterGroups={mockFilterGroups}
+      activeFilters={{}}
+      onFilterChange={() => {}}
+      onClearAll={() => {}}
+    />
+  )
+
+  const header = screen.getByText('Category')
+  expect(screen.getByText('Option 1')).toBeVisible()
+
+  fireEvent.click(header)
+  expect(screen.queryByText('Option 1')).not.toBeInTheDocument()
+
+  fireEvent.click(header)
+  expect(screen.getByText('Option 1')).toBeVisible()
+})
+```

@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { isPublic, isAuthenticated, isAdmin, isOwnReview } from '../access'
+import { isAdmin, isAuthenticated, isOwnReview, isPublic } from '../access'
 
 export const Reviews: CollectionConfig = {
   slug: 'reviews',
@@ -108,7 +108,8 @@ export const Reviews: CollectionConfig = {
             practitioners: 'practitioner',
             modalities: 'modality',
           }
-          data.reviewedEntityType = entityTypeMap[data.reviewedEntity.relationTo as keyof typeof entityTypeMap]
+          data.reviewedEntityType =
+            entityTypeMap[data.reviewedEntity.relationTo as keyof typeof entityTypeMap]
         }
         return data
       },

@@ -97,12 +97,13 @@ function transformDocumentForAlgolia(doc: any, collectionName: string): any {
         averageRating: doc.averageRating || 0,
         reviewCount: doc.reviewCount || 0,
         // Add geolocation for geo search
-        _geoloc: doc.addresses?.[0]?.latitude && doc.addresses?.[0]?.longitude
-          ? {
-              lat: doc.addresses[0].latitude,
-              lng: doc.addresses[0].longitude,
-            }
-          : undefined,
+        _geoloc:
+          doc.addresses?.[0]?.latitude && doc.addresses?.[0]?.longitude
+            ? {
+                lat: doc.addresses[0].latitude,
+                lng: doc.addresses[0].longitude,
+              }
+            : undefined,
       }
 
     default:
@@ -130,12 +131,14 @@ export const algoliaAfterChangeHook: CollectionAfterChangeHook = async ({
     if (doc._status && doc._status !== 'published') {
       console.log(`⏩ Skipping Algolia index for draft ${collectionName}:${doc.id}`)
       // Delete from Algolia if it exists (was published, now draft)
-      await client.deleteObject({
-        indexName,
-        objectID: doc.id,
-      }).catch(() => {
-        // Ignore errors if object doesn't exist
-      })
+      await client
+        .deleteObject({
+          indexName,
+          objectID: doc.id,
+        })
+        .catch(() => {
+          // Ignore errors if object doesn't exist
+        })
       return doc
     }
 
@@ -267,10 +270,7 @@ export async function bulkIndexToAlgolia(
  * Configure Algolia index settings
  * Sets up searchable attributes, ranking, and facets
  */
-export async function configureAlgoliaIndex(
-  collectionSlug: string,
-  settings: any
-): Promise<void> {
+export async function configureAlgoliaIndex(collectionSlug: string, settings: any): Promise<void> {
   try {
     const client = getAlgoliaClient()
     if (!client) {
@@ -315,35 +315,18 @@ export const ALGOLIA_SETTINGS = {
       'filterOnly(_status)',
     ],
     customRanking: ['desc(averageRating)', 'desc(reviewCount)', 'desc(updatedAt)'],
-    ranking: [
-      'typo',
-      'geo',
-      'words',
-      'filters',
-      'proximity',
-      'attribute',
-      'exact',
-      'custom',
-    ],
+    ranking: ['typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom'],
   },
 
   formulas: {
     searchableAttributes: ['title', 'shortDescription', 'description', 'category'],
-    attributesForFaceting: [
-      'filterOnly(category)',
-      'filterOnly(tradition)',
-      'filterOnly(_status)',
-    ],
+    attributesForFaceting: ['filterOnly(category)', 'filterOnly(tradition)', 'filterOnly(_status)'],
     customRanking: ['desc(updatedAt)'],
   },
 
   conditions: {
     searchableAttributes: ['title', 'description', 'tcmPattern', 'westernDiagnosis'],
-    attributesForFaceting: [
-      'filterOnly(category)',
-      'filterOnly(severity)',
-      'filterOnly(_status)',
-    ],
+    attributesForFaceting: ['filterOnly(category)', 'filterOnly(severity)', 'filterOnly(_status)'],
     customRanking: ['desc(updatedAt)'],
   },
 
@@ -365,15 +348,6 @@ export const ALGOLIA_SETTINGS = {
     ],
     customRanking: ['desc(averageRating)', 'desc(reviewCount)'],
     // Enable geo search
-    ranking: [
-      'geo',
-      'typo',
-      'words',
-      'filters',
-      'proximity',
-      'attribute',
-      'exact',
-      'custom',
-    ],
+    ranking: ['geo', 'typo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom'],
   },
 }

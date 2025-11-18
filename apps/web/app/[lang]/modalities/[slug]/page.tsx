@@ -102,9 +102,8 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
         ? { contraindication: modality.contraindications }
         : {}),
     },
-    specialty: 'Alternative Medicine',
     ...(modality.scientificEvidence ? { reviewedBy: modality.scientificEvidence } : {}),
-  })
+  } as any)
 
   return (
     <div className="container-custom py-12">

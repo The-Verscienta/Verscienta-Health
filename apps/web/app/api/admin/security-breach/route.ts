@@ -3,7 +3,7 @@ import { AuditAction, AuditSeverity, createAuditLog } from '@/lib/audit-log'
 import { auth } from '@/lib/auth'
 import { sendEmail } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
-import { BreachType, BreachSeverity, RemediationStatus } from './types'
+import { BreachSeverity, BreachType, RemediationStatus } from './types'
 
 export const dynamic = 'force-dynamic'
 

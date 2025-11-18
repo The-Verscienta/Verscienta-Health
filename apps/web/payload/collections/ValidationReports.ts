@@ -4,7 +4,14 @@ export const ValidationReports: CollectionConfig = {
   slug: 'validation-reports',
   admin: {
     useAsTitle: 'type',
-    defaultColumns: ['type', 'collectionType', 'severity', 'errorCount', 'warningCount', 'timestamp'],
+    defaultColumns: [
+      'type',
+      'collectionType',
+      'severity',
+      'errorCount',
+      'warningCount',
+      'timestamp',
+    ],
     description: 'Data validation reports from automated quality checks',
   },
   access: {

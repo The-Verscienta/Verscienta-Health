@@ -1,0 +1,568 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as SearchBarStories from './SearchBar.stories'
+
+<Meta of={SearchBarStories} />
+
+# SearchBar
+
+A search input component with icon and submit button that navigates to search results on submission.
+
+<Primary />
+
+## Overview
+
+The SearchBar component provides a user-friendly search interface throughout the Verscienta Health platform. It features a search icon, customizable placeholder text, and automatic navigation to search results.
+
+## Usage
+
+```tsx
+import { SearchBar } from '@/components/search/SearchBar'
+
+export default function HerbsPage() {
+  return (
+    <SearchBar
+      placeholder="Search herbs, formulas, and conditions..."
+      autoFocus
+    />
+  )
+}
+```
+
+## Variants
+
+### Default
+
+Basic search bar with placeholder text.
+
+<Canvas of={SearchBarStories.Default} />
+
+### With Default Value
+
+Pre-populated search query (useful for search results pages).
+
+<Canvas of={SearchBarStories.WithDefaultValue} />
+
+### With Auto Focus
+
+Automatically focuses on mount (useful for search pages or modals).
+
+<Canvas of={SearchBarStories.WithAutoFocus} />
+
+### Custom Placeholder
+
+<Canvas of={SearchBarStories.CustomPlaceholder} />
+
+## Context-Specific Search
+
+### Herbs Search
+
+<Canvas of={SearchBarStories.HerbsSearch} />
+
+### Formulas Search
+
+<Canvas of={SearchBarStories.FormulasSearch} />
+
+### Conditions Search
+
+<Canvas of={SearchBarStories.ConditionsSearch} />
+
+## Layout Examples
+
+### In Header/Navbar
+
+Typical placement in site header.
+
+<Canvas of={SearchBarStories.InHeader} />
+
+### In Hero Section
+
+Featured placement on landing or search pages.
+
+<Canvas of={SearchBarStories.InHeroSection} />
+
+### Compact Width
+
+Suitable for sidebars or tight spaces.
+
+<Canvas of={SearchBarStories.CompactWidth} />
+
+### Full Width
+
+Maximum width for prominent search interfaces.
+
+<Canvas of={SearchBarStories.FullWidth} />
+
+### Mobile View
+
+Responsive design for mobile devices.
+
+<Canvas of={SearchBarStories.MobileView} />
+
+## Enhancement Patterns
+
+### With Recent Searches
+
+Shows user's recent search history.
+
+<Canvas of={SearchBarStories.WithRecentSearches} />
+
+### With Popular Searches
+
+Displays trending or popular search terms.
+
+<Canvas of={SearchBarStories.WithPopularSearches} />
+
+## Props
+
+<Controls />
+
+### SearchBarProps
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `placeholder` | `string` | No | Translated default | Placeholder text for search input |
+| `defaultValue` | `string` | No | `''` | Initial search query value |
+| `autoFocus` | `boolean` | No | `false` | Automatically focus input on mount |
+
+## Behavior
+
+- **Form Submission**: Navigates to `/search?q=${query}` on submit
+- **Whitespace Trimming**: Automatically trims leading/trailing whitespace
+- **Empty Prevention**: Does not submit if query is empty after trimming
+- **URL Encoding**: Properly encodes query parameters
+- **Internationalization**: Uses next-intl for translated placeholders
+- **Browser Features**: Disables spellcheck and autocomplete
+
+## Accessibility
+
+- **Keyboard Navigation**: Fully accessible via keyboard
+- **Form Semantics**: Uses proper `<form>` element
+- **Submit Button**: Explicit submit button (not just Enter key)
+- **Search Input Type**: Uses `type="search"` for better mobile keyboards
+- **Focus Indicators**: Clear focus ring on input
+- **Screen Readers**: Search icon is decorative (aria-hidden)
+- **Auto Focus**: Use sparingly to avoid disrupting navigation
+
+### Best Practices
+
+- Provide descriptive placeholder text
+- Use `autoFocus` only on dedicated search pages
+- Ensure search button is visible (not icon-only)
+- Support keyboard submission (Enter key)
+- Clear search state after navigation (or preserve with defaultValue)
+
+## Design Guidelines
+
+### When to Use
+
+- **Site Header**: Global search in navigation bar
+- **Hero Sections**: Featured search on landing pages
+- **Search Pages**: Dedicated search interfaces
+- **Category Pages**: Contextual search within categories
+- **Modals/Dialogs**: Popup search interfaces
+
+### Do's
+
+✅ Use clear, contextual placeholder text
+✅ Show search icon for visual recognition
+✅ Include visible submit button
+✅ Support keyboard shortcuts (Enter to submit)
+✅ Trim whitespace before searching
+✅ Provide immediate visual feedback on focus
+✅ Use appropriate width for context
+✅ Consider showing recent/popular searches
+
+### Don'ts
+
+❌ Don't hide the submit button (accessibility issue)
+❌ Don't use generic "Search..." placeholders when context is known
+❌ Don't auto-focus on every page (disrupts navigation)
+❌ Don't submit empty searches
+❌ Don't make search input too narrow (min 200px recommended)
+❌ Don't disable browser autocomplete without good reason
+❌ Don't use without proper form semantics
+
+## Examples
+
+### Basic Implementation
+
+```tsx
+import { SearchBar } from '@/components/search/SearchBar'
+
+export default function Page() {
+  return (
+    <SearchBar placeholder="Search herbs, formulas, and conditions..." />
+  )
+}
+```
+
+### In Site Header
+
+```tsx
+import { SearchBar } from '@/components/search/SearchBar'
+
+export default function SiteHeader() {
+  return (
+    <header className="border-b">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <Logo />
+        <div className="flex-1 max-w-md mx-8">
+          <SearchBar placeholder="Search..." />
+        </div>
+        <Navigation />
+      </div>
+    </header>
+  )
+}
+```
+
+### On Search Results Page
+
+```tsx
+import { SearchBar } from '@/components/search/SearchBar'
+
+export default function SearchPage({ searchParams }: { searchParams: { q: string } }) {
+  return (
+    <div>
+      <div className="mb-8">
+        <SearchBar
+          defaultValue={searchParams.q}
+          placeholder="Search herbs, formulas, and conditions..."
+        />
+      </div>
+      <SearchResults query={searchParams.q} />
+    </div>
+  )
+}
+```
+
+### With Debounced Live Search
+
+```tsx
+'use client'
+
+import { SearchBar } from '@/components/search/SearchBar'
+import { useState, useEffect } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
+
+export default function LiveSearch() {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+
+  const debouncedSearch = useDebouncedCallback(
+    async (searchQuery: string) => {
+      if (searchQuery.trim()) {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`)
+        const data = await response.json()
+        setResults(data)
+      } else {
+        setResults([])
+      }
+    },
+    300
+  )
+
+  useEffect(() => {
+    debouncedSearch(query)
+  }, [query, debouncedSearch])
+
+  return (
+    <div>
+      <SearchBar
+        defaultValue={query}
+        placeholder="Search as you type..."
+      />
+      <LiveSearchResults results={results} />
+    </div>
+  )
+}
+```
+
+### With Autocomplete Dropdown
+
+```tsx
+'use client'
+
+import { SearchBar } from '@/components/search/SearchBar'
+import { useState } from 'react'
+
+export default function AutocompleteSearch() {
+  const [query, setQuery] = useState('')
+  const [suggestions, setSuggestions] = useState([])
+  const [showDropdown, setShowDropdown] = useState(false)
+
+  const handleInputChange = async (value: string) => {
+    setQuery(value)
+    if (value.trim().length >= 2) {
+      const response = await fetch(`/api/autocomplete?q=${value}`)
+      const data = await response.json()
+      setSuggestions(data)
+      setShowDropdown(true)
+    } else {
+      setShowDropdown(false)
+    }
+  }
+
+  return (
+    <div className="relative">
+      <SearchBar defaultValue={query} placeholder="Search..." />
+      {showDropdown && suggestions.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg z-50">
+          {suggestions.map((item) => (
+            <button
+              key={item.id}
+              className="w-full px-4 py-2 text-left hover:bg-gray-50"
+              onClick={() => {
+                setQuery(item.title)
+                setShowDropdown(false)
+              }}
+            >
+              {item.title}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### With Recent Searches (localStorage)
+
+```tsx
+'use client'
+
+import { SearchBar } from '@/components/search/SearchBar'
+import { useState, useEffect } from 'react'
+
+export default function SearchWithHistory() {
+  const [recentSearches, setRecentSearches] = useState<string[]>([])
+
+  useEffect(() => {
+    const stored = localStorage.getItem('recentSearches')
+    if (stored) {
+      setRecentSearches(JSON.parse(stored))
+    }
+  }, [])
+
+  const addToRecent = (query: string) => {
+    const updated = [query, ...recentSearches.filter((s) => s !== query)].slice(0, 5)
+    setRecentSearches(updated)
+    localStorage.setItem('recentSearches', JSON.stringify(updated))
+  }
+
+  return (
+    <div>
+      <SearchBar placeholder="Search..." />
+      {recentSearches.length > 0 && (
+        <div className="mt-4">
+          <div className="text-sm font-semibold mb-2">Recent Searches</div>
+          <div className="flex flex-wrap gap-2">
+            {recentSearches.map((search) => (
+              <button
+                key={search}
+                onClick={() => addToRecent(search)}
+                className="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200"
+              >
+                {search}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### With Search Filters
+
+```tsx
+'use client'
+
+import { SearchBar } from '@/components/search/SearchBar'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useState } from 'react'
+
+export default function FilteredSearch() {
+  const [category, setCategory] = useState('all')
+
+  return (
+    <div>
+      <SearchBar placeholder={`Search ${category === 'all' ? 'everything' : category}...`} />
+      <Tabs value={category} onValueChange={setCategory} className="mt-4">
+        <TabsList>
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="herbs">Herbs</TabsTrigger>
+          <TabsTrigger value="formulas">Formulas</TabsTrigger>
+          <TabsTrigger value="conditions">Conditions</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    </div>
+  )
+}
+```
+
+### Search Modal Pattern
+
+```tsx
+'use client'
+
+import { SearchBar } from '@/components/search/SearchBar'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useState } from 'react'
+
+export default function SearchModal() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Open Search</button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Search</DialogTitle>
+          </DialogHeader>
+          <SearchBar placeholder="Search..." autoFocus />
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
+```
+
+## Styling
+
+### Dimensions
+
+- **Min Width**: 200px (for usability)
+- **Recommended Width**: 300-600px
+- **Mobile Width**: Full width (100%)
+- **Icon Size**: 20x20px (h-5 w-5)
+
+### Color Scheme
+
+- **Icon**: gray-400
+- **Input**: Inherits from Input component
+- **Button**: btn-primary class
+
+### Spacing
+
+- **Icon Position**: left-4 (16px from left)
+- **Input Padding**: pl-12 (48px left), pr-4 (16px right)
+- **Button Margin**: ml-2 (8px gap)
+
+## Performance
+
+- **Client Component**: Marked with 'use client' for interactivity
+- **Controlled Input**: Uses React state for input value
+- **Form Submission**: Native form submit event
+- **Navigation**: Uses Next.js router for client-side navigation
+- **URL Encoding**: Ensures safe query parameters
+- **Whitespace Trimming**: Reduces unnecessary API calls
+
+## Related Components
+
+- **Input**: Base input component
+- **Button**: Submit button
+- **SearchFilters**: Advanced search filtering
+- **SearchResults**: Display search results
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+ (benefits from type="search")
+- ✅ Android Chrome 90+ (benefits from type="search")
+
+## Testing
+
+```tsx
+import { render, screen, fireEvent } from '@testing-library/react'
+import { SearchBar } from './SearchBar'
+
+// Mock useRouter
+const mockPush = jest.fn()
+jest.mock('@/i18n/routing', () => ({
+  useRouter: () => ({ push: mockPush }),
+}))
+
+test('renders with placeholder', () => {
+  render(<SearchBar placeholder="Search herbs..." />)
+  expect(screen.getByPlaceholderText('Search herbs...')).toBeInTheDocument()
+})
+
+test('renders with default value', () => {
+  render(<SearchBar defaultValue="ginseng" placeholder="Search..." />)
+  const input = screen.getByPlaceholderText('Search...') as HTMLInputElement
+  expect(input.value).toBe('ginseng')
+})
+
+test('updates input value on change', () => {
+  render(<SearchBar placeholder="Search..." />)
+  const input = screen.getByPlaceholderText('Search...') as HTMLInputElement
+
+  fireEvent.change(input, { target: { value: 'astragalus' } })
+  expect(input.value).toBe('astragalus')
+})
+
+test('navigates to search page on submit', () => {
+  render(<SearchBar placeholder="Search..." />)
+  const input = screen.getByPlaceholderText('Search...')
+  const button = screen.getByRole('button', { name: /search/i })
+
+  fireEvent.change(input, { target: { value: 'ginseng' } })
+  fireEvent.click(button)
+
+  expect(mockPush).toHaveBeenCalledWith('/search?q=ginseng')
+})
+
+test('trims whitespace before submitting', () => {
+  render(<SearchBar placeholder="Search..." />)
+  const input = screen.getByPlaceholderText('Search...')
+  const button = screen.getByRole('button', { name: /search/i })
+
+  fireEvent.change(input, { target: { value: '  ginseng  ' } })
+  fireEvent.click(button)
+
+  expect(mockPush).toHaveBeenCalledWith('/search?q=ginseng')
+})
+
+test('does not submit empty search', () => {
+  render(<SearchBar placeholder="Search..." />)
+  const button = screen.getByRole('button', { name: /search/i })
+
+  fireEvent.click(button)
+
+  expect(mockPush).not.toHaveBeenCalled()
+})
+
+test('does not submit whitespace-only search', () => {
+  render(<SearchBar placeholder="Search..." />)
+  const input = screen.getByPlaceholderText('Search...')
+  const button = screen.getByRole('button', { name: /search/i })
+
+  fireEvent.change(input, { target: { value: '   ' } })
+  fireEvent.click(button)
+
+  expect(mockPush).not.toHaveBeenCalled()
+})
+
+test('encodes special characters in query', () => {
+  render(<SearchBar placeholder="Search..." />)
+  const input = screen.getByPlaceholderText('Search...')
+  const button = screen.getByRole('button', { name: /search/i })
+
+  fireEvent.change(input, { target: { value: 'herb & formula' } })
+  fireEvent.click(button)
+
+  expect(mockPush).toHaveBeenCalledWith('/search?q=herb%20%26%20formula')
+})
+
+test('auto focuses when autoFocus is true', () => {
+  render(<SearchBar placeholder="Search..." autoFocus />)
+  const input = screen.getByPlaceholderText('Search...')
+  expect(document.activeElement).toBe(input)
+})
+```

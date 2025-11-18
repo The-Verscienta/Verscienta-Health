@@ -346,7 +346,7 @@ Issuer: ${alertData.issuer}
 
   describe('Production vs Development Behavior', () => {
     it('should enable strict monitoring in production', () => {
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
       process.env.CERT_MONITOR_ENABLED = 'true'
 
       const isEnabled =
@@ -356,7 +356,7 @@ Issuer: ${alertData.issuer}
     })
 
     it('should allow disabling monitoring with CERT_MONITOR_ENABLED=false', () => {
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
       process.env.CERT_MONITOR_ENABLED = 'false'
 
       const isEnabled = process.env.CERT_MONITOR_ENABLED !== 'false'

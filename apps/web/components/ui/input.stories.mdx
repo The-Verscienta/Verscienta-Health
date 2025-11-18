@@ -1,0 +1,426 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as InputStories from './input.stories'
+
+<Meta of={InputStories} />
+
+# Input
+
+A versatile input component for text, email, password, and other form fields with consistent styling and accessibility.
+
+<Primary />
+
+## Overview
+
+The Input component is a foundational form element used throughout the Verscienta Health platform. It provides consistent styling, focus states, dark mode support, and accessibility features out of the box.
+
+## Usage
+
+```tsx
+import { Input } from '@/components/ui/input'
+
+export default function Example() {
+  return <Input type="text" placeholder="Enter herb name..." />
+}
+```
+
+## Input Types
+
+### Text Input
+
+Default text input for general purposes.
+
+<Canvas of={InputStories.Default} />
+
+### Email Input
+
+For email addresses with built-in validation.
+
+<Canvas of={InputStories.Email} />
+
+### Password Input
+
+For secure password entry.
+
+<Canvas of={InputStories.Password} />
+
+### Number Input
+
+For numeric values with increment/decrement controls.
+
+<Canvas of={InputStories.Number} />
+
+### Search Input
+
+For search fields with native search styling.
+
+<Canvas of={InputStories.Search} />
+
+### Date Input
+
+For date selection with native date picker.
+
+<Canvas of={InputStories.Date} />
+
+## States
+
+### With Value
+
+Input with default or pre-filled value.
+
+<Canvas of={InputStories.WithValue} />
+
+### Disabled
+
+Disabled state prevents user interaction.
+
+<Canvas of={InputStories.Disabled} />
+
+### Required
+
+Input marked as required for form validation.
+
+<Canvas of={InputStories.Required} />
+
+## Validation States
+
+### Error State
+
+Show validation errors with red styling.
+
+<Canvas of={InputStories.WithError} />
+
+### Success State
+
+Show successful validation with green styling.
+
+<Canvas of={InputStories.WithSuccess} />
+
+## Sizes
+
+### Small
+
+Compact input for tight spaces.
+
+<Canvas of={InputStories.Small} />
+
+### Default (Medium)
+
+Standard input size for most use cases.
+
+<Canvas of={InputStories.Default} />
+
+### Large
+
+Larger input for emphasis or mobile-friendly touch targets.
+
+<Canvas of={InputStories.Large} />
+
+## Props
+
+<Controls />
+
+## Accessibility
+
+- **Keyboard Navigation**: Fully accessible via keyboard (Tab to focus, type to input)
+- **Focus Indicators**: Clear focus ring with earth-tone color
+- **ARIA**: Proper input semantics and validation states
+- **Screen Readers**: Announces label, placeholder, and validation messages
+- **Dark Mode**: Automatic dark mode support
+
+### Best Practices
+
+- Always provide a `label` element associated with the input:
+  ```tsx
+  <label htmlFor="email">Email Address</label>
+  <Input id="email" type="email" placeholder="name@example.com" />
+  ```
+- Use appropriate `type` attribute for better mobile keyboards
+- Provide helpful `placeholder` text as hints (not as labels)
+- Use `required` and `aria-required` for required fields
+- Show validation errors with `aria-invalid` and `aria-describedby`:
+  ```tsx
+  <Input
+    id="email"
+    type="email"
+    aria-invalid={hasError}
+    aria-describedby={hasError ? 'email-error' : undefined}
+  />
+  {hasError && <p id="email-error">Please enter a valid email</p>}
+  ```
+
+## Design Guidelines
+
+### When to Use
+
+- **Text**: Names, search queries, general text input
+- **Email**: Email addresses (triggers email keyboard on mobile)
+- **Password**: Secure password entry
+- **Number**: Quantities, prices, numeric values
+- **Tel**: Phone numbers (triggers numeric keyboard on mobile)
+- **URL**: Website addresses (triggers URL keyboard on mobile)
+- **Search**: Search fields (adds clear button on some browsers)
+- **Date/Time**: Date and time selection
+
+### Do's
+
+✅ Use descriptive labels above or beside inputs
+✅ Provide helpful placeholder text as examples
+✅ Show validation feedback clearly
+✅ Use appropriate input types for mobile optimization
+✅ Maintain consistent sizing within forms
+✅ Provide clear error messages
+✅ Support keyboard navigation and shortcuts
+
+### Don'ts
+
+❌ Don't use placeholder as the only label
+❌ Don't use generic error messages like "Invalid input"
+❌ Don't validate on every keystroke (wait for blur)
+❌ Don't forget focus states for keyboard users
+❌ Don't make inputs too small for touch targets
+❌ Don't use disabled state when you can use readonly
+❌ Don't forget to test with screen readers
+
+## Examples
+
+### Basic Form Field
+
+```tsx
+<div>
+  <label htmlFor="herb-name" className="block text-sm font-medium mb-1">
+    Herb Name
+  </label>
+  <Input id="herb-name" type="text" placeholder="e.g., Ginseng" required />
+</div>
+```
+
+### With Validation
+
+```tsx
+const [email, setEmail] = useState('')
+const [error, setError] = useState('')
+
+const validateEmail = (value: string) => {
+  if (!value) {
+    setError('Email is required')
+  } else if (!/\S+@\S+\.\S+/.test(value)) {
+    setError('Please enter a valid email')
+  } else {
+    setError('')
+  }
+}
+
+return (
+  <div>
+    <label htmlFor="email" className="block text-sm font-medium mb-1">
+      Email Address
+    </label>
+    <Input
+      id="email"
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      onBlur={() => validateEmail(email)}
+      placeholder="name@example.com"
+      className={error ? 'border-red-500 focus:ring-red-500' : ''}
+      aria-invalid={!!error}
+      aria-describedby={error ? 'email-error' : undefined}
+    />
+    {error && (
+      <p id="email-error" className="mt-1 text-sm text-red-600">
+        {error}
+      </p>
+    )}
+  </div>
+)
+```
+
+### Search with Icon
+
+```tsx
+import { Search } from 'lucide-react'
+
+<div className="relative">
+  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+  <Input type="search" placeholder="Search herbs..." className="pl-10" />
+</div>
+```
+
+### Password with Toggle
+
+```tsx
+import { Eye, EyeOff } from 'lucide-react'
+import { useState } from 'react'
+
+const [showPassword, setShowPassword] = useState(false)
+
+return (
+  <div className="relative">
+    <Input
+      type={showPassword ? 'text' : 'password'}
+      placeholder="Enter password"
+      className="pr-10"
+    />
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-1/2 -translate-y-1/2"
+      aria-label={showPassword ? 'Hide password' : 'Show password'}
+    >
+      {showPassword ? (
+        <EyeOff className="h-4 w-4 text-gray-400" />
+      ) : (
+        <Eye className="h-4 w-4 text-gray-400" />
+      )}
+    </button>
+  </div>
+)
+```
+
+### Controlled Input
+
+```tsx
+const [value, setValue] = useState('')
+
+<Input
+  type="text"
+  value={value}
+  onChange={(e) => setValue(e.target.value)}
+  placeholder="Type something..."
+/>
+```
+
+### With Character Count
+
+```tsx
+const [text, setText] = useState('')
+const maxLength = 100
+
+<div>
+  <Input
+    type="text"
+    value={text}
+    onChange={(e) => setText(e.target.value)}
+    maxLength={maxLength}
+    placeholder="Enter description..."
+  />
+  <p className="mt-1 text-sm text-gray-500">
+    {text.length}/{maxLength} characters
+  </p>
+</div>
+```
+
+## Form Integration
+
+### Complete Form Example
+
+<Canvas of={InputStories.FormExample} />
+
+### With React Hook Form
+
+```tsx
+import { useForm } from 'react-hook-form'
+import { Input } from '@/components/ui/input'
+
+const { register, handleSubmit, formState: { errors } } = useForm()
+
+<form onSubmit={handleSubmit(onSubmit)}>
+  <div>
+    <label htmlFor="email">Email</label>
+    <Input
+      id="email"
+      type="email"
+      {...register('email', {
+        required: 'Email is required',
+        pattern: {
+          value: /\S+@\S+\.\S+/,
+          message: 'Invalid email address',
+        },
+      })}
+      aria-invalid={!!errors.email}
+    />
+    {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+  </div>
+</form>
+```
+
+## Related Components
+
+- **Textarea**: For multi-line text input
+- **Select**: For dropdown selections
+- **Checkbox**: For boolean inputs
+- **Radio**: For mutually exclusive options
+- **Form**: For form layout and validation
+
+## Technical Details
+
+### Component Structure
+
+The Input component:
+
+- **Extends**: Standard HTML input element
+- **Styling**: Tailwind CSS with consistent design tokens
+- **Dark Mode**: Automatic via Tailwind dark mode classes
+- **Forwarding**: Uses React.forwardRef for ref access
+
+### Customization
+
+You can customize the input by:
+
+1. **Using className prop**:
+
+```tsx
+<Input className="w-full md:w-96" placeholder="Responsive width" />
+```
+
+2. **Wrapper styling**:
+
+```tsx
+<div className="relative">
+  <Input className="pl-10" /> {/* Add left padding for icon */}
+  <IconComponent className="absolute left-3" />
+</div>
+```
+
+3. **Custom validation styles**:
+
+```tsx
+<Input
+  className={cn(
+    errors.field && 'border-red-500 focus:ring-red-500',
+    success && 'border-green-500 focus:ring-green-500'
+  )}
+/>
+```
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Input } from './input'
+
+test('allows typing', async () => {
+  const user = userEvent.setup()
+  render(<Input placeholder="Type here" />)
+
+  const input = screen.getByPlaceholderText('Type here')
+  await user.type(input, 'Hello')
+
+  expect(input).toHaveValue('Hello')
+})
+
+test('respects disabled state', () => {
+  render(<Input disabled />)
+  const input = screen.getByRole('textbox')
+  expect(input).toBeDisabled()
+})
+```

@@ -1,10 +1,10 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
+import { withPayload } from '@payloadcms/next/withPayload'
 import { withSentryConfig } from '@sentry/nextjs'
 import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
 // @ts-expect-error - next-pwa has no types
 import withPWA from 'next-pwa'
-import { withPayload } from '@payloadcms/next/withPayload'
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 
@@ -15,11 +15,10 @@ const bundleAnalyzer = withBundleAnalyzer({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  // Enable standalone output for Docker deployment
-  // NOTE: Standalone mode is for production Docker deployments only
-  // For local development, comment out this line and use 'npm run dev' or 'npm start'
-  // For Docker production, use: node .next/standalone/server.js
-  output: process.env.NODE_ENV === 'production' && process.env.DOCKER === 'true' ? 'standalone' : undefined,
+  // Enable standalone output for Docker/Coolify deployment
+  // Standalone mode creates a minimal Node.js server for production
+  // This is required for Docker containers and Coolify deployments
+  output: process.env.NODE_ENV === 'production' ? 'standalone' : undefined,
 
   // Disable source maps in production for smaller bundles and faster builds
   productionBrowserSourceMaps: false,

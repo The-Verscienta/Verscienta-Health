@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
-import { generateFormulaSchema, type FormulaData } from '@/lib/json-ld'
+import { type FormulaData, generateBreadcrumbSchema, generateFormulaSchema } from '@/lib/json-ld'
 import { getFormulaBySlug } from '@/lib/strapi-api'
 
 export const dynamic = 'force-dynamic'
@@ -113,10 +113,17 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
         : undefined,
   }
 
+  // Breadcrumb schema
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Formulas', url: '/formulas' },
+    { name: formula.title, url: `/formulas/${formula.slug}` },
+  ]
+
   return (
     <div className="container-custom py-12">
       {/* JSON-LD Schema for SEO */}
-      <JsonLd data={generateFormulaSchema(formulaData)} />
+      <JsonLd data={[generateFormulaSchema(formulaData), generateBreadcrumbSchema(breadcrumbItems)]} />
 
       {/* Hero Section */}
       <div className="mb-12">

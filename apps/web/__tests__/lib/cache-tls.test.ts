@@ -112,7 +112,7 @@ describe('DragonflyDB TLS Configuration', () => {
   describe('TLS Configuration Completeness', () => {
     it('should include all required TLS security properties', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -132,7 +132,7 @@ describe('DragonflyDB TLS Configuration', () => {
       process.env.REDIS_PASSWORD = 'password'
       process.env.REDIS_DB = '0'
       process.env.REDIS_TLS = 'true'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -156,7 +156,7 @@ describe('DragonflyDB TLS Configuration', () => {
   describe('PCI DSS / HIPAA Compliance', () => {
     it('should meet PCI DSS 3.2 TLS requirements (TLS 1.2+)', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -169,7 +169,7 @@ describe('DragonflyDB TLS Configuration', () => {
 
     it('should meet HIPAA Security Rule encryption requirements', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -182,7 +182,7 @@ describe('DragonflyDB TLS Configuration', () => {
 
     it('should prevent downgrade attacks to TLS 1.0/1.1', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -201,7 +201,7 @@ describe('DragonflyDB TLS Configuration', () => {
   describe('Error Handling', () => {
     it('should handle invalid REDIS_URL gracefully', async () => {
       process.env.REDIS_URL = 'invalid-url'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
 
@@ -217,7 +217,7 @@ describe('DragonflyDB TLS Configuration', () => {
 
     it('should handle missing TLS env vars with sensible defaults', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
       // Don't set REDIS_TLS_MIN_VERSION or REDIS_TLS_MAX_VERSION
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
@@ -232,7 +232,7 @@ describe('DragonflyDB TLS Configuration', () => {
   describe('Development vs Production Behavior', () => {
     it('should use strict TLS in production', async () => {
       process.env.REDIS_URL = 'rediss://:password@dragonfly.example.com:6379/0'
-      process.env.NODE_ENV = 'production'
+      vi.stubEnv('NODE_ENV', 'production')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()
@@ -244,7 +244,7 @@ describe('DragonflyDB TLS Configuration', () => {
 
     it('should allow self-signed certificates in development', async () => {
       process.env.REDIS_URL = 'rediss://:password@localhost:6379/0'
-      process.env.NODE_ENV = 'development'
+      vi.stubEnv('NODE_ENV', 'development')
 
       const { getRedisConfig } = await import('../../lib/cache-test-helper')
       const config = getRedisConfig()

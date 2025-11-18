@@ -42,7 +42,7 @@ export const GrokInsights: CollectionConfig = {
       type: 'textarea',
       required: true,
       admin: {
-        description: 'User\'s symptom description or question',
+        description: "User's symptom description or question",
       },
     },
     {

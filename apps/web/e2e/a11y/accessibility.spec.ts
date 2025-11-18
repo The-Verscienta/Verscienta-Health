@@ -168,4 +168,228 @@ test.describe('Accessibility Tests', () => {
       await expect(skipLink.first()).toBeFocused()
     }
   })
+
+  // Additional page tests
+  test('formulas listing page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/formulas')
+    await page.waitForLoadState('networkidle')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+
+  test('conditions listing page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/conditions')
+    await page.waitForLoadState('networkidle')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+
+  test('modalities page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/modalities')
+    await page.waitForLoadState('networkidle')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+
+  test('contact page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/contact')
+    await page.waitForLoadState('networkidle')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+
+  test('FAQ page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/faq')
+    await page.waitForLoadState('networkidle')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+
+  test('disclaimer page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/disclaimer')
+    await page.waitForLoadState('networkidle')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+
+  test('register page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/register')
+    await page.waitForLoadState('networkidle')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+
+  // Detail pages tests (navigate from listing pages)
+  test('herb detail page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/herbs')
+    await page.waitForLoadState('networkidle')
+
+    // Find and click first herb card
+    const firstHerb = page.locator('[data-testid="herb-card"]').first().or(
+      page.locator('article').filter({ hasText: /herb/i }).first()
+    )
+
+    if (await firstHerb.count() > 0) {
+      const viewLink = firstHerb.getByRole('link', { name: /view|details|learn more/i })
+      if (await viewLink.count() > 0) {
+        await viewLink.first().click()
+      } else {
+        await firstHerb.click()
+      }
+
+      await page.waitForLoadState('networkidle')
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze()
+
+      expect(accessibilityScanResults.violations).toEqual([])
+    } else {
+      test.skip()
+    }
+  })
+
+  test('formula detail page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/formulas')
+    await page.waitForLoadState('networkidle')
+
+    // Find and click first formula card
+    const firstFormula = page.locator('[data-testid="formula-card"]').first().or(
+      page.locator('article').filter({ hasText: /formula/i }).first()
+    )
+
+    if (await firstFormula.count() > 0) {
+      const viewLink = firstFormula.getByRole('link', { name: /view|details|learn more/i })
+      if (await viewLink.count() > 0) {
+        await viewLink.first().click()
+      } else {
+        await firstFormula.click()
+      }
+
+      await page.waitForLoadState('networkidle')
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze()
+
+      expect(accessibilityScanResults.violations).toEqual([])
+    } else {
+      test.skip()
+    }
+  })
+
+  test('condition detail page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/conditions')
+    await page.waitForLoadState('networkidle')
+
+    // Find and click first condition card
+    const firstCondition = page.locator('[data-testid="condition-card"]').first().or(
+      page.locator('article').filter({ hasText: /condition/i }).first()
+    )
+
+    if (await firstCondition.count() > 0) {
+      const viewLink = firstCondition.getByRole('link', { name: /view|details|learn more/i })
+      if (await viewLink.count() > 0) {
+        await viewLink.first().click()
+      } else {
+        await firstCondition.click()
+      }
+
+      await page.waitForLoadState('networkidle')
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze()
+
+      expect(accessibilityScanResults.violations).toEqual([])
+    } else {
+      test.skip()
+    }
+  })
+
+  test('practitioner profile page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/practitioners')
+    await page.waitForLoadState('networkidle')
+
+    // Find and click first practitioner card
+    const firstPractitioner = page.locator('[data-testid="practitioner-card"]').first().or(
+      page.locator('article').filter({ hasText: /practitioner/i }).first()
+    )
+
+    if (await firstPractitioner.count() > 0) {
+      const viewLink = firstPractitioner.getByRole('link', { name: /view|profile|learn more/i })
+      if (await viewLink.count() > 0) {
+        await viewLink.first().click()
+      } else {
+        await firstPractitioner.click()
+      }
+
+      await page.waitForLoadState('networkidle')
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze()
+
+      expect(accessibilityScanResults.violations).toEqual([])
+    } else {
+      test.skip()
+    }
+  })
+
+  test('modality detail page should not have accessibility violations', async ({ page }) => {
+    await page.goto('/modalities')
+    await page.waitForLoadState('networkidle')
+
+    // Find and click first modality card
+    const firstModality = page.locator('[data-testid="modality-card"]').first().or(
+      page.locator('article').filter({ hasText: /modality|therapy/i }).first()
+    )
+
+    if (await firstModality.count() > 0) {
+      const viewLink = firstModality.getByRole('link', { name: /view|details|learn more/i })
+      if (await viewLink.count() > 0) {
+        await viewLink.first().click()
+      } else {
+        await firstModality.click()
+      }
+
+      await page.waitForLoadState('networkidle')
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze()
+
+      expect(accessibilityScanResults.violations).toEqual([])
+    } else {
+      test.skip()
+    }
+  })
 })

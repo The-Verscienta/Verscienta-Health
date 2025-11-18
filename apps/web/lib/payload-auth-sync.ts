@@ -6,8 +6,8 @@
  * Payload manages user profiles and content access control.
  */
 
-import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getPayload } from 'payload'
 
 /**
  * Get or create a Payload user for a Better Auth user

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin, isAuthenticated, isPublic } from '../access'
 import { algoliaAfterChangeHook, algoliaAfterDeleteHook } from '../hooks/algolia-sync'
-import { isPublic, isAuthenticated, isAdmin } from '../access'
 
 export const Herbs: CollectionConfig = {
   slug: 'herbs',

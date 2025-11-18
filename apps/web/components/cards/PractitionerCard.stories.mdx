@@ -1,0 +1,692 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as PractitionerCardStories from './PractitionerCard.stories'
+
+<Meta of={PractitionerCardStories} />
+
+# PractitionerCard
+
+A specialized card component for displaying practitioner profiles with photos, credentials, modalities, location, ratings, and verification status.
+
+<Primary />
+
+## Overview
+
+The PractitionerCard component showcases healthcare practitioners throughout the Verscienta Health platform. It features professional photos with avatar fallbacks, verification badges, treatment modalities, location information, and user ratings in a consistent format.
+
+## Usage
+
+```tsx
+import { PractitionerCard } from '@/components/cards/PractitionerCard'
+
+export default function PractitionersPage() {
+  return (
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      photo={{
+        url: '/images/practitioners/sarah-chen.jpg',
+        alt: 'Dr. Sarah Chen',
+      }}
+      title="L.Ac., Dipl. OM"
+      modalities={['Acupuncture', 'Chinese Herbal Medicine', 'Cupping']}
+      address={{
+        city: 'San Francisco',
+        state: 'CA',
+      }}
+      averageRating={4.9}
+      reviewCount={127}
+      verificationStatus="verified"
+    />
+  )
+}
+```
+
+## Variants
+
+### Default (With Photo)
+
+Complete practitioner card with photo and all properties.
+
+<Canvas of={PractitionerCardStories.Default} />
+
+### Without Photo
+
+Shows initials when no photo is provided (uses first letter of first and last name).
+
+<Canvas of={PractitionerCardStories.WithoutPhoto} />
+
+### Minimal Data
+
+Practitioner with only essential fields (name and slug).
+
+<Canvas of={PractitionerCardStories.Minimal} />
+
+## Verification Status
+
+### Verified
+
+Green checkmark icon for verified practitioners.
+
+<Canvas of={PractitionerCardStories.Verified} />
+
+### Pending Verification
+
+No checkmark shown for pending verification.
+
+<Canvas of={PractitionerCardStories.PendingVerification} />
+
+### Unverified
+
+No checkmark shown for unverified practitioners.
+
+<Canvas of={PractitionerCardStories.Unverified} />
+
+## Modality Handling
+
+### Many Modalities
+
+Shows first 3 modalities with overflow count (+N) for additional ones.
+
+<Canvas of={PractitionerCardStories.ManyModalities} />
+
+### Single Modality
+
+<Canvas of={PractitionerCardStories.SingleModality} />
+
+## Rating States
+
+### High Rating
+
+Perfect 5.0 rating display.
+
+<Canvas of={PractitionerCardStories.HighRating} />
+
+### No Rating
+
+Hides rating section when reviewCount is 0 or undefined.
+
+<Canvas of={PractitionerCardStories.NoRating} />
+
+## Location Variations
+
+### City Only
+
+<Canvas of={PractitionerCardStories.CityOnly} />
+
+### State Only
+
+<Canvas of={PractitionerCardStories.StateOnly} />
+
+## Layouts
+
+### Grid Display
+
+Typical grid layout used in practitioner listings.
+
+<Canvas of={PractitionerCardStories.GridExample} />
+
+### Loading State
+
+Skeleton loading state while fetching data.
+
+<Canvas of={PractitionerCardStories.LoadingState} />
+
+## Props
+
+<Controls />
+
+### PractitionerCardProps
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `practitionerId` | `string` | Yes | Unique identifier (displayed as badge) |
+| `name` | `string` | Yes | Practitioner's full name |
+| `slug` | `string` | Yes | URL-friendly identifier for routing |
+| `photo` | `object` | No | Photo with `url` and optional `alt` |
+| `title` | `string` | No | Credentials/professional title (e.g., "L.Ac., Dipl. OM") |
+| `modalities` | `string[]` | No | Treatment modalities (shows first 3 + overflow) |
+| `address` | `object` | No | Location with optional `city` and `state` |
+| `averageRating` | `number` | No | Average rating (0-5) |
+| `reviewCount` | `number` | No | Number of reviews |
+| `verificationStatus` | `string` | No | "verified", "pending", or "unverified" |
+
+### Photo Object
+
+```typescript
+photo: {
+  url: string       // Image URL
+  alt?: string      // Alt text (defaults to practitioner name)
+}
+```
+
+### Address Object
+
+```typescript
+address: {
+  city?: string     // City name
+  state?: string    // State code (e.g., "CA", "NY")
+}
+```
+
+## Accessibility
+
+- **Semantic HTML**: Uses `<Link>` for entire card (keyboard accessible)
+- **Alt Text**: Photos include descriptive alt text or fall back to name
+- **Avatar Fallback**: Initials displayed when no photo available
+- **ARIA Labels**: Verified badge has aria-label="Verified"
+- **Focus Indicators**: Clear focus ring on keyboard navigation
+- **Screen Readers**: All content properly labeled and announced
+- **Hover Effects**: Visual feedback with shadow and text color change
+- **Touch Targets**: Entire card is clickable (large target area)
+
+### Best Practices
+
+- Always provide `alt` text for photos
+- Use standard credential abbreviations in `title`
+- Include location when available for better user experience
+- Show ratings only when `reviewCount > 0`
+- Use verification status to build trust
+- Limit modalities to most relevant ones
+
+## Design Guidelines
+
+### When to Use
+
+- **Practitioner Listings**: Main practitioners directory page
+- **Search Results**: Practitioner search results
+- **Location-Based Searches**: Practitioners filtered by location
+- **Modality Searches**: Practitioners filtered by treatment type
+- **Related Practitioners**: Showing similar practitioners
+- **Booking Flows**: Practitioner selection interface
+
+### Do's
+
+✅ Use high-quality professional photos
+✅ Include credentials/titles for credibility
+✅ Show verification status prominently
+✅ Limit modalities to most relevant (3 max visible)
+✅ Include location for better matching
+✅ Show ratings when available
+✅ Enable hover effects for interactivity
+✅ Maintain consistent card heights in grids
+✅ Use avatar fallback with initials when no photo
+
+### Don'ts
+
+❌ Don't use low-resolution photos
+❌ Don't show 0-star ratings (hide instead)
+❌ Don't list too many modalities (use +N overflow)
+❌ Don't omit verification status
+❌ Don't make cards too wide (max 450px recommended)
+❌ Don't use without a link (cards should navigate)
+❌ Don't show unverified practitioners without clear indication
+❌ Don't use generic placeholder images
+
+## Examples
+
+### Basic Implementation
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  {practitioners.map((practitioner) => (
+    <PractitionerCard
+      key={practitioner.id}
+      practitionerId={practitioner.id}
+      name={practitioner.name}
+      slug={practitioner.slug}
+      photo={practitioner.photo}
+      title={practitioner.title}
+      modalities={practitioner.modalities}
+      address={practitioner.address}
+      averageRating={practitioner.averageRating}
+      reviewCount={practitioner.reviewCount}
+      verificationStatus={practitioner.verificationStatus}
+    />
+  ))}
+</div>
+```
+
+### With Payload CMS Data
+
+```tsx
+import { getPractitioners } from '@/lib/payload-api'
+
+export default async function PractitionersPage() {
+  const { docs: practitioners } = await getPractitioners({ limit: 12 })
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {practitioners.map((practitioner) => (
+        <PractitionerCard
+          key={practitioner.id}
+          practitionerId={practitioner.practitionerId}
+          name={practitioner.name}
+          slug={practitioner.slug}
+          photo={practitioner.photo}
+          title={practitioner.credentials}
+          modalities={practitioner.modalities?.map((m) => m.name)}
+          address={{
+            city: practitioner.city,
+            state: practitioner.state,
+          }}
+          averageRating={practitioner.averageRating}
+          reviewCount={practitioner.reviewCount}
+          verificationStatus={practitioner.verificationStatus}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+### Filter by Location
+
+```tsx
+'use client'
+
+const [selectedState, setSelectedState] = useState<string>()
+
+const filtered = practitioners.filter(
+  (p) => !selectedState || p.address?.state === selectedState
+)
+
+<div>
+  <select value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
+    <option value="">All States</option>
+    <option value="CA">California</option>
+    <option value="NY">New York</option>
+    <option value="TX">Texas</option>
+  </select>
+  <div className="grid grid-cols-3 gap-6">
+    {filtered.map((practitioner) => (
+      <PractitionerCard key={practitioner.id} {...practitioner} />
+    ))}
+  </div>
+</div>
+```
+
+### Filter by Modality
+
+```tsx
+'use client'
+
+const [selectedModality, setSelectedModality] = useState<string>()
+
+const filtered = practitioners.filter((p) =>
+  !selectedModality || p.modalities?.includes(selectedModality)
+)
+
+<div>
+  <Tabs defaultValue="all" onValueChange={setSelectedModality}>
+    <TabsList>
+      <TabsTrigger value="all">All</TabsTrigger>
+      <TabsTrigger value="Acupuncture">Acupuncture</TabsTrigger>
+      <TabsTrigger value="Herbal Medicine">Herbal Medicine</TabsTrigger>
+      <TabsTrigger value="Naturopathy">Naturopathy</TabsTrigger>
+    </TabsList>
+  </Tabs>
+  <div className="grid grid-cols-3 gap-6 mt-6">
+    {filtered.map((practitioner) => (
+      <PractitionerCard key={practitioner.id} {...practitioner} />
+    ))}
+  </div>
+</div>
+```
+
+### Filter by Verification Status
+
+```tsx
+'use client'
+
+const [showVerifiedOnly, setShowVerifiedOnly] = useState(false)
+
+const filtered = practitioners.filter(
+  (p) => !showVerifiedOnly || p.verificationStatus === 'verified'
+)
+
+<div>
+  <label>
+    <input
+      type="checkbox"
+      checked={showVerifiedOnly}
+      onChange={(e) => setShowVerifiedOnly(e.target.checked)}
+    />
+    Verified Practitioners Only
+  </label>
+  <div className="grid grid-cols-3 gap-6">
+    {filtered.map((practitioner) => (
+      <PractitionerCard key={practitioner.id} {...practitioner} />
+    ))}
+  </div>
+</div>
+```
+
+### Sort by Rating
+
+```tsx
+const sorted = [...practitioners].sort((a, b) =>
+  (b.averageRating || 0) - (a.averageRating || 0)
+)
+
+<div className="grid grid-cols-3 gap-6">
+  {sorted.map((practitioner) => (
+    <PractitionerCard key={practitioner.id} {...practitioner} />
+  ))}
+</div>
+```
+
+### Loading State Pattern
+
+```tsx
+{isLoading ? (
+  <div className="grid grid-cols-3 gap-6">
+    {[...Array(6)].map((_, i) => (
+      <PractitionerCardSkeleton key={i} />
+    ))}
+  </div>
+) : (
+  <div className="grid grid-cols-3 gap-6">
+    {practitioners.map((practitioner) => (
+      <PractitionerCard key={practitioner.id} {...practitioner} />
+    ))}
+  </div>
+)}
+```
+
+## Advanced Patterns
+
+### With Booking Button
+
+```tsx
+<div className="relative">
+  <PractitionerCard {...practitioner} />
+  <div className="absolute bottom-4 right-4">
+    <Button
+      size="sm"
+      onClick={(e) => {
+        e.preventDefault() // Prevent navigation
+        openBookingDialog(practitioner.id)
+      }}
+    >
+      Book Appointment
+    </Button>
+  </div>
+</div>
+```
+
+### With Favorite Button
+
+```tsx
+<div className="relative">
+  <PractitionerCard {...practitioner} />
+  <button
+    className="absolute top-2 right-2 p-2 bg-white rounded-full shadow"
+    onClick={(e) => {
+      e.preventDefault() // Prevent navigation
+      toggleFavorite(practitioner.id)
+    }}
+  >
+    <Heart className={isFavorite ? 'fill-red-500' : ''} />
+  </button>
+</div>
+```
+
+### With Context Menu
+
+```tsx
+import { DropdownMenu } from '@/components/ui/dropdown-menu'
+
+<div className="relative">
+  <PractitionerCard {...practitioner} />
+  <div className="absolute top-2 right-2">
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <MoreVertical />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>View Profile</DropdownMenuItem>
+        <DropdownMenuItem>Book Appointment</DropdownMenuItem>
+        <DropdownMenuItem>Message Practitioner</DropdownMenuItem>
+        <DropdownMenuItem>Add to Favorites</DropdownMenuItem>
+        <DropdownMenuItem>Share</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </div>
+</div>
+```
+
+### Responsive Grid
+
+```tsx
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+  {practitioners.map((practitioner) => (
+    <PractitionerCard key={practitioner.id} {...practitioner} />
+  ))}
+</div>
+```
+
+### Distance-Based Search
+
+```tsx
+'use client'
+
+// Assumes practitioners have lat/lon coordinates
+const [userLocation, setUserLocation] = useState<{lat: number, lon: number}>()
+
+const withDistance = practitioners.map((p) => ({
+  ...p,
+  distance: calculateDistance(userLocation, { lat: p.latitude, lon: p.longitude })
+}))
+
+const sorted = withDistance.sort((a, b) => a.distance - b.distance)
+
+<div className="grid grid-cols-3 gap-6">
+  {sorted.map((practitioner) => (
+    <div key={practitioner.id} className="relative">
+      <PractitionerCard {...practitioner} />
+      <Badge className="absolute top-2 left-2">
+        {practitioner.distance.toFixed(1)} mi
+      </Badge>
+    </div>
+  ))}
+</div>
+```
+
+### Availability Indicator
+
+```tsx
+<div className="relative">
+  <PractitionerCard {...practitioner} />
+  {practitioner.hasAvailability && (
+    <Badge variant="success" className="absolute top-2 left-2">
+      Available
+    </Badge>
+  )}
+</div>
+```
+
+## Styling
+
+### Card Dimensions
+
+- **Width**: Flexible (100% of grid cell)
+- **Height**: Auto (content-driven)
+- **Recommended Max Width**: 450px
+- **Avatar Size**: 64x64 pixels
+
+### Typography
+
+- **Name**: Serif font, text-lg, earth-900
+- **Title**: Sans-serif, text-sm, gray-600
+- **Location**: Sans-serif, text-sm, gray-600
+
+### Color Scheme
+
+- **Background**: White
+- **Border**: Gray-200 (default), shadow-lg (hover)
+- **Name**: earth-900 (default), earth-700 (hover)
+- **Verified Badge**: green-600
+- **Rating Star**: gold-600 (fill and stroke)
+- **Avatar Fallback**: earth-100 background, earth-600 text
+- **Badges**: sage variant for modalities, outline for overflow
+
+### Hover Effects
+
+- **Shadow**: Elevates to `shadow-lg`
+- **Name**: Changes to earth-700
+- **Transition**: Smooth 200ms ease
+
+## Performance
+
+- **Optimized Images**: Uses `OptimizedAvatar` component with lazy loading
+- **Conditional Rendering**: Only shows elements when data exists
+- **Badge Limiting**: Shows max 3 modalities + overflow count
+- **Link Optimization**: Uses Next.js Link for prefetching
+- **Avatar Fallback**: Lightweight text-based fallback when no photo
+
+## Related Components
+
+- **HerbCard**: Card for individual herbs
+- **FormulaCard**: Card for herbal formulas
+- **ConditionCard**: Card for health conditions
+- **Card**: Base card component
+- **OptimizedAvatar**: Avatar with optimization
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import { PractitionerCard } from './PractitionerCard'
+
+test('renders practitioner name and title', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      title="L.Ac., Dipl. OM"
+    />
+  )
+
+  expect(screen.getByText('Dr. Sarah Chen')).toBeInTheDocument()
+  expect(screen.getByText('L.Ac., Dipl. OM')).toBeInTheDocument()
+})
+
+test('shows verified badge for verified practitioners', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      verificationStatus="verified"
+    />
+  )
+
+  expect(screen.getByLabelText('Verified')).toBeInTheDocument()
+})
+
+test('does not show badge for unverified practitioners', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      verificationStatus="unverified"
+    />
+  )
+
+  expect(screen.queryByLabelText('Verified')).not.toBeInTheDocument()
+})
+
+test('shows rating when available', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      averageRating={4.9}
+      reviewCount={127}
+    />
+  )
+
+  expect(screen.getByText('4.9')).toBeInTheDocument()
+  expect(screen.getByText('(127)')).toBeInTheDocument()
+})
+
+test('hides rating when reviewCount is 0', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      averageRating={0}
+      reviewCount={0}
+    />
+  )
+
+  expect(screen.queryByText('0.0')).not.toBeInTheDocument()
+})
+
+test('shows first 3 modalities with overflow count', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      modalities={['Acupuncture', 'Herbal Medicine', 'Cupping', 'Moxibustion', 'Nutrition']}
+    />
+  )
+
+  expect(screen.getByText('Acupuncture')).toBeInTheDocument()
+  expect(screen.getByText('Herbal Medicine')).toBeInTheDocument()
+  expect(screen.getByText('Cupping')).toBeInTheDocument()
+  expect(screen.getByText('+2')).toBeInTheDocument()
+})
+
+test('shows location correctly', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+      address={{ city: 'San Francisco', state: 'CA' }}
+    />
+  )
+
+  expect(screen.getByText('San Francisco, CA')).toBeInTheDocument()
+})
+
+test('shows initials when no photo provided', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Sarah Chen"
+      slug="sarah-chen"
+    />
+  )
+
+  expect(screen.getByText('SC')).toBeInTheDocument()
+})
+
+test('links to correct practitioner detail page', () => {
+  render(
+    <PractitionerCard
+      practitionerId="P001"
+      name="Dr. Sarah Chen"
+      slug="sarah-chen"
+    />
+  )
+
+  const link = screen.getByRole('link')
+  expect(link).toHaveAttribute('href', '/practitioners/sarah-chen')
+})
+```

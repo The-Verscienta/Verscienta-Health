@@ -1,0 +1,462 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as HerbCardStories from './HerbCard.stories'
+
+<Meta of={HerbCardStories} />
+
+# HerbCard
+
+A comprehensive card component for displaying herb information with TCM properties, ratings, and images.
+
+<Primary />
+
+## Overview
+
+The HerbCard component is used throughout the Verscienta Health platform to display herb information in a consistent, visually appealing format. It includes support for featured images, TCM and Western properties, ratings, and responsive hover effects.
+
+## Usage
+
+```tsx
+import { HerbCard } from '@/components/cards/HerbCard'
+
+export default function HerbsList() {
+  return (
+    <HerbCard
+      herbId="H001"
+      title="Ginseng"
+      slug="ginseng"
+      scientificName="Panax ginseng"
+      description="A revered adaptogenic herb..."
+      featuredImage={{
+        url: '/images/ginseng.jpg',
+        alt: 'Ginseng root',
+      }}
+      tcmProperties={{
+        taste: ['Sweet', 'Slightly Bitter'],
+        temperature: 'Warm',
+        category: 'Qi Tonics',
+      }}
+      westernProperties={['Adaptogen', 'Energy Booster']}
+      averageRating={4.7}
+      reviewCount={342}
+    />
+  )
+}
+```
+
+## Variants
+
+### With Image
+
+Full herb card with featured image.
+
+<Canvas of={HerbCardStories.Default} />
+
+### Without Image
+
+Herb card with leaf icon placeholder when no image is available.
+
+<Canvas of={HerbCardStories.WithoutImage} />
+
+### Minimal Data
+
+Card with only required fields (title, slug, scientificName).
+
+<Canvas of={HerbCardStories.Minimal} />
+
+## Content Variations
+
+### Many Properties
+
+Card showing overflow handling for multiple Western properties.
+
+<Canvas of={HerbCardStories.ManyProperties} />
+
+### High Rating
+
+Herb with excellent user reviews.
+
+<Canvas of={HerbCardStories.HighRating} />
+
+### No Rating
+
+Herb without user ratings (new or unreviewed).
+
+<Canvas of={HerbCardStories.NoRating} />
+
+## Property Types
+
+### Western Properties Only
+
+Herb with only Western herbal properties.
+
+<Canvas of={HerbCardStories.WesternOnly} />
+
+### TCM Properties Only
+
+Traditional Chinese Medicine properties exclusively.
+
+<Canvas of={HerbCardStories.TCMOnly} />
+
+## Layouts
+
+### Grid Display
+
+Typical grid layout used in herb listings.
+
+<Canvas of={HerbCardStories.GridExample} />
+
+### Loading State
+
+Skeleton loading state while fetching data.
+
+<Canvas of={HerbCardStories.LoadingState} />
+
+## Props
+
+<Controls />
+
+### HerbCardProps
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `herbId` | `string` | Yes | Unique identifier (displayed as badge) |
+| `title` | `string` | Yes | Herb common name |
+| `slug` | `string` | Yes | URL-friendly identifier for routing |
+| `scientificName` | `string` | No | Latin botanical name |
+| `description` | `string` | No | Brief description (truncated to 2 lines) |
+| `featuredImage` | `object` | No | Image with `url` and optional `alt` |
+| `tcmProperties` | `object` | No | TCM properties (taste, temperature, category) |
+| `westernProperties` | `string[]` | No | Western herbal properties array |
+| `averageRating` | `number` | No | Average rating (0-5) |
+| `reviewCount` | `number` | No | Number of reviews |
+
+### TCM Properties Object
+
+```typescript
+tcmProperties: {
+  taste?: string[]        // e.g., ['Sweet', 'Bitter']
+  temperature?: string    // e.g., 'Warm', 'Cool', 'Neutral'
+  category?: string      // e.g., 'Qi Tonics', 'Blood Tonics'
+}
+```
+
+## Accessibility
+
+- **Semantic HTML**: Uses `<Link>` for entire card (keyboard accessible)
+- **Alt Text**: Images include descriptive alt text
+- **Focus Indicators**: Clear focus ring on keyboard navigation
+- **Screen Readers**: All content properly labeled
+- **Hover Effects**: Visual feedback with scale transform
+- **Touch Targets**: Entire card is clickable (large target area)
+
+### Best Practices
+
+- Always provide `alt` text for images
+- Keep descriptions concise (2 lines max)
+- Use `herbId` for admin/tracking purposes
+- Provide both TCM and Western properties when available
+- Show ratings only when `reviewCount > 0`
+
+## Design Guidelines
+
+### When to Use
+
+- **Herb Listings**: Main herbs directory page
+- **Search Results**: Herb search results
+- **Related Herbs**: Showing related/similar herbs
+- **Favorites**: User's favorited herbs
+- **Category Pages**: Herbs filtered by category
+
+### Do's
+
+✅ Use high-quality featured images
+✅ Keep descriptions to 1-2 sentences
+✅ Show up to 3 Western properties (use +N for overflow)
+✅ Include ratings when available
+✅ Maintain consistent aspect ratios (16:9)
+✅ Use earth-tone color scheme
+✅ Enable hover effects for interactivity
+
+### Don'ts
+
+❌ Don't use low-resolution images
+❌ Don't show 0-star ratings (hide instead)
+❌ Don't overload with too many badges
+❌ Don't make cards too wide (max 400px recommended)
+❌ Don't use without a link (cards should navigate)
+❌ Don't truncate scientific names
+❌ Don't omit loading states
+
+## Examples
+
+### Basic Implementation
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  {herbs.map((herb) => (
+    <HerbCard
+      key={herb.id}
+      herbId={herb.id}
+      title={herb.title}
+      slug={herb.slug}
+      scientificName={herb.scientificName}
+      description={herb.description}
+      featuredImage={herb.featuredImage}
+      tcmProperties={herb.tcmProperties}
+      westernProperties={herb.westernProperties}
+      averageRating={herb.averageRating}
+      reviewCount={herb.reviewCount}
+    />
+  ))}
+</div>
+```
+
+### With Payload CMS Data
+
+```tsx
+import { getHerbs } from '@/lib/payload-api'
+
+export default async function HerbsPage() {
+  const { docs: herbs } = await getHerbs({ limit: 12 })
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {herbs.map((herb) => (
+        <HerbCard
+          key={herb.id}
+          herbId={herb.herbId}
+          title={herb.title}
+          slug={herb.slug}
+          scientificName={herb.scientificName}
+          description={herb.description}
+          featuredImage={herb.featuredImage}
+          tcmProperties={{
+            taste: herb.tcmTaste,
+            temperature: herb.tcmTemperature,
+            category: herb.tcmCategory?.name,
+          }}
+          westernProperties={herb.westernProperties?.map((p) => p.name)}
+          averageRating={herb.averageRating}
+          reviewCount={herb.reviewCount}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+### With Search/Filter
+
+```tsx
+const [filteredHerbs, setFilteredHerbs] = useState(herbs)
+
+const handleSearch = (query: string) => {
+  const filtered = herbs.filter((herb) =>
+    herb.title.toLowerCase().includes(query.toLowerCase())
+  )
+  setFilteredHerbs(filtered)
+}
+
+<div>
+  <SearchBar onSearch={handleSearch} />
+  <div className="grid grid-cols-3 gap-6">
+    {filteredHerbs.map((herb) => (
+      <HerbCard key={herb.id} {...herb} />
+    ))}
+  </div>
+</div>
+```
+
+### Loading State Pattern
+
+```tsx
+{isLoading ? (
+  <div className="grid grid-cols-3 gap-6">
+    {[...Array(6)].map((_, i) => (
+      <HerbCardSkeleton key={i} />
+    ))}
+  </div>
+) : (
+  <div className="grid grid-cols-3 gap-6">
+    {herbs.map((herb) => (
+      <HerbCard key={herb.id} {...herb} />
+    ))}
+  </div>
+)}
+```
+
+### With Intersection Observer (Infinite Scroll)
+
+```tsx
+import { useInView } from 'react-intersection-observer'
+
+const { ref, inView } = useInView()
+
+useEffect(() => {
+  if (inView) {
+    loadMoreHerbs()
+  }
+}, [inView])
+
+<div className="grid grid-cols-3 gap-6">
+  {herbs.map((herb, index) => (
+    <div key={herb.id} ref={index === herbs.length - 1 ? ref : null}>
+      <HerbCard {...herb} />
+    </div>
+  ))}
+</div>
+```
+
+## Advanced Patterns
+
+### With Favorite Button
+
+```tsx
+<div className="relative">
+  <HerbCard {...herb} />
+  <button
+    className="absolute top-2 right-2 p-2 bg-white rounded-full shadow"
+    onClick={(e) => {
+      e.preventDefault() // Prevent navigation
+      toggleFavorite(herb.id)
+    }}
+  >
+    <Heart className={isFavorite ? 'fill-red-500' : ''} />
+  </button>
+</div>
+```
+
+### With Context Menu
+
+```tsx
+import { DropdownMenu } from '@/components/ui/dropdown-menu'
+
+<div className="relative">
+  <HerbCard {...herb} />
+  <div className="absolute top-2 right-2">
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <MoreVertical />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>Add to Favorites</DropdownMenuItem>
+        <DropdownMenuItem>Share</DropdownMenuItem>
+        <DropdownMenuItem>Report</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </div>
+</div>
+```
+
+### Responsive Grid
+
+```tsx
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+  {herbs.map((herb) => (
+    <HerbCard key={herb.id} {...herb} />
+  ))}
+</div>
+```
+
+## Styling
+
+### Card Dimensions
+
+- **Width**: Flexible (100% of grid cell)
+- **Height**: Auto (maintains aspect ratio)
+- **Image Aspect**: 16:9 (aspect-video)
+- **Recommended Max Width**: 400px
+
+### Color Scheme
+
+- **Background**: White
+- **Border**: Gray-200 on hover
+- **Text**: earth-900 (title), gray-600 (description)
+- **Badges**: earth-tone variants (TCM), sage (Western)
+- **Rating**: gold-600 (star icon)
+
+### Hover Effects
+
+- **Shadow**: Elevates to `shadow-lg`
+- **Image**: Scales to 105% (`scale-105`)
+- **Title**: Changes to earth-700
+- **Transition**: Smooth 200ms ease
+
+## Performance
+
+- **Optimized Images**: Uses `OptimizedCardImage` component
+- **Lazy Loading**: Images load on viewport intersection
+- **Fallback**: Shows placeholder if image fails
+- **Line Clamping**: CSS truncation (no JS)
+- **Badge Limiting**: Shows max 3 + overflow count
+
+## Related Components
+
+- **FormulaCard**: Similar card for herbal formulas
+- **ConditionCard**: Card for health conditions
+- **PractitionerCard**: Card for practitioners
+- **Card**: Base card component
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import { HerbCard } from './HerbCard'
+
+test('renders herb title and scientific name', () => {
+  render(
+    <HerbCard
+      herbId="H001"
+      title="Ginseng"
+      slug="ginseng"
+      scientificName="Panax ginseng"
+    />
+  )
+
+  expect(screen.getByText('Ginseng')).toBeInTheDocument()
+  expect(screen.getByText('Panax ginseng')).toBeInTheDocument()
+})
+
+test('shows rating when available', () => {
+  render(
+    <HerbCard
+      herbId="H001"
+      title="Ginseng"
+      slug="ginseng"
+      averageRating={4.7}
+      reviewCount={342}
+    />
+  )
+
+  expect(screen.getByText('4.7')).toBeInTheDocument()
+  expect(screen.getByText('(342)')).toBeInTheDocument()
+})
+
+test('truncates western properties over 3', () => {
+  render(
+    <HerbCard
+      herbId="H001"
+      title="Test"
+      slug="test"
+      westernProperties={['A', 'B', 'C', 'D', 'E']}
+    />
+  )
+
+  expect(screen.getByText('+2')).toBeInTheDocument()
+})
+
+test('links to correct herb detail page', () => {
+  render(<HerbCard herbId="H001" title="Ginseng" slug="ginseng" />)
+
+  const link = screen.getByRole('link')
+  expect(link).toHaveAttribute('href', '/herbs/ginseng')
+})
+```

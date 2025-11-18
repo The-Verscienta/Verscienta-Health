@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # PostgreSQL Database with pgvector extension
   postgres:
     image: postgres:17-alpine
     container_name: verscienta-db
@@ -20,32 +20,22 @@ services:
       timeout: 5s
       retries: 5
 
-  # Payload CMS Backend
-  cms:
-    build:
-      context: .
-      dockerfile: apps/cms/Dockerfile
-    container_name: verscienta-cms
+  # Redis for caching and rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: verscienta-redis
     restart: unless-stopped
     ports:
-      - '3001:3001'
-    environment:
-      NODE_ENV: production
-      PORT: 3001
-      DATABASE_URL: postgresql://verscienta_user:${DB_PASSWORD:-changeme123}@postgres:5432/verscienta_health
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-your-secret-key-change-in-production}
-      FRONTEND_URL: http://localhost:3000
-      ALGOLIA_APP_ID: ${ALGOLIA_APP_ID:-}
-      ALGOLIA_ADMIN_KEY: ${ALGOLIA_ADMIN_KEY:-}
-      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:-}
-      CLOUDFLARE_IMAGES_API_TOKEN: ${CLOUDFLARE_IMAGES_API_TOKEN:-}
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - '6379:6379'
     volumes:
-      - cms_media:/app/media
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Next.js Frontend
+  # Unified Next.js + PayloadCMS Application
   web:
     build:
       context: .
@@ -57,22 +47,42 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+      # Application URLs
       NEXT_PUBLIC_APP_URL: http://localhost:3000
-      NEXT_PUBLIC_CMS_URL: http://localhost:3001
+      PAYLOAD_PUBLIC_SERVER_URL: http://localhost:3000
+      # Database
       DATABASE_URL: postgresql://verscienta_user:${DB_PASSWORD:-changeme123}@postgres:5432/verscienta_health
+      # Payload CMS
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-your-secret-key-change-in-production}
+      # Authentication
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-your-auth-secret-change-in-production}
       BETTER_AUTH_URL: http://localhost:3000
+      # Redis
+      REDIS_URL: redis://redis:6379
+      # Algolia Search
+      ALGOLIA_APP_ID: ${ALGOLIA_APP_ID:-}
+      ALGOLIA_ADMIN_API_KEY: ${ALGOLIA_ADMIN_KEY:-}
       NEXT_PUBLIC_ALGOLIA_APP_ID: ${ALGOLIA_APP_ID:-}
-      NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: ${ALGOLIA_SEARCH_KEY:-}
+      NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY: ${ALGOLIA_SEARCH_KEY:-}
+      # Cloudflare
+      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:-}
+      CLOUDFLARE_IMAGES_API_TOKEN: ${CLOUDFLARE_IMAGES_API_TOKEN:-}
+      # AI
       GROK_API_KEY: ${GROK_API_KEY:-}
     depends_on:
-      - cms
-      - postgres
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - web_uploads:/app/apps/web/public/uploads
 
 volumes:
   postgres_data:
     driver: local
-  cms_media:
+  redis_data:
+    driver: local
+  web_uploads:
     driver: local
 
 networks:

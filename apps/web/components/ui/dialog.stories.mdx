@@ -1,0 +1,437 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as DialogStories from './dialog.stories'
+
+<Meta of={DialogStories} />
+
+# Dialog
+
+A modal dialog component built on Radix UI with smooth animations and accessibility features.
+
+<Primary />
+
+## Overview
+
+The Dialog component provides a modal interface for displaying important information, collecting user input, or requiring user decisions. It's built on Radix UI's Dialog primitive with proper focus management, keyboard navigation, and screen reader support.
+
+## Usage
+
+```tsx
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+
+export default function Example() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Open</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Dialog Title</DialogTitle>
+          <DialogDescription>
+            Your dialog description goes here.
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  )
+}
+```
+
+## Variants
+
+### Default Dialog
+
+Basic dialog with title and description.
+
+<Canvas of={DialogStories.Default} />
+
+### With Actions
+
+Dialog with confirmation buttons.
+
+<Canvas of={DialogStories.WithActions} />
+
+### Form Dialog
+
+Dialog containing a form for data entry.
+
+<Canvas of={DialogStories.FormDialog} />
+
+### Confirmation Dialog
+
+Destructive action confirmation.
+
+<Canvas of={DialogStories.ConfirmationDialog} />
+
+### Info Dialog
+
+Informational content display.
+
+<Canvas of={DialogStories.InfoDialog} />
+
+### Success Dialog
+
+Success feedback with visual confirmation.
+
+<Canvas of={DialogStories.SuccessDialog} />
+
+## Content Handling
+
+### Long Content
+
+Scrollable content for lengthy text.
+
+<Canvas of={DialogStories.LongContentDialog} />
+
+### Custom Width
+
+Adjust dialog width for your content.
+
+<Canvas of={DialogStories.CustomWidth} />
+
+### Without Description
+
+Minimal dialog with just a title.
+
+<Canvas of={DialogStories.NoDescription} />
+
+## Component Structure
+
+The Dialog is composed of several sub-components:
+
+```tsx
+<Dialog>                    {/* Root component */}
+  <DialogTrigger>          {/* Trigger button */}
+    <Button>Open</Button>
+  </DialogTrigger>
+  <DialogContent>          {/* Modal content container */}
+    <DialogHeader>         {/* Header section */}
+      <DialogTitle>       {/* Title (required for a11y) */}
+      <DialogDescription> {/* Description (recommended for a11y) */}
+    </DialogHeader>
+    {/* Your content here */}
+    <DialogFooter>         {/* Footer section (optional) */}
+      {/* Action buttons */}
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+## Props
+
+### Dialog (Root)
+
+<Controls />
+
+### Common Props
+
+All sub-components accept their respective Radix UI props and `className` for styling customization.
+
+## Accessibility
+
+- **Focus Management**: Automatically traps focus within dialog when open
+- **Keyboard Navigation**:
+  - `Escape` to close
+  - `Tab`/`Shift+Tab` to navigate focusable elements
+  - Focus returns to trigger on close
+- **ARIA**: Proper `role="dialog"`, `aria-labelledby`, and `aria-describedby`
+- **Screen Readers**: Title and description announced when opened
+- **Close Button**: Always accessible with keyboard and screen readers
+- **Portal**: Rendered outside DOM hierarchy to avoid clipping issues
+
+### Best Practices
+
+- **Always provide DialogTitle** for screen readers (required for accessibility)
+- **Use DialogDescription** to provide context (highly recommended)
+- **Focus management**: First focusable element receives focus automatically
+- **Escape key**: Always allow users to close with Escape
+- **Backdrop click**: Users can click outside to close (default behavior)
+- **Loading states**: Disable close button during async operations:
+  ```tsx
+  <DialogContent onInteractOutside={(e) => isLoading && e.preventDefault()}>
+  ```
+
+## Design Guidelines
+
+### When to Use
+
+- **Confirmations**: Require user confirmation before destructive actions
+- **Forms**: Collect user input without leaving the current page
+- **Information**: Display important information that requires user acknowledgment
+- **Warnings**: Show critical warnings or errors
+- **Multi-step flows**: Guide users through a process (use state, not nested dialogs)
+
+### Do's
+
+✅ Use for important, focused tasks that require user attention
+✅ Keep dialog content concise and scannable
+✅ Provide clear action buttons (e.g., "Delete" vs "Cancel")
+✅ Use DialogTitle for clear context
+✅ Make the primary action button prominent
+✅ Allow users to close via Escape, close button, or backdrop click
+✅ Return focus to the trigger element when closed
+✅ Use for temporary interruptions only
+
+### Don'ts
+
+❌ Don't use for non-critical information (use Toast instead)
+❌ Don't nest dialogs (use multi-step state instead)
+❌ Don't make dialogs too large (respect viewport height)
+❌ Don't remove the close button without good reason
+❌ Don't use for primary navigation
+❌ Don't auto-open dialogs on page load (except critical warnings)
+❌ Don't use for content that should be shareable/bookmarkable
+
+## Examples
+
+### Controlled Dialog
+
+```tsx
+import { useState } from 'react'
+
+const [open, setOpen] = useState(false)
+
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogTrigger asChild>
+    <Button onClick={() => setOpen(true)}>Open</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Controlled Dialog</DialogTitle>
+    </DialogHeader>
+    <DialogFooter>
+      <Button onClick={() => setOpen(false)}>Close</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+### Confirmation with Async Action
+
+```tsx
+const [isDeleting, setIsDeleting] = useState(false)
+
+const handleDelete = async () => {
+  setIsDeleting(true)
+  try {
+    await deleteHerb(herbId)
+    setOpen(false)
+  } catch (error) {
+    // Handle error
+  } finally {
+    setIsDeleting(false)
+  }
+}
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button variant="destructive">Delete</Button>
+  </DialogTrigger>
+  <DialogContent onInteractOutside={(e) => isDeleting && e.preventDefault()}>
+    <DialogHeader>
+      <DialogTitle>Delete Herb</DialogTitle>
+      <DialogDescription>
+        This action cannot be undone.
+      </DialogDescription>
+    </DialogHeader>
+    <DialogFooter>
+      <Button variant="outline" disabled={isDeleting}>
+        Cancel
+      </Button>
+      <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+        {isDeleting ? 'Deleting...' : 'Delete'}
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+### Form with Validation
+
+```tsx
+import { useForm } from 'react-hook-form'
+
+const { register, handleSubmit, formState: { errors } } = useForm()
+
+const onSubmit = (data) => {
+  // Handle form submission
+  console.log(data)
+}
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button>Add Herb</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogHeader>
+        <DialogTitle>Add New Herb</DialogTitle>
+        <DialogDescription>
+          Enter the herb details below.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="grid gap-4 py-4">
+        <div>
+          <Input
+            {...register('name', { required: 'Name is required' })}
+            placeholder="Herb name"
+          />
+          {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+        </div>
+      </div>
+      <DialogFooter>
+        <Button type="submit">Save</Button>
+      </DialogFooter>
+    </form>
+  </DialogContent>
+</Dialog>
+```
+
+### Multi-Step Dialog
+
+```tsx
+const [step, setStep] = useState(1)
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button>Start Wizard</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Step {step} of 3</DialogTitle>
+    </DialogHeader>
+    {step === 1 && <div>Step 1 content</div>}
+    {step === 2 && <div>Step 2 content</div>}
+    {step === 3 && <div>Step 3 content</div>}
+    <DialogFooter>
+      {step > 1 && <Button onClick={() => setStep(step - 1)}>Back</Button>}
+      {step < 3 ? (
+        <Button onClick={() => setStep(step + 1)}>Next</Button>
+      ) : (
+        <Button>Finish</Button>
+      )}
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+### Prevent Close During Processing
+
+```tsx
+const [isProcessing, setIsProcessing] = useState(false)
+
+<DialogContent
+  onEscapeKeyDown={(e) => isProcessing && e.preventDefault()}
+  onInteractOutside={(e) => isProcessing && e.preventDefault()}
+>
+  {/* Content */}
+</DialogContent>
+```
+
+## Advanced Customization
+
+### Custom Animations
+
+```tsx
+<DialogContent className="data-[state=open]:animate-slideInUp data-[state=closed]:animate-slideOutDown">
+  {/* Content */}
+</DialogContent>
+```
+
+### Full Screen on Mobile
+
+```tsx
+<DialogContent className="sm:max-w-lg w-full h-full sm:h-auto">
+  {/* Content */}
+</DialogContent>
+```
+
+### Remove Backdrop Blur
+
+```tsx
+import { DialogOverlay } from './dialog'
+
+<DialogPortal>
+  <DialogOverlay className="bg-black/50" /> {/* No blur */}
+  <DialogContent>{/* Content */}</DialogContent>
+</DialogPortal>
+```
+
+## Limitations
+
+<Canvas of={DialogStories.StackedDialogsWarning} />
+
+⚠️ **Nested Dialogs**: Radix Dialog does not support stacked/nested dialogs by design. Use a multi-step flow with state management instead.
+
+## Related Components
+
+- **AlertDialog**: For critical confirmations (more opinionated than Dialog)
+- **Sheet**: Side panel alternative for mobile-friendly layouts
+- **Popover**: For non-modal contextual information
+- **Drawer**: Bottom sheet for mobile interfaces
+
+## Technical Details
+
+### Component Architecture
+
+- **Radix UI Primitive**: Built on `@radix-ui/react-dialog`
+- **Portal Rendering**: Rendered at document root to avoid z-index issues
+- **Focus Trap**: Automatically traps focus within dialog
+- **Animations**: Smooth enter/exit animations with Tailwind
+- **Responsive**: Adapts to mobile viewports
+
+### Performance Considerations
+
+- **Lazy Rendering**: Content only rendered when open
+- **Portal**: Avoids layout recalculation of parent components
+- **Animations**: GPU-accelerated transforms for smooth performance
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Dialog, DialogContent, DialogTrigger } from './dialog'
+
+test('opens on trigger click', async () => {
+  const user = userEvent.setup()
+  render(
+    <Dialog>
+      <DialogTrigger>Open</DialogTrigger>
+      <DialogContent>Dialog content</DialogContent>
+    </Dialog>
+  )
+
+  await user.click(screen.getByText('Open'))
+  expect(screen.getByText('Dialog content')).toBeInTheDocument()
+})
+
+test('closes on escape key', async () => {
+  const user = userEvent.setup()
+  render(
+    <Dialog defaultOpen>
+      <DialogContent>Content</DialogContent>
+    </Dialog>
+  )
+
+  await user.keyboard('{Escape}')
+  expect(screen.queryByText('Content')).not.toBeInTheDocument()
+})
+```

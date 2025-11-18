@@ -1,0 +1,631 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as ConditionCardStories from './ConditionCard.stories'
+
+<Meta of={ConditionCardStories} />
+
+# ConditionCard
+
+A card component for displaying health condition information with severity levels, categories, and related herbal treatment options.
+
+<Primary />
+
+## Overview
+
+The ConditionCard component is designed to present health conditions throughout the Verscienta Health platform. It features color-coded severity indicators, category badges, and counts of related herbs and formulas to help users find appropriate treatments.
+
+## Usage
+
+```tsx
+import { ConditionCard } from '@/components/cards/ConditionCard'
+
+export default function ConditionsPage() {
+  return (
+    <ConditionCard
+      conditionId="C001"
+      title="Chronic Fatigue"
+      slug="chronic-fatigue"
+      description="Persistent tiredness not improved by rest..."
+      category="Energy & Vitality"
+      severity="Moderate"
+      relatedHerbsCount={12}
+      relatedFormulasCount={8}
+    />
+  )
+}
+```
+
+## Variants
+
+### Default Condition
+
+Complete condition card with all properties.
+
+<Canvas of={ConditionCardStories.Default} />
+
+### Minimal Data
+
+Condition with only essential fields (title and slug).
+
+<Canvas of={ConditionCardStories.Minimal} />
+
+### With Description
+
+Condition with description but without severity or related content.
+
+<Canvas of={ConditionCardStories.WithDescription} />
+
+## Severity Levels
+
+Severity is color-coded for quick visual identification:
+
+### Mild Severity
+
+Sage green badge for mild conditions.
+
+<Canvas of={ConditionCardStories.MildSeverity} />
+
+### Moderate Severity
+
+Gold badge for moderate conditions.
+
+<Canvas of={ConditionCardStories.ModerateSeverity} />
+
+### Severe Severity
+
+TCM red badge for severe conditions.
+
+<Canvas of={ConditionCardStories.SevereSeverity} />
+
+## Content Categories
+
+### Respiratory Health
+
+<Canvas of={ConditionCardStories.RespiratoryCondition} />
+
+### Women's Health
+
+<Canvas of={ConditionCardStories.WomensHealth} />
+
+### Mental Health
+
+<Canvas of={ConditionCardStories.MentalHealth} />
+
+## Related Content
+
+### Single Related Item
+
+Shows proper singular form ("1 herb", "1 formula").
+
+<Canvas of={ConditionCardStories.SingleRelated} />
+
+### No Related Content
+
+Hides count badges when no related herbs or formulas exist.
+
+<Canvas of={ConditionCardStories.NoRelatedContent} />
+
+## Layouts
+
+### Grid Display
+
+Typical grid layout used in condition listings.
+
+<Canvas of={ConditionCardStories.GridExample} />
+
+### Loading State
+
+Skeleton loading state while fetching data.
+
+<Canvas of={ConditionCardStories.LoadingState} />
+
+## Props
+
+<Controls />
+
+### ConditionCardProps
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `conditionId` | `string` | Yes | Unique identifier (displayed as badge) |
+| `title` | `string` | Yes | Condition name |
+| `slug` | `string` | Yes | URL-friendly identifier for routing |
+| `description` | `string` | No | Brief description (truncated to 2 lines) |
+| `category` | `string` | No | Condition category (e.g., "Digestive Health") |
+| `severity` | `string` | No | Severity level: "Mild", "Moderate", or "Severe" |
+| `relatedHerbsCount` | `number` | No | Number of related herbs |
+| `relatedFormulasCount` | `number` | No | Number of related formulas |
+
+### Severity Color Mapping
+
+The severity badge uses color-coded variants for quick visual identification:
+
+```typescript
+{
+  mild: 'sage',      // Sage green
+  moderate: 'gold',  // Gold/amber
+  severe: 'tcm'      // TCM red
+}
+```
+
+## Accessibility
+
+- **Semantic HTML**: Uses `<Link>` for entire card (keyboard accessible)
+- **Focus Indicators**: Clear focus ring on keyboard navigation
+- **Screen Readers**: All content properly labeled and announced
+- **Color + Text**: Severity communicated via both color AND text
+- **Hover Effects**: Visual feedback with shadow and text color change
+- **Touch Targets**: Entire card is clickable (large target area)
+
+### Best Practices
+
+- Always provide meaningful `title` and `slug`
+- Use severity levels consistently across the platform
+- Keep descriptions concise (2 lines max)
+- Only show related content counts when > 0
+- Use descriptive category names
+
+## Design Guidelines
+
+### When to Use
+
+- **Condition Listings**: Main conditions directory page
+- **Search Results**: Condition search results
+- **Related Conditions**: Showing related/similar conditions
+- **Category Pages**: Conditions filtered by category or severity
+- **Symptom Checker**: Potential condition matches
+- **Treatment Plans**: Conditions being addressed
+
+### Do's
+
+✅ Use color-coded severity levels consistently
+✅ Keep descriptions to 1-2 sentences
+✅ Show related content counts for context
+✅ Use descriptive category names
+✅ Include severity when known
+✅ Enable hover effects for interactivity
+✅ Maintain consistent card heights in grids
+✅ Use proper singular/plural forms
+
+### Don'ts
+
+❌ Don't show 0 counts (hide the badge instead)
+❌ Don't use ambiguous severity levels
+❌ Don't omit descriptions for serious conditions
+❌ Don't make cards too wide (max 400px recommended)
+❌ Don't use without a link (cards should navigate)
+❌ Don't mix condition cards with other card types
+❌ Don't use colors alone to convey severity
+
+## Examples
+
+### Basic Implementation
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  {conditions.map((condition) => (
+    <ConditionCard
+      key={condition.id}
+      conditionId={condition.id}
+      title={condition.title}
+      slug={condition.slug}
+      description={condition.description}
+      category={condition.category}
+      severity={condition.severity}
+      relatedHerbsCount={condition.relatedHerbs?.length}
+      relatedFormulasCount={condition.relatedFormulas?.length}
+    />
+  ))}
+</div>
+```
+
+### With Payload CMS Data
+
+```tsx
+import { getConditions } from '@/lib/payload-api'
+
+export default async function ConditionsPage() {
+  const { docs: conditions } = await getConditions({ limit: 12 })
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {conditions.map((condition) => (
+        <ConditionCard
+          key={condition.id}
+          conditionId={condition.conditionId}
+          title={condition.title}
+          slug={condition.slug}
+          description={condition.description}
+          category={condition.category?.name}
+          severity={condition.severity}
+          relatedHerbsCount={condition.relatedHerbs?.length || 0}
+          relatedFormulasCount={condition.relatedFormulas?.length || 0}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+### Filter by Severity
+
+```tsx
+'use client'
+
+const [selectedSeverity, setSelectedSeverity] = useState<string>()
+
+const filtered = conditions.filter(
+  (c) => !selectedSeverity || c.severity === selectedSeverity
+)
+
+<div>
+  <Tabs defaultValue="all" onValueChange={setSelectedSeverity}>
+    <TabsList>
+      <TabsTrigger value="all">All</TabsTrigger>
+      <TabsTrigger value="Mild">Mild</TabsTrigger>
+      <TabsTrigger value="Moderate">Moderate</TabsTrigger>
+      <TabsTrigger value="Severe">Severe</TabsTrigger>
+    </TabsList>
+  </Tabs>
+  <div className="grid grid-cols-3 gap-6 mt-6">
+    {filtered.map((condition) => (
+      <ConditionCard key={condition.id} {...condition} />
+    ))}
+  </div>
+</div>
+```
+
+### Filter by Category
+
+```tsx
+'use client'
+
+const [category, setCategory] = useState<string>()
+
+const categories = [...new Set(conditions.map((c) => c.category))]
+
+const filtered = conditions.filter(
+  (c) => !category || c.category === category
+)
+
+<div>
+  <select value={category} onChange={(e) => setCategory(e.target.value)}>
+    <option value="">All Categories</option>
+    {categories.map((cat) => (
+      <option key={cat} value={cat}>{cat}</option>
+    ))}
+  </select>
+  <div className="grid grid-cols-3 gap-6">
+    {filtered.map((condition) => (
+      <ConditionCard key={condition.id} {...condition} />
+    ))}
+  </div>
+</div>
+```
+
+### Search Implementation
+
+```tsx
+'use client'
+
+const [searchTerm, setSearchTerm] = useState('')
+
+const filtered = conditions.filter((c) =>
+  c.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  c.description?.toLowerCase().includes(searchTerm.toLowerCase())
+)
+
+<div>
+  <input
+    type="search"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Search conditions..."
+  />
+  <div className="grid grid-cols-3 gap-6">
+    {filtered.map((condition) => (
+      <ConditionCard key={condition.id} {...condition} />
+    ))}
+  </div>
+</div>
+```
+
+### Loading State Pattern
+
+```tsx
+{isLoading ? (
+  <div className="grid grid-cols-3 gap-6">
+    {[...Array(6)].map((_, i) => (
+      <ConditionCardSkeleton key={i} />
+    ))}
+  </div>
+) : (
+  <div className="grid grid-cols-3 gap-6">
+    {conditions.map((condition) => (
+      <ConditionCard key={condition.id} {...condition} />
+    ))}
+  </div>
+)}
+```
+
+### Sort by Related Content
+
+```tsx
+const sorted = [...conditions].sort((a, b) => {
+  const aCount = (a.relatedHerbsCount || 0) + (a.relatedFormulasCount || 0)
+  const bCount = (b.relatedHerbsCount || 0) + (b.relatedFormulasCount || 0)
+  return bCount - aCount
+})
+
+<div className="grid grid-cols-3 gap-6">
+  {sorted.map((condition) => (
+    <ConditionCard key={condition.id} {...condition} />
+  ))}
+</div>
+```
+
+## Advanced Patterns
+
+### With Favorite Button
+
+```tsx
+<div className="relative">
+  <ConditionCard {...condition} />
+  <button
+    className="absolute top-2 right-2 p-2 bg-white rounded-full shadow"
+    onClick={(e) => {
+      e.preventDefault() // Prevent navigation
+      toggleFavorite(condition.id)
+    }}
+  >
+    <Heart className={isFavorite ? 'fill-red-500' : ''} />
+  </button>
+</div>
+```
+
+### With Context Menu
+
+```tsx
+import { DropdownMenu } from '@/components/ui/dropdown-menu'
+
+<div className="relative">
+  <ConditionCard {...condition} />
+  <div className="absolute top-2 right-2">
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <MoreVertical />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>View Herbs</DropdownMenuItem>
+        <DropdownMenuItem>View Formulas</DropdownMenuItem>
+        <DropdownMenuItem>Add to Tracking</DropdownMenuItem>
+        <DropdownMenuItem>Share</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </div>
+</div>
+```
+
+### Responsive Grid
+
+```tsx
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+  {conditions.map((condition) => (
+    <ConditionCard key={condition.id} {...condition} />
+  ))}
+</div>
+```
+
+### With Tooltip for Severity
+
+```tsx
+import { Tooltip } from '@/components/ui/tooltip'
+
+<Tooltip>
+  <TooltipTrigger asChild>
+    <div>
+      <ConditionCard {...condition} />
+    </div>
+  </TooltipTrigger>
+  <TooltipContent>
+    <p className="text-sm">
+      {condition.severity === 'Mild' && 'Usually manageable with lifestyle changes'}
+      {condition.severity === 'Moderate' && 'May require herbal support'}
+      {condition.severity === 'Severe' && 'Consult a healthcare professional'}
+    </p>
+  </TooltipContent>
+</Tooltip>
+```
+
+### Symptom Checker Results
+
+```tsx
+const symptomMatches = await matchSymptoms(userSymptoms)
+
+<div>
+  <h2>Possible Conditions</h2>
+  <div className="grid grid-cols-3 gap-6">
+    {symptomMatches.map((match) => (
+      <div key={match.condition.id} className="relative">
+        <ConditionCard {...match.condition} />
+        <div className="absolute top-2 left-2">
+          <Badge>{match.matchPercentage}% match</Badge>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+```
+
+## Styling
+
+### Card Dimensions
+
+- **Width**: Flexible (100% of grid cell)
+- **Height**: Auto (content-driven)
+- **Recommended Max Width**: 400px
+
+### Typography
+
+- **Title**: Serif font, text-lg, earth-900
+- **Description**: Sans-serif, text-sm, gray-600, line-clamp-2
+
+### Color Scheme
+
+- **Background**: White
+- **Border**: Gray-200 (default), shadow-lg (hover)
+- **Title**: earth-900 (default), earth-700 (hover)
+- **Description**: gray-600
+- **Badges**:
+  - Category: default variant
+  - Severity: sage (mild), gold (moderate), tcm (severe)
+  - Counts: outline variant
+
+### Hover Effects
+
+- **Shadow**: Elevates to `shadow-lg`
+- **Title**: Changes to earth-700
+- **Transition**: Smooth 200ms ease
+
+## Performance
+
+- **Line Clamping**: CSS truncation (no JS) for descriptions (line-clamp-2)
+- **Conditional Rendering**: Only shows badges when data exists
+- **Link Optimization**: Uses Next.js Link for prefetching
+- **Smart Pluralization**: Singular/plural forms for better UX
+
+## Related Components
+
+- **HerbCard**: Card for individual herbs
+- **FormulaCard**: Card for herbal formulas
+- **PractitionerCard**: Card for practitioners
+- **Card**: Base card component
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import { ConditionCard } from './ConditionCard'
+
+test('renders condition title and description', () => {
+  render(
+    <ConditionCard
+      conditionId="C001"
+      title="Chronic Fatigue"
+      slug="chronic-fatigue"
+      description="Persistent tiredness..."
+    />
+  )
+
+  expect(screen.getByText('Chronic Fatigue')).toBeInTheDocument()
+  expect(screen.getByText('Persistent tiredness...')).toBeInTheDocument()
+})
+
+test('shows severity with correct color', () => {
+  const { rerender } = render(
+    <ConditionCard
+      conditionId="C001"
+      title="Test"
+      slug="test"
+      severity="Mild"
+    />
+  )
+
+  let badge = screen.getByText('Mild')
+  expect(badge).toHaveClass('sage')
+
+  rerender(
+    <ConditionCard
+      conditionId="C001"
+      title="Test"
+      slug="test"
+      severity="Severe"
+    />
+  )
+
+  badge = screen.getByText('Severe')
+  expect(badge).toHaveClass('tcm')
+})
+
+test('shows correct singular/plural for related content', () => {
+  const { rerender } = render(
+    <ConditionCard
+      conditionId="C001"
+      title="Test"
+      slug="test"
+      relatedHerbsCount={1}
+      relatedFormulasCount={1}
+    />
+  )
+
+  expect(screen.getByText('1 herb')).toBeInTheDocument()
+  expect(screen.getByText('1 formula')).toBeInTheDocument()
+
+  rerender(
+    <ConditionCard
+      conditionId="C001"
+      title="Test"
+      slug="test"
+      relatedHerbsCount={5}
+      relatedFormulasCount={3}
+    />
+  )
+
+  expect(screen.getByText('5 herbs')).toBeInTheDocument()
+  expect(screen.getByText('3 formulas')).toBeInTheDocument()
+})
+
+test('hides count badges when 0', () => {
+  render(
+    <ConditionCard
+      conditionId="C001"
+      title="Test"
+      slug="test"
+      relatedHerbsCount={0}
+      relatedFormulasCount={0}
+    />
+  )
+
+  expect(screen.queryByText(/herb/)).not.toBeInTheDocument()
+  expect(screen.queryByText(/formula/)).not.toBeInTheDocument()
+})
+
+test('links to correct condition detail page', () => {
+  render(
+    <ConditionCard
+      conditionId="C001"
+      title="Chronic Fatigue"
+      slug="chronic-fatigue"
+    />
+  )
+
+  const link = screen.getByRole('link')
+  expect(link).toHaveAttribute('href', '/conditions/chronic-fatigue')
+})
+
+test('displays all badges when provided', () => {
+  render(
+    <ConditionCard
+      conditionId="C001"
+      title="Test"
+      slug="test"
+      category="Digestive Health"
+      severity="Moderate"
+      relatedHerbsCount={10}
+      relatedFormulasCount={5}
+    />
+  )
+
+  expect(screen.getByText('Digestive Health')).toBeInTheDocument()
+  expect(screen.getByText('Moderate')).toBeInTheDocument()
+  expect(screen.getByText('10 herbs')).toBeInTheDocument()
+  expect(screen.getByText('5 formulas')).toBeInTheDocument()
+})
+```

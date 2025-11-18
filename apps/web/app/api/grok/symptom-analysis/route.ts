@@ -3,9 +3,8 @@ import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import { auditLog } from '@/lib/audit-log'
 import { auth } from '@/lib/auth'
-
-const GROK_API_URL = 'https://api.x.ai/v1/chat/completions'
-const GROK_API_KEY = process.env.GROK_API_KEY
+import { checkRateLimit } from '@/lib/cache'
+import { GrokAPIError, grokClient } from '@/lib/grok/client'
 
 /**
  * HIPAA COMPLIANCE NOTE:
@@ -74,9 +73,12 @@ function sanitizeInput(text: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if API key is configured
-    if (!GROK_API_KEY) {
-      return NextResponse.json({ error: 'Grok API key not configured' }, { status: 500 })
+    // Check if Grok client is configured
+    if (!grokClient.isConfigured()) {
+      return NextResponse.json(
+        { error: 'AI service not configured. Please contact support.' },
+        { status: 503 }
+      )
     }
 
     const body: SymptomAnalysisRequest = await request.json()
@@ -87,11 +89,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'At least one symptom is required' }, { status: 400 })
     }
 
+    if (symptoms.length > 20) {
+      return NextResponse.json(
+        { error: 'Maximum 20 symptoms allowed' },
+        { status: 400 }
+      )
+    }
+
     // HIPAA: Extract user session for audit logging
     const session = await auth.api.getSession({ headers: await headers() })
     const userId = session?.user?.id
     const userEmail = session?.user?.email
     const sessionId = session?.session?.id
+
+    // Rate limiting: 10 requests per hour per user (HIPAA: Prevent abuse)
+    const rateLimitId = userId || request.ip || 'anonymous'
+    const rateLimit = await checkRateLimit(rateLimitId, 'ai')
+
+    if (!rateLimit.success) {
+      console.warn('[RATE LIMIT] Symptom checker abuse attempt:', {
+        userId: userId || 'anonymous',
+        ip: request.ip,
+        limit: rateLimit.limit,
+        remaining: rateLimit.remaining,
+        reset: new Date(rateLimit.reset).toISOString(),
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Rate limit exceeded',
+          message: `You have reached the maximum number of requests (${rateLimit.limit} per hour). Please try again later.`,
+          resetAt: new Date(rateLimit.reset).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': rateLimit.limit.toString(),
+            'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+            'X-RateLimit-Reset': rateLimit.reset.toString(),
+            'Retry-After': Math.ceil((rateLimit.reset - Date.now()) / 1000).toString(),
+          },
+        }
+      )
+    }
 
     // HIPAA: Check MFA status for compliance logging
     const mfaEnabled = (session?.user as any)?.mfaEnabled || false
@@ -150,73 +190,62 @@ export async function POST(request: NextRequest) {
     const sanitizedSeverity = severity ? sanitizeInput(severity) : undefined
     const sanitizedAdditionalInfo = additionalInfo ? sanitizeInput(additionalInfo) : undefined
 
-    // Construct the prompt for Grok
-    const prompt = `You are a knowledgeable herbalist and Traditional Chinese Medicine practitioner. A user is experiencing the following symptoms:
-
-Symptoms: ${sanitizedSymptoms.join(', ')}
-${sanitizedDuration ? `Duration: ${sanitizedDuration}` : ''}
-${sanitizedSeverity ? `Severity: ${sanitizedSeverity}` : ''}
-${sanitizedAdditionalInfo ? `Additional Information: ${sanitizedAdditionalInfo}` : ''}
-
-IMPORTANT: All personally identifiable information has been removed from this input for privacy and HIPAA compliance.
-
-Please provide:
-1. A brief analysis of these symptoms from both Western and TCM perspectives
-2. Potential underlying patterns or imbalances (TCM)
-3. Recommended herbs that may help (3-5 herbs with brief explanations)
-4. Recommended formulas if applicable
-5. General lifestyle recommendations
-6. A clear disclaimer that this is educational information and not medical advice
-
-Keep your response clear, practical, and educational. Format your response in a structured way.`
-
-    // Call Grok API
-    const response = await fetch(GROK_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${GROK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'grok-beta',
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are an expert herbalist and Traditional Chinese Medicine practitioner providing educational information about herbs and natural remedies. Always emphasize that your advice is educational and users should consult healthcare providers for medical issues.',
-          },
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 1500,
-      }),
+    // Call Grok AI client with caching and retry logic
+    const analysis = await grokClient.analyzeSymptoms(sanitizedSymptoms, {
+      duration: sanitizedDuration,
+      severity: sanitizedSeverity,
+      additionalInfo: sanitizedAdditionalInfo,
+      useCache: true, // Enable 24-hour caching for similar symptoms
+      temperature: 0.7,
+      maxTokens: 1500,
     })
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error('Grok API error:', errorData)
-      return NextResponse.json(
-        { error: 'Failed to get analysis from Grok' },
-        { status: response.status }
-      )
-    }
-
-    const data = await response.json()
-    const analysis = data.choices[0]?.message?.content
-
-    if (!analysis) {
-      return NextResponse.json({ error: 'No analysis returned from Grok' }, { status: 500 })
-    }
 
     return NextResponse.json({
       analysis,
       timestamp: new Date().toISOString(),
+      cached: false, // Could be enhanced to return actual cache status
     })
   } catch (error) {
     console.error('Error in symptom analysis:', error)
+
+    // Handle Grok API specific errors
+    if (error instanceof GrokAPIError) {
+      console.error('[Grok API Error]', {
+        message: error.message,
+        statusCode: error.statusCode,
+        type: error.type,
+        code: error.code,
+      })
+
+      // Return user-friendly error message
+      if (error.statusCode === 429) {
+        return NextResponse.json(
+          {
+            error: 'AI service rate limit exceeded',
+            message: 'The AI service is experiencing high demand. Please try again in a few minutes.',
+          },
+          { status: 503 }
+        )
+      }
+
+      if (error.statusCode >= 500) {
+        return NextResponse.json(
+          {
+            error: 'AI service temporarily unavailable',
+            message: 'The AI analysis service is temporarily unavailable. Please try again later.',
+          },
+          { status: 503 }
+        )
+      }
+
+      return NextResponse.json(
+        {
+          error: 'Analysis failed',
+          message: 'We encountered an error analyzing your symptoms. Please try again.',
+        },
+        { status: error.statusCode }
+      )
+    }
 
     // HIPAA: Log security event for errors
     await auditLog.suspiciousActivity(undefined, {
@@ -225,7 +254,13 @@ Keep your response clear, practical, and educational. Format your response in a 
       timestamp: new Date().toISOString(),
     })
 
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        message: 'An unexpected error occurred. Please try again later.',
+      },
+      { status: 500 }
+    )
   }
 }
 

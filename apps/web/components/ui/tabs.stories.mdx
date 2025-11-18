@@ -1,0 +1,467 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as TabsStories from './tabs.stories'
+
+<Meta of={TabsStories} />
+
+# Tabs
+
+A flexible tabs component built on Radix UI for organizing content into separate views.
+
+<Primary />
+
+## Overview
+
+The Tabs component provides an accessible way to organize and navigate between different sections of related content. Built on Radix UI's Tabs primitive, it includes keyboard navigation, focus management, and ARIA attributes out of the box.
+
+## Usage
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+export default function Example() {
+  return (
+    <Tabs defaultValue="tab1">
+      <TabsList>
+        <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+        <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+      </TabsList>
+      <TabsContent value="tab1">Content 1</TabsContent>
+      <TabsContent value="tab2">Content 2</TabsContent>
+    </Tabs>
+  )
+}
+```
+
+## Variants
+
+### Default
+
+Basic tabs with simple content.
+
+<Canvas of={TabsStories.Default} />
+
+### With Cards
+
+Tabs integrated with card components for structured layouts.
+
+<Canvas of={TabsStories.WithCards} />
+
+### Herb Details
+
+Example showing herb information organized by tabs.
+
+<Canvas of={TabsStories.HerbDetails} />
+
+## Layouts
+
+### Full Width
+
+Tabs that span the full container width.
+
+<Canvas of={TabsStories.FullWidth} />
+
+### Vertical
+
+Vertical orientation for side navigation.
+
+<Canvas of={TabsStories.Vertical} />
+
+### With Icons
+
+Tabs enhanced with icons for better visual communication.
+
+<Canvas of={TabsStories.WithIcons} />
+
+### Navigation Style
+
+Underline style for navigation-like tabs.
+
+<Canvas of={TabsStories.NavigationStyle} />
+
+## States
+
+### Controlled
+
+Programmatically control active tab state.
+
+<Canvas of={TabsStories.Controlled} />
+
+### With Disabled
+
+Disable specific tabs.
+
+<Canvas of={TabsStories.WithDisabled} />
+
+### Many Tabs
+
+Handling overflow with many tabs.
+
+<Canvas of={TabsStories.ManyTabs} />
+
+## Component Structure
+
+The Tabs component consists of four sub-components:
+
+```tsx
+<Tabs defaultValue="tab1">         {/* Root container */}
+  <TabsList>                        {/* Tabs navigation bar */}
+    <TabsTrigger value="tab1">     {/* Individual tab button */}
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+  <TabsContent value="tab1">       {/* Content for tab 1 */}
+    Content 1
+  </TabsContent>
+  <TabsContent value="tab2">       {/* Content for tab 2 */}
+    Content 2
+  </TabsContent>
+</Tabs>
+```
+
+## Props
+
+<Controls />
+
+### Tabs (Root)
+
+- `defaultValue`: Initial active tab (uncontrolled)
+- `value`: Active tab value (controlled)
+- `onValueChange`: Callback when active tab changes
+- `orientation`: 'horizontal' (default) or 'vertical'
+
+### TabsTrigger
+
+- `value`: Unique identifier for this tab (required)
+- `disabled`: Whether the tab is disabled
+- `asChild`: Render as a child element
+
+## Accessibility
+
+- **Keyboard Navigation**:
+  - `Arrow Left/Right` (horizontal) or `Arrow Up/Down` (vertical) to navigate tabs
+  - `Home` to focus first tab
+  - `End` to focus last tab
+  - `Tab` to move focus to active panel
+- **ARIA**: Proper `role="tablist"`, `role="tab"`, and `role="tabpanel"`
+- **Focus Management**: Focus indicator on tab triggers
+- **Screen Readers**: Announces tabs, panels, and selected state
+
+### Best Practices
+
+- Keep tab labels concise (1-2 words)
+- Limit to 3-7 tabs for best usability
+- Use icons + text for clearer communication
+- Don't use tabs for sequential steps (use a stepper instead)
+- Ensure tab content is meaningful and related
+- Avoid nesting tabs within tabs
+
+## Design Guidelines
+
+### When to Use
+
+- **Related Content**: Organize related content into logical groups
+- **Space Saving**: Show different views without navigation
+- **Filtering**: Filter or categorize content
+- **Settings**: Organize settings into categories
+- **Detail Views**: Different aspects of the same entity
+
+### Do's
+
+✅ Use clear, descriptive tab labels
+✅ Keep the number of tabs manageable (3-7)
+✅ Make the active tab visually distinct
+✅ Preserve tab state when appropriate
+✅ Use consistent tab patterns across your app
+✅ Consider mobile layout (stack or scroll)
+✅ Group related content logically
+
+### Don'ts
+
+❌ Don't use for sequential navigation (use stepper/wizard)
+❌ Don't hide critical information in tabs
+❌ Don't use when all content should be visible at once
+❌ Don't use vague labels like "Misc" or "Other"
+❌ Don't nest tabs within tabs
+❌ Don't use tabs for 2 items (use toggle instead)
+❌ Don't make tabs too small for touch targets
+
+## Examples
+
+### Controlled Tabs with State
+
+```tsx
+import { useState } from 'react'
+
+const [activeTab, setActiveTab] = useState('overview')
+
+<Tabs value={activeTab} onValueChange={setActiveTab}>
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="details">Details</TabsTrigger>
+  </TabsList>
+  <TabsContent value="overview">Overview content</TabsContent>
+  <TabsContent value="details">Details content</TabsContent>
+</Tabs>
+```
+
+### With URL Sync (Next.js)
+
+```tsx
+import { useRouter, useSearchParams } from 'next/navigation'
+
+const router = useRouter()
+const searchParams = useSearchParams()
+const tab = searchParams.get('tab') || 'overview'
+
+const handleTabChange = (value: string) => {
+  router.push(`?tab=${value}`)
+}
+
+<Tabs value={tab} onValueChange={handleTabChange}>
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="details">Details</TabsTrigger>
+  </TabsList>
+  <TabsContent value="overview">Content</TabsContent>
+  <TabsContent value="details">Content</TabsContent>
+</Tabs>
+```
+
+### Lazy Loading Tab Content
+
+```tsx
+const [loadedTabs, setLoadedTabs] = useState(['tab1'])
+
+const handleTabChange = (value: string) => {
+  if (!loadedTabs.includes(value)) {
+    setLoadedTabs([...loadedTabs, value])
+  }
+}
+
+<Tabs defaultValue="tab1" onValueChange={handleTabChange}>
+  <TabsList>
+    <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+    <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+  </TabsList>
+  <TabsContent value="tab1">Always loaded</TabsContent>
+  <TabsContent value="tab2">
+    {loadedTabs.includes('tab2') ? (
+      <ExpensiveComponent />
+    ) : (
+      <div>Loading...</div>
+    )}
+  </TabsContent>
+</Tabs>
+```
+
+### With Form Validation
+
+```tsx
+import { useForm } from 'react-hook-form'
+
+const { formState: { errors } } = useForm()
+
+<Tabs defaultValue="account">
+  <TabsList>
+    <TabsTrigger value="account">
+      Account
+      {errors.account && (
+        <span className="ml-1 text-red-500">•</span>
+      )}
+    </TabsTrigger>
+    <TabsTrigger value="password">
+      Password
+      {errors.password && (
+        <span className="ml-1 text-red-500">•</span>
+      )}
+    </TabsTrigger>
+  </TabsList>
+  {/* Tab content with forms */}
+</Tabs>
+```
+
+### Responsive Tabs
+
+```tsx
+<Tabs defaultValue="all" className="w-full">
+  <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-flex">
+    <TabsTrigger value="all">All</TabsTrigger>
+    <TabsTrigger value="active">Active</TabsTrigger>
+    <TabsTrigger value="archived">Archived</TabsTrigger>
+  </TabsList>
+  {/* Content */}
+</Tabs>
+```
+
+### With Badge Counts
+
+```tsx
+<TabsList>
+  <TabsTrigger value="all" className="gap-2">
+    All
+    <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs">
+      24
+    </span>
+  </TabsTrigger>
+  <TabsTrigger value="unread" className="gap-2">
+    Unread
+    <span className="rounded-full bg-red-500 text-white px-2 py-0.5 text-xs">
+      3
+    </span>
+  </TabsTrigger>
+</TabsList>
+```
+
+## Advanced Customization
+
+### Custom Styling
+
+```tsx
+<Tabs defaultValue="tab1">
+  <TabsList className="bg-gray-100">
+    <TabsTrigger
+      value="tab1"
+      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-earth-500 data-[state=active]:to-earth-600 data-[state=active]:text-white"
+    >
+      Custom Style
+    </TabsTrigger>
+  </TabsList>
+  <TabsContent value="tab1">Content</TabsContent>
+</Tabs>
+```
+
+### Programmatic Tab Change
+
+```tsx
+const tabsRef = useRef<HTMLDivElement>(null)
+
+const goToTab = (value: string) => {
+  setActiveTab(value)
+  // Scroll to tabs if needed
+  tabsRef.current?.scrollIntoView({ behavior: 'smooth' })
+}
+
+<div ref={tabsRef}>
+  <Tabs value={activeTab} onValueChange={setActiveTab}>
+    {/* Tabs */}
+  </Tabs>
+</div>
+```
+
+### Animated Content
+
+```tsx
+<TabsContent
+  value="tab1"
+  className="data-[state=active]:animate-in data-[state=inactive]:animate-out data-[state=inactive]:fade-out-0 data-[state=active]:fade-in-0"
+>
+  Content with fade animation
+</TabsContent>
+```
+
+## Patterns
+
+### Herb Information Tabs
+
+```tsx
+<Tabs defaultValue="overview">
+  <TabsList className="grid w-full grid-cols-4">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="properties">Properties</TabsTrigger>
+    <TabsTrigger value="dosage">Dosage</TabsTrigger>
+    <TabsTrigger value="research">Research</TabsTrigger>
+  </TabsList>
+  {/* Herb-specific content for each tab */}
+</Tabs>
+```
+
+### Settings Organization
+
+```tsx
+<Tabs defaultValue="general" orientation="vertical" className="flex">
+  <TabsList className="flex-col h-auto">
+    <TabsTrigger value="general">General</TabsTrigger>
+    <TabsTrigger value="privacy">Privacy</TabsTrigger>
+    <TabsTrigger value="notifications">Notifications</TabsTrigger>
+  </TabsList>
+  {/* Settings panels */}
+</Tabs>
+```
+
+## Related Components
+
+- **Accordion**: For progressive disclosure of content
+- **Carousel**: For sequential content navigation
+- **Breadcrumb**: For hierarchical navigation
+- **Stepper**: For sequential workflows
+
+## Technical Details
+
+### Component Architecture
+
+- **Radix UI Primitive**: Built on `@radix-ui/react-tabs`
+- **Keyboard Navigation**: Full arrow key support
+- **Focus Management**: Automatic focus handling
+- **ARIA**: Complete accessibility attributes
+- **Roving Tabindex**: Efficient keyboard navigation
+
+### Performance
+
+- **Lazy Content**: Only active tab content is mounted
+- **Memoization**: Consider memoizing expensive tab content
+- **Code Splitting**: Load tab content dynamically if needed
+
+### State Management
+
+- **Uncontrolled**: Use `defaultValue` for simple cases
+- **Controlled**: Use `value` + `onValueChange` for complex state
+- **URL Sync**: Sync active tab with URL query params
+- **Persistence**: Store in localStorage for returning users
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
+
+test('switches tabs on click', async () => {
+  const user = userEvent.setup()
+  render(
+    <Tabs defaultValue="tab1">
+      <TabsList>
+        <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+        <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+      </TabsList>
+      <TabsContent value="tab1">Content 1</TabsContent>
+      <TabsContent value="tab2">Content 2</TabsContent>
+    </Tabs>
+  )
+
+  await user.click(screen.getByText('Tab 2'))
+  expect(screen.getByText('Content 2')).toBeVisible()
+  expect(screen.queryByText('Content 1')).not.toBeVisible()
+})
+
+test('supports keyboard navigation', async () => {
+  const user = userEvent.setup()
+  render(/* Tabs */)
+
+  const tab1 = screen.getByText('Tab 1')
+  tab1.focus()
+  await user.keyboard('{ArrowRight}')
+
+  expect(screen.getByText('Tab 2')).toHaveFocus()
+})
+```

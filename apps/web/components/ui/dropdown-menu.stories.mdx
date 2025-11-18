@@ -1,0 +1,558 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as DropdownMenuStories from './dropdown-menu.stories'
+
+<Meta of={DropdownMenuStories} />
+
+# Dropdown Menu
+
+A contextual menu component built on Radix UI for displaying actions and options.
+
+<Primary />
+
+## Overview
+
+The Dropdown Menu component provides a floating menu that appears when triggered, typically used for displaying contextual actions, user account menus, or navigation options. Built on Radix UI's Dropdown Menu primitive with full keyboard navigation and accessibility support.
+
+## Usage
+
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+
+export default function Example() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">Open</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>Settings</DropdownMenuItem>
+        <DropdownMenuItem>Logout</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+```
+
+## Variants
+
+### Default
+
+Basic dropdown menu with text items.
+
+<Canvas of={DropdownMenuStories.Default} />
+
+### With Icons
+
+Enhanced menu items with leading icons.
+
+<Canvas of={DropdownMenuStories.WithIcons} />
+
+### Icon Button Trigger
+
+Compact icon-only trigger button.
+
+<Canvas of={DropdownMenuStories.IconButton} />
+
+## Common Patterns
+
+### Herb Card Actions
+
+Context menu for herb cards.
+
+<Canvas of={DropdownMenuStories.HerbCardActions} />
+
+### User Menu
+
+Account menu with user info and actions.
+
+<Canvas of={DropdownMenuStories.UserMenu} />
+
+### Create New Menu
+
+"Add new" action menu.
+
+<Canvas of={DropdownMenuStories.CreateNewMenu} />
+
+## States
+
+### With Disabled Items
+
+Disabled menu items for unavailable actions.
+
+<Canvas of={DropdownMenuStories.WithDisabled} />
+
+### Destructive Actions
+
+Dangerous actions styled in red.
+
+<Canvas of={DropdownMenuStories.DestructiveAction} />
+
+## Layout
+
+### Align End
+
+Right-aligned menu.
+
+<Canvas of={DropdownMenuStories.AlignEnd} />
+
+### Custom Side Offset
+
+Adjust distance from trigger.
+
+<Canvas of={DropdownMenuStories.CustomSideOffset} />
+
+### Wide Menu
+
+Menu with descriptions or longer content.
+
+<Canvas of={DropdownMenuStories.WideMenu} />
+
+## Component Structure
+
+```tsx
+<DropdownMenu>                    {/* Root container */}
+  <DropdownMenuTrigger asChild>  {/* Trigger button */}
+    <Button>Open</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>           {/* Menu panel */}
+    <DropdownMenuItem>           {/* Individual menu item */}
+      Action 1
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Action 2
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Props
+
+<Controls />
+
+### DropdownMenuContent
+
+- `align`: 'start' | 'center' | 'end' (default: 'start')
+- `sideOffset`: Distance from trigger in pixels (default: 4)
+- `alignOffset`: Offset along the align axis
+- `side`: 'top' | 'right' | 'bottom' | 'left'
+
+### DropdownMenuItem
+
+- `disabled`: Disable the menu item
+- `onSelect`: Callback when item is selected
+- `asChild`: Render as child element (for links)
+
+## Accessibility
+
+- **Keyboard Navigation**:
+  - `Space` or `Enter` on trigger to open
+  - `Arrow Down/Up` to navigate items
+  - `Enter` or `Space` to select item
+  - `Escape` to close menu
+  - `Tab` to close and move focus away
+- **Focus Management**: Auto-focus first item when opened
+- **ARIA**: Proper `role="menu"`, `role="menuitem"`, and `aria-haspopup`
+- **Screen Readers**: Announces menu items and state
+- **Portal**: Rendered outside DOM to avoid clipping
+
+### Best Practices
+
+- Use icon + text for clarity (not icon-only in menu items)
+- Provide `aria-label` for icon-only trigger buttons
+- Group related actions together
+- Use dividers to separate action groups
+- Place destructive actions at the bottom
+- Limit to 7-10 items for scannability
+- Use disabled state instead of hiding critical actions
+
+## Design Guidelines
+
+### When to Use
+
+- **Context Actions**: Actions related to a specific item
+- **User Menus**: Account settings and profile options
+- **Bulk Actions**: Actions for selected items
+- **Quick Actions**: Frequently used commands
+- **Create Menus**: "Add new" type actions
+
+### Do's
+
+✅ Use for 3+ related actions
+✅ Show icons for common actions (delete, edit, etc.)
+✅ Place trigger near the content it affects
+✅ Highlight destructive actions in red
+✅ Group related items together
+✅ Close menu after selection (default behavior)
+✅ Provide keyboard shortcuts for power users
+
+### Don'ts
+
+❌ Don't use for primary navigation
+❌ Don't hide critical actions in overflow menus
+❌ Don't use for single actions (use button instead)
+❌ Don't nest menus too deeply (max 1 level)
+❌ Don't make menus too long (> 10 items)
+❌ Don't use for form inputs (use Select instead)
+❌ Don't remove focus indicators
+
+## Examples
+
+### With Click Handler
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button>Actions</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={() => console.log('Edit')}>
+      Edit
+    </DropdownMenuItem>
+    <DropdownMenuItem onSelect={() => console.log('Delete')}>
+      Delete
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+### With Next.js Link
+
+```tsx
+import Link from 'next/link'
+
+<DropdownMenuItem asChild>
+  <Link href="/profile">
+    <User className="mr-2 h-4 w-4" />
+    View Profile
+  </Link>
+</DropdownMenuItem>
+```
+
+### Controlled Menu
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<DropdownMenu open={open} onOpenChange={setOpen}>
+  <DropdownMenuTrigger asChild>
+    <Button>Controlled Menu</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={() => {
+      console.log('Action performed')
+      setOpen(false)
+    }}>
+      Action
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+### With Confirmation
+
+```tsx
+<DropdownMenuItem
+  onSelect={(e) => {
+    e.preventDefault() // Keep menu open
+    if (confirm('Are you sure?')) {
+      handleDelete()
+    }
+  }}
+  className="text-red-600"
+>
+  <Trash2 className="mr-2 h-4 w-4" />
+  Delete
+</DropdownMenuItem>
+```
+
+### Custom Divider
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuItem>Edit</DropdownMenuItem>
+  <DropdownMenuItem>Duplicate</DropdownMenuItem>
+  <div className="h-px bg-gray-200 my-1" />
+  <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+</DropdownMenuContent>
+```
+
+### With Keyboard Shortcuts
+
+```tsx
+<DropdownMenuItem>
+  <div className="flex items-center justify-between w-full">
+    <span>Copy</span>
+    <span className="text-xs text-gray-500">⌘C</span>
+  </div>
+</DropdownMenuItem>
+```
+
+### Nested Content
+
+```tsx
+<DropdownMenuItem>
+  <div className="flex flex-col gap-1">
+    <div className="font-medium">Export Data</div>
+    <div className="text-xs text-gray-500">
+      Download your data in CSV format
+    </div>
+  </div>
+</DropdownMenuItem>
+```
+
+## Advanced Patterns
+
+### Context Menu for Cards
+
+```tsx
+function HerbCard({ herb }) {
+  return (
+    <div className="card relative">
+      <div className="absolute top-2 right-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => addToFavorites(herb.id)}>
+              <Star className="mr-2 h-4 w-4" />
+              Add to Favorites
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => shareHerb(herb.id)}>
+              <Share className="mr-2 h-4 w-4" />
+              Share
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      {/* Card content */}
+    </div>
+  )
+}
+```
+
+### Table Row Actions
+
+```tsx
+<tr>
+  <td>Ginseng</td>
+  <td>Adaptogen</td>
+  <td>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>View Details</DropdownMenuItem>
+        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </td>
+</tr>
+```
+
+### Bulk Actions
+
+```tsx
+const [selectedIds, setSelectedIds] = useState([])
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button disabled={selectedIds.length === 0}>
+      Actions ({selectedIds.length})
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={() => exportSelected(selectedIds)}>
+      Export Selected
+    </DropdownMenuItem>
+    <DropdownMenuItem onSelect={() => archiveSelected(selectedIds)}>
+      Archive Selected
+    </DropdownMenuItem>
+    <DropdownMenuItem
+      className="text-red-600"
+      onSelect={() => deleteSelected(selectedIds)}
+    >
+      Delete Selected
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+### With Loading State
+
+```tsx
+const [isLoading, setIsLoading] = useState(false)
+
+<DropdownMenuItem
+  disabled={isLoading}
+  onSelect={async () => {
+    setIsLoading(true)
+    await performAction()
+    setIsLoading(false)
+  }}
+>
+  {isLoading ? (
+    <>
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      Processing...
+    </>
+  ) : (
+    <>
+      <Download className="mr-2 h-4 w-4" />
+      Export
+    </>
+  )}
+</DropdownMenuItem>
+```
+
+## Positioning
+
+### Align Options
+
+```tsx
+// Align to start (default)
+<DropdownMenuContent align="start">
+
+// Center aligned
+<DropdownMenuContent align="center">
+
+// Align to end
+<DropdownMenuContent align="end">
+```
+
+### Side Options
+
+```tsx
+// Bottom (default)
+<DropdownMenuContent side="bottom">
+
+// Top
+<DropdownMenuContent side="top">
+
+// Right
+<DropdownMenuContent side="right">
+
+// Left
+<DropdownMenuContent side="left">
+```
+
+## Styling
+
+### Custom Width
+
+```tsx
+<DropdownMenuContent className="w-56">
+  {/* Items */}
+</DropdownMenuContent>
+```
+
+### Max Height with Scroll
+
+```tsx
+<DropdownMenuContent className="max-h-96 overflow-y-auto">
+  {/* Many items */}
+</DropdownMenuContent>
+```
+
+## Related Components
+
+- **Select**: For form input selection
+- **Popover**: For non-menu contextual content
+- **Context Menu**: Right-click context menus
+- **Command**: Command palette with search
+
+## Technical Details
+
+### Component Architecture
+
+- **Radix UI Primitive**: Built on `@radix-ui/react-dropdown-menu`
+- **Portal Rendering**: Rendered at document root
+- **Focus Trap**: Traps focus within menu when open
+- **Collision Detection**: Auto-adjusts position to stay in viewport
+- **Animation**: Smooth enter/exit animations
+
+### Performance
+
+- **Lazy Rendering**: Content only rendered when open
+- **Event Delegation**: Efficient event handling
+- **Portal**: Avoids layout thrashing
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu'
+
+test('opens menu on click', async () => {
+  const user = userEvent.setup()
+  render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>Item 1</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+
+  await user.click(screen.getByText('Open'))
+  expect(screen.getByText('Item 1')).toBeVisible()
+})
+
+test('calls onSelect when item clicked', async () => {
+  const onSelect = jest.fn()
+  const user = userEvent.setup()
+
+  render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onSelect={onSelect}>Action</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+
+  await user.click(screen.getByText('Open'))
+  await user.click(screen.getByText('Action'))
+
+  expect(onSelect).toHaveBeenCalled()
+})
+
+test('closes on escape', async () => {
+  const user = userEvent.setup()
+  render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>Item</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+
+  await user.click(screen.getByText('Open'))
+  await user.keyboard('{Escape}')
+
+  expect(screen.queryByText('Item')).not.toBeInTheDocument()
+})
+```

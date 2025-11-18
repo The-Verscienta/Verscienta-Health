@@ -1,0 +1,420 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/blocks'
+import * as PaginationStories from './pagination.stories'
+
+<Meta of={PaginationStories} />
+
+# Pagination
+
+A smart pagination component for navigating large datasets with intelligent ellipsis and accessibility features.
+
+<Primary />
+
+## Overview
+
+The Pagination component provides an accessible way to navigate through paginated content. It automatically shows ellipsis for large page counts and integrates seamlessly with Next.js routing.
+
+## Usage
+
+```tsx
+import { Pagination } from '@/components/ui/pagination'
+
+export default function Example() {
+  return (
+    <Pagination
+      currentPage={1}
+      totalPages={10}
+      baseUrl="/herbs"
+    />
+  )
+}
+```
+
+## Examples
+
+### Few Pages
+
+When there are only a few pages, all page numbers are shown.
+
+<Canvas of={PaginationStories.FewPages} />
+
+### First Page
+
+Previous button is disabled on the first page.
+
+<Canvas of={PaginationStories.FirstPage} />
+
+### Middle Page
+
+Shows pages around the current page with ellipsis for gaps.
+
+<Canvas of={PaginationStories.MiddlePage} />
+
+### Last Page
+
+Next button is disabled on the last page.
+
+<Canvas of={PaginationStories.LastPage} />
+
+## Ellipsis Handling
+
+### Many Pages - Start
+
+<Canvas of={PaginationStories.ManyPages} />
+
+### Many Pages - Middle
+
+<Canvas of={PaginationStories.ManyPagesMiddle} />
+
+### Many Pages - End
+
+<Canvas of={PaginationStories.ManyPagesNearEnd} />
+
+## Edge Cases
+
+### Single Page
+
+No pagination controls needed when there's only one page.
+
+<Canvas of={PaginationStories.SinglePage} />
+
+### Two Pages
+
+Simple pagination for minimal content.
+
+<Canvas of={PaginationStories.TwoPages} />
+
+### Large Datasets
+
+Handles hundreds of pages efficiently.
+
+<Canvas of={PaginationStories.LargeDataset} />
+
+## Real-World Examples
+
+### Herbs Listing
+
+<Canvas of={PaginationStories.HerbsExample} />
+
+### Formulas Listing
+
+<Canvas of={PaginationStories.FormulasExample} />
+
+### Search Results
+
+<Canvas of={PaginationStories.SearchResults} />
+
+### With Results Per Page
+
+<Canvas of={PaginationStories.WithResultsPerPage} />
+
+## Props
+
+<Controls />
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `currentPage` | `number` | Yes | The currently active page (1-indexed) |
+| `totalPages` | `number` | Yes | Total number of pages |
+| `baseUrl` | `string` | Yes | Base URL for pagination links (e.g., '/herbs') |
+| `className` | `string` | No | Additional CSS classes |
+
+## Accessibility
+
+- **Keyboard Navigation**: All links are keyboard-accessible with Tab
+- **ARIA Labels**:
+  - Previous/Next buttons have descriptive labels
+  - Current page is marked with `aria-current="page"`
+  - Disabled buttons have `aria-disabled`
+- **Screen Readers**: Clear announcements of page numbers and navigation state
+- **Focus Indicators**: Visible focus rings for keyboard users
+- **Semantic HTML**: Uses `<nav>` with proper `aria-label`
+
+### Best Practices
+
+- Always provide meaningful context above pagination ("Showing 1-12 of 348 herbs")
+- Don't hide pagination on mobile (make it scrollable if needed)
+- Keep pagination visible even on the last page
+- Use consistent page sizes throughout the application
+- Consider infinite scroll for mobile-first experiences
+- Show total results count for transparency
+
+## Design Guidelines
+
+### When to Use
+
+- **Large Datasets**: More than 20-30 items
+- **Server Pagination**: When not all data is loaded at once
+- **SEO-Friendly**: When pages need to be crawlable
+- **Controlled Navigation**: When users need to jump to specific pages
+- **Performance**: When loading all items would be slow
+
+### Do's
+
+✅ Show total number of items/pages
+✅ Indicate current page clearly
+✅ Disable previous/next when at boundaries
+✅ Use consistent page sizes
+✅ Provide clear visual hierarchy
+✅ Make links keyboard-accessible
+✅ Show "Showing X-Y of Z" context
+
+### Don'ts
+
+❌ Don't hide pagination controls completely
+❌ Don't use tiny touch targets on mobile
+❌ Don't reload the entire page (use client routing)
+❌ Don't forget to update URL for bookmarking
+❌ Don't use pagination for < 20 items (show all)
+❌ Don't make page numbers too small to read
+❌ Don't forget focus management after navigation
+
+## Algorithm
+
+The pagination algorithm shows:
+
+1. Always first page
+2. Ellipsis if current page > 3
+3. Current page ± 1
+4. Ellipsis if current page < total - 2
+5. Always last page (if total > 1)
+
+**Examples**:
+- Pages 1-5: `[1] [2] [3] [4] [5]`
+- Page 1 of 10: `[1] [2] ... [10]`
+- Page 5 of 10: `[1] ... [4] [5] [6] ... [10]`
+- Page 9 of 10: `[1] ... [8] [9] [10]`
+
+## Implementation
+
+### Server Component (Next.js App Router)
+
+```tsx
+import { Pagination } from '@/components/ui/pagination'
+
+interface PageProps {
+  searchParams: { page?: string }
+}
+
+export default async function HerbsPage({ searchParams }: PageProps) {
+  const page = Number(searchParams.page) || 1
+  const perPage = 12
+
+  // Fetch data from database
+  const { herbs, total } = await getHerbs({ page, perPage })
+
+  return (
+    <div>
+      <div className="grid grid-cols-3 gap-4">
+        {herbs.map((herb) => (
+          <HerbCard key={herb.id} herb={herb} />
+        ))}
+      </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={Math.ceil(total / perPage)}
+        baseUrl="/herbs"
+      />
+    </div>
+  )
+}
+```
+
+### Client Component with State
+
+```tsx
+'use client'
+
+import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+export default function HerbsList() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('page')) || 1
+
+  const handlePageChange = (page: number) => {
+    router.push(`/herbs?page=${page}`)
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  return (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      baseUrl="/herbs"
+    />
+  )
+}
+```
+
+### With Query Parameters
+
+```tsx
+// Preserve other query params when paginating
+const searchParams = useSearchParams()
+const params = new URLSearchParams(searchParams)
+
+const getPageUrl = (page: number) => {
+  params.set('page', String(page))
+  return `${baseUrl}?${params.toString()}`
+}
+
+// Use custom URLs in pagination links
+```
+
+### Scroll to Top After Navigation
+
+```tsx
+'use client'
+
+import { useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+
+export default function PaginatedList() {
+  const searchParams = useSearchParams()
+  const page = searchParams.get('page')
+
+  useEffect(() => {
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [page])
+
+  return <Pagination {...props} />
+}
+```
+
+## Advanced Patterns
+
+### Infinite Scroll Hybrid
+
+```tsx
+// Show pagination on desktop, infinite scroll on mobile
+<div className="hidden md:block">
+  <Pagination {...props} />
+</div>
+
+<div className="md:hidden">
+  <InfiniteScroll onLoadMore={loadMore} />
+</div>
+```
+
+### Jump to Page Input
+
+```tsx
+const [jumpPage, setJumpPage] = useState('')
+
+<div className="flex items-center gap-2">
+  <Pagination {...props} />
+  <div className="flex items-center gap-1">
+    <span className="text-sm">Go to:</span>
+    <input
+      type="number"
+      min={1}
+      max={totalPages}
+      value={jumpPage}
+      onChange={(e) => setJumpPage(e.target.value)}
+      className="w-16 rounded border px-2 py-1 text-sm"
+    />
+    <button
+      onClick={() => {
+        const page = Number(jumpPage)
+        if (page >= 1 && page <= totalPages) {
+          router.push(`${baseUrl}?page=${page}`)
+        }
+      }}
+    >
+      Go
+    </button>
+  </div>
+</div>
+```
+
+### Loading State
+
+```tsx
+const [isLoading, setIsLoading] = useState(false)
+
+<div className={isLoading ? 'opacity-50 pointer-events-none' : ''}>
+  <Pagination {...props} />
+</div>
+```
+
+## Customization
+
+### Compact Spacing
+
+```tsx
+<Pagination className="space-x-1" {...props} />
+```
+
+### Larger Size
+
+```tsx
+<Pagination className="space-x-3 scale-110" {...props} />
+```
+
+### Custom Colors
+
+Modify the component to accept a `variant` prop for different color schemes.
+
+## Performance Considerations
+
+- **URL State**: Page is stored in URL for bookmarking/sharing
+- **Client Routing**: Uses Next.js Link for fast navigation
+- **Minimal Re-renders**: Only active page changes between navigations
+- **SEO-Friendly**: Each page has a unique URL
+
+## Related Components
+
+- **InfiniteScroll**: For mobile-friendly continuous loading
+- **Table**: Often used together with pagination
+- **Skeleton**: Show loading state while fetching new page
+- **Select**: For "results per page" dropdown
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ iOS Safari 14+
+- ✅ Android Chrome 90+
+
+## Testing
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import { Pagination } from './pagination'
+
+test('shows all pages when few', () => {
+  render(<Pagination currentPage={1} totalPages={5} baseUrl="/herbs" />)
+
+  expect(screen.getByText('1')).toBeInTheDocument()
+  expect(screen.getByText('2')).toBeInTheDocument()
+  expect(screen.getByText('3')).toBeInTheDocument()
+  expect(screen.getByText('4')).toBeInTheDocument()
+  expect(screen.getByText('5')).toBeInTheDocument()
+})
+
+test('shows ellipsis for many pages', () => {
+  render(<Pagination currentPage={5} totalPages={50} baseUrl="/herbs" />)
+
+  const ellipsis = screen.getAllByRole('separator', { hidden: true })
+  expect(ellipsis.length).toBeGreaterThan(0)
+})
+
+test('disables previous on first page', () => {
+  render(<Pagination currentPage={1} totalPages={10} baseUrl="/herbs" />)
+
+  const prev = screen.getByLabelText('Go to previous page')
+  expect(prev).toHaveAttribute('aria-disabled', 'true')
+})
+
+test('disables next on last page', () => {
+  render(<Pagination currentPage={10} totalPages={10} baseUrl="/herbs" />)
+
+  const next = screen.getByLabelText('Go to next page')
+  expect(next).toHaveAttribute('aria-disabled', 'true')
+})
+```

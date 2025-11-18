@@ -9,8 +9,8 @@
  * - Local API: ~5-20ms per request (direct database access)
  */
 
-import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getPayload } from 'payload'
 
 // Payload CMS response format (native)
 export interface PaginatedResponse<T> {
@@ -32,10 +32,26 @@ export interface SingleDocResponse<T> {
 }
 
 // Import generated types from PayloadCMS
-export type { Herb, Formula, Condition, Practitioner, Modality, Symptom, Review } from '@/types/payload-types'
+export type {
+  Condition,
+  Formula,
+  Herb,
+  Modality,
+  Practitioner,
+  Review,
+  Symptom,
+} from '@/types/payload-types'
 
 // Re-export for backward compatibility
-import type { Herb, Formula, Condition, Practitioner, Modality, Symptom, Review } from '@/types/payload-types'
+import type {
+  Condition,
+  Formula,
+  Herb,
+  Modality,
+  Practitioner,
+  Review,
+  Symptom,
+} from '@/types/payload-types'
 
 // ==================== HERBS ====================
 
@@ -85,10 +101,7 @@ export async function getHerbBySlug(slug: string): Promise<Herb | null> {
   const result = await payload.find({
     collection: 'herbs',
     where: {
-      and: [
-        { slug: { equals: slug } },
-        { _status: { equals: 'published' } },
-      ],
+      and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
     },
     limit: 1,
     depth: 2, // Populate relationships (related formulas, conditions, etc.)
@@ -128,9 +141,7 @@ export async function getFormulas(
 ): Promise<PaginatedResponse<Formula>> {
   const payload = await getPayload({ config })
 
-  const whereConditions: any[] = [
-    { _status: { equals: 'published' } },
-  ]
+  const whereConditions: any[] = [{ _status: { equals: 'published' } }]
 
   if (query) {
     whereConditions.push({
@@ -164,10 +175,7 @@ export async function getFormulaBySlug(slug: string): Promise<Formula | null> {
   const result = await payload.find({
     collection: 'formulas',
     where: {
-      and: [
-        { slug: { equals: slug } },
-        { _status: { equals: 'published' } },
-      ],
+      and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
     },
     limit: 1,
     depth: 2,
@@ -188,9 +196,7 @@ export async function getConditions(
 ): Promise<PaginatedResponse<Condition>> {
   const payload = await getPayload({ config })
 
-  const whereConditions: any[] = [
-    { _status: { equals: 'published' } },
-  ]
+  const whereConditions: any[] = [{ _status: { equals: 'published' } }]
 
   if (query) {
     whereConditions.push({
@@ -224,10 +230,7 @@ export async function getConditionBySlug(slug: string): Promise<Condition | null
   const result = await payload.find({
     collection: 'conditions',
     where: {
-      and: [
-        { slug: { equals: slug } },
-        { _status: { equals: 'published' } },
-      ],
+      and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
     },
     limit: 1,
     depth: 2,
@@ -285,10 +288,7 @@ export async function getPractitionerBySlug(slug: string): Promise<Practitioner 
   const result = await payload.find({
     collection: 'practitioners',
     where: {
-      and: [
-        { slug: { equals: slug } },
-        { _status: { equals: 'published' } },
-      ],
+      and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
     },
     limit: 1,
     depth: 2,
@@ -330,10 +330,7 @@ export async function getModalityBySlug(slug: string): Promise<Modality | null> 
   const result = await payload.find({
     collection: 'modalities',
     where: {
-      and: [
-        { slug: { equals: slug } },
-        { _status: { equals: 'published' } },
-      ],
+      and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
     },
     limit: 1,
     depth: 2,
@@ -354,16 +351,11 @@ export async function getSymptoms(
 ): Promise<PaginatedResponse<Symptom>> {
   const payload = await getPayload({ config })
 
-  const whereConditions: any[] = [
-    { _status: { equals: 'published' } },
-  ]
+  const whereConditions: any[] = [{ _status: { equals: 'published' } }]
 
   if (query) {
     whereConditions.push({
-      or: [
-        { title: { contains: query } },
-        { description: { contains: query } },
-      ],
+      or: [{ title: { contains: query } }, { description: { contains: query } }],
     })
   }
 
@@ -468,9 +460,7 @@ export async function searchGlobal(
             and: [
               { _status: { equals: 'published' } },
               {
-                or: [
-                  { title: { contains: query } },
-                ],
+                or: [{ title: { contains: query } }],
               },
             ],
           },
@@ -484,13 +474,10 @@ export async function searchGlobal(
     })
   )
 
-  return results.reduce(
-    (acc, { collection, docs }) => {
-      acc[collection] = docs
-      return acc
-    },
-    {} as any
-  )
+  return results.reduce((acc, { collection, docs }) => {
+    acc[collection] = docs
+    return acc
+  }, {} as any)
 }
 
 /**

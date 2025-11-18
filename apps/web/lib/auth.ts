@@ -4,10 +4,10 @@ import { createAuthMiddleware } from 'better-auth/api'
 import { magicLink, twoFactor } from 'better-auth/plugins'
 import { accountLockout } from './account-lockout'
 import { sendMagicLinkEmail } from './email'
+import { syncBetterAuthUserToPayload } from './payload-auth-sync'
 import { prisma } from './prisma'
 import { securityMonitor } from './security-monitor'
 import { sessionLogger } from './session-logger'
-import { syncBetterAuthUserToPayload } from './payload-auth-sync'
 
 /**
  * Better Auth Configuration
