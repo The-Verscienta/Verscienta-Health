@@ -205,13 +205,9 @@ export function middleware(request: NextRequest) {
 /**
  * Middleware configuration
  *
- * Runs on all /api/* routes except Payload admin
+ * Runs on all /api/* routes
+ * (Payload admin routes are excluded via route checks in the middleware function)
  */
 export const config = {
-  matcher: [
-    '/api/:path*',
-    // Exclude Payload admin panel
-    '!/(payload)',
-    '!/admin/(.*)',
-  ],
+  matcher: '/api/:path*',
 }

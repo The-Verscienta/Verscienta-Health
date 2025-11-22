@@ -30,7 +30,7 @@ import { headers } from 'next/headers'
  * GET /api/admin/perenual-sync
  * Get current Perenual import status and progress
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Check authentication
     const session = await auth.api.getSession({
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
  * POST /api/admin/perenual-sync
  * Manually trigger Perenual import
  */
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   try {
     // Check authentication
     const session = await auth.api.getSession({
@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
  * OPTIONS /api/admin/perenual-sync
  * CORS preflight
  */
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(_req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {

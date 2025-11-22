@@ -409,7 +409,6 @@ export async function importPerenualData(): Promise<void> {
 
     // Update state
     const newPage = state.currentPage + PAGES_PER_RUN
-    const totalProcessed = state.herbsCreated + state.herbsUpdated + totalCreated + totalUpdated
 
     await updateImportState(payload, {
       currentPage: newPage,
@@ -473,6 +472,19 @@ export async function getPerenualImportProgress(payload: any): Promise<{
   herbsUpdated: number
   lastRunAt: Date
   estimatedPlantsRemaining: number
+  circuitState: string
+  apiStats: {
+    totalRequests: number
+    successfulRequests: number
+    failedRequests: number
+    retriedRequests: number
+    totalRetries: number
+    timeoutErrors: number
+    networkErrors: number
+    rateLimitErrors: number
+    circuitBreakerTrips: number
+    avgResponseTimeMs: number
+  }
 }> {
   const state = await getImportState(payload)
 
@@ -481,6 +493,10 @@ export async function getPerenualImportProgress(payload: any): Promise<{
   const plantsProcessed = (state.currentPage - 1) * PAGE_SIZE
   const plantsRemaining = Math.max(0, estimatedTotal - plantsProcessed)
 
+  // Get client stats
+  const apiStats = perenualClient.getStats()
+  const circuitState = perenualClient.getCircuitState()
+
   return {
     currentPage: state.currentPage,
     isComplete: state.isComplete,
@@ -488,6 +504,8 @@ export async function getPerenualImportProgress(payload: any): Promise<{
     herbsUpdated: state.herbsUpdated,
     lastRunAt: state.lastRunAt,
     estimatedPlantsRemaining: plantsRemaining,
+    circuitState,
+    apiStats,
   }
 }
 

@@ -21,7 +21,7 @@
  * @see lib/perenual/client-enhanced.ts for implementation details
  */
 
-import { cacheKeys, cacheTTL, getCombinedCache, setCombinedCache } from '@/lib/cache'
+import { cacheTTL, getCombinedCache, setCombinedCache } from '@/lib/cache'
 
 const PERENUAL_API_URL = process.env.PERENUAL_API_URL || 'https://perenual.com/api'
 const PERENUAL_API_KEY = process.env.PERENUAL_API_KEY
@@ -117,14 +117,8 @@ export interface PerenualSpeciesDetail extends PerenualSpecies {
   invasive: boolean
   tropical: boolean
   indoor: boolean
-  care_level: string
   rare: boolean
   rare_level: string
-  tropical: boolean
-  cuisine: boolean
-  medicinal: boolean
-  poisonous_to_humans: number
-  poisonous_to_pets: number
   origin: string[]
   family: string | null
   scientific_name: string[]

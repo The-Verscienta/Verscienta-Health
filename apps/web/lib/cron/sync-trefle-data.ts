@@ -222,7 +222,7 @@ export async function syncTrefleData(): Promise<void> {
     let errorCount = 0
 
     for (const herb of herbs.docs) {
-      const result = await syncSingleHerbWithTrefle(payload, herb.id)
+      const result = await syncSingleHerbWithTrefle(payload, String(herb.id))
 
       if (result.success) {
         if (result.message.startsWith('Skipped')) {

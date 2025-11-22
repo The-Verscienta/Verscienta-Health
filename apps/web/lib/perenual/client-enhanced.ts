@@ -14,7 +14,7 @@
  * @see https://perenual.com/docs/api
  */
 
-import { cacheKeys, cacheTTL, getCombinedCache, setCombinedCache } from '@/lib/cache'
+import { cacheTTL, getCombinedCache, setCombinedCache } from '@/lib/cache'
 
 // ============================================================================
 // Configuration & Constants
@@ -69,24 +69,59 @@ export interface PerenualSpeciesDetail extends PerenualSpecies {
     min: string
     max: string
   }
+  hardiness_location: {
+    full_url: string
+    full_iframe: string
+  }
+  watering_general_benchmark: {
+    value: string
+    unit: string
+  }
+  watering_period: string | null
+  volume_water_requirement: {
+    value: number
+    unit: string
+  } | null
+  depth_water_requirement: {
+    value: number
+    unit: string
+  } | null
   care_level: string
   growth_rate: string
   maintenance: string
+  care_guides: string
   soil: string[]
   pest_susceptibility: string[]
+  pest_susceptibility_api: string
+  flowers: boolean
+  flowering_season: string | null
+  flower_color: string
+  cones: boolean
+  fruits: boolean
+  edible_fruit: boolean
+  edible_fruit_taste_profile: string
+  fruit_nutritional_value: string
+  fruit_color: string[]
+  harvest_season: string | null
+  leaf: boolean
+  leaf_color: string[]
+  edible_leaf: boolean
+  cuisine: boolean
   medicinal: boolean
   poisonous_to_humans: number
   poisonous_to_pets: number
   description: string
   drought_tolerant: boolean
   salt_tolerant: boolean
+  thorny: boolean
+  invasive: boolean
+  tropical: boolean
   indoor: boolean
-  edible_fruit: boolean
-  edible_leaf: boolean
+  rare: boolean
+  rare_level: string
   family: string | null
   origin: string[]
   synonyms: string[]
-  watering_period: string | null
 }
 
 export interface PerenualListResponse {
@@ -734,6 +769,74 @@ export class PerenualClientEnhanced {
     params.per_page = options.pageSize || DEFAULT_PAGE_SIZE
 
     return this.makeRequest<PerenualListResponse>('/species-list', params)
+  }
+
+  /**
+   * Helper: Extract enrichment data from species detail
+   */
+  extractEnrichmentData(species: PerenualSpeciesDetail): {
+    perenualId: number
+    lastPerenualSyncAt: Date
+    family: string | null
+    origin: string[]
+    medicinal: boolean
+    edible: boolean
+    poisonous: {
+      toHumans: boolean
+      toPets: boolean
+    }
+    attracts: string[]
+    cultivation: {
+      cycle: string
+      watering: string
+      wateringPeriod: string | null
+      sunlight: string[]
+      soil: string[]
+      hardiness: {
+        min: string
+        max: string
+      }
+      maintenance: string
+      careLevel: string
+      growthRate: string
+      indoor: boolean
+      droughtTolerant: boolean
+      saltTolerant: boolean
+      propagation: string[]
+      pruningMonths: string[]
+    }
+    imageUrl: string | null
+  } {
+    return {
+      perenualId: species.id,
+      lastPerenualSyncAt: new Date(),
+      family: species.family,
+      origin: species.origin || [],
+      medicinal: species.medicinal || false,
+      edible: species.edible_fruit || species.edible_leaf || false,
+      poisonous: {
+        toHumans: species.poisonous_to_humans === 1,
+        toPets: species.poisonous_to_pets === 1,
+      },
+      attracts: species.attracts || [],
+      cultivation: {
+        cycle: species.cycle || 'Unknown',
+        watering: species.watering || 'Average',
+        wateringPeriod: species.watering_period,
+        sunlight: species.sunlight || [],
+        soil: species.soil || [],
+        hardiness: species.hardiness || { min: '0', max: '0' },
+        maintenance: species.maintenance || 'Unknown',
+        careLevel: species.care_level || 'Unknown',
+        growthRate: species.growth_rate || 'Unknown',
+        indoor: species.indoor || false,
+        droughtTolerant: species.drought_tolerant || false,
+        saltTolerant: species.salt_tolerant || false,
+        propagation: species.propagation || [],
+        pruningMonths: [], // Extract from care guide if needed
+      },
+      imageUrl: species.default_image?.regular_url || null,
+    }
   }
 }
 

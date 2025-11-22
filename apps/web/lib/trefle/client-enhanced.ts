@@ -23,7 +23,7 @@ import type {
   TrefleListResponse,
   TrefleError,
 } from './client'
-import { cacheKeys, cacheTTL, getCombinedCache, setCombinedCache } from '@/lib/cache'
+import { cacheTTL, getCombinedCache, setCombinedCache } from '@/lib/cache'
 
 const TREFLE_API_URL = process.env.TREFLE_API_URL || 'https://trefle.io/api/v1'
 const TREFLE_API_KEY = process.env.TREFLE_API_KEY

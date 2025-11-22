@@ -37,7 +37,7 @@ export {
   validateScientificName,
   enrichHerbWithTrefle,
   type TreflePlant,
-  TreflePlantDetail,
+  type TreflePlantDetail,
   type TrefleListResponse,
   type TrefleError,
 } from './client'

@@ -327,7 +327,6 @@ export async function importTrefleData(): Promise<void> {
 
     // Update state
     const newPage = state.currentPage + PAGES_PER_RUN
-    const totalProcessed = state.herbsCreated + state.herbsUpdated + totalCreated + totalUpdated
 
     await updateImportState(payload, {
       currentPage: newPage,

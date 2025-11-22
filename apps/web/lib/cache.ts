@@ -145,6 +145,7 @@ export const cacheTTL = {
   practitioner: 1800, // 30 minutes
   aiSymptomAnalysis: 86400, // 24 hours (symptoms don't change frequently)
   searchResults: 900, // 15 minutes
+  algoliaSync: 86400, // 24 hours (for Algolia sync operations)
 }
 
 // Generic cache get/set utilities
