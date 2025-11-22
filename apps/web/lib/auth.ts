@@ -3,7 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { createAuthMiddleware } from 'better-auth/api'
 import { magicLink, twoFactor } from 'better-auth/plugins'
 import { accountLockout } from './account-lockout'
-import { sendMagicLinkEmail } from './email'
+import { sendMagicLinkEmail, sendWelcomeEmail } from './email'
 import { syncBetterAuthUserToPayload } from './payload-auth-sync'
 import { prisma } from './prisma'
 import { securityMonitor } from './security-monitor'
@@ -201,6 +201,22 @@ export const auth = betterAuth({
             })
           } catch (error) {
             console.error('[Session] Logging error (sign-in):', error)
+          }
+        }
+
+        // Handle successful sign-ups (new user registration)
+        if (ctx.path === '/sign-up/email' && ctx.method === 'POST' && session && user) {
+          try {
+            // Send welcome email to new user
+            await sendWelcomeEmail({
+              email: user.email,
+              firstName: (user as any).firstName,
+            })
+
+            console.log(`[Auth] Welcome email sent to new user: ${user.email}`)
+          } catch (error) {
+            // Don't fail registration if email fails
+            console.error('[Auth] Failed to send welcome email:', error)
           }
         }
 

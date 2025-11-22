@@ -738,11 +738,111 @@ export const Herbs: CollectionConfig = {
         },
       ],
     },
+
+    // Evidence-Based Citations (PubMed/NCCIH)
+    {
+      name: 'citations',
+      type: 'array',
+      admin: {
+        description: 'Scientific research citations from PubMed (auto-updated)',
+      },
+      fields: [
+        {
+          name: 'pmid',
+          type: 'text',
+          required: true,
+          unique: true,
+          admin: {
+            description: 'PubMed ID',
+          },
+        },
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'abstract',
+          type: 'textarea',
+        },
+        {
+          name: 'authors',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'Comma-separated author list',
+          },
+        },
+        {
+          name: 'journal',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'publicationDate',
+          type: 'date',
+          required: true,
+        },
+        {
+          name: 'doi',
+          type: 'text',
+          admin: {
+            description: 'Digital Object Identifier',
+          },
+        },
+        {
+          name: 'pmcid',
+          type: 'text',
+          admin: {
+            description: 'PubMed Central ID (for full-text access)',
+          },
+        },
+        {
+          name: 'publicationType',
+          type: 'json',
+          admin: {
+            description: 'Publication types (Clinical Trial, Meta-Analysis, etc.)',
+          },
+        },
+        {
+          name: 'url',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'PubMed URL',
+          },
+        },
+        {
+          name: 'relevanceScore',
+          type: 'number',
+          min: 0,
+          max: 100,
+          admin: {
+            description: 'Quality/relevance score (0-100)',
+          },
+        },
+        {
+          name: 'lastFetched',
+          type: 'date',
+          admin: {
+            description: 'When this citation was last fetched from PubMed',
+          },
+        },
+      ],
+    },
+    {
+      name: 'citationsLastUpdated',
+      type: 'date',
+      admin: {
+        description: 'Last time citations were updated from PubMed',
+        readOnly: true,
+      },
+    },
   ],
   timestamps: true,
   hooks: {
     beforeChange: [
-      async ({ data, req, operation }) => {
+      async ({ data, operation }) => {
         // Auto-generate slug if not provided
         if (operation === 'create' && !data.slug && data.title) {
           data.slug = data.title

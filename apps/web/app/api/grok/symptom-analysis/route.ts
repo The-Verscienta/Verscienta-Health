@@ -103,13 +103,14 @@ export async function POST(request: NextRequest) {
     const sessionId = session?.session?.id
 
     // Rate limiting: 10 requests per hour per user (HIPAA: Prevent abuse)
-    const rateLimitId = userId || request.ip || 'anonymous'
+    const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const rateLimitId = userId || clientIp || 'anonymous'
     const rateLimit = await checkRateLimit(rateLimitId, 'ai')
 
     if (!rateLimit.success) {
       console.warn('[RATE LIMIT] Symptom checker abuse attempt:', {
         userId: userId || 'anonymous',
-        ip: request.ip,
+        ip: clientIp,
         limit: rateLimit.limit,
         remaining: rateLimit.remaining,
         reset: new Date(rateLimit.reset).toISOString(),

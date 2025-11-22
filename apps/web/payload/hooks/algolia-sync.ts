@@ -116,8 +116,6 @@ function transformDocumentForAlgolia(doc: any, collectionName: string): any {
  */
 export const algoliaAfterChangeHook: CollectionAfterChangeHook = async ({
   doc,
-  req,
-  operation,
   collection,
 }) => {
   try {
@@ -165,7 +163,6 @@ export const algoliaAfterChangeHook: CollectionAfterChangeHook = async ({
  */
 export const algoliaAfterDeleteHook: CollectionAfterDeleteHook = async ({
   doc,
-  req,
   collection,
 }) => {
   try {

@@ -31,7 +31,8 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || process.env.DATABASE_URI,
     },
     migrationDir: path.resolve(dirname, 'payload/migrations'),
-    push: true, // Temporarily enable auto-push to create schema (disable in production)
+    // Enable push in development, disable in production for safety
+    push: process.env.NODE_ENV !== 'production',
   }),
 
   // Admin Panel
@@ -92,13 +93,28 @@ export default buildConfig({
 
   // CORS configuration
   cors: [
+    // Base web URLs
     process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    process.env.NEXT_PUBLIC_APP_URL || '',
+    process.env.NEXT_PUBLIC_WEB_URL || '',
     process.env.PAYLOAD_PUBLIC_SERVER_URL || '',
+    // Mobile app origins
+    'capacitor://localhost',
+    'ionic://localhost',
+    'http://localhost', // iOS simulator
+    'http://localhost:8100', // Ionic dev server
+    'verscienta-app://', // Custom app scheme
+    // Development
+    ...(process.env.NODE_ENV === 'development' ? ['http://localhost:*'] : []),
+    // Additional origins from env
+    ...(process.env.ALLOWED_CORS_ORIGINS?.split(',').map((o) => o.trim()) || []),
   ].filter(Boolean),
 
   // CSRF configuration
   csrf: [
     process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    process.env.NEXT_PUBLIC_APP_URL || '',
+    process.env.NEXT_PUBLIC_WEB_URL || '',
     process.env.PAYLOAD_PUBLIC_SERVER_URL || '',
   ].filter(Boolean),
 

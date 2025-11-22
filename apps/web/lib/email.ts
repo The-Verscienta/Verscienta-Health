@@ -1,13 +1,23 @@
+import { render } from '@react-email/render'
 import { Resend } from 'resend'
+import {
+  EmailVerificationEmail,
+  MagicLinkEmail,
+  MfaBackupCodesEmail,
+  MfaSetupEmail,
+  PasswordResetEmail,
+  SecurityAlertEmail,
+  WelcomeEmail,
+} from '../emails'
 
 /**
  * Email Service Utility
  *
- * Centralized email sending using Resend
+ * Centralized email sending using Resend with React Email templates
  * Used for:
- * - Magic link authentication
+ * - Authentication (magic link, password reset, email verification)
+ * - Account notifications (welcome, security alerts, MFA)
  * - Contact form submissions
- * - Account notifications
  * - Admin alerts
  */
 
@@ -23,10 +33,13 @@ function getResendClient(): Resend {
 }
 
 // Default sender email
-const FROM_EMAIL = process.env.EMAIL_FROM || 'Verscienta Health <noreply@verscientahealth.com>'
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Verscienta Health <noreply@verscienta.com>'
 
 // Admin email for notifications
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@verscientahealth.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@verscienta.com'
+
+// App URL for links in emails
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
 /**
  * Check if email service is configured
@@ -81,43 +94,265 @@ export async function sendEmail({
 }
 
 /**
+ * Send welcome email to new users
+ */
+export async function sendWelcomeEmail({
+  email,
+  firstName,
+}: {
+  email: string
+  firstName?: string
+}): Promise<void> {
+  if (!isEmailConfigured()) {
+    console.warn('Email service not configured. Would send welcome email to:', email)
+    return
+  }
+
+  try {
+    const html = await render(WelcomeEmail({ firstName, email, appUrl: APP_URL }))
+
+    await sendEmail({
+      to: email,
+      subject: 'Welcome to Verscienta Health!',
+      html,
+    })
+  } catch (error) {
+    console.error('Failed to send welcome email:', error)
+    throw error
+  }
+}
+
+/**
+ * Send email verification link
+ */
+export async function sendEmailVerification({
+  email,
+  verificationUrl,
+  expiresInMinutes = 5,
+}: {
+  email: string
+  verificationUrl: string
+  expiresInMinutes?: number
+}): Promise<void> {
+  if (!isEmailConfigured()) {
+    console.warn('Email service not configured. Verification URL:', verificationUrl)
+    return
+  }
+
+  try {
+    const html = await render(
+      EmailVerificationEmail({
+        email,
+        verificationUrl,
+        expiresInMinutes,
+      })
+    )
+
+    await sendEmail({
+      to: email,
+      subject: 'Verify your Verscienta Health email address',
+      html,
+    })
+  } catch (error) {
+    console.error('Failed to send email verification:', error)
+    throw error
+  }
+}
+
+/**
  * Send magic link authentication email
  */
 export async function sendMagicLinkEmail({
   email,
   url,
+  expiresInMinutes = 5,
 }: {
   email: string
   url: string
+  expiresInMinutes?: number
 }): Promise<void> {
   if (!isEmailConfigured()) {
     console.warn('Email service not configured. Magic link URL:', url)
     return
   }
 
-  await getResendClient().emails.send({
-    from: FROM_EMAIL,
-    to: email,
-    subject: 'Sign in to Verscienta Health',
-    html: `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #2d5016;">Sign in to Verscienta Health</h1>
-        <p>Click the button below to sign in to your account. This link will expire in 5 minutes.</p>
-        <div style="margin: 32px 0;">
-          <a href="${url}" style="background-color: #2d5016; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-            Sign In
-          </a>
-        </div>
-        <p style="color: #666; font-size: 14px;">
-          If you didn't request this email, you can safely ignore it.
-        </p>
-        <p style="color: #666; font-size: 14px;">
-          Or copy and paste this URL into your browser:<br>
-          <a href="${url}" style="color: #2d5016;">${url}</a>
-        </p>
-      </div>
-    `,
-  })
+  try {
+    const html = await render(
+      MagicLinkEmail({
+        email,
+        magicLinkUrl: url,
+        expiresInMinutes,
+      })
+    )
+
+    await sendEmail({
+      to: email,
+      subject: 'Sign in to Verscienta Health',
+      html,
+    })
+  } catch (error) {
+    console.error('Failed to send magic link email:', error)
+    throw error
+  }
+}
+
+/**
+ * Send password reset email
+ */
+export async function sendPasswordResetEmail({
+  email,
+  resetUrl,
+  expiresInMinutes = 15,
+  ipAddress,
+}: {
+  email: string
+  resetUrl: string
+  expiresInMinutes?: number
+  ipAddress?: string
+}): Promise<void> {
+  if (!isEmailConfigured()) {
+    console.warn('Email service not configured. Reset URL:', resetUrl)
+    return
+  }
+
+  try {
+    const html = await render(
+      PasswordResetEmail({
+        email,
+        resetUrl,
+        expiresInMinutes,
+        ipAddress,
+      })
+    )
+
+    await sendEmail({
+      to: email,
+      subject: 'Reset your Verscienta Health password',
+      html,
+    })
+  } catch (error) {
+    console.error('Failed to send password reset email:', error)
+    throw error
+  }
+}
+
+/**
+ * Send MFA setup confirmation email
+ */
+export async function sendMfaSetupEmail({
+  email,
+  firstName,
+}: {
+  email: string
+  firstName?: string
+}): Promise<void> {
+  if (!isEmailConfigured()) {
+    console.warn('Email service not configured. Would send MFA setup email to:', email)
+    return
+  }
+
+  try {
+    const html = await render(
+      MfaSetupEmail({
+        email,
+        firstName,
+        setupDate: new Date(),
+      })
+    )
+
+    await sendEmail({
+      to: email,
+      subject: 'Two-factor authentication enabled',
+      html,
+    })
+  } catch (error) {
+    console.error('Failed to send MFA setup email:', error)
+    throw error
+  }
+}
+
+/**
+ * Send MFA backup codes email
+ */
+export async function sendMfaBackupCodesEmail({
+  email,
+  firstName,
+  backupCodes,
+}: {
+  email: string
+  firstName?: string
+  backupCodes: string[]
+}): Promise<void> {
+  if (!isEmailConfigured()) {
+    console.warn('Email service not configured. Would send MFA backup codes to:', email)
+    return
+  }
+
+  try {
+    const html = await render(
+      MfaBackupCodesEmail({
+        email,
+        firstName,
+        backupCodes,
+      })
+    )
+
+    await sendEmail({
+      to: email,
+      subject: 'Your two-factor authentication backup codes',
+      html,
+    })
+  } catch (error) {
+    console.error('Failed to send MFA backup codes email:', error)
+    throw error
+  }
+}
+
+/**
+ * Send security alert email
+ */
+export async function sendSecurityAlertEmail({
+  email,
+  firstName,
+  alertType,
+  details,
+}: {
+  email: string
+  firstName?: string
+  alertType: 'suspicious_login' | 'password_changed' | 'account_lockout' | 'unusual_activity'
+  details: {
+    timestamp: Date
+    ipAddress?: string
+    location?: string
+    device?: string
+    action?: string
+  }
+}): Promise<void> {
+  if (!isEmailConfigured()) {
+    console.warn('Email service not configured. Would send security alert to:', email)
+    return
+  }
+
+  try {
+    const html = await render(
+      SecurityAlertEmail({
+        email,
+        firstName,
+        alertType,
+        details,
+        appUrl: APP_URL,
+      })
+    )
+
+    await sendEmail({
+      to: email,
+      subject: `Security alert for your Verscienta Health account`,
+      html,
+    })
+  } catch (error) {
+    console.error('Failed to send security alert email:', error)
+    throw error
+  }
 }
 
 /**
@@ -213,7 +448,8 @@ export async function sendAdminNotification({
 }
 
 /**
- * Send security alert email
+ * Legacy function - redirects to sendSecurityAlertEmail
+ * @deprecated Use sendSecurityAlertEmail instead
  */
 export async function sendSecurityAlert({
   type,
@@ -224,6 +460,9 @@ export async function sendSecurityAlert({
   message: string
   details: Record<string, unknown>
 }): Promise<void> {
+  console.warn('sendSecurityAlert is deprecated. Use sendSecurityAlertEmail instead.')
+
+  // For now, send to admin
   if (!isEmailConfigured()) {
     console.warn('Email service not configured. Security alert:', {
       type,

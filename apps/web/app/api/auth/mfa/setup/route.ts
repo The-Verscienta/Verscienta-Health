@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
+import { sendMfaBackupCodesEmail, sendMfaSetupEmail } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
 import { sessionLogger } from '@/lib/session-logger'
 
@@ -75,6 +76,26 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
       userEmail: session.user.email,
     })
+
+    // Send MFA setup confirmation email
+    try {
+      await sendMfaSetupEmail({
+        email: session.user.email,
+        firstName: (session.user as any).firstName,
+      })
+
+      // Send backup codes email
+      await sendMfaBackupCodesEmail({
+        email: session.user.email,
+        firstName: (session.user as any).firstName,
+        backupCodes,
+      })
+
+      console.log(`[MFA] Setup and backup codes emails sent to: ${session.user.email}`)
+    } catch (error) {
+      // Don't fail MFA setup if email fails
+      console.error('[MFA] Failed to send setup emails:', error)
+    }
 
     return NextResponse.json({
       success: true,

@@ -7,23 +7,23 @@ import { REST_DELETE, REST_GET, REST_PATCH, REST_POST } from '@payloadcms/next/r
 import type { NextRequest } from 'next/server'
 
 // Wrap to handle async params in Next.js 15.4+
-async function handleGET(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
-  const resolvedParams = await params
+async function handleGET(_req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  await params // Resolve params for Next.js 15.4+ compatibility
   return REST_GET(config)
 }
 
-async function handlePOST(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
-  const resolvedParams = await params
+async function handlePOST(_req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  await params // Resolve params for Next.js 15.4+ compatibility
   return REST_POST(config)
 }
 
-async function handleDELETE(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
-  const resolvedParams = await params
+async function handleDELETE(_req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  await params // Resolve params for Next.js 15.4+ compatibility
   return REST_DELETE(config)
 }
 
-async function handlePATCH(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
-  const resolvedParams = await params
+async function handlePATCH(_req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  await params // Resolve params for Next.js 15.4+ compatibility
   return REST_PATCH(config)
 }
 

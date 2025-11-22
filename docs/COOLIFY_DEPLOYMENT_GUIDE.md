@@ -94,88 +94,177 @@ verscienta.com     → Next.js + PayloadCMS (apps/web)
 In Coolify, go to your application → **Environment Variables** → Add these:
 
 ```bash
-# ============================================
-# DATABASE
-# ============================================
+# =============================================================================
+# DATABASE (PostgreSQL 17+)
+# =============================================================================
 DATABASE_URL=postgresql://user:password@postgres-host:5432/verscienta_health
-DATABASE_URI=postgresql://user:password@postgres-host:5432/verscienta_health
 
-# ============================================
-# PAYLOAD CMS
-# ============================================
+# Database provider (for encryption detection)
+# Options: 'aws-rds', 'digitalocean', 'supabase', 'render', 'custom'
+DATABASE_PROVIDER=custom
+
+# Database Encryption at Rest (HIPAA - optional for self-hosted)
+# Generate with: openssl rand -base64 32
+# DATABASE_ENCRYPTION_KEY=your-32-char-encryption-key
+
+# =============================================================================
+# PAYLOAD CMS (Integrated into Next.js)
+# =============================================================================
 PAYLOAD_SECRET=generate-a-secure-random-string-here-min-32-chars
 PAYLOAD_PUBLIC_SERVER_URL=https://verscienta.com
 
-# ============================================
+# =============================================================================
 # NEXT.JS
-# ============================================
+# =============================================================================
 NEXT_PUBLIC_APP_URL=https://verscienta.com
+NEXT_PUBLIC_WEB_URL=https://verscienta.com
 NEXT_PUBLIC_CMS_URL=https://verscienta.com
-NEXT_PUBLIC_SITE_URL=https://verscienta.com
 NODE_ENV=production
+PORT=3000
 
-# ============================================
+# =============================================================================
 # BETTER AUTH (Authentication)
-# ============================================
+# =============================================================================
 BETTER_AUTH_SECRET=generate-another-secure-random-string-here
 BETTER_AUTH_URL=https://verscienta.com
 ENCRYPTION_KEY=generate-32-char-encryption-key-here
 
-# ============================================
-# CLOUDFLARE R2 (Media Storage)
-# ============================================
+# OAuth Providers (Optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+
+# =============================================================================
+# CLOUDFLARE R2 (Media Storage - S3 Compatible)
+# =============================================================================
 CLOUDFLARE_R2_ACCOUNT_ID=your-cloudflare-account-id
 CLOUDFLARE_R2_ACCESS_KEY_ID=your-r2-access-key
 CLOUDFLARE_R2_SECRET_ACCESS_KEY=your-r2-secret-key
 CLOUDFLARE_R2_BUCKET_NAME=verscienta-media
 CLOUDFLARE_R2_PUBLIC_URL=https://media.verscienta.com
 
-# ============================================
-# CLOUDFLARE IMAGES (Image Optimization)
-# ============================================
+# Alternative names (compatibility)
 CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
+CLOUDFLARE_ACCESS_KEY_ID=your-r2-access-key
+CLOUDFLARE_SECRET_ACCESS_KEY=your-r2-secret-key
+CLOUDFLARE_BUCKET_NAME=verscienta-media
+CLOUDFLARE_ACCOUNT_HASH=your-account-hash-for-image-urls
+
+# =============================================================================
+# CLOUDFLARE IMAGES (Image Optimization & CDN)
+# =============================================================================
+CLOUDFLARE_IMAGES_ENABLED=true
 CLOUDFLARE_IMAGES_API_TOKEN=your-images-api-token
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
+NEXT_PUBLIC_CLOUDFLARE_IMAGES_DELIVERY_URL=https://imagedelivery.net
 
-# ============================================
-# ALGOLIA (Search)
-# ============================================
+# =============================================================================
+# ALGOLIA (Search Service)
+# =============================================================================
 ALGOLIA_APP_ID=your-algolia-app-id
 ALGOLIA_ADMIN_API_KEY=your-algolia-admin-key
+NEXT_PUBLIC_ALGOLIA_APP_ID=your-algolia-app-id
 NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY=your-algolia-search-key
-NEXT_PUBLIC_ALGOLIA_INDEX_NAME=verscienta_health
 
-# ============================================
-# REDIS (Rate Limiting & Caching)
-# ============================================
+# =============================================================================
+# REDIS / DRAGONFLYDB (Rate Limiting, Caching, Sessions)
+# =============================================================================
+# Option 1: Connection URL (Recommended)
 REDIS_URL=redis://redis-host:6379
-UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
-UPSTASH_REDIS_REST_TOKEN=your-redis-token
+# For TLS: REDIS_URL=rediss://redis-host:6379
 
-# ============================================
-# SENTRY (Error Tracking) - Optional
-# ============================================
-SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
-SENTRY_ORG=your-org
-SENTRY_PROJECT=verscienta-health
-NEXT_PUBLIC_SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+# Option 2: Individual parameters (fallback)
+REDIS_HOST=redis-host
+REDIS_PORT=6379
+REDIS_PASSWORD=your-redis-password
+REDIS_DB=0
 
-# ============================================
-# EMAIL (Notifications)
-# ============================================
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=587
-SMTP_USER=apikey
-SMTP_PASS=your-sendgrid-api-key
-SMTP_FROM_EMAIL=noreply@verscienta.com
-SMTP_FROM_NAME=Verscienta Health
+# TLS/SSL Configuration (Production)
+REDIS_TLS=false
+REDIS_TLS_MIN_VERSION=TLSv1.2
+REDIS_TLS_MAX_VERSION=TLSv1.3
 
-# ============================================
-# API KEYS (External Services)
-# ============================================
+# Certificate Monitoring
+CERT_MONITOR_ENABLED=true
+CERT_EXPIRY_WARNING_DAYS=30
+CERT_EXPIRY_CRITICAL_DAYS=7
+ALERT_EMAIL=admin@verscienta.com
+
+# Upstash Redis (Alternative - serverless)
+# UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
+# UPSTASH_REDIS_REST_TOKEN=your-redis-token
+
+# =============================================================================
+# EMAIL SERVICE (Resend)
+# =============================================================================
+RESEND_API_KEY=re_your_resend_api_key_here
+RESEND_FROM_EMAIL=noreply@verscienta.com
+
+# Admin notifications
+ADMIN_EMAIL=admin@verscienta.com
+
+# =============================================================================
+# GROK AI (xAI - Symptom Checker & AI Features)
+# =============================================================================
+GROK_API_KEY=your-grok-api-key-from-x-ai
+# Optional overrides:
+# GROK_API_URL=https://api.x.ai/v1/chat/completions
+# GROK_MODEL=grok-beta
+
+# =============================================================================
+# CLOUDFLARE TURNSTILE (Bot Protection)
+# =============================================================================
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key
+TURNSTILE_SECRET_KEY=your-turnstile-secret-key
+
+# =============================================================================
+# EXTERNAL API KEYS (Botanical Data)
+# =============================================================================
 TREFLE_API_KEY=your-trefle-api-key
 PERENUAL_API_KEY=your-perenual-api-key
-GROK_API_KEY=your-grok-api-key
+
+# =============================================================================
+# SENTRY (Error Tracking) - Optional but Recommended
+# =============================================================================
+SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+NEXT_PUBLIC_SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+SENTRY_ORG=your-sentry-org
+SENTRY_PROJECT=verscienta-health
+# SENTRY_AUTH_TOKEN=your-sentry-auth-token-for-source-maps
+
+# =============================================================================
+# SECURITY & HIPAA COMPLIANCE
+# =============================================================================
+# Session timeouts
+SESSION_TIMEOUT=86400  # 24 hours for general sessions
+PHI_SESSION_TIMEOUT=900  # 15 minutes idle timeout for PHI pages
+
+# MFA requirements
+REQUIRE_MFA_FOR_ADMIN=true
+REQUIRE_MFA_FOR_PHI_ACCESS=false  # Recommended: true in production
+
+# =============================================================================
+# MOBILE APP CONFIGURATION (Future)
+# =============================================================================
+MOBILE_OFFLINE_MODE=false
+MOBILE_PUSH_NOTIFICATIONS=false
+# MIN_SUPPORTED_APP_VERSION=1.0.0
+
+# CORS for mobile apps (comma-separated)
+# ALLOWED_CORS_ORIGINS=verscienta-app://,capacitor://localhost
+
+# =============================================================================
+# ANALYTICS (Optional)
+# =============================================================================
+# Automatically enabled on Vercel
+# NEXT_PUBLIC_VERCEL_ANALYTICS_ID=your-analytics-id
+
+# =============================================================================
+# DEVELOPMENT & DEBUGGING (Production: Keep Disabled)
+# =============================================================================
+# DEBUG=payload:*
+# NEXT_TELEMETRY_DISABLED=1
 ```
 
 ### 3. Generate Secure Secrets

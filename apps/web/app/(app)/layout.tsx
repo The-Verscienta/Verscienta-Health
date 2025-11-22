@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { Crimson_Pro, Inter, JetBrains_Mono } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import './globals.css'

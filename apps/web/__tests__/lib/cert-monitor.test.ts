@@ -16,9 +16,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { checkCertificateExpiration, getRedisHostPort, isTLSEnabled } from '../../lib/cert-monitor'
 
-// Mock environment variables
-const _originalEnv = process.env
-
 describe('Certificate Expiration Monitoring', () => {
   beforeEach(() => {
     vi.resetModules()
