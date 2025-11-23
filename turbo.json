@@ -21,7 +21,7 @@
     },
     "type-check": {
       "outputs": [],
-      "dependsOn": []
+      "dependsOn": ["^build"]
     },
     "test": {
       "outputs": ["coverage/**"],
