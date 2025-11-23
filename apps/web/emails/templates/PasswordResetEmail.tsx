@@ -55,7 +55,7 @@ export function PasswordResetEmail({
       <Hr style={divider} />
 
       <Section style={warningBox}>
-        <Paragraph color="warning" style={{ margin: 0 }}>
+        <Paragraph color="warning">
           ⚠️ <strong>Security Notice:</strong> If you didn't request a password reset, please ignore
           this email and ensure your account is secure. Your password will not be changed unless you
           click the link above.

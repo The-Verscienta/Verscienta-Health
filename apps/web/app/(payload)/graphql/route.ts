@@ -7,14 +7,14 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
 // Placeholder routes - GraphQL API temporarily disabled
-export const GET = async (req: NextRequest) => {
+export const GET = async (_req: NextRequest) => {
   return NextResponse.json(
     { error: 'GraphQL API temporarily disabled. Use REST API at /api/* instead.' },
     { status: 503 }
   )
 }
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (_req: NextRequest) => {
   return NextResponse.json(
     { error: 'GraphQL API temporarily disabled. Use REST API at /api/* instead.' },
     { status: 503 }

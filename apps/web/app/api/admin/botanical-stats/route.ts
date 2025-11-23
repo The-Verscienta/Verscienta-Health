@@ -108,7 +108,7 @@ function calculateHealthScore(stats: any): {
  * GET /api/admin/botanical-stats
  * Get comprehensive statistics for both APIs
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Check authentication
     const session = await auth.api.getSession({
@@ -355,7 +355,7 @@ export async function POST(req: NextRequest) {
  * OPTIONS /api/admin/botanical-stats
  * CORS preflight
  */
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(_req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {

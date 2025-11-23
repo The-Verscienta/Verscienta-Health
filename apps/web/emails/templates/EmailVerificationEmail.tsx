@@ -13,13 +13,11 @@ import { Paragraph } from '../components/Paragraph'
  */
 
 export interface EmailVerificationEmailProps {
-  email: string
   verificationUrl: string
   expiresInMinutes?: number
 }
 
 export function EmailVerificationEmail({
-  email,
   verificationUrl,
   expiresInMinutes = 5,
 }: EmailVerificationEmailProps) {

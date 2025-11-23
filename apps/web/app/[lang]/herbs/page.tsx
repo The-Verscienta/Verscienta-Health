@@ -4,7 +4,7 @@ import { HerbCard } from '@/components/cards/HerbCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
-import { getHerbs, type Herb } from '@/lib/payload-api'
+import { getHerbs } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
 

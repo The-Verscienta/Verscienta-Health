@@ -30,7 +30,7 @@ import { headers } from 'next/headers'
  * GET /api/admin/trefle-sync
  * Get current Trefle sync status and progress
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Check authentication
     const session = await auth.api.getSession({
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
  * POST /api/admin/trefle-sync
  * Manually trigger Trefle sync
  */
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   try {
     // Check authentication
     const session = await auth.api.getSession({
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
  * OPTIONS /api/admin/trefle-sync
  * CORS preflight
  */
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(_req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {

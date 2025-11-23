@@ -107,7 +107,7 @@ function calculateHealthScore(stats: any): {
  * GET /api/health/perenual
  * Public health check endpoint
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Check if Perenual is configured
     if (!perenualClientEnhanced.isConfigured()) {
@@ -184,7 +184,7 @@ export async function GET(req: NextRequest) {
  * OPTIONS /api/health/perenual
  * CORS preflight
  */
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(_req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {

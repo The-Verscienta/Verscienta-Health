@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cacheKeys, cacheTTL, withCache } from '@/lib/cache'
 import { getHerbBySlug } from '@/lib/strapi-api'
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
 

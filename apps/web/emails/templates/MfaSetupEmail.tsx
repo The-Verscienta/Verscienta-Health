@@ -1,4 +1,4 @@
-import { Hr, Img, Section } from '@react-email/components'
+import { Hr, Section } from '@react-email/components'
 import * as React from 'react'
 import { Heading } from '../components/Heading'
 import { Layout } from '../components/Layout'
@@ -31,7 +31,7 @@ export function MfaSetupEmail({ email, firstName, setupDate }: MfaSetupEmailProp
   return (
     <Layout preview="Two-factor authentication enabled on your account">
       <Section style={successBanner}>
-        <Paragraph style={{ margin: 0, color: '#ffffff', textAlign: 'center' }}>
+        <Paragraph>
           ✓ Security Enhanced
         </Paragraph>
       </Section>
@@ -46,10 +46,10 @@ export function MfaSetupEmail({ email, firstName, setupDate }: MfaSetupEmailProp
       </Paragraph>
 
       <Section style={infoBox}>
-        <Paragraph style={{ margin: '0 0 8px' }}>
+        <Paragraph>
           <strong>Account:</strong> {email}
         </Paragraph>
-        <Paragraph style={{ margin: 0 }}>
+        <Paragraph>
           <strong>Enabled on:</strong> {formattedDate}
         </Paragraph>
       </Section>
@@ -81,7 +81,7 @@ export function MfaSetupEmail({ email, firstName, setupDate }: MfaSetupEmailProp
       <Hr style={divider} />
 
       <Section style={warningBox}>
-        <Paragraph color="warning" style={{ margin: 0 }}>
+        <Paragraph color="warning">
           ⚠️ <strong>Security Alert:</strong> If you didn't enable 2FA on your account, please
           contact our support team immediately.
         </Paragraph>

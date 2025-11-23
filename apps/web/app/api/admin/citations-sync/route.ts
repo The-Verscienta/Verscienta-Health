@@ -62,7 +62,7 @@ interface CitationSyncResponse {
  */
 async function isAdmin(req: NextRequest): Promise<boolean> {
   try {
-    const payload = await getPayload({ config })
+    await getPayload({ config })
 
     // Get user from request (implementation depends on your auth setup)
     // This is a placeholder - adjust based on your auth implementation

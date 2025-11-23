@@ -13,13 +13,11 @@ import { Paragraph } from '../components/Paragraph'
  */
 
 export interface MagicLinkEmailProps {
-  email: string
   magicLinkUrl: string
   expiresInMinutes?: number
 }
 
 export function MagicLinkEmail({
-  email,
   magicLinkUrl,
   expiresInMinutes = 5,
 }: MagicLinkEmailProps) {

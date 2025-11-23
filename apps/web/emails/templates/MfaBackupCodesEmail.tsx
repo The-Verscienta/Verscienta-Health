@@ -1,4 +1,4 @@
-import { Code, Hr, Section } from '@react-email/components'
+import { Hr, Section, Text } from '@react-email/components'
 import * as React from 'react'
 import { Heading } from '../components/Heading'
 import { Layout } from '../components/Layout'
@@ -32,7 +32,7 @@ export function MfaBackupCodesEmail({ email, firstName, backupCodes }: MfaBackup
       </Paragraph>
 
       <Section style={warningBox}>
-        <Paragraph style={{ margin: 0 }} color="warning">
+        <Paragraph color="warning">
           ⚠️ <strong>Important:</strong> Store these codes in a secure location. You'll need them if
           you lose access to your authenticator app.
         </Paragraph>
@@ -40,9 +40,9 @@ export function MfaBackupCodesEmail({ email, firstName, backupCodes }: MfaBackup
 
       <Section style={codesBox}>
         {backupCodes.map((code, index) => (
-          <Code key={index} style={codeStyle}>
+          <Text key={index} style={codeStyle}>
             {code}
-          </Code>
+          </Text>
         ))}
       </Section>
 
@@ -63,7 +63,7 @@ export function MfaBackupCodesEmail({ email, firstName, backupCodes }: MfaBackup
       <Hr style={divider} />
 
       <Section style={infoBox}>
-        <Paragraph style={{ margin: 0 }}>
+        <Paragraph>
           💡 <strong>Pro Tip:</strong> Print these codes and store them in a safe place, or save them
           in a secure password manager.
         </Paragraph>
@@ -72,7 +72,7 @@ export function MfaBackupCodesEmail({ email, firstName, backupCodes }: MfaBackup
       <Hr style={divider} />
 
       <Section style={dangerBox}>
-        <Paragraph style={{ margin: 0 }} color="error">
+        <Paragraph color="error">
           🚨 <strong>Security Warning:</strong> Do not share these codes with anyone. Verscienta
           Health support will never ask for your backup codes.
         </Paragraph>

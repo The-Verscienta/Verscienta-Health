@@ -4,7 +4,7 @@ import { ConditionCard } from '@/components/cards/ConditionCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
-import { type Condition, getConditions } from '@/lib/payload-api'
+import { getConditions } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
 

@@ -48,7 +48,7 @@ export function SecurityAlertEmail({
   return (
     <Layout preview={`Security alert for your Verscienta Health account`}>
       <Section style={alertBanner}>
-        <Paragraph style={{ margin: 0, color: '#ffffff', textAlign: 'center', fontSize: '18px' }}>
+        <Paragraph>
           🚨 {alertMessages.title}
         </Paragraph>
       </Section>
@@ -61,26 +61,26 @@ export function SecurityAlertEmail({
 
       <Section style={detailsBox}>
         <Heading level={3}>Activity Details</Heading>
-        <Paragraph style={{ margin: '0 0 8px' }}>
+        <Paragraph>
           <strong>Time:</strong> {formattedDate}
         </Paragraph>
         {details.ipAddress && (
-          <Paragraph style={{ margin: '0 0 8px' }}>
+          <Paragraph>
             <strong>IP Address:</strong> {details.ipAddress}
           </Paragraph>
         )}
         {details.location && (
-          <Paragraph style={{ margin: '0 0 8px' }}>
+          <Paragraph>
             <strong>Location:</strong> {details.location}
           </Paragraph>
         )}
         {details.device && (
-          <Paragraph style={{ margin: '0 0 8px' }}>
+          <Paragraph>
             <strong>Device:</strong> {details.device}
           </Paragraph>
         )}
         {details.action && (
-          <Paragraph style={{ margin: 0 }}>
+          <Paragraph>
             <strong>Action:</strong> {details.action}
           </Paragraph>
         )}
@@ -91,10 +91,10 @@ export function SecurityAlertEmail({
       <Heading level={2}>Was This You?</Heading>
 
       <Section style={actionBox}>
-        <Paragraph style={{ margin: '0 0 16px' }}>
+        <Paragraph>
           <strong>If this was you:</strong> No action is needed. Your account is secure.
         </Paragraph>
-        <Paragraph style={{ margin: 0 }}>
+        <Paragraph>
           <strong>If this wasn't you:</strong> Take immediate action to secure your account:
         </Paragraph>
       </Section>
