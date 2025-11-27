@@ -138,15 +138,6 @@ const nextConfig: NextConfig = {
       level: 'error', // Only show errors, suppress warnings
     }
 
-    // Optimize cache for large generated files
-    if (config.cache && typeof config.cache === 'object') {
-      config.cache = {
-        ...config.cache,
-        // Increase maxGeneratedCodeSize for auto-generated files
-        maxGeneratedCodeSize: 500 * 1024, // 500KB (up from default ~200KB)
-      }
-    }
-
     return config
   },
 }
