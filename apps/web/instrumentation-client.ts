@@ -26,3 +26,6 @@ Sentry.init({
 
   environment: process.env.NODE_ENV,
 })
+
+// Export hook to instrument router transitions
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart
