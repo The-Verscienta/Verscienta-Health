@@ -128,6 +128,27 @@ const nextConfig: NextConfig = {
     // Temporarily ignore ESLint during builds to speed up deployment
     ignoreDuringBuilds: true,
   },
+
+  // Webpack configuration
+  webpack: (config, { isServer }) => {
+    // Suppress webpack cache warning for large auto-generated files (Payload types, Prisma client)
+    // These files are generated and we cannot control their size
+    config.infrastructureLogging = {
+      ...config.infrastructureLogging,
+      level: 'error', // Only show errors, suppress warnings
+    }
+
+    // Optimize cache for large generated files
+    if (config.cache && typeof config.cache === 'object') {
+      config.cache = {
+        ...config.cache,
+        // Increase maxGeneratedCodeSize for auto-generated files
+        maxGeneratedCodeSize: 500 * 1024, // 500KB (up from default ~200KB)
+      }
+    }
+
+    return config
+  },
 }
 
 // Wrap with Payload, next-intl, PWA plugin, Bundle Analyzer, and Sentry
