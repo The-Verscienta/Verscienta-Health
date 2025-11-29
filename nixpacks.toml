@@ -19,12 +19,11 @@ cmds = [
 ]
 
 [start]
-cmd = "node apps/web/.next/standalone/apps/web/server.js"
+cmd = "HOSTNAME=0.0.0.0 node apps/web/.next/standalone/apps/web/server.js"
 
 [variables]
 NODE_ENV = "production"
 PORT = "3000"
-HOSTNAME = "0.0.0.0"
 NEXT_TELEMETRY_DISABLED = "1"
 # Suppress Sentry warnings (we've migrated to instrumentation files)
 SENTRY_SUPPRESS_INSTRUMENTATION_FILE_WARNING = "1"
