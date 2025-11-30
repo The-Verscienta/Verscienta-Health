@@ -20,10 +20,15 @@ const nextConfig: NextConfig = {
   // This is required for Docker containers and Coolify deployments
   output: process.env.NODE_ENV === 'production' ? 'standalone' : undefined,
 
-  // Include Sentry dependencies in standalone output
+  // Include dependencies and assets in standalone output
   // Sentry uses dynamic requires that Next.js can't automatically trace
+  // next-intl messages need to be included for runtime translation loading
   outputFileTracingIncludes: {
-    '/': ['./node_modules/@sentry/**/*', './node_modules/require-in-the-middle/**/*'],
+    '/': [
+      './node_modules/@sentry/**/*',
+      './node_modules/require-in-the-middle/**/*',
+      './messages/**/*', // Include translation files for next-intl
+    ],
   },
 
   // Disable source maps in production for smaller bundles and faster builds

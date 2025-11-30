@@ -14,8 +14,13 @@ cmds = [
   "pnpm --filter @verscienta/api-client build || true",
   "pnpm --filter web exec prisma generate",
   "pnpm --filter web build",
+  "echo '=== Copying static files and public directory ==='",
   "cp -r apps/web/public apps/web/.next/standalone/apps/web/public",
-  "cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/static"
+  "cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/static",
+  "echo '=== Verifying standalone build structure ==='",
+  "ls -la apps/web/.next/standalone/apps/web/ || echo 'Directory not found'",
+  "ls -la apps/web/.next/standalone/apps/web/.next/ || echo '.next directory not found'",
+  "ls -la apps/web/.next/standalone/apps/web/.next/static/ | head -20 || echo 'static directory not found'"
 ]
 
 [start]
