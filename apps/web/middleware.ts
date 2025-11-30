@@ -1,14 +1,20 @@
+import createMiddleware from 'next-intl/middleware'
 import { NextRequest, NextResponse } from 'next/server'
+import { routing } from './i18n/routing'
 
 /**
- * Next.js Middleware for API Versioning and CORS
+ * Next.js Middleware for i18n, API Versioning and CORS
  *
  * Handles:
- * 1. API versioning (redirects /api/v1/* to appropriate handlers)
- * 2. CORS for mobile apps and third-party origins
- * 3. Security headers
- * 4. Rate limiting headers
+ * 1. Internationalization (locale detection and routing)
+ * 2. API versioning (redirects /api/v1/* to appropriate handlers)
+ * 3. CORS for mobile apps and third-party origins
+ * 4. Security headers
+ * 5. Rate limiting headers
  */
+
+// Create i18n middleware
+const intlMiddleware = createMiddleware(routing)
 
 /**
  * Parse allowed CORS origins from environment variable
@@ -175,39 +181,56 @@ function addApiVersionHeaders(response: NextResponse, pathname: string): NextRes
  * Main middleware function
  */
 export function middleware(request: NextRequest) {
-  const allowedOrigins = getAllowedOrigins()
+  const { pathname } = request.nextUrl
 
-  // Handle preflight OPTIONS requests
-  if (request.method === 'OPTIONS') {
-    const response = new NextResponse(null, { status: 204 })
-    return applyCorsHeaders(response, request, allowedOrigins)
+  // For API routes: handle versioning, CORS, and security headers
+  if (pathname.startsWith('/api/')) {
+    const allowedOrigins = getAllowedOrigins()
+
+    // Handle preflight OPTIONS requests
+    if (request.method === 'OPTIONS') {
+      const response = new NextResponse(null, { status: 204 })
+      return applyCorsHeaders(response, request, allowedOrigins)
+    }
+
+    // Handle API versioning (rewrites)
+    const versionedResponse = handleApiVersioning(request)
+    if (versionedResponse) {
+      // Apply CORS to versioned response
+      return applyCorsHeaders(versionedResponse, request, allowedOrigins)
+    }
+
+    // Continue to route handler
+    const response = NextResponse.next()
+
+    // Apply CORS headers
+    applyCorsHeaders(response, request, allowedOrigins)
+
+    // Add API version headers
+    addApiVersionHeaders(response, request.nextUrl.pathname)
+
+    return response
   }
 
-  // Handle API versioning (rewrites)
-  const versionedResponse = handleApiVersioning(request)
-  if (versionedResponse) {
-    // Apply CORS to versioned response
-    return applyCorsHeaders(versionedResponse, request, allowedOrigins)
-  }
-
-  // Continue to route handler
-  const response = NextResponse.next()
-
-  // Apply CORS headers
-  applyCorsHeaders(response, request, allowedOrigins)
-
-  // Add API version headers
-  addApiVersionHeaders(response, request.nextUrl.pathname)
-
-  return response
+  // For all other routes: use i18n middleware for locale handling
+  return intlMiddleware(request)
 }
 
 /**
  * Middleware configuration
  *
- * Runs on all /api/* routes
- * (Payload admin routes are excluded via route checks in the middleware function)
+ * Runs on all routes except:
+ * - Static files (with extensions like .jpg, .css, .js)
+ * - Next.js internal routes (_next/*)
+ * - Manifest and service worker files
+ *
+ * This allows both i18n routing and API handling to work properly
  */
 export const config = {
-  matcher: '/api/:path*',
+  matcher: [
+    // Match all routes except static files and Next.js internals
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|eot)).*)',
+    // Always run middleware on API routes
+    '/api/:path*',
+  ],
 }
