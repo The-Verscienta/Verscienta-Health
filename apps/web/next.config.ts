@@ -308,7 +308,6 @@ const configWithPlugins = withPayload(
       )
     )
   )
-)
 
 // Only apply Sentry in development to avoid standalone build dependency issues
 // TODO: Re-enable in production once pnpm + standalone + Sentry compatibility is resolved
