@@ -19,7 +19,7 @@ cmds = [
 ]
 
 [start]
-cmd = "HOSTNAME=0.0.0.0 node apps/web/.next/standalone/apps/web/server.js"
+cmd = "cd apps/web/.next/standalone && HOSTNAME=0.0.0.0 node apps/web/server.js"
 
 [variables]
 NODE_ENV = "production"
