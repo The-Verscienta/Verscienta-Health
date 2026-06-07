@@ -3,9 +3,11 @@ import { Suspense } from 'react'
 import { PractitionerViewToggle } from '@/components/practitioners/PractitionerViewToggle'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
-import { getPractitioners } from '@/lib/strapi-api'
+import { getPractitioners } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
+
+// View-model consumed by PractitionerViewToggle / PractitionerCard / map.
 interface Practitioner {
   id: string
   practitionerId: string
@@ -31,6 +33,34 @@ interface Practitioner {
   verificationStatus?: 'verified' | 'pending' | 'unverified'
 }
 
+// Raw shape returned by Payload (see Practitioners collection + DB migration).
+// NOTE: the generated payload-types.ts is stale for this collection, so we
+// describe the real runtime shape here and cast at the boundary.
+interface PractitionerDoc {
+  id: number | string
+  practitionerName: string
+  businessName?: string | null
+  slug?: string | null
+  profileImage?: { url?: string | null; alt?: string | null } | number | null
+  modalities?: ({ title?: string | null } | number)[] | null
+  addresses?:
+    | {
+        street?: string | null
+        city?: string | null
+        state?: string | null
+        zipCode?: string | null
+        country?: string | null
+        latitude?: number | null
+        longitude?: number | null
+      }[]
+    | null
+  city?: string | null
+  state?: string | null
+  averageRating?: number | null
+  reviewCount?: number | null
+  verificationStatus?: string | null
+}
+
 interface PractitionersPageProps {
   params: Promise<{ lang: string }>
   searchParams: Promise<{
@@ -49,7 +79,34 @@ export default async function PractitionersPage({ params, searchParams }: Practi
   const page = Number(pageParam) || 1
 
   const { docs, totalPages, totalDocs } = await getPractitioners(page, 12, query)
-  const practitioners = docs as Practitioner[]
+
+  const practitioners: Practitioner[] = (docs as unknown as PractitionerDoc[]).map((p) => {
+    const primary = p.addresses?.[0]
+    const image = p.profileImage && typeof p.profileImage === 'object' ? p.profileImage : undefined
+    return {
+      id: String(p.id),
+      practitionerId: String(p.id),
+      name: p.practitionerName,
+      slug: p.slug ?? '',
+      photo: image?.url ? { url: image.url, alt: image.alt ?? p.practitionerName } : undefined,
+      title: p.businessName ?? undefined,
+      modalities: (p.modalities ?? [])
+        .map((m) => (m && typeof m === 'object' ? (m.title ?? undefined) : undefined))
+        .filter((t): t is string => Boolean(t)),
+      address: {
+        street: primary?.street ?? undefined,
+        city: primary?.city ?? p.city ?? undefined,
+        state: primary?.state ?? p.state ?? undefined,
+        postalCode: primary?.zipCode ?? undefined,
+        country: primary?.country ?? undefined,
+      },
+      latitude: primary?.latitude ?? undefined,
+      longitude: primary?.longitude ?? undefined,
+      averageRating: p.averageRating ?? undefined,
+      reviewCount: p.reviewCount ?? undefined,
+      verificationStatus: p.verificationStatus === 'verified' ? 'verified' : 'pending',
+    }
+  })
 
   return (
     <div className="container-custom py-12">

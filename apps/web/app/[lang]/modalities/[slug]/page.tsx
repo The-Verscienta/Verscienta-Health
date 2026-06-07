@@ -1,68 +1,43 @@
-import { Award, Book, Heart, Target, Users } from 'lucide-react'
+import { Award, Book, Heart, Target } from 'lucide-react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { PractitionerCard } from '@/components/cards/PractitionerCard'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
 import { createJsonLd, getAbsoluteUrl } from '@/lib/json-ld'
-import { getModalityBySlug } from '@/lib/strapi-api'
+import { richTextToPlainText } from '@/lib/lexical'
+import { getModalityBySlug } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
-interface Modality {
-  id: string
+
+// Raw Payload shapes (generated payload-types.ts is stale; see collection config).
+interface ConditionRef {
+  id: number | string
   title: string
-  modalityId: string
-  slug: string
-  description?: string
-  origin?: string
-  overview?: string
-  history?: string
-  category?: string
-  evidenceLevel?: string
-  philosophy?: string
-  keyConcepts?: string[]
-  keyTechniques?: (string | { name: string; description?: string })[]
-  diagnosticMethods?: string[]
-  treatmentApproaches?: string[]
-  benefits?: string[]
-  commonConditionsTreated?: (string | { id: string; title: string; slug: string })[]
-  scientificEvidence?: string
-  contraindications?: string[]
-  trainingRequirements?: string
-  certificationBodies?: {
-    name: string
-    website?: string
-  }[]
-  continuingEducation?: string
-  practitioners?: {
-    practitionerId: string
-    name: string
-    slug: string
-    photo?: {
-      url: string
-      alt: string
-    }
-    title?: string
-    modalities?: string[]
-    address?: {
-      city?: string
-      state?: string
-    }
-    averageRating?: number
-    reviewCount?: number
-    verificationStatus?: 'verified' | 'pending' | 'unverified'
-  }[]
-  resources?: {
-    title: string
-    url: string
-    type: string
-    description?: string
-  }[]
+  slug?: string | null
 }
+
+interface ModalityDoc {
+  id: number | string
+  title: string
+  slug?: string | null
+  description?: unknown
+  category?: string | null
+  benefits?: { benefit?: string | null }[] | null
+  certificationBodies?:
+    | { organizationName?: string | null; website?: string | null; certificationLevel?: string | null }[]
+    | null
+  excelsAt?: { conditionType?: string | null }[] | null
+  treatmentApproaches?: { approach?: string | null; description?: string | null }[] | null
+  trainingRequirements?: unknown
+  relatedConditions?: (ConditionRef | number)[] | null
+}
+
+const isObject = <T,>(v: T | number | null | undefined): v is T =>
+  typeof v === 'object' && v !== null
 
 interface ModalityPageProps {
   params: Promise<{
@@ -77,32 +52,37 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
   // Enable static rendering optimization
   setRequestLocale(lang)
 
-  const { docs } = await getModalityBySlug(slug)
-  const modality = docs[0] as Modality | undefined
+  const modality = (await getModalityBySlug(slug)) as unknown as ModalityDoc | null
 
   if (!modality) {
     notFound()
   }
+
+  const descriptionText = richTextToPlainText(modality.description)
+  const benefits = (modality.benefits ?? [])
+    .map((b) => b.benefit ?? undefined)
+    .filter((b): b is string => Boolean(b))
+  const excelsAt = (modality.excelsAt ?? [])
+    .map((e) => e.conditionType ?? undefined)
+    .filter((e): e is string => Boolean(e))
+  const approaches = (modality.treatmentApproaches ?? []).filter((a) => a.approach)
+  const certBodies = (modality.certificationBodies ?? []).filter((c) => c.organizationName)
+  const trainingText = richTextToPlainText(modality.trainingRequirements)
+  const relatedConditions = (modality.relatedConditions ?? []).filter(isObject<ConditionRef>)
 
   // Prepare JSON-LD structured data for the modality
   const modalitySchema = createJsonLd({
     '@type': 'MedicalWebPage',
     '@id': getAbsoluteUrl(`/modalities/${modality.slug}`),
     name: modality.title,
-    description: modality.description || modality.overview,
+    description: descriptionText,
     url: getAbsoluteUrl(`/modalities/${modality.slug}`),
     about: {
       '@type': 'MedicalTherapy',
       name: modality.title,
-      description: modality.description,
-      ...(modality.benefits && modality.benefits.length > 0
-        ? { benefits: modality.benefits.join(', ') }
-        : {}),
-      ...(modality.contraindications && modality.contraindications.length > 0
-        ? { contraindication: modality.contraindications }
-        : {}),
+      description: descriptionText,
+      ...(benefits.length > 0 ? { benefits: benefits.join(', ') } : {}),
     },
-    ...(modality.scientificEvidence ? { reviewedBy: modality.scientificEvidence } : {}),
   } as any)
 
   return (
@@ -112,19 +92,13 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
 
       {/* Hero Section */}
       <div className="mb-12">
-        <div className="mb-4 flex items-start justify-between">
-          <div className="flex-1">
-            <h1 className="text-earth-900 mb-2 font-serif text-4xl font-bold">{modality.title}</h1>
-            {modality.origin && (
-              <p className="mb-4 text-xl text-gray-600">Origin: {modality.origin}</p>
-            )}
-          </div>
-          <span className="font-mono text-sm text-gray-500">{modality.modalityId}</span>
+        <div className="mb-4">
+          <h1 className="text-earth-900 mb-2 font-serif text-4xl font-bold">{modality.title}</h1>
         </div>
 
         {/* Description */}
-        {modality.description && (
-          <p className="mb-6 text-lg text-gray-700">{modality.description}</p>
+        {descriptionText && (
+          <p className="mb-6 whitespace-pre-line text-lg text-gray-700">{descriptionText}</p>
         )}
 
         {/* Quick Info */}
@@ -135,12 +109,6 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
               <Badge variant="sage">{modality.category}</Badge>
             </div>
           )}
-          {modality.evidenceLevel && (
-            <div>
-              <h3 className="mb-1 text-sm font-semibold text-gray-700">Evidence Level</h3>
-              <Badge variant="gold">{modality.evidenceLevel}</Badge>
-            </div>
-          )}
         </div>
       </div>
 
@@ -148,113 +116,67 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
       <Tabs defaultValue="overview" className="mb-12">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="techniques">Techniques</TabsTrigger>
+          <TabsTrigger value="techniques">Approaches</TabsTrigger>
           <TabsTrigger value="benefits">Benefits</TabsTrigger>
           <TabsTrigger value="training">Training & Certification</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
-          {/* Philosophy */}
-          {modality.philosophy && (
+          {excelsAt.length > 0 ? (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Book className="text-earth-600 mr-2 h-5 w-5" />
-                  Philosophy & Principles
+                  What This Modality Excels At
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700">{modality.philosophy}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* History */}
-          {modality.history && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Historical Background</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">{modality.history}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Key Concepts */}
-          {modality.keyConcepts && modality.keyConcepts.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Key Concepts</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-inside list-disc space-y-2 text-gray-700">
-                  {modality.keyConcepts.map((concept: string, idx: number) => (
-                    <li key={idx}>{concept}</li>
+                <div className="flex flex-wrap gap-2">
+                  {excelsAt.map((item) => (
+                    <Badge key={item} variant="sage">
+                      {item}
+                    </Badge>
                   ))}
-                </ul>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="py-12 text-center text-gray-600">
+                No additional overview information available.
               </CardContent>
             </Card>
           )}
         </TabsContent>
 
-        {/* Techniques Tab */}
+        {/* Approaches Tab */}
         <TabsContent value="techniques" className="space-y-6">
-          {/* Key Techniques */}
-          {modality.keyTechniques && modality.keyTechniques.length > 0 && (
+          {approaches.length > 0 ? (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Target className="text-earth-600 mr-2 h-5 w-5" />
-                  Key Techniques
+                  Treatment Approaches
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {modality.keyTechniques.map((technique, idx) => (
+                  {approaches.map((approach, idx) => (
                     <div key={idx} className="rounded-lg border border-gray-200 p-4">
-                      <h4 className="text-earth-900 mb-2 font-semibold">
-                        {typeof technique === 'string' ? technique : technique.name}
-                      </h4>
-                      {typeof technique === 'object' && technique.description && (
-                        <p className="text-sm text-gray-600">{technique.description}</p>
+                      <h4 className="text-earth-900 mb-2 font-semibold">{approach.approach}</h4>
+                      {approach.description && (
+                        <p className="text-sm text-gray-600">{approach.description}</p>
                       )}
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
-          )}
-
-          {/* Diagnostic Methods */}
-          {modality.diagnosticMethods && modality.diagnosticMethods.length > 0 && (
+          ) : (
             <Card>
-              <CardHeader>
-                <CardTitle>Diagnostic Methods</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-inside list-disc space-y-2 text-gray-700">
-                  {modality.diagnosticMethods.map((method: string, idx: number) => (
-                    <li key={idx}>{method}</li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Treatment Approaches */}
-          {modality.treatmentApproaches && modality.treatmentApproaches.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Treatment Approaches</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-inside list-disc space-y-2 text-gray-700">
-                  {modality.treatmentApproaches.map((approach: string, idx: number) => (
-                    <li key={idx}>{approach}</li>
-                  ))}
-                </ul>
+              <CardContent className="py-12 text-center text-gray-600">
+                No treatment approaches listed.
               </CardContent>
             </Card>
           )}
@@ -262,8 +184,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
 
         {/* Benefits Tab */}
         <TabsContent value="benefits" className="space-y-6">
-          {/* Benefits */}
-          {modality.benefits && modality.benefits.length > 0 && (
+          {benefits.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -273,8 +194,8 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
               </CardHeader>
               <CardContent>
                 <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                  {modality.benefits.map((benefit: string, idx: number) => (
-                    <li key={idx} className="flex items-start">
+                  {benefits.map((benefit) => (
+                    <li key={benefit} className="flex items-start">
                       <span className="text-earth-600 mr-2">•</span>
                       <span className="text-gray-700">{benefit}</span>
                     </li>
@@ -285,20 +206,17 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
           )}
 
           {/* Conditions Treated */}
-          {modality.commonConditionsTreated && modality.commonConditionsTreated.length > 0 && (
+          {relatedConditions.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>Commonly Treated Conditions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {modality.commonConditionsTreated.map((condition) => (
-                    <Link
-                      key={typeof condition === 'string' ? condition : condition.id}
-                      href={`/conditions/${typeof condition === 'string' ? '#' : condition.slug}`}
-                    >
+                  {relatedConditions.map((condition) => (
+                    <Link key={condition.id} href={`/conditions/${condition.slug}`}>
                       <Badge variant="sage" className="hover:bg-sage-200">
-                        {typeof condition === 'string' ? condition : condition.title}
+                        {condition.title}
                       </Badge>
                     </Link>
                   ))}
@@ -307,30 +225,10 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             </Card>
           )}
 
-          {/* Scientific Evidence */}
-          {modality.scientificEvidence && (
+          {benefits.length === 0 && relatedConditions.length === 0 && (
             <Card>
-              <CardHeader>
-                <CardTitle>Scientific Evidence</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">{modality.scientificEvidence}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Contraindications */}
-          {modality.contraindications && modality.contraindications.length > 0 && (
-            <Card className="border-yellow-300 bg-yellow-50">
-              <CardHeader>
-                <CardTitle className="text-yellow-900">Contraindications</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-inside list-disc space-y-1 text-yellow-900">
-                  {modality.contraindications.map((contra: string, idx: number) => (
-                    <li key={idx}>{contra}</li>
-                  ))}
-                </ul>
+              <CardContent className="py-12 text-center text-gray-600">
+                No benefit information available.
               </CardContent>
             </Card>
           )}
@@ -338,8 +236,7 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
 
         {/* Training & Certification Tab */}
         <TabsContent value="training" className="space-y-6">
-          {/* Training Requirements */}
-          {modality.trainingRequirements && (
+          {trainingText && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -348,25 +245,26 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700">{modality.trainingRequirements}</p>
+                <p className="whitespace-pre-line text-gray-700">{trainingText}</p>
               </CardContent>
             </Card>
           )}
 
           {/* Certifications */}
-          {modality.certificationBodies && modality.certificationBodies.length > 0 && (
+          {certBodies.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>Certification Bodies</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
-                  {modality.certificationBodies.map((body, idx) => (
+                  {certBodies.map((body, idx) => (
                     <li key={idx} className="border-b border-gray-200 pb-2 last:border-0">
-                      <h4 className="font-semibold text-gray-900">
-                        {typeof body === 'string' ? body : body.name}
-                      </h4>
-                      {typeof body === 'object' && body.website && (
+                      <h4 className="font-semibold text-gray-900">{body.organizationName}</h4>
+                      {body.certificationLevel && (
+                        <p className="text-sm text-gray-600">{body.certificationLevel}</p>
+                      )}
+                      {body.website && (
                         <a
                           href={body.website}
                           target="_blank"
@@ -383,84 +281,15 @@ export default async function ModalityPage({ params }: ModalityPageProps) {
             </Card>
           )}
 
-          {/* Continuing Education */}
-          {modality.continuingEducation && (
+          {!trainingText && certBodies.length === 0 && (
             <Card>
-              <CardHeader>
-                <CardTitle>Continuing Education</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">{modality.continuingEducation}</p>
+              <CardContent className="py-12 text-center text-gray-600">
+                No training or certification information available.
               </CardContent>
             </Card>
           )}
         </TabsContent>
       </Tabs>
-
-      {/* Related Practitioners */}
-      {modality.practitioners && modality.practitioners.length > 0 && (
-        <div className="mb-12">
-          <h2 className="text-earth-900 mb-6 flex items-center font-serif text-2xl font-bold">
-            <Users className="text-earth-600 mr-2 h-6 w-6" />
-            Practitioners Specializing in {modality.title}
-          </h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {modality.practitioners.slice(0, 6).map((practitioner) => (
-              <PractitionerCard
-                key={practitioner.practitionerId}
-                practitionerId={practitioner.practitionerId}
-                name={practitioner.name}
-                slug={practitioner.slug}
-                photo={practitioner.photo}
-                title={practitioner.title}
-                modalities={practitioner.modalities}
-                address={practitioner.address}
-                averageRating={practitioner.averageRating}
-                reviewCount={practitioner.reviewCount}
-                verificationStatus={practitioner.verificationStatus}
-              />
-            ))}
-          </div>
-          {modality.practitioners.length > 6 && (
-            <div className="mt-6 text-center">
-              <Link
-                href={`/practitioners?modality=${modality.slug}`}
-                className="text-earth-600 hover:text-earth-700 font-semibold"
-              >
-                View all practitioners →
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Resources */}
-      {modality.resources && modality.resources.length > 0 && (
-        <Card className="mb-12">
-          <CardHeader>
-            <CardTitle>Additional Resources</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {modality.resources.map((resource, idx) => (
-                <li key={idx}>
-                  <a
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-earth-600 hover:text-earth-700"
-                  >
-                    {resource.title} →
-                  </a>
-                  {resource.description && (
-                    <p className="mt-1 text-sm text-gray-600">{resource.description}</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Disclaimer */}
       <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
@@ -483,8 +312,7 @@ export async function generateMetadata({ params }: ModalityPageProps): Promise<M
   const t = await getTranslations({ locale: lang, namespace: 'modalities' })
   const metaT = await getTranslations({ locale: lang, namespace: 'metadata' })
 
-  const { docs } = await getModalityBySlug(slug)
-  const modality = docs[0] as Modality | undefined
+  const modality = (await getModalityBySlug(slug)) as unknown as ModalityDoc | null
 
   if (!modality) {
     return {
@@ -493,13 +321,16 @@ export async function generateMetadata({ params }: ModalityPageProps): Promise<M
     }
   }
 
+  const description =
+    richTextToPlainText(modality.description) ||
+    t('metadata.defaultDescription', { name: modality.title })
+
   return {
     title: `${modality.title} | ${metaT('siteName')}`,
-    description: modality.description || t('metadata.defaultDescription', { name: modality.title }),
+    description,
     openGraph: {
       title: `${modality.title} | ${metaT('siteName')}`,
-      description:
-        modality.description || t('metadata.defaultDescription', { name: modality.title }),
+      description,
     },
   }
 }
