@@ -31,8 +31,12 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || process.env.DATABASE_URI,
     },
     migrationDir: path.resolve(dirname, 'payload/migrations'),
-    // Enable push in development, disable in production for safety
-    push: process.env.NODE_ENV !== 'production',
+    // Fail-safe schema management: only auto-push (diff & apply DDL without a
+    // migration) in explicit local development. Every other environment
+    // (production, staging, test, or an unset NODE_ENV) gets push=false and
+    // must apply versioned migrations via `payload migrate`. Never auto-push
+    // against the live PII database. See docs/AUDIT_REPORT_2026-06.md (C4).
+    push: process.env.NODE_ENV === 'development',
   }),
 
   // Admin Panel

@@ -23,8 +23,18 @@ cmds = [
   "ls -la apps/web/.next/standalone/apps/web/.next/static/ | head -20 || echo 'static directory not found'"
 ]
 
+# Release + start. Migrations run BEFORE the server accepts traffic and MUST
+# succeed: db:migrate:up runs `prisma migrate deploy` then `payload migrate`
+# (see apps/web/scripts/db/migrate.ts) from the full apps/web workspace, which
+# exits non-zero on any failure. The `&&` chain means a failed/half-applied
+# migration aborts startup (the container exits and the deploy is marked failed)
+# instead of booting the app — Payload `push` is OFF in production, so the DB is
+# never silently "fixed" by auto-DDL. Only on success do we start the server.
+# NOTE: this runs per container start; for multi-instance deploys prefer a
+# dedicated single-run release step. Prisma/Payload both lock, so concurrent
+# starts are safe but redundant.
 [start]
-cmd = "cd apps/web/.next/standalone/apps/web && HOSTNAME=0.0.0.0 node server.js"
+cmd = "pnpm --filter web db:migrate:up && cd apps/web/.next/standalone/apps/web && HOSTNAME=0.0.0.0 node server.js"
 
 [variables]
 NODE_ENV = "production"
