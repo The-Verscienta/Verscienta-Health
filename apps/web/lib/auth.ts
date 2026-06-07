@@ -54,6 +54,10 @@ export const auth = betterAuth({
       role: {
         type: 'string',
         defaultValue: 'user',
+        // SECURITY: privilege-escalation guard. Without input:false a sign-up
+        // request could POST role:"admin". Role is server-controlled and may
+        // only be changed by an admin (in Payload), never by the client.
+        input: false,
       },
       firstName: {
         type: 'string',
@@ -67,6 +71,9 @@ export const auth = betterAuth({
       mfaEnabled: {
         type: 'boolean',
         defaultValue: false,
+        // SECURITY: server-controlled — clients must not be able to assert
+        // their own MFA status during sign-up/update.
+        input: false,
       },
       mfaEnrolledAt: {
         type: 'date',
@@ -100,8 +107,12 @@ export const auth = betterAuth({
   ],
   // Advanced security options
   advanced: {
-    // Generate secure session tokens
-    generateId: () => crypto.randomUUID(),
+    // Generate secure session tokens.
+    // better-auth 1.4 moved this from `advanced.generateId` to
+    // `advanced.database.generateId`; the old location is silently ignored.
+    database: {
+      generateId: () => crypto.randomUUID(),
+    },
     // Use secure cookies
     cookiePrefix: '__Secure-',
     // Cross-site request forgery protection

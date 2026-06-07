@@ -90,6 +90,29 @@ jobs:
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/verscienta_test
 
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Fail the build on any production dependency vulnerability of high
+      # severity or above. See docs/AUDIT_REPORT_2026-06.md finding C3.
+      - name: Audit production dependencies
+        run: pnpm audit --prod --audit-level=high
+
   build:
     name: Build
     runs-on: ubuntu-latest
