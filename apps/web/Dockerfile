@@ -63,8 +63,29 @@ RUN pnpm payload generate:types || echo "Payload types generation skipped"
 RUN pnpm build
 
 # ============================================
-# Stage 3: Runner (Production)
+# Stage 3: Migrator (release/init job)
 # ============================================
+# The runner stage below is a minimal Next.js standalone image and intentionally
+# does NOT contain the Prisma/Payload CLIs or full node_modules, so it cannot run
+# migrations itself. This stage reuses the builder (full deps + source + both
+# prisma/migrations and payload/migrations) to apply migrations.
+#
+# Run it to completion as a release/init step BEFORE the runner serves traffic:
+#   docker build --target migrator -t verscienta-migrator .
+#   docker run --rm -e DATABASE_URL=... verscienta-migrator
+# It runs `prisma migrate deploy` then `payload migrate` and exits non-zero on
+# any failure (see apps/web/scripts/db/migrate.ts), which must abort the rollout.
+# Payload `push` is OFF in production, so the schema is never auto-mutated on boot.
+FROM builder AS migrator
+WORKDIR /app/apps/web
+ENV NODE_ENV=production
+CMD ["pnpm", "db:migrate:up"]
+
+# ============================================
+# Stage 4: Runner (Production)
+# ============================================
+# IMPORTANT: deploy the `migrator` stage (above) as a release/init job that must
+# succeed before this runner starts. This minimal image only serves traffic.
 FROM node:22-alpine AS runner
 
 # Install runtime dependencies
