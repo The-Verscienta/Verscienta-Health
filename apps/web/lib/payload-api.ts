@@ -257,11 +257,14 @@ export async function getPractitioners(
   ]
 
   if (location) {
+    // Address lives in the `addresses` array (see Practitioners collection);
+    // there is no `contactInfo` group. Query the array subfields directly so
+    // all of a practitioner's addresses are matched, not just the primary.
     whereConditions.push({
       or: [
-        { 'contactInfo.address.city': { contains: location } },
-        { 'contactInfo.address.state': { contains: location } },
-        { 'contactInfo.address.country': { contains: location } },
+        { 'addresses.city': { contains: location } },
+        { 'addresses.state': { contains: location } },
+        { 'addresses.country': { contains: location } },
       ],
     })
   }
@@ -273,7 +276,7 @@ export async function getPractitioners(
     },
     limit,
     page,
-    sort: 'name',
+    sort: 'practitionerName', // the collection has no `name` field
   })
 
   return result as PaginatedResponse<Practitioner>

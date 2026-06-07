@@ -5,7 +5,7 @@ import { FormulaCard } from '@/components/cards/FormulaCard'
 import { SearchBar } from '@/components/search/SearchBar'
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
-import { getFormulas } from '@/lib/strapi-api'
+import { getFormulas } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
 interface FormulasPageProps {
@@ -56,7 +56,7 @@ export default async function FormulasPage({ params, searchParams }: FormulasPag
   // Note: tradition filtering can be added to the API client if needed
 
   const { docs, totalPages, totalDocs } = await getFormulas(page, 12, query)
-  const formulas = docs as Formula[]
+  const formulas = docs as unknown as Formula[]
 
   return (
     <div className="container-custom py-12">

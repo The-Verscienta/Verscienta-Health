@@ -1,4 +1,4 @@
-import { AlertTriangle, Book, Heart, Leaf, Star } from 'lucide-react'
+import { AlertTriangle, Book, Heart, Leaf } from 'lucide-react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -8,63 +8,52 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
 import { type FormulaData, generateBreadcrumbSchema, generateFormulaSchema } from '@/lib/json-ld'
-import { getFormulaBySlug } from '@/lib/strapi-api'
+import { richTextToPlainText } from '@/lib/lexical'
+import { getFormulaBySlug } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
-interface Formula {
-  id: string
-  title: string
-  formulaId: string
-  slug: string
-  description?: string
-  tradition?: string
-  chineseName?: string
-  pinyin?: string
-  category?: string
-  ingredientCount?: number
-  averageRating?: number
-  reviewCount?: number
-  ingredients?: {
-    herbId: string
-    name: string
-    amount?: string
-    herb?: {
-      slug?: string
-      title?: string
-      scientificName?: string
-    }
-    role?: string
-    quantity?: string
-    unit?: string
-    percentage?: number
-    notes?: string
-  }[]
-  indications?: string[]
-  actions?: string[]
-  relatedConditions?: {
-    id: string
-    slug: string
-    title: string
-    description?: string
-  }[]
-  tcmPattern?: string
-  preparationMethod?: string
-  dosage?: string
-  administration?: string
-  modifications?: string[]
-  contraindications?: string[]
-  cautions?: string[]
-  drugInteractions?: string[]
-  traditionalSource?: string
-  sourceDate?: string
-  relatedFormulas?: {
-    id: string
-    title: string
-    slug: string
-    chineseName?: string
-    category?: string
-  }[]
+
+// Raw Payload shapes (generated payload-types.ts is stale; see collection config).
+interface HerbRefLite {
+  id?: number | string
+  title?: string | null
+  slug?: string | null
+  botanicalInfo?: { scientificName?: string | null } | null
 }
+
+interface IngredientItem {
+  herb?: HerbRefLite | number | null
+  quantity?: number | null
+  unit?: string | null
+  percentage?: number | null
+  role?: string | null
+}
+
+interface ConditionRef {
+  id: number | string
+  title: string
+  slug?: string | null
+}
+
+interface FormulaDoc {
+  id: number | string
+  title: string
+  slug?: string | null
+  description?: unknown
+  ingredients?: IngredientItem[] | null
+  preparationInstructions?: unknown
+  dosage?: unknown
+  useCases?: { useCase?: string | null }[] | null
+  relatedConditions?: (ConditionRef | number)[] | null
+  tradition?: string | null
+  category?: string | null
+  historicalText?: string | null
+  contraindications?: unknown
+  sideEffects?: unknown
+}
+
+const isObject = <T,>(v: T | number | null | undefined): v is T =>
+  typeof v === 'object' && v !== null
 
 interface FormulaPageProps {
   params: Promise<{
@@ -79,38 +68,46 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
   // Enable static rendering optimization
   setRequestLocale(lang)
 
-  const { docs } = await getFormulaBySlug(slug)
-  const formula = docs[0] as Formula | undefined
+  const formula = (await getFormulaBySlug(slug)) as unknown as FormulaDoc | null
 
   if (!formula) {
     notFound()
   }
 
-  const traditionColors = {
+  const traditionColors: Record<string, 'tcm' | 'gold' | 'sage' | 'default'> = {
     tcm: 'tcm',
-    ayurvedic: 'gold',
+    ayurveda: 'gold',
     western: 'sage',
+    native_american: 'default',
+    modern: 'default',
     other: 'default',
-  } as const
+  }
+
+  const descriptionText = richTextToPlainText(formula.description)
+  const dosageText = richTextToPlainText(formula.dosage)
+  const preparationText = richTextToPlainText(formula.preparationInstructions)
+  const contraindicationsText = richTextToPlainText(formula.contraindications)
+  const sideEffectsText = richTextToPlainText(formula.sideEffects)
+  const ingredients = (formula.ingredients ?? []).map((ing) => ({
+    ...ing,
+    herb: isObject<HerbRefLite>(ing.herb) ? ing.herb : undefined,
+  }))
+  const useCases = (formula.useCases ?? [])
+    .map((u) => u.useCase ?? undefined)
+    .filter((u): u is string => Boolean(u))
+  const relatedConditions = (formula.relatedConditions ?? []).filter(isObject<ConditionRef>)
 
   // Prepare JSON-LD structured data
   const formulaData: FormulaData = {
     name: formula.title,
-    description: formula.description,
-    id: formula.slug,
-    ingredients: formula.ingredients?.map((ing) => ({
-      name: ing.herb?.title || ing.name || 'Unknown Herb',
+    description: descriptionText || undefined,
+    id: formula.slug ?? String(formula.id),
+    ingredients: ingredients.map((ing) => ({
+      name: ing.herb?.title || 'Unknown Herb',
       amount: ing.quantity && ing.unit ? `${ing.quantity} ${ing.unit}` : undefined,
     })),
-    uses: formula.indications,
-    dosage: formula.dosage,
-    rating:
-      formula.averageRating && formula.reviewCount
-        ? {
-            value: formula.averageRating,
-            count: formula.reviewCount,
-          }
-        : undefined,
+    uses: useCases,
+    dosage: dosageText || undefined,
   }
 
   // Breadcrumb schema
@@ -127,40 +124,21 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
 
       {/* Hero Section */}
       <div className="mb-12">
-        <div className="mb-4 flex items-start justify-between">
-          <div className="flex-1">
-            <div className="mb-2 flex items-center gap-3">
-              <h1 className="text-earth-900 font-serif text-4xl font-bold">{formula.title}</h1>
-              {formula.tradition && (
-                <Badge variant={traditionColors[formula.tradition as keyof typeof traditionColors]}>
-                  {formula.tradition.toUpperCase()}
-                </Badge>
-              )}
-            </div>
-
-            {formula.chineseName && (
-              <p className="font-serif-sc text-tcm-600 mb-2 text-xl">{formula.chineseName}</p>
-            )}
-            {formula.pinyin && (
-              <p className="mb-4 text-lg italic text-gray-600">{formula.pinyin}</p>
+        <div className="mb-4">
+          <div className="mb-2 flex items-center gap-3">
+            <h1 className="text-earth-900 font-serif text-4xl font-bold">{formula.title}</h1>
+            {formula.tradition && (
+              <Badge variant={traditionColors[formula.tradition] || 'default'}>
+                {formula.tradition.toUpperCase()}
+              </Badge>
             )}
           </div>
-          <span className="font-mono text-sm text-gray-500">{formula.formulaId}</span>
         </div>
 
-        {/* Rating */}
-        {formula.averageRating && formula.reviewCount && formula.reviewCount > 0 && (
-          <div className="mb-6 flex items-center space-x-2">
-            <div className="flex items-center">
-              <Star className="fill-gold-600 text-gold-600 h-5 w-5" />
-              <span className="ml-1 text-lg font-semibold">{formula.averageRating.toFixed(1)}</span>
-            </div>
-            <span className="text-gray-600">({formula.reviewCount} reviews)</span>
-          </div>
-        )}
-
         {/* Description */}
-        {formula.description && <p className="mb-6 text-lg text-gray-700">{formula.description}</p>}
+        {descriptionText && (
+          <p className="mb-6 whitespace-pre-line text-lg text-gray-700">{descriptionText}</p>
+        )}
 
         {/* Quick Info */}
         <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -170,11 +148,11 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
               <Badge variant="sage">{formula.category}</Badge>
             </div>
           )}
-          {formula.ingredients && formula.ingredients.length > 0 && (
+          {ingredients.length > 0 && (
             <div>
               <h3 className="mb-1 text-sm font-semibold text-gray-700">Ingredients</h3>
               <p className="text-gray-900">
-                {formula.ingredients.length} {formula.ingredients.length === 1 ? 'herb' : 'herbs'}
+                {ingredients.length} {ingredients.length === 1 ? 'herb' : 'herbs'}
               </p>
             </div>
           )}
@@ -185,7 +163,7 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
       <Tabs defaultValue="ingredients" className="mb-12">
         <TabsList>
           <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
-          <TabsTrigger value="actions">Actions & Uses</TabsTrigger>
+          <TabsTrigger value="uses">Uses</TabsTrigger>
           <TabsTrigger value="preparation">Preparation</TabsTrigger>
           <TabsTrigger value="safety">Safety</TabsTrigger>
         </TabsList>
@@ -200,9 +178,9 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {formula.ingredients && formula.ingredients.length > 0 ? (
+              {ingredients.length > 0 ? (
                 <div className="space-y-4">
-                  {formula.ingredients.map((ingredient, idx) => (
+                  {ingredients.map((ingredient, idx) => (
                     <div key={idx} className="border-b border-gray-200 pb-4 last:border-0">
                       <div className="mb-2 flex items-start justify-between">
                         <div className="flex-1">
@@ -212,9 +190,9 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
                           >
                             {ingredient.herb?.title || 'Unknown Herb'}
                           </Link>
-                          {ingredient.herb?.scientificName && (
+                          {ingredient.herb?.botanicalInfo?.scientificName && (
                             <p className="text-sm italic text-gray-600">
-                              {ingredient.herb.scientificName}
+                              {ingredient.herb.botanicalInfo.scientificName}
                             </p>
                           )}
                         </div>
@@ -237,10 +215,6 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
                           </span>
                         )}
                       </div>
-
-                      {ingredient.notes && (
-                        <p className="mt-2 text-sm text-gray-600">{ingredient.notes}</p>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -274,81 +248,43 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
           </Card>
         </TabsContent>
 
-        {/* Actions & Uses Tab */}
-        <TabsContent value="actions" className="space-y-6">
-          {/* Actions */}
+        {/* Uses Tab */}
+        <TabsContent value="uses" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Heart className="text-earth-600 mr-2 h-5 w-5" />
-                Therapeutic Actions
+                Indications & Uses
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {formula.actions && formula.actions.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {formula.actions.map((action: string, idx: number) => (
-                    <Badge key={idx} variant="tcm">
-                      {action}
-                    </Badge>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-600">No action information available.</p>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Indications */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Indications & Uses</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {formula.indications && formula.indications.length > 0 ? (
+              {useCases.length > 0 ? (
                 <ul className="list-inside list-disc space-y-2 text-gray-700">
-                  {formula.indications.map((indication: string, idx: number) => (
-                    <li key={idx}>{indication}</li>
+                  {useCases.map((useCase, idx) => (
+                    <li key={idx}>{useCase}</li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-600">No indication information available.</p>
+                <p className="text-gray-600">No use-case information available.</p>
               )}
             </CardContent>
           </Card>
 
-          {/* Pattern Treated (TCM) */}
-          {formula.tcmPattern && (
-            <Card>
-              <CardHeader>
-                <CardTitle>TCM Pattern Treated</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">{formula.tcmPattern}</p>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Related Conditions */}
-          {formula.relatedConditions && formula.relatedConditions.length > 0 && (
+          {relatedConditions.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>Related Conditions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {formula.relatedConditions.map((condition) => (
+                  {relatedConditions.map((condition) => (
                     <Link
                       key={condition.id}
                       href={`/conditions/${condition.slug}`}
                       className="block rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
                     >
                       <h4 className="text-earth-900 font-semibold">{condition.title}</h4>
-                      {condition.description && (
-                        <p className="mt-1 line-clamp-2 text-sm text-gray-600">
-                          {condition.description}
-                        </p>
-                      )}
                     </Link>
                   ))}
                 </div>
@@ -367,40 +303,24 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Preparation Method */}
-              {formula.preparationMethod && (
+              {preparationText && (
                 <div>
-                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Preparation Method</h4>
-                  <p className="text-gray-700">{formula.preparationMethod}</p>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">
+                    Preparation Instructions
+                  </h4>
+                  <p className="whitespace-pre-line text-gray-700">{preparationText}</p>
                 </div>
               )}
 
-              {/* Dosage */}
-              {formula.dosage && (
+              {dosageText && (
                 <div>
-                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Standard Dosage</h4>
-                  <p className="text-gray-700">{formula.dosage}</p>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Dosage</h4>
+                  <p className="whitespace-pre-line text-gray-700">{dosageText}</p>
                 </div>
               )}
 
-              {/* Administration */}
-              {formula.administration && (
-                <div>
-                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Administration</h4>
-                  <p className="text-gray-700">{formula.administration}</p>
-                </div>
-              )}
-
-              {/* Modifications */}
-              {formula.modifications && formula.modifications.length > 0 && (
-                <div>
-                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Common Modifications</h4>
-                  <ul className="list-inside list-disc space-y-1 text-gray-700">
-                    {formula.modifications.map((mod: string, idx: number) => (
-                      <li key={idx}>{mod}</li>
-                    ))}
-                  </ul>
-                </div>
+              {!preparationText && !dosageText && (
+                <p className="text-gray-600">No preparation information available.</p>
               )}
             </CardContent>
           </Card>
@@ -416,40 +336,22 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Contraindications */}
-              {formula.contraindications && formula.contraindications.length > 0 && (
+              {contraindicationsText && (
                 <div className="bg-tcm-50 border-tcm-200 rounded-lg border p-4">
                   <h4 className="text-tcm-800 mb-2 text-sm font-semibold">Contraindications</h4>
-                  <ul className="text-tcm-700 list-inside list-disc space-y-1">
-                    {formula.contraindications.map((item: string, idx: number) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
+                  <p className="text-tcm-700 whitespace-pre-line">{contraindicationsText}</p>
                 </div>
               )}
 
-              {/* Cautions */}
-              {formula.cautions && formula.cautions.length > 0 && (
-                <div className="bg-gold-50 border-gold-200 rounded-lg border p-4">
-                  <h4 className="text-gold-800 mb-2 text-sm font-semibold">Cautions</h4>
-                  <ul className="text-gold-700 list-inside list-disc space-y-1">
-                    {formula.cautions.map((item: string, idx: number) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Drug Interactions */}
-              {formula.drugInteractions && formula.drugInteractions.length > 0 && (
+              {sideEffectsText && (
                 <div>
-                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Drug Interactions</h4>
-                  <ul className="list-inside list-disc space-y-1 text-gray-700">
-                    {formula.drugInteractions.map((item: string, idx: number) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
+                  <h4 className="mb-2 text-sm font-semibold text-gray-700">Side Effects</h4>
+                  <p className="whitespace-pre-line text-gray-700">{sideEffectsText}</p>
                 </div>
+              )}
+
+              {!contraindicationsText && !sideEffectsText && (
+                <p className="text-gray-600">No safety information available.</p>
               )}
             </CardContent>
           </Card>
@@ -457,44 +359,15 @@ export default async function FormulaPage({ params }: FormulaPageProps) {
       </Tabs>
 
       {/* Traditional Source */}
-      {formula.traditionalSource && (
+      {formula.historicalText && (
         <Card className="mb-12">
           <CardHeader>
             <CardTitle>Traditional Source</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-700">{formula.traditionalSource}</p>
-            {formula.sourceDate && (
-              <p className="mt-2 text-sm text-gray-500">Date: {formula.sourceDate}</p>
-            )}
+            <p className="whitespace-pre-line text-gray-700">{formula.historicalText}</p>
           </CardContent>
         </Card>
-      )}
-
-      {/* Related Formulas */}
-      {formula.relatedFormulas && formula.relatedFormulas.length > 0 && (
-        <div className="mb-12">
-          <h2 className="text-earth-900 mb-6 font-serif text-2xl font-bold">Similar Formulas</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {formula.relatedFormulas.slice(0, 3).map((related) => (
-              <Link
-                key={related.id}
-                href={`/formulas/${related.slug}`}
-                className="block rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
-              >
-                <h3 className="text-earth-900 font-semibold">{related.title}</h3>
-                {related.chineseName && (
-                  <p className="font-serif-sc text-tcm-600 mt-1 text-sm">{related.chineseName}</p>
-                )}
-                {related.category && (
-                  <Badge variant="sage" className="mt-2 text-xs">
-                    {related.category}
-                  </Badge>
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
       )}
 
       {/* Medical Disclaimer */}
@@ -519,8 +392,7 @@ export async function generateMetadata({ params }: FormulaPageProps): Promise<Me
   const t = await getTranslations({ locale: lang, namespace: 'formulas' })
   const metaT = await getTranslations({ locale: lang, namespace: 'metadata' })
 
-  const { docs } = await getFormulaBySlug(slug)
-  const formula = docs[0] as Formula | undefined
+  const formula = (await getFormulaBySlug(slug)) as unknown as FormulaDoc | null
 
   if (!formula) {
     return {
@@ -529,12 +401,16 @@ export async function generateMetadata({ params }: FormulaPageProps): Promise<Me
     }
   }
 
+  const description =
+    richTextToPlainText(formula.description) ||
+    t('metadata.defaultDescription', { name: formula.title })
+
   return {
     title: `${formula.title} | ${metaT('siteName')}`,
-    description: formula.description || t('metadata.defaultDescription', { name: formula.title }),
+    description,
     openGraph: {
       title: `${formula.title} | ${metaT('siteName')}`,
-      description: formula.description || t('metadata.defaultDescription', { name: formula.title }),
+      description,
     },
   }
 }

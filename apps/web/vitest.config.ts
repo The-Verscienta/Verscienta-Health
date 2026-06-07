@@ -29,6 +29,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
+      // The real Payload config pulls in the DB adapter and all collections,
+      // which is too heavy for unit tests. Modules under test get Payload via a
+      // mocked getPayload(), so a no-op stub is sufficient here.
+      '@payload-config': path.resolve(__dirname, './test-utils/payload-config.stub.ts'),
     },
   },
 })

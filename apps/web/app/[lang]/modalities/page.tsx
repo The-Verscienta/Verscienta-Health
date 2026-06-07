@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Loading } from '@/components/ui/loading'
 import { Pagination } from '@/components/ui/pagination'
 import { Link } from '@/i18n/routing'
-import { getModalities } from '@/lib/strapi-api'
+import { getModalities } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
 interface ModalitiesPageProps {
@@ -35,7 +35,7 @@ export default async function ModalitiesPage({ params, searchParams }: Modalitie
   const page = Number(pageParam) || 1
 
   const { docs, totalPages, totalDocs } = await getModalities(page, 12)
-  const modalities = docs as Modality[]
+  const modalities = docs as unknown as Modality[]
 
   return (
     <div className="container-custom py-12">

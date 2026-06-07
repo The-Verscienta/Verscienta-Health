@@ -11,85 +11,78 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Link } from '@/i18n/routing'
 import type { ConditionData } from '@/lib/json-ld'
 import { generateBreadcrumbSchema, generateConditionSchema } from '@/lib/json-ld'
-import { getConditionBySlug } from '@/lib/strapi-api'
+import { richTextToPlainText } from '@/lib/lexical'
+import { getConditionBySlug } from '@/lib/payload-api'
 
 export const dynamic = 'force-dynamic'
-interface Symptom {
-  id: string
-  title: string
-  slug: string
+
+// Raw Payload shapes (generated payload-types.ts is stale; see collection config).
+interface MediaRef {
+  url?: string | null
+  alt?: string | null
 }
 
-interface Herb {
-  id: string
-  herbId: string
+interface HerbRef {
+  id: number | string
+  herbId?: string | null
   title: string
-  slug: string
-  scientificName?: string
-  description?: string
-  featuredImage?: {
-    url: string
-    alt: string
-  }
+  slug?: string | null
+  description?: unknown
+  featuredImage?: MediaRef | number | null
+  botanicalInfo?: { scientificName?: string | null } | null
   tcmProperties?: {
-    taste?: string[]
-    temperature?: string
-    category?: string
-  }
-  westernProperties?: string[]
-  averageRating?: number
-  reviewCount?: number
+    tcmTaste?: string[] | null
+    tcmTemperature?: string | null
+    tcmCategory?: string | null
+  } | null
+  westernProperties?: string[] | null
+  averageRating?: number | null
+  reviewCount?: number | null
 }
 
-interface Ingredient {
-  id: string
-  herbId: string
-  name: string
-  amount?: string
-}
-
-interface Formula {
-  id: string
-  formulaId: string
+interface FormulaRef {
+  id: number | string
   title: string
-  slug: string
-  chineseName?: string
-  pinyin?: string
-  description?: string
-  category?: string
-  tradition?: string
-  ingredients?: Ingredient[]
-  ingredientCount?: number
-  averageRating?: number
-  reviewCount?: number
+  slug?: string | null
+  description?: unknown
+  category?: string | null
+  tradition?: string | null
+  ingredients?: unknown[] | null
 }
 
-interface Condition {
-  id: string
+interface SymptomRef {
+  id: number | string
   title: string
-  conditionId: string
-  slug: string
-  description?: string
-  alternativeNames?: string[]
-  category?: string
-  severity?: 'mild' | 'moderate' | 'severe'
-  affectedSystems?: string[]
-  commonSymptoms?: string[]
-  relatedSymptoms?: Symptom[]
-  westernCauses?: string[]
-  riskFactors?: string[]
-  diagnosis?: string[]
-  conventionalTreatment?: string[]
-  tcmPattern?: string[]
-  tcmCauses?: string[]
-  affectedMeridians?: string[]
-  tcmDiagnosis?: string[]
-  treatmentPrinciples?: string[]
-  lifestyleRecommendations?: string[]
-  dietaryRecommendations?: string[]
-  relatedHerbs?: Herb[]
-  relatedFormulas?: Formula[]
-  emergencySymptoms?: string[]
+  slug?: string | null
+}
+
+interface ConditionDoc {
+  id: number | string
+  title: string
+  slug?: string | null
+  description?: unknown
+  symptoms?: { symptom?: string | null; frequency?: string | null }[] | null
+  severity?: string | null
+  category?: string | null
+  tcmPattern?: string | null
+  westernDiagnosis?: string | null
+  prevalence?: string | null
+  conventionalTreatments?: unknown
+  complementaryApproaches?: unknown
+  preventionTips?: unknown
+  lifestyleRecommendations?: unknown
+  dietaryAdvice?: unknown
+  whenToSeekHelp?: unknown
+  relatedHerbs?: (HerbRef | number)[] | null
+  relatedFormulas?: (FormulaRef | number)[] | null
+  relatedSymptoms?: (SymptomRef | number)[] | null
+}
+
+const isObject = <T,>(v: T | number | null | undefined): v is T =>
+  typeof v === 'object' && v !== null
+
+function mediaUrl(image: MediaRef | number | null | undefined): MediaRef | undefined {
+  return image && typeof image === 'object' ? image : undefined
 }
 
 interface ConditionPageProps {
@@ -105,37 +98,47 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
   // Enable static rendering optimization
   setRequestLocale(lang)
 
-  const { docs } = await getConditionBySlug(slug)
-  const condition = docs[0] as Condition | undefined
+  const condition = (await getConditionBySlug(slug)) as unknown as ConditionDoc | null
 
   if (!condition) {
     notFound()
   }
 
-  // TypeScript doesn't understand that notFound() throws, so we assert the type
-  const validCondition = condition as NonNullable<typeof condition>
+  const descriptionText = richTextToPlainText(condition.description)
+  const symptoms = (condition.symptoms ?? []).filter((s) => s.symptom)
+  const relatedSymptoms = (condition.relatedSymptoms ?? []).filter(isObject<SymptomRef>)
+  const relatedHerbs = (condition.relatedHerbs ?? []).filter(isObject<HerbRef>)
+  const relatedFormulas = (condition.relatedFormulas ?? []).filter(isObject<FormulaRef>)
+
+  const conventionalText = richTextToPlainText(condition.conventionalTreatments)
+  const complementaryText = richTextToPlainText(condition.complementaryApproaches)
+  const lifestyleText = richTextToPlainText(condition.lifestyleRecommendations)
+  const dietaryText = richTextToPlainText(condition.dietaryAdvice)
+  const preventionText = richTextToPlainText(condition.preventionTips)
+  const whenToSeekText = richTextToPlainText(condition.whenToSeekHelp)
 
   // Prepare data for JSON-LD schema
   const conditionData: ConditionData = {
-    id: validCondition.slug,
-    name: validCondition.title,
-    description: validCondition.description,
-    symptoms: validCondition.commonSymptoms,
-    relatedHerbs: validCondition.relatedHerbs?.map((herb) => herb.title),
-    relatedFormulas: validCondition.relatedFormulas?.map((formula) => formula.title),
+    id: condition.slug ?? String(condition.id),
+    name: condition.title,
+    description: descriptionText || undefined,
+    symptoms: symptoms.map((s) => s.symptom as string),
+    relatedHerbs: relatedHerbs.map((herb) => herb.title),
+    relatedFormulas: relatedFormulas.map((formula) => formula.title),
   }
 
   // Breadcrumb schema
   const breadcrumbItems = [
     { name: 'Home', url: '/' },
     { name: 'Conditions', url: '/conditions' },
-    { name: validCondition.title, url: `/conditions/${validCondition.slug}` },
+    { name: condition.title, url: `/conditions/${condition.slug}` },
   ]
 
   const severityColors = {
     mild: 'sage',
     moderate: 'gold',
     severe: 'tcm',
+    life_threatening: 'tcm',
   } as const
 
   return (
@@ -148,23 +151,13 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
       <div className="container-custom py-12">
         {/* Hero Section */}
         <div className="mb-12">
-          <div className="mb-4 flex items-start justify-between">
-            <div className="flex-1">
-              <h1 className="text-earth-900 mb-2 font-serif text-4xl font-bold">
-                {validCondition.title}
-              </h1>
-              {validCondition.alternativeNames && validCondition.alternativeNames.length > 0 && (
-                <p className="mb-4 text-lg text-gray-600">
-                  Also known as: {validCondition.alternativeNames.join(', ')}
-                </p>
-              )}
-            </div>
-            <span className="font-mono text-sm text-gray-500">{validCondition.conditionId}</span>
+          <div className="mb-4">
+            <h1 className="text-earth-900 mb-2 font-serif text-4xl font-bold">{condition.title}</h1>
           </div>
 
           {/* Description */}
-          {validCondition.description && (
-            <p className="mb-6 text-lg text-gray-700">{validCondition.description}</p>
+          {descriptionText && (
+            <p className="mb-6 whitespace-pre-line text-lg text-gray-700">{descriptionText}</p>
           )}
 
           {/* Quick Info */}
@@ -187,16 +180,10 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
                 </Badge>
               </div>
             )}
-            {condition.affectedSystems && condition.affectedSystems.length > 0 && (
+            {condition.westernDiagnosis && (
               <div>
-                <h3 className="mb-1 text-sm font-semibold text-gray-700">Affected Systems</h3>
-                <div className="flex flex-wrap gap-1">
-                  {condition.affectedSystems.slice(0, 2).map((system: string) => (
-                    <Badge key={system} variant="sage" className="text-xs">
-                      {system}
-                    </Badge>
-                  ))}
-                </div>
+                <h3 className="mb-1 text-sm font-semibold text-gray-700">Western Diagnosis</h3>
+                <p className="text-gray-700">{condition.westernDiagnosis}</p>
               </div>
             )}
           </div>
@@ -221,12 +208,19 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {condition.commonSymptoms && condition.commonSymptoms.length > 0 ? (
+                {symptoms.length > 0 ? (
                   <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                    {condition.commonSymptoms.map((symptom: string, idx: number) => (
+                    {symptoms.map((symptom, idx) => (
                       <li key={idx} className="flex items-start">
                         <span className="text-earth-600 mr-2">•</span>
-                        <span className="text-gray-700">{symptom}</span>
+                        <span className="text-gray-700">
+                          {symptom.symptom}
+                          {symptom.frequency && (
+                            <Badge variant="outline" className="ml-2 text-xs">
+                              {symptom.frequency}
+                            </Badge>
+                          )}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -237,14 +231,14 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
             </Card>
 
             {/* Related Symptoms */}
-            {condition.relatedSymptoms && condition.relatedSymptoms.length > 0 && (
+            {relatedSymptoms.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle>Associated Symptoms</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {condition.relatedSymptoms.map((symptom) => (
+                    {relatedSymptoms.map((symptom) => (
                       <Link
                         key={symptom.id}
                         href={`/symptoms/${symptom.slug}`}
@@ -261,19 +255,13 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
             )}
 
             {/* When to Seek Help */}
-            {condition.emergencySymptoms && condition.emergencySymptoms.length > 0 && (
+            {whenToSeekText && (
               <Card className="border-tcm-300 bg-tcm-50">
                 <CardHeader>
-                  <CardTitle className="text-tcm-900">
-                    When to Seek Immediate Medical Care
-                  </CardTitle>
+                  <CardTitle className="text-tcm-900">When to Seek Immediate Medical Care</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-tcm-800 list-inside list-disc space-y-2">
-                    {condition.emergencySymptoms.map((symptom: string, idx: number) => (
-                      <li key={idx}>{symptom}</li>
-                    ))}
-                  </ul>
+                  <p className="text-tcm-800 whitespace-pre-line">{whenToSeekText}</p>
                 </CardContent>
               </Card>
             )}
@@ -289,46 +277,30 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Causes */}
-                {condition.westernCauses && condition.westernCauses.length > 0 && (
+                {condition.prevalence && (
                   <div>
-                    <h4 className="mb-2 text-sm font-semibold text-gray-700">Causes</h4>
-                    <ul className="list-inside list-disc space-y-1 text-gray-700">
-                      {condition.westernCauses.map((cause: string, idx: number) => (
-                        <li key={idx}>{cause}</li>
-                      ))}
-                    </ul>
+                    <h4 className="mb-2 text-sm font-semibold text-gray-700">Prevalence</h4>
+                    <p className="whitespace-pre-line text-gray-700">{condition.prevalence}</p>
                   </div>
                 )}
-
-                {/* Risk Factors */}
-                {condition.riskFactors && condition.riskFactors.length > 0 && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-semibold text-gray-700">Risk Factors</h4>
-                    <ul className="list-inside list-disc space-y-1 text-gray-700">
-                      {condition.riskFactors.map((factor: string, idx: number) => (
-                        <li key={idx}>{factor}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Diagnosis */}
-                {condition.diagnosis && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-semibold text-gray-700">Diagnosis</h4>
-                    <p className="text-gray-700">{condition.diagnosis}</p>
-                  </div>
-                )}
-
-                {/* Conventional Treatment */}
-                {condition.conventionalTreatment && (
+                {conventionalText && (
                   <div>
                     <h4 className="mb-2 text-sm font-semibold text-gray-700">
-                      Conventional Treatment
+                      Conventional Treatments
                     </h4>
-                    <p className="text-gray-700">{condition.conventionalTreatment}</p>
+                    <p className="whitespace-pre-line text-gray-700">{conventionalText}</p>
                   </div>
+                )}
+                {complementaryText && (
+                  <div>
+                    <h4 className="mb-2 text-sm font-semibold text-gray-700">
+                      Complementary Approaches
+                    </h4>
+                    <p className="whitespace-pre-line text-gray-700">{complementaryText}</p>
+                  </div>
+                )}
+                {!condition.prevalence && !conventionalText && !complementaryText && (
+                  <p className="text-gray-600">No Western medical information available.</p>
                 )}
               </CardContent>
             </Card>
@@ -344,64 +316,15 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* TCM Pattern */}
-                {condition.tcmPattern && (
+                {condition.tcmPattern ? (
                   <div>
                     <h4 className="mb-2 text-sm font-semibold text-gray-700">TCM Pattern</h4>
                     <Badge variant="tcm" className="text-base">
                       {condition.tcmPattern}
                     </Badge>
                   </div>
-                )}
-
-                {/* TCM Causes */}
-                {condition.tcmCauses && condition.tcmCauses.length > 0 && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-semibold text-gray-700">
-                      TCM Etiology (Causes)
-                    </h4>
-                    <ul className="list-inside list-disc space-y-1 text-gray-700">
-                      {condition.tcmCauses.map((cause: string, idx: number) => (
-                        <li key={idx}>{cause}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Affected Meridians */}
-                {condition.affectedMeridians && condition.affectedMeridians.length > 0 && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-semibold text-gray-700">Affected Meridians</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {condition.affectedMeridians.map((meridian: string) => (
-                        <Badge key={meridian} variant="tcm">
-                          {meridian}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* TCM Diagnosis */}
-                {condition.tcmDiagnosis && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-semibold text-gray-700">TCM Diagnosis</h4>
-                    <p className="text-gray-700">{condition.tcmDiagnosis}</p>
-                  </div>
-                )}
-
-                {/* Treatment Principles */}
-                {condition.treatmentPrinciples && condition.treatmentPrinciples.length > 0 && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-semibold text-gray-700">
-                      Treatment Principles
-                    </h4>
-                    <ul className="list-inside list-disc space-y-1 text-gray-700">
-                      {condition.treatmentPrinciples.map((principle: string, idx: number) => (
-                        <li key={idx}>{principle}</li>
-                      ))}
-                    </ul>
-                  </div>
+                ) : (
+                  <p className="text-gray-600">No TCM information available.</p>
                 )}
               </CardContent>
             </Card>
@@ -409,31 +332,43 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
 
           {/* Treatment Tab */}
           <TabsContent value="treatment" className="space-y-6">
-            {/* Lifestyle Recommendations */}
-            {condition.lifestyleRecommendations &&
-              condition.lifestyleRecommendations.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Lifestyle Recommendations</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="list-inside list-disc space-y-2 text-gray-700">
-                      {condition.lifestyleRecommendations.map((rec: string, idx: number) => (
-                        <li key={idx}>{rec}</li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              )}
-
-            {/* Dietary Recommendations */}
-            {condition.dietaryRecommendations && (
+            {preventionText && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Dietary Recommendations</CardTitle>
+                  <CardTitle>Prevention Tips</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700">{condition.dietaryRecommendations}</p>
+                  <p className="whitespace-pre-line text-gray-700">{preventionText}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {lifestyleText && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Lifestyle Recommendations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="whitespace-pre-line text-gray-700">{lifestyleText}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {dietaryText && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Dietary Advice</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="whitespace-pre-line text-gray-700">{dietaryText}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {!preventionText && !lifestyleText && !dietaryText && (
+              <Card>
+                <CardContent className="py-12 text-center text-gray-600">
+                  No treatment recommendations available.
                 </CardContent>
               </Card>
             )}
@@ -441,26 +376,41 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
         </Tabs>
 
         {/* Related Herbs */}
-        {condition.relatedHerbs && condition.relatedHerbs.length > 0 && (
+        {relatedHerbs.length > 0 && (
           <div className="mb-12">
             <h2 className="text-earth-900 mb-6 flex items-center font-serif text-2xl font-bold">
               <Leaf className="text-earth-600 mr-2 h-6 w-6" />
               Helpful Herbs
             </h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {condition.relatedHerbs.slice(0, 6).map((herb) => (
+              {relatedHerbs.slice(0, 6).map((herb) => (
                 <HerbCard
                   key={herb.id}
-                  herbId={herb.herbId}
+                  herbId={herb.herbId || ''}
                   title={herb.title}
-                  slug={herb.slug}
-                  scientificName={herb.scientificName}
-                  description={herb.description}
-                  featuredImage={herb.featuredImage}
-                  tcmProperties={herb.tcmProperties}
-                  westernProperties={herb.westernProperties}
-                  averageRating={herb.averageRating}
-                  reviewCount={herb.reviewCount}
+                  slug={herb.slug || ''}
+                  scientificName={herb.botanicalInfo?.scientificName || undefined}
+                  description={richTextToPlainText(herb.description) || undefined}
+                  featuredImage={
+                    mediaUrl(herb.featuredImage)?.url
+                      ? {
+                          url: mediaUrl(herb.featuredImage)?.url as string,
+                          alt: mediaUrl(herb.featuredImage)?.alt || undefined,
+                        }
+                      : undefined
+                  }
+                  tcmProperties={
+                    herb.tcmProperties
+                      ? {
+                          taste: herb.tcmProperties.tcmTaste ?? undefined,
+                          temperature: herb.tcmProperties.tcmTemperature ?? undefined,
+                          category: herb.tcmProperties.tcmCategory ?? undefined,
+                        }
+                      : undefined
+                  }
+                  westernProperties={herb.westernProperties || undefined}
+                  averageRating={herb.averageRating || undefined}
+                  reviewCount={herb.reviewCount || undefined}
                 />
               ))}
             </div>
@@ -468,27 +418,23 @@ export default async function ConditionPage({ params }: ConditionPageProps) {
         )}
 
         {/* Related Formulas */}
-        {condition.relatedFormulas && condition.relatedFormulas.length > 0 && (
+        {relatedFormulas.length > 0 && (
           <div className="mb-12">
             <h2 className="text-earth-900 mb-6 flex items-center font-serif text-2xl font-bold">
               <Pill className="text-earth-600 mr-2 h-6 w-6" />
               Recommended Formulas
             </h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {condition.relatedFormulas.slice(0, 6).map((formula) => (
+              {relatedFormulas.slice(0, 6).map((formula) => (
                 <FormulaCard
                   key={formula.id}
-                  formulaId={formula.formulaId}
+                  formulaId={String(formula.id)}
                   title={formula.title}
-                  slug={formula.slug}
-                  chineseName={formula.chineseName}
-                  pinyin={formula.pinyin}
-                  description={formula.description}
-                  category={formula.category}
-                  tradition={formula.tradition}
+                  slug={formula.slug || ''}
+                  description={richTextToPlainText(formula.description) || undefined}
+                  category={formula.category || undefined}
+                  tradition={formula.tradition || undefined}
                   ingredientCount={formula.ingredients?.length}
-                  averageRating={formula.averageRating}
-                  reviewCount={formula.reviewCount}
                 />
               ))}
             </div>
@@ -518,8 +464,7 @@ export async function generateMetadata({ params }: ConditionPageProps): Promise<
   const t = await getTranslations({ locale: lang, namespace: 'conditions' })
   const metaT = await getTranslations({ locale: lang, namespace: 'metadata' })
 
-  const { docs } = await getConditionBySlug(slug)
-  const condition = docs[0] as Condition | undefined
+  const condition = (await getConditionBySlug(slug)) as unknown as ConditionDoc | null
 
   if (!condition) {
     return {
@@ -528,14 +473,16 @@ export async function generateMetadata({ params }: ConditionPageProps): Promise<
     }
   }
 
+  const description =
+    richTextToPlainText(condition.description) ||
+    t('metadata.defaultDescription', { name: condition.title })
+
   return {
     title: `${condition.title} | ${metaT('siteName')}`,
-    description:
-      condition.description || t('metadata.defaultDescription', { name: condition.title }),
+    description,
     openGraph: {
       title: `${condition.title} | ${metaT('siteName')}`,
-      description:
-        condition.description || t('metadata.defaultDescription', { name: condition.title }),
+      description,
     },
   }
 }
